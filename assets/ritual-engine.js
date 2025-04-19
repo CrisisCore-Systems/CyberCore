@@ -14,6 +14,13 @@ class RitualEngine {
     this.coherenceBaseline = 0.5;
     this.narrativeSeeds = [];
 
+    // Shopify-specific properties
+    this.shopify = {
+      customer: null,
+      cart: null,
+      shop: null,
+    };
+
     // Trauma assessment vectors - calibrate user's inherent affinities
     this.assessmentVectors = {
       visual: { weight: 0.4, responses: [] },
@@ -22,7 +29,93 @@ class RitualEngine {
       temporal: { weight: 0.1, responses: [] },
     };
 
-    this.bindEvents();
+    // Only bind events if we're in a browser context
+    if (typeof document !== 'undefined') {
+      this.bindEvents();
+    }
+  }
+
+  // Initialize with Shopify context
+  initializeShopify(shopifyData) {
+    if (shopifyData.customer) {
+      this.shopify.customer = shopifyData.customer;
+    }
+
+    if (shopifyData.cart) {
+      this.shopify.cart = shopifyData.cart;
+    }
+
+    if (shopifyData.shop) {
+      this.shopify.shop = shopifyData.shop;
+    }
+
+    // Check if user has completed ritual previously
+    if (this.shopify.customer && this.shopify.customer.metafields) {
+      const ritualMetafield = this.shopify.customer.metafields.voidbloom_memory_protected?.state;
+      if (ritualMetafield) {
+        try {
+          const memoryState = JSON.parse(ritualMetafield);
+          if (memoryState.voidbloom_initiated) {
+            // User already initiated
+            localStorage.setItem('voidbloom_initiated', 'true');
+            if (memoryState.traumaAffinities) {
+              localStorage.setItem(
+                'voidbloom_trauma_affinities',
+                JSON.stringify(memoryState.traumaAffinities)
+              );
+            }
+            if (memoryState.primaryTrauma) {
+              localStorage.setItem('voidbloom_primary_trauma', memoryState.primaryTrauma);
+            }
+            if (memoryState.coherenceBaseline) {
+              localStorage.setItem(
+                'voidbloom_coherence_baseline',
+                memoryState.coherenceBaseline.toString()
+              );
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing ritual metafield:', e);
+        }
+      }
+    }
+  }
+
+  // Save ritual data to Shopify customer metafield
+  saveRitualDataToShopify() {
+    if (!this.shopify.customer || !this.shopify.customer.id) {
+      // Can't save if no customer
+      return;
+    }
+
+    // Prepare data for metafield
+    const memoryState = {
+      voidbloom_initiated: true,
+      traumaAffinities: JSON.parse(localStorage.getItem('voidbloom_trauma_affinities') || '{}'),
+      primaryTrauma: localStorage.getItem('voidbloom_primary_trauma'),
+      coherenceBaseline: parseFloat(localStorage.getItem('voidbloom_coherence_baseline') || '0.5'),
+      timestamp: Date.now(),
+    };
+
+    // In a real implementation, we would use Shopify Ajax API to update customer metafield
+    // This would require a separate endpoint or app proxy
+    console.log('Would save ritual data to Shopify:', memoryState);
+
+    // For demo purposes:
+    fetch('/apps/voidbloom/customer/metafields', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        namespace: 'voidbloom_memory_protected',
+        key: 'state',
+        value: JSON.stringify(memoryState),
+        type: 'json',
+      }),
+    }).catch((err) => {
+      console.error('Error saving ritual data:', err);
+    });
   }
 
   bindEvents() {
@@ -575,6 +668,9 @@ class RitualEngine {
     localStorage.setItem('voidbloom_primary_trauma', primaryTrauma);
     localStorage.setItem('voidbloom_coherence_baseline', this.coherenceBaseline.toString());
 
+    // Save to Shopify if customer is logged in
+    this.saveRitualDataToShopify();
+
     // Clean up session state
     sessionStorage.removeItem('voidbloom_ritual_in_progress');
 
@@ -760,10 +856,14 @@ class RitualEngine {
   }
 }
 
-// Initialize
+// Initialize with Shopify data
 document.addEventListener('DOMContentLoaded', () => {
   window.voidBloom = window.voidBloom || {};
   window.voidBloom.ritualEngine = new RitualEngine();
+
+  // Get Shopify data from the window object (set by the theme)
+  const shopifyData = window.shopifyData || {};
+  window.voidBloom.ritualEngine.initializeShopify(shopifyData);
 
   // Connect to Neural Bus if available
   if (typeof NeuralBus !== 'undefined') {
