@@ -1,765 +1,777 @@
 /**
  * VoidBloom Ritual Engine
- * User initiation and trauma affinity mapping system
- * @version 1.0.0
- * @MutationCompatible: VoidBloom, QuantumMythos
- * @StrategyProfile: ritual-ordained
+ * VERSION: 3.8.5
+ *
+ * Initiates users into the trauma encoding framework through
+ * calibrated experience mapping and coherence anchoring
  */
 
-import { NeuralBus } from './neural-bus.js';
-
-export class RitualEngine {
+class RitualEngine {
   constructor() {
-    this.state = {
-      initialized: false,
-      ritualInProgress: false,
-      currentStage: null,
-      userResponses: {},
-      derivedAffinities: {},
-      coherenceAnchors: [],
-      ritualStartTime: null,
-      ritualCompletionTime: null
+    this.initiationPhases = ['recognition', 'resonance', 'recursion', 'integration'];
+    this.currentPhase = 0;
+    this.traumaResponses = new Map();
+    this.coherenceBaseline = 0.5;
+    this.narrativeSeeds = [];
+
+    // Trauma assessment vectors - calibrate user's inherent affinities
+    this.assessmentVectors = {
+      visual: { weight: 0.4, responses: [] },
+      interactive: { weight: 0.3, responses: [] },
+      narrative: { weight: 0.2, responses: [] },
+      temporal: { weight: 0.1, responses: [] },
     };
 
-    // Ritual sequence configuration
-    this.ritualSequence = [
-      'introduction',
-      'traumaAssessment',
-      'symbolAlignment',
-      'coherenceAnchoring',
-      'narrativeSeeding',
-      'completion'
-    ];
-
-    // Trauma affinity mappings
-    this.affinityQuestions = [
-      {
-        id: 'visual_preference',
-        question: 'Which visual pattern draws you in most deeply?',
-        options: [
-          { id: 'a', text: 'Void-like expanses with distant lights', affinity: 'abandonment', weight: 0.8 },
-          { id: 'b', text: 'Shattered/fractured geometric forms', affinity: 'fragmentation', weight: 0.8 },
-          { id: 'c', text: 'Recursive patterns that fold inward', affinity: 'recursion', weight: 0.8 },
-          { id: 'd', text: 'Lens/aperture shapes with scanning motifs', affinity: 'surveillance', weight: 0.8 },
-          { id: 'e', text: 'Warped/shifted perspectives and portals', affinity: 'displacement', weight: 0.8 },
-          { id: 'f', text: 'Decaying/static-like textures that fade', affinity: 'dissolution', weight: 0.8 }
-        ]
-      },
-      {
-        id: 'interaction_preference',
-        question: 'How do you prefer to interact with digital systems?',
-        options: [
-          { id: 'a', text: 'Minimally, with long periods of contemplation', affinity: 'abandonment', weight: 0.6 },
-          { id: 'b', text: 'Rapidly switching between multiple tasks', affinity: 'fragmentation', weight: 0.6 },
-          { id: 'c', text: 'Creating and refining loops and systems', affinity: 'recursion', weight: 0.6 },
-          { id: 'd', text: 'Observing details and monitoring for changes', affinity: 'surveillance', weight: 0.6 },
-          { id: 'e', text: 'Exploring many different spaces/contexts', affinity: 'displacement', weight: 0.6 },
-          { id: 'f', text: 'Letting entropy and randomness guide you', affinity: 'dissolution', weight: 0.6 }
-        ]
-      },
-      {
-        id: 'emotional_resonance',
-        question: 'Which sensation most profoundly affects you?',
-        options: [
-          { id: 'a', text: 'The vast emptiness of being completely alone', affinity: 'abandonment', weight: 0.9 },
-          { id: 'b', text: 'The disorientation of being broken into pieces', affinity: 'fragmentation', weight: 0.9 },
-          { id: 'c', text: 'The infinite regression of self-referential thought', affinity: 'recursion', weight: 0.9 },
-          { id: 'd', text: 'The awareness of being constantly watched', affinity: 'surveillance', weight: 0.9 },
-          { id: 'e', text: 'The vertigo of being in the wrong reality', affinity: 'displacement', weight: 0.9 },
-          { id: 'f', text: 'The entropy of systems breaking down irreversibly', affinity: 'dissolution', weight: 0.9 }
-        ]
-      },
-      {
-        id: 'memory_pattern',
-        question: 'How do you experience memories?',
-        options: [
-          { id: 'a', text: 'As absences or voids where meaning should be', affinity: 'abandonment', weight: 0.7 },
-          { id: 'b', text: 'As disconnected fragments without context', affinity: 'fragmentation', weight: 0.7 },
-          { id: 'c', text: 'As repeating patterns that echo through time', affinity: 'recursion', weight: 0.7 },
-          { id: 'd', text: 'As evidence being collected and scrutinized', affinity: 'surveillance', weight: 0.7 },
-          { id: 'e', text: 'As scenes from seemingly alternate timelines', affinity: 'displacement', weight: 0.7 },
-          { id: 'f', text: 'As decaying impressions that fade with time', affinity: 'dissolution', weight: 0.7 }
-        ]
-      }
-    ];
-
-    // Narrative seed templates by trauma type
-    this.narrativeSeeds = {
-      'abandonment': [
-        'You stand at the edge of a vast darkness. Others have crossed this threshold, but none remain.',
-        'The distant lights flicker like fading transmissions from those who left you behind.',
-        'In absence there is clarity. In emptiness, a kind of truth.'
-      ],
-      'fragmentation': [
-        'Every fracture creates new edges, new perspectives, new ways of seeing.',
-        'The pieces of yourself scatter like reflections on broken glass.',
-        'What was once whole now exists as constellation, a galaxy of fragments.'
-      ],
-      'recursion': [
-        'You've been here before. You'll be here again. The loop tightens with each iteration.',
-        'Patterns within patterns. Each decision branches yet somehow returns.',
-        'The observer becomes the observed, becomes the observer, becomes...'
-      ],
-      'surveillance': [
-        'The lens adjusts, focuses, captures. You are seen in ways you cannot see yourself.',
-        'Every trace you leave becomes data. Every movement, a signature.',
-        'The archive grows. Nothing witnessed is ever truly forgotten.'
-      ],
-      'displacement': [
-        'The coordinates shift. This reality overlaps another that was always here.',
-        'You recognize nothing, yet everything recognizes you.',
-        'Home exists in multiple locations simultaneously. None of them feel right.'
-      ],
-      'dissolution': [
-        'Entropy increases. The signal degrades. Nothing maintains coherence forever.',
-        'The boundaries between you and everything else grow increasingly permeable.',
-        'In dissolution there is release. In decay, a kind of rebirth.'
-      ]
-    };
-
-    // Initialize the engine
-    this.initialize();
+    this.bindEvents();
   }
 
-  /**
-   * Initialize the ritual engine
-   */
-  async initialize() {
-    try {
-      // Connect to NeuralBus if available
-      if (window.NeuralBus) {
-        this.connectToNeuralBus();
+  bindEvents() {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (this.shouldInitiateRitual()) {
+        this.beginInitiationSequence();
+      }
+    });
+  }
+
+  shouldInitiateRitual() {
+    // Check if user has completed ritual or needs initiation
+    return (
+      !localStorage.getItem('voidbloom_initiated') &&
+      !sessionStorage.getItem('voidbloom_ritual_in_progress')
+    );
+  }
+
+  beginInitiationSequence() {
+    console.log('🧿 Ritual Initiation Sequence: Beginning');
+    sessionStorage.setItem('voidbloom_ritual_in_progress', 'true');
+
+    // Create ritual container
+    const ritualContainer = document.createElement('div');
+    ritualContainer.className = 'voidbloom-ritual-container phase-recognition';
+    ritualContainer.innerHTML = this.buildRitualInterface();
+    document.body.appendChild(ritualContainer);
+
+    // Start with subtle entrance
+    setTimeout(() => {
+      ritualContainer.classList.add('active');
+      this.progressToPhase(0);
+    }, 1000);
+  }
+
+  buildRitualInterface() {
+    return `
+      <div class="ritual-interface">
+        <div class="ritual-header">
+          <div class="ritual-symbol"></div>
+          <h1 class="ritual-title">Memory Calibration Protocol</h1>
+        </div>
+
+        <div class="ritual-phases">
+          ${this.initiationPhases
+            .map(
+              (phase, index) =>
+                `<div class="ritual-phase ${index === 0 ? 'current' : ''}" data-phase="${phase}">
+              <div class="phase-indicator"></div>
+              <div class="phase-name">${phase}</div>
+            </div>`
+            )
+            .join('')}
+        </div>
+
+        <div class="ritual-content">
+          <!-- Phase content will be injected here -->
+        </div>
+
+        <div class="ritual-actions">
+          <button class="ritual-button next-button">Proceed</button>
+        </div>
+      </div>
+    `;
+  }
+
+  progressToPhase(phaseIndex) {
+    if (phaseIndex >= this.initiationPhases.length) {
+      this.completeRitual();
+      return;
+    }
+
+    this.currentPhase = phaseIndex;
+    const phaseName = this.initiationPhases[phaseIndex];
+    const container = document.querySelector('.voidbloom-ritual-container');
+
+    // Update phase UI
+    container.className = `voidbloom-ritual-container phase-${phaseName}`;
+    document.querySelectorAll('.ritual-phase').forEach((el, i) => {
+      el.classList.toggle('current', i === phaseIndex);
+      el.classList.toggle('completed', i < phaseIndex);
+    });
+
+    // Load phase content
+    const contentContainer = document.querySelector('.ritual-content');
+
+    switch (phaseName) {
+      case 'recognition':
+        this.loadRecognitionPhase(contentContainer);
+        break;
+      case 'resonance':
+        this.loadResonancePhase(contentContainer);
+        break;
+      case 'recursion':
+        this.loadRecursionPhase(contentContainer);
+        break;
+      case 'integration':
+        this.loadIntegrationPhase(contentContainer);
+        break;
+    }
+
+    // Update button
+    const nextButton = document.querySelector('.next-button');
+    nextButton.textContent =
+      phaseIndex === this.initiationPhases.length - 1 ? 'Complete' : 'Continue';
+
+    // Bind next button
+    nextButton.onclick = () => {
+      this.collectPhaseData(phaseName);
+      this.progressToPhase(phaseIndex + 1);
+    };
+  }
+
+  loadRecognitionPhase(container) {
+    container.innerHTML = `
+      <div class="phase-content recognition-phase">
+        <h2>Trauma Recognition</h2>
+        <p>Select images that resonate with your experience of memory:</p>
+
+        <div class="trauma-selection-grid">
+          <div class="trauma-selection" data-trauma="abandonment" data-vector="visual">
+            <div class="selection-image abandonment"></div>
+            <div class="selection-label">Isolation in Vastness</div>
+          </div>
+          <div class="trauma-selection" data-trauma="fragmentation" data-vector="visual">
+            <div class="selection-image fragmentation"></div>
+            <div class="selection-label">Dissolution of Self</div>
+          </div>
+          <div class="trauma-selection" data-trauma="surveillance" data-vector="visual">
+            <div class="selection-image surveillance"></div>
+            <div class="selection-label">Observed Experience</div>
+          </div>
+          <div class="trauma-selection" data-trauma="recursion" data-vector="visual">
+            <div class="selection-image recursion"></div>
+            <div class="selection-label">Cyclical Patterns</div>
+          </div>
+          <div class="trauma-selection" data-trauma="displacement" data-vector="visual">
+            <div class="selection-image displacement"></div>
+            <div class="selection-label">Dislocation of Perception</div>
+          </div>
+          <div class="trauma-selection" data-trauma="dissolution" data-vector="visual">
+            <div class="selection-image dissolution"></div>
+            <div class="selection-label">Fading Boundaries</div>
+          </div>
+        </div>
+
+        <p class="selection-instruction">Select all that apply. These will calibrate your visual recognition system.</p>
+      </div>
+    `;
+
+    // Bind selection events
+    container.querySelectorAll('.trauma-selection').forEach((selection) => {
+      selection.addEventListener('click', () => {
+        selection.classList.toggle('selected');
+      });
+    });
+  }
+
+  loadResonancePhase(container) {
+    container.innerHTML = `
+      <div class="phase-content resonance-phase">
+        <h2>Memory Resonance</h2>
+        <p>How would you describe your relationship with memory?</p>
+
+        <div class="trauma-narrative-selections">
+          <div class="trauma-selection narrative" data-trauma="abandonment" data-vector="narrative">
+            <div class="selection-heading">Abandoned Archives</div>
+            <p>My memories feel distant and unreachable, as though they exist in a vast space I cannot navigate.</p>
+          </div>
+          <div class="trauma-selection narrative" data-trauma="fragmentation" data-vector="narrative">
+            <div class="selection-heading">Shattered Reflections</div>
+            <p>My memories appear in disconnected fragments, breaking apart when I try to hold them together.</p>
+          </div>
+          <div class="trauma-selection narrative" data-trauma="surveillance" data-vector="narrative">
+            <div class="selection-heading">Recorded Without Consent</div>
+            <p>My memories feel like they're being watched and analyzed by systems beyond my control.</p>
+          </div>
+          <div class="trauma-selection narrative" data-trauma="recursion" data-vector="narrative">
+            <div class="selection-heading">Recursive Loops</div>
+            <p>My memories repeat in patterns, creating echoes that amplify certain experiences.</p>
+          </div>
+          <div class="trauma-selection narrative" data-trauma="displacement" data-vector="narrative">
+            <div class="selection-heading">Misplaced Origins</div>
+            <p>My memories feel as though they've been relocated, transplanted from their original context.</p>
+          </div>
+          <div class="trauma-selection narrative" data-trauma="dissolution" data-vector="narrative">
+            <div class="selection-heading">Dissolving Certainty</div>
+            <p>My memories seem to dissolve at the edges, blending with imagination or others' accounts.</p>
+          </div>
+        </div>
+
+        <p class="selection-instruction">Select the narrative that most resonates with your experience.</p>
+      </div>
+    `;
+
+    // Bind selection events - allow only one selection for narrative
+    const narrativeSelections = container.querySelectorAll('.trauma-selection.narrative');
+    narrativeSelections.forEach((selection) => {
+      selection.addEventListener('click', () => {
+        narrativeSelections.forEach((s) => s.classList.remove('selected'));
+        selection.classList.add('selected');
+      });
+    });
+  }
+
+  loadRecursionPhase(container) {
+    container.innerHTML = `
+      <div class="phase-content recursion-phase">
+        <h2>Pattern Recognition</h2>
+        <p>Select the interaction patterns that feel familiar to you:</p>
+
+        <div class="trauma-interaction-selections">
+          <div class="trauma-selection interaction" data-trauma="abandonment" data-vector="interactive">
+            <div class="interaction-demo abandonment"></div>
+            <div class="selection-label">Reaching Without Response</div>
+          </div>
+          <div class="trauma-selection interaction" data-trauma="fragmentation" data-vector="interactive">
+            <div class="interaction-demo fragmentation"></div>
+            <div class="selection-label">Reassembling Pieces</div>
+          </div>
+          <div class="trauma-selection interaction" data-trauma="surveillance" data-vector="interactive">
+            <div class="interaction-demo surveillance"></div>
+            <div class="selection-label">Performing For Observers</div>
+          </div>
+          <div class="trauma-selection interaction" data-trauma="recursion" data-vector="interactive">
+            <div class="interaction-demo recursion"></div>
+            <div class="selection-label">Repeating Patterns</div>
+          </div>
+          <div class="trauma-selection interaction" data-trauma="displacement" data-vector="interactive">
+            <div class="interaction-demo displacement"></div>
+            <div class="selection-label">Relocating Centers</div>
+          </div>
+          <div class="trauma-selection interaction" data-trauma="dissolution" data-vector="interactive">
+            <div class="interaction-demo dissolution"></div>
+            <div class="selection-label">Dissolving Boundaries</div>
+          </div>
+        </div>
+
+        <p class="selection-instruction">Interact with each pattern. Select those that feel most natural to you.</p>
+      </div>
+    `;
+
+    // Set up interaction demos
+    this.initializeInteractionDemos(container);
+
+    // Bind selection events
+    container.querySelectorAll('.trauma-selection.interaction').forEach((selection) => {
+      selection.addEventListener('click', () => {
+        selection.classList.toggle('selected');
+      });
+    });
+  }
+
+  initializeInteractionDemos(container) {
+    // Basic interaction demos - these would be more sophisticated in production
+    const demos = container.querySelectorAll('.interaction-demo');
+
+    // Abandonment - fading element that responds to hover by moving away
+    const abandonmentDemo = container.querySelector('.interaction-demo.abandonment');
+    if (abandonmentDemo) {
+      abandonmentDemo.addEventListener('mouseover', function () {
+        this.classList.add('avoiding');
+        setTimeout(() => this.classList.remove('avoiding'), 1000);
+      });
+    }
+
+    // Fragmentation - breaks into pieces on click
+    const fragmentationDemo = container.querySelector('.interaction-demo.fragmentation');
+    if (fragmentationDemo) {
+      fragmentationDemo.addEventListener('click', function () {
+        this.classList.add('fragmenting');
+        setTimeout(() => this.classList.remove('fragmenting'), 1500);
+      });
+    }
+
+    // More interaction patterns would be implemented here
+  }
+
+  loadIntegrationPhase(container) {
+    container.innerHTML = `
+      <div class="phase-content integration-phase">
+        <h2>Temporal Integration</h2>
+        <p>How do you experience the passage of time in relation to memory?</p>
+
+        <div class="temporal-slider-container">
+          <div class="temporal-slider-labels">
+            <span>Contracted</span>
+            <span>Linear</span>
+            <span>Expanded</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" class="temporal-slider" id="timePerceptionSlider">
+
+          <div class="temporal-trauma-mapping">
+            <div class="trauma-mapping" data-trauma="displacement">Displacement</div>
+            <div class="trauma-mapping" data-trauma="recursion">Recursion</div>
+            <div class="trauma-mapping" data-trauma="abandonment">Abandonment</div>
+            <div class="trauma-mapping" data-trauma="surveillance">Surveillance</div>
+            <div class="trauma-mapping" data-trauma="fragmentation">Fragmentation</div>
+            <div class="trauma-mapping" data-trauma="dissolution">Dissolution</div>
+          </div>
+        </div>
+
+        <div class="calibration-summary">
+          <h3>Calibration Summary</h3>
+          <p>Based on your responses, we've identified these primary memory patterns:</p>
+          <div class="trauma-summary-container">
+            <!-- Will be populated dynamically -->
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Set up temporal slider
+    const slider = container.querySelector('.temporal-slider');
+    const mappingContainer = container.querySelector('.temporal-trauma-mapping');
+
+    if (slider && mappingContainer) {
+      slider.addEventListener('input', () => {
+        const value = parseInt(slider.value);
+        const position = (value / 100) * (mappingContainer.offsetWidth - 30);
+
+        // Find closest trauma type based on position
+        const traumaMappings = container.querySelectorAll('.trauma-mapping');
+        let closestTrauma = null;
+        let closestDistance = Infinity;
+
+        traumaMappings.forEach((traumaEl) => {
+          const rect = traumaEl.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - position);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestTrauma = traumaEl.getAttribute('data-trauma');
+          }
+        });
+
+        // Record temporal response
+        if (closestTrauma) {
+          this.assessmentVectors.temporal.responses = [
+            {
+              traumaType: closestTrauma,
+              value: value / 100,
+            },
+          ];
+        }
+      });
+    }
+
+    // Generate and display summary based on selections so far
+    this.generateCalibrationSummary(container.querySelector('.trauma-summary-container'));
+  }
+
+  generateCalibrationSummary(container) {
+    // Calculate trauma affinities based on selections
+    const affinities = {};
+
+    // Process all vectors
+    Object.entries(this.assessmentVectors).forEach(([vectorName, vector]) => {
+      vector.responses.forEach((response) => {
+        if (!response.traumaType) return;
+
+        if (!affinities[response.traumaType]) {
+          affinities[response.traumaType] = 0;
+        }
+
+        affinities[response.traumaType] += vector.weight * (response.value || 1);
+      });
+    });
+
+    // Add all selected trauma types from the DOM
+    document.querySelectorAll('.trauma-selection.selected').forEach((selection) => {
+      const traumaType = selection.getAttribute('data-trauma');
+      const vector = selection.getAttribute('data-vector');
+      const vectorWeight = this.assessmentVectors[vector]?.weight || 0.25;
+
+      if (!affinities[traumaType]) {
+        affinities[traumaType] = 0;
       }
 
-      // Connect to persistence layer if available
-      if (window.CoherencePersistence) {
-        this.persistence = window.CoherencePersistence;
-      }
+      affinities[traumaType] += vectorWeight;
+    });
 
-      this.state.initialized = true;
+    // Normalize values
+    let total = 0;
+    Object.values(affinities).forEach((v) => (total += v));
 
-      // Dispatch initialization event
-      document.dispatchEvent(new CustomEvent('ritual:initialized', {
-        detail: { ritual: this }
-      }));
+    const normalizedAffinities = {};
+    Object.entries(affinities).forEach(([trauma, value]) => {
+      normalizedAffinities[trauma] = value / total;
+    });
 
-      console.log('[RitualEngine] Initialized successfully');
-      return true;
-    } catch (error) {
-      console.error('[RitualEngine] Initialization failed:', error);
-      return false;
+    // Store for final processing
+    this.traumaAffinities = normalizedAffinities;
+
+    // Get top 3 trauma types
+    const sortedTraumas = Object.entries(normalizedAffinities)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3);
+
+    // Generate summary HTML
+    let summaryHTML = '';
+    sortedTraumas.forEach(([trauma, value], index) => {
+      const percentage = Math.round(value * 100);
+      summaryHTML += `
+        <div class="trauma-summary ${trauma} ${index === 0 ? 'primary' : 'secondary'}">
+          <div class="trauma-label">${this.getTraumaLabel(trauma)}</div>
+          <div class="trauma-bar">
+            <div class="trauma-bar-fill" style="width: ${percentage}%"></div>
+          </div>
+          <div class="trauma-percentage">${percentage}%</div>
+        </div>
+      `;
+    });
+
+    // Update container
+    if (container) {
+      container.innerHTML = summaryHTML;
     }
   }
 
-  /**
-   * Connect to the NeuralBus event system
-   */
+  getTraumaLabel(traumaType) {
+    const labels = {
+      abandonment: 'Abandonment Encoding',
+      fragmentation: 'Fragmentation Pattern',
+      surveillance: 'Surveillance Protocol',
+      recursion: 'Recursive Loop',
+      displacement: 'Displacement Vectors',
+      dissolution: 'Boundary Dissolution',
+    };
+
+    return labels[traumaType] || traumaType;
+  }
+
+  collectPhaseData(phaseName) {
+    // Collect data from the current phase
+    switch (phaseName) {
+      case 'recognition':
+        this.collectRecognitionData();
+        break;
+      case 'resonance':
+        this.collectResonanceData();
+        break;
+      case 'recursion':
+        this.collectRecursionData();
+        break;
+      case 'integration':
+        this.collectIntegrationData();
+        break;
+    }
+
+    // Transmit phase completion to Neural Bus
+    if (typeof NeuralBus !== 'undefined') {
+      NeuralBus.publish('ritual:phase:completed', {
+        phase: phaseName,
+        phaseIndex: this.currentPhase,
+        timestamp: Date.now(),
+      });
+    }
+  }
+
+  collectRecognitionData() {
+    // Collect visual trauma selections
+    const visualSelections = document.querySelectorAll(
+      '.trauma-selection[data-vector="visual"].selected'
+    );
+    this.assessmentVectors.visual.responses = Array.from(visualSelections).map((el) => ({
+      traumaType: el.getAttribute('data-trauma'),
+      value: 1,
+    }));
+  }
+
+  collectResonanceData() {
+    // Collect narrative trauma selection (only one should be selected)
+    const narrativeSelection = document.querySelector(
+      '.trauma-selection[data-vector="narrative"].selected'
+    );
+    if (narrativeSelection) {
+      this.assessmentVectors.narrative.responses = [
+        {
+          traumaType: narrativeSelection.getAttribute('data-trauma'),
+          value: 1,
+        },
+      ];
+    }
+  }
+
+  collectRecursionData() {
+    // Collect interactive trauma selections
+    const interactiveSelections = document.querySelectorAll(
+      '.trauma-selection[data-vector="interactive"].selected'
+    );
+    this.assessmentVectors.interactive.responses = Array.from(interactiveSelections).map((el) => ({
+      traumaType: el.getAttribute('data-trauma'),
+      value: 1,
+    }));
+  }
+
+  collectIntegrationData() {
+    // Temporal data already collected via slider
+    // Final calculations for trauma affinities are done
+
+    // Calculate coherence baseline based on response consistency
+    this.calculateCoherenceBaseline();
+  }
+
+  calculateCoherenceBaseline() {
+    // Calculate coherence based on consistency of selections
+    // Higher consistency = higher baseline coherence
+
+    // Get count of unique trauma types selected
+    const traumaTypesSelected = new Set();
+
+    Object.values(this.assessmentVectors).forEach((vector) => {
+      vector.responses.forEach((response) => {
+        if (response.traumaType) {
+          traumaTypesSelected.add(response.traumaType);
+        }
+      });
+    });
+
+    // More focused selection = higher coherence
+    const traumaTypeCount = traumaTypesSelected.size;
+    const maxTypes = 6; // Total possible trauma types
+
+    // Base coherence starts higher for more focused selection
+    const focusFactor = 1 - traumaTypeCount / maxTypes;
+
+    // Add some randomness for natural variation
+    const randomFactor = 0.1 + Math.random() * 0.1;
+
+    // Calculate final coherence (range 0.4 to 0.8)
+    this.coherenceBaseline = 0.4 + focusFactor * 0.4 + randomFactor;
+  }
+
+  completeRitual() {
+    // Find primary trauma type
+    let primaryTrauma = null;
+    let highestAffinity = 0;
+
+    Object.entries(this.traumaAffinities).forEach(([trauma, affinity]) => {
+      if (affinity > highestAffinity) {
+        primaryTrauma = trauma;
+        highestAffinity = affinity;
+      }
+    });
+
+    // Save ritual results
+    localStorage.setItem('voidbloom_initiated', 'true');
+    localStorage.setItem('voidbloom_trauma_affinities', JSON.stringify(this.traumaAffinities));
+    localStorage.setItem('voidbloom_primary_trauma', primaryTrauma);
+    localStorage.setItem('voidbloom_coherence_baseline', this.coherenceBaseline.toString());
+
+    // Clean up session state
+    sessionStorage.removeItem('voidbloom_ritual_in_progress');
+
+    // Fade out ritual interface
+    const container = document.querySelector('.voidbloom-ritual-container');
+    container.classList.add('completing');
+
+    // Announce ritual completion via Neural Bus
+    if (typeof NeuralBus !== 'undefined') {
+      NeuralBus.publish('ritual:completed', {
+        traumaAffinities: this.traumaAffinities,
+        primaryTrauma: primaryTrauma,
+        coherenceBaseline: this.coherenceBaseline,
+        timestamp: Date.now(),
+      });
+    }
+
+    // Remove ritual interface after transition
+    setTimeout(() => {
+      container.remove();
+      this.triggerWelcomeNarrative(primaryTrauma);
+    }, 2000);
+  }
+
+  triggerWelcomeNarrative(traumaType) {
+    // Generate narrative based on trauma type
+    const narrative = this.generateNarrative(traumaType);
+
+    // Create welcome modal
+    const welcomeContainer = document.createElement('div');
+    welcomeContainer.className = `voidbloom-welcome trauma-${traumaType}`;
+    welcomeContainer.innerHTML = `
+      <div class="welcome-card">
+        <div class="welcome-header">
+          <h2>Welcome to VoidBloom</h2>
+          <div class="trauma-indicator ${traumaType}"></div>
+        </div>
+        <div class="welcome-message">${narrative}</div>
+        <button class="welcome-dismiss">Begin Memory Exploration</button>
+      </div>
+    `;
+
+    document.body.appendChild(welcomeContainer);
+
+    // Animate in
+    setTimeout(() => {
+      welcomeContainer.classList.add('visible');
+    }, 100);
+
+    // Dismiss handler
+    welcomeContainer.querySelector('.welcome-dismiss').addEventListener('click', () => {
+      welcomeContainer.classList.remove('visible');
+
+      // Publish the welcome acknowledgment
+      if (typeof NeuralBus !== 'undefined') {
+        NeuralBus.publish('ritual:welcome:acknowledged', {
+          traumaType: traumaType,
+          timestamp: Date.now(),
+        });
+      }
+
+      setTimeout(() => welcomeContainer.remove(), 500);
+    });
+  }
+
+  generateNarrative(traumaType) {
+    // Simple narratives based on trauma type
+    const narratives = {
+      abandonment: `
+        <p>Your connection to memory reveals a profound <em>spatial distance</em> between experience and recollection.</p>
+        <p>The VoidBloom system will create <strong>anchoring points</strong> within this expanse, bridging the isolation between present and past.</p>
+        <p>Your journey through our collection will build memory architectures that <em>resonate across the void</em>.</p>
+      `,
+      fragmentation: `
+        <p>Your memory patterns reveal <em>fragmentation</em> as a primary encoding mechanism.</p>
+        <p>The VoidBloom system will help you <strong>assemble constellations</strong> from these disconnected elements.</p>
+        <p>As you explore our collection, we'll create cohesive narratives from <em>the beautiful shards of your experience</em>.</p>
+      `,
+      surveillance: `
+        <p>Your memory architecture demonstrates <em>heightened awareness of observation</em> as a formative pattern.</p>
+        <p>The VoidBloom system will help you <strong>reclaim agency</strong> within these observed states.</p>
+        <p>Our collection becomes a mirror that <em>reflects only what you choose to see</em>.</p>
+      `,
+      recursion: `
+        <p>Your memory encoding reveals <em>recursive patterns</em> that amplify through repetition.</p>
+        <p>The VoidBloom system will help you <strong>navigate these cycles</strong>, finding new branches from familiar loops.</p>
+        <p>Each return to our collection will <em>reveal different perspectives in resonant experiences</em>.</p>
+      `,
+      displacement: `
+        <p>Your memory structures show <em>displacement</em> as a primary organizational principle.</p>
+        <p>The VoidBloom system will help you <strong>map these relocated territories</strong> of experience.</p>
+        <p>Our collection becomes a cartography of <em>finding home in unfamiliar landscapes</em>.</p>
+      `,
+      dissolution: `
+        <p>Your memory patterns reveal <em>dissolution of boundaries</em> as a foundational experience.</p>
+        <p>The VoidBloom system will help you <strong>define edges without confinement</strong>.</p>
+        <p>Our collection becomes a medium where <em>you can both dissolve and remain</em>.</p>
+      `,
+    };
+
+    return (
+      narratives[traumaType] ||
+      `
+      <p>Welcome to VoidBloom, where memory becomes a living medium.</p>
+      <p>Our system has calibrated to your unique memory patterns.</p>
+      <p>Explore our collection to develop your personal narrative.</p>
+    `
+    );
+  }
+
+  // Connect to Neural Bus for event handling
   connectToNeuralBus() {
-    // Register with NeuralBus
+    if (typeof NeuralBus === 'undefined') return;
+
+    // Register with Neural Bus
     const { nonce } = NeuralBus.register('ritual-engine', {
-      version: '1.0.0',
-      profile: 'ritual-ordained'
+      version: '3.8.5',
+      capabilities: {
+        traumaAssessment: true,
+        coherenceCalibration: true,
+        narrativeGeneration: true,
+      },
     });
 
     this.nonce = nonce;
 
     // Subscribe to relevant events
     NeuralBus.subscribe('user:new', this.handleNewUser.bind(this));
-    NeuralBus.subscribe('ritual:response', this.handleRitualResponse.bind(this));
-    NeuralBus.subscribe('ritual:navigate', this.navigateRitual.bind(this));
+    NeuralBus.subscribe('ritual:start', this.handleRitualStart.bind(this));
+    NeuralBus.subscribe('ritual:skip', this.handleRitualSkip.bind(this));
 
-    console.log('[RitualEngine] Connected to NeuralBus');
+    console.log('🧿 Ritual Engine connected to Neural Bus');
   }
 
-  /**
-   * Begin the initiation ritual for a new user
-   * @param {Object} options - Ritual options
-   * @returns {Object} Initial ritual state
-   */
-  beginRitual(options = {}) {
-    if (this.state.ritualInProgress) {
-      console.warn('[RitualEngine] Ritual already in progress');
-      return this.getCurrentRitualState();
-    }
-
-    this.state.ritualInProgress = true;
-    this.state.currentStage = this.ritualSequence[0];
-    this.state.userResponses = {};
-    this.state.derivedAffinities = {};
-    this.state.coherenceAnchors = [];
-    this.state.ritualStartTime = Date.now();
-
-    // Prepare initial stage content
-    const stage = this.prepareStageContent(this.state.currentStage);
-
-    // Publish ritual start event
-    if (window.NeuralBus) {
-      NeuralBus.publish('ritual:started', {
-        timestamp: this.state.ritualStartTime,
-        initialStage: stage
-      });
-    }
-
-    return {
-      stage: this.state.currentStage,
-      content: stage,
-      progress: 0
-    };
-  }
-
-  /**
-   * Handle a response from the current ritual stage
-   * @param {string} questionId - Question identifier
-   * @param {string} responseId - Response identifier
-   * @returns {Object} Updated ritual state
-   */
-  submitResponse(questionId, responseId) {
-    if (!this.state.ritualInProgress) {
-      throw new Error('[RitualEngine] No ritual in progress');
-    }
-
-    // Record the user response
-    this.state.userResponses[questionId] = responseId;
-
-    // If this is a trauma assessment response, update derived affinities
-    if (this.state.currentStage === 'traumaAssessment') {
-      const questionData = this.affinityQuestions.find(q => q.id === questionId);
-
-      if (questionData) {
-        const selectedOption = questionData.options.find(opt => opt.id === responseId);
-
-        if (selectedOption) {
-          // Update the affinity in derived affinities
-          const affinity = selectedOption.affinity;
-          const weight = selectedOption.weight;
-
-          this.state.derivedAffinities[affinity] = (this.state.derivedAffinities[affinity] || 0) + weight;
-        }
-      }
-    }
-
-    // Publish response event
-    if (window.NeuralBus) {
-      NeuralBus.publish('ritual:response:submitted', {
-        timestamp: Date.now(),
-        questionId,
-        responseId,
-        stage: this.state.currentStage
-      });
-    }
-
-    return this.getCurrentRitualState();
-  }
-
-  /**
-   * Navigate to the next or specified ritual stage
-   * @param {string} targetStage - Optional specific stage to navigate to
-   * @returns {Object} Updated ritual state
-   */
-  navigateRitual(targetStage = null) {
-    if (!this.state.ritualInProgress) {
-      throw new Error('[RitualEngine] No ritual in progress');
-    }
-
-    let nextStage;
-
-    if (targetStage && this.ritualSequence.includes(targetStage)) {
-      // Navigate to specified stage
-      nextStage = targetStage;
-    } else {
-      // Navigate to next stage in sequence
-      const currentIndex = this.ritualSequence.indexOf(this.state.currentStage);
-
-      if (currentIndex < this.ritualSequence.length - 1) {
-        nextStage = this.ritualSequence[currentIndex + 1];
-      } else {
-        // End of ritual
-        return this.completeRitual();
-      }
-    }
-
-    // Special pre-processing for certain stages
-    if (nextStage === 'traumaAssessment') {
-      // Nothing special needed here, the questions are already configured
-    } else if (nextStage === 'symbolAlignment') {
-      // Determine dominant trauma affinities before showing symbols
-      this.processDerivedAffinities();
-    } else if (nextStage === 'coherenceAnchoring') {
-      // Generate coherence anchors based on derived affinities
-      this.generateCoherenceAnchors();
-    } else if (nextStage === 'narrativeSeeding') {
-      // Prepare narrative fragments based on trauma profile
-      this.prepareNarrativeSeeds();
-    }
-
-    // Update current stage
-    this.state.currentStage = nextStage;
-
-    // Prepare stage content
-    const stageContent = this.prepareStageContent(nextStage);
-
-    // Publish navigation event
-    if (window.NeuralBus) {
-      NeuralBus.publish('ritual:navigated', {
-        timestamp: Date.now(),
-        fromStage: this.state.currentStage,
-        toStage: nextStage,
-        content: stageContent
-      });
-    }
-
-    return {
-      stage: nextStage,
-      content: stageContent,
-      progress: this.calculateProgress()
-    };
-  }
-
-  /**
-   * Calculate current progress through the ritual (0-1)
-   * @returns {number} Progress value
-   */
-  calculateProgress() {
-    const currentIndex = this.ritualSequence.indexOf(this.state.currentStage);
-    return currentIndex / (this.ritualSequence.length - 1);
-  }
-
-  /**
-   * Process derived affinities to determine the user's trauma profile
-   */
-  processDerivedAffinities() {
-    // Normalize derived affinities
-    let total = 0;
-
-    Object.values(this.state.derivedAffinities).forEach(value => {
-      total += value;
-    });
-
-    if (total > 0) {
-      Object.keys(this.state.derivedAffinities).forEach(key => {
-        this.state.derivedAffinities[key] /= total;
-      });
-    }
-
-    // Get top two affinity types
-    const sortedAffinities = Object.entries(this.state.derivedAffinities)
-      .sort((a, b) => b[1] - a[1]);
-
-    this.state.primaryTrauma = sortedAffinities[0]?.[0] || 'dissolution';
-    this.state.secondaryTrauma = sortedAffinities[1]?.[0] || 'recursion';
-
-    // If using persistence layer, store these affinities
-    if (this.persistence) {
-      // Create trauma affinity events for each derived affinity
-      Object.entries(this.state.derivedAffinities).forEach(([type, value]) => {
-        // Only store significant affinities
-        if (value > 0.1) {
-          NeuralBus.publish('trauma:activated', {
-            type,
-            intensity: value,
-            source: 'ritual-assessment',
-            timestamp: Date.now()
-          });
-        }
-      });
-    }
-  }
-
-  /**
-   * Generate coherence anchors based on derived affinities
-   */
-  generateCoherenceAnchors() {
-    if (!this.state.primaryTrauma) {
-      this.processDerivedAffinities();
-    }
-
-    const anchors = [];
-
-    // Create primary anchor
-    anchors.push({
-      id: `anchor-${Date.now()}-1`,
-      traumaType: this.state.primaryTrauma,
-      intensity: 0.8,
-      description: `Primary ${this.state.primaryTrauma} anchor`,
-      symbol: `symbol-${this.state.primaryTrauma}-prime`,
-      placement: 'header'
-    });
-
-    // Create secondary anchor
-    anchors.push({
-      id: `anchor-${Date.now()}-2`,
-      traumaType: this.state.secondaryTrauma,
-      intensity: 0.5,
-      description: `Secondary ${this.state.secondaryTrauma} anchor`,
-      symbol: `symbol-${this.state.secondaryTrauma}-alt`,
-      placement: 'navigation'
-    });
-
-    // Create resonance anchor (combination of primary and secondary)
-    anchors.push({
-      id: `anchor-${Date.now()}-3`,
-      traumaType: 'combined',
-      primaryType: this.state.primaryTrauma,
-      secondaryType: this.state.secondaryTrauma,
-      intensity: 0.6,
-      description: 'Resonance pattern anchor',
-      symbol: `symbol-resonance-${this.state.primaryTrauma}-${this.state.secondaryTrauma}`,
-      placement: 'footer'
-    });
-
-    this.state.coherenceAnchors = anchors;
-  }
-
-  /**
-   * Prepare narrative seeds based on trauma profile
-   */
-  prepareNarrativeSeeds() {
-    if (!this.state.primaryTrauma) {
-      this.processDerivedAffinities();
-    }
-
-    const narratives = [];
-
-    // Add primary trauma narratives
-    if (this.narrativeSeeds[this.state.primaryTrauma]) {
-      const primarySeeds = this.narrativeSeeds[this.state.primaryTrauma];
-      narratives.push({
-        id: `narrative-${Date.now()}-1`,
-        traumaType: this.state.primaryTrauma,
-        text: primarySeeds[Math.floor(Math.random() * primarySeeds.length)],
-        intensity: 0.8
-      });
-    }
-
-    // Add secondary trauma narratives
-    if (this.narrativeSeeds[this.state.secondaryTrauma]) {
-      const secondarySeeds = this.narrativeSeeds[this.state.secondaryTrauma];
-      narratives.push({
-        id: `narrative-${Date.now()}-2`,
-        traumaType: this.state.secondaryTrauma,
-        text: secondarySeeds[Math.floor(Math.random() * secondarySeeds.length)],
-        intensity: 0.6
-      });
-    }
-
-    // Create a combined/hybrid narrative
-    narratives.push({
-      id: `narrative-${Date.now()}-3`,
-      traumaType: 'hybrid',
-      primaryType: this.state.primaryTrauma,
-      secondaryType: this.state.secondaryTrauma,
-      text: this.generateHybridNarrative(),
-      intensity: 0.7
-    });
-
-    this.state.narrativeSeeds = narratives;
-  }
-
-  /**
-   * Generate a hybrid narrative combining primary and secondary trauma themes
-   * @returns {string} Hybrid narrative text
-   */
-  generateHybridNarrative() {
-    const primary = this.state.primaryTrauma;
-    const secondary = this.state.secondaryTrauma;
-
-    // Map of hybrid narratives for specific trauma combinations
-    const hybridMap = {
-      'abandonment+fragmentation': 'The void is not empty but filled with countless pieces of yourself, too distant to reassemble.',
-      'abandonment+recursion': 'You keep returning to the same empty room, each time more alone than before.',
-      'abandonment+surveillance': 'The cameras watch, but no one is behind them. The perfect observation of perfect emptiness.',
-      'abandonment+displacement': 'You are nowhere and everywhere. In all possible worlds, equally alone.',
-      'abandonment+dissolution': 'As you fade, there is no one to remember what you once were.',
-
-      'fragmentation+recursion': 'Each broken piece contains another shattered whole, an infinite regression of fractures.',
-      'fragmentation+surveillance': 'Every fragment of yourself is cataloged, labeled, but never reassembled.',
-      'fragmentation+displacement': 'The pieces of you exist across multiple planes, impossible to collect in one reality.',
-      'fragmentation+dissolution': 'Each fragment dissolves at its own rate. Some memories persist while others vanish.',
-
-      'recursion+surveillance': 'The observers are being observed. The watchers, watched. The loop of surveillance has no end.',
-      'recursion+displacement': 'You keep trying different paths but always arrive at the same wrong destination.',
-      'recursion+dissolution': 'The pattern decays with each iteration, losing information until only the loop remains.',
-
-      'surveillance+displacement': 'The cameras follow you across realities. There is nowhere they cannot see.',
-      'surveillance+dissolution': 'Your image degrades under observation, as if the very act of being watched causes you to dissolve.',
-
-      'displacement+dissolution': 'You fade between worlds, dissolving in one reality only to partially reform in another.'
-    };
-
-    // Try to look up a specific hybrid narrative
-    const key1 = `${primary}+${secondary}`;
-    const key2 = `${secondary}+${primary}`;
-
-    if (hybridMap[key1]) {
-      return hybridMap[key1];
-    } else if (hybridMap[key2]) {
-      return hybridMap[key2];
-    }
-
-    // Fallback: generate a generalized hybrid narrative
-    const primarySeeds = this.narrativeSeeds[primary];
-    const secondarySeeds = this.narrativeSeeds[secondary];
-
-    const primaryFragment = primarySeeds[Math.floor(Math.random() * primarySeeds.length)];
-    const secondaryFragment = secondarySeeds[Math.floor(Math.random() * secondarySeeds.length)];
-
-    // Create a composite
-    return `${primaryFragment} ${secondaryFragment}`;
-  }
-
-  /**
-   * Complete the initiation ritual
-   * @returns {Object} Final ritual state
-   */
-  completeRitual() {
-    this.state.ritualCompletionTime = Date.now();
-    this.state.ritualInProgress = false;
-
-    // Calculate final trauma profile
-    const traumaProfile = {};
-
-    Object.entries(this.state.derivedAffinities).forEach(([type, value]) => {
-      // Only include significant affinities
-      if (value > 0.1) {
-        traumaProfile[type] = value;
-      }
-    });
-
-    // Save state to persistence layer
-    if (this.persistence) {
-      // Store narrative seeds as fragments
-      this.state.narrativeSeeds.forEach(seed => {
-        NeuralBus.publish('narrative:fragment:discovered', {
-          fragmentId: seed.id,
-          text: seed.text,
-          traumaType: seed.traumaType === 'hybrid' ? seed.primaryType : seed.traumaType,
-          source: 'ritual-initiation'
-        });
-      });
-    }
-
-    // Apply coherence anchors to the DOM
-    this.applyCoherenceAnchors();
-
-    // Build completion state
-    const completionState = {
-      stage: 'completion',
-      content: this.prepareStageContent('completion'),
-      progress: 1,
-      traumaProfile,
-      completionTime: this.state.ritualCompletionTime,
-      duration: this.state.ritualCompletionTime - this.state.ritualStartTime
-    };
-
-    // Publish completion event
-    if (window.NeuralBus) {
-      NeuralBus.publish('ritual:completed', {
-        timestamp: this.state.ritualCompletionTime,
-        traumaProfile,
-        coherenceAnchors: this.state.coherenceAnchors,
-        narrativeSeeds: this.state.narrativeSeeds,
-        duration: completionState.duration
-      });
-    }
-
-    return completionState;
-  }
-
-  /**
-   * Apply coherence anchors to the DOM
-   */
-  applyCoherenceAnchors() {
-    if (!this.state.coherenceAnchors || !this.state.coherenceAnchors.length) return;
-
-    this.state.coherenceAnchors.forEach(anchor => {
-      // Create anchor element if it doesn't exist
-      let anchorElement = document.getElementById(anchor.id);
-
-      if (!anchorElement) {
-        anchorElement = document.createElement('div');
-        anchorElement.id = anchor.id;
-        anchorElement.className = 'coherence-anchor';
-        anchorElement.setAttribute('data-trauma', anchor.traumaType === 'combined' ? anchor.primaryType : anchor.traumaType);
-        anchorElement.setAttribute('data-intensity', anchor.intensity.toString());
-        anchorElement.setAttribute('data-symbol', anchor.symbol);
-
-        // Create the inner content
-        anchorElement.innerHTML = `
-          <div class="anchor-symbol ${anchor.symbol}"></div>
-          <div class="anchor-pulse" style="--pulse-color: var(--trauma-${anchor.traumaType === 'combined' ? anchor.primaryType : anchor.traumaType}-color);"></div>
-        `;
-
-        // Append to correct placement
-        if (anchor.placement === 'header') {
-          document.querySelector('header')?.appendChild(anchorElement);
-        } else if (anchor.placement === 'navigation') {
-          document.querySelector('nav')?.appendChild(anchorElement);
-        } else if (anchor.placement === 'footer') {
-          document.querySelector('footer')?.appendChild(anchorElement);
-        } else {
-          // Default to body
-          document.body.appendChild(anchorElement);
-        }
-      }
-
-      // Apply trauma effects
-      if (window.MemoryProtocol) {
-        const memoryProtocol = window.MemoryProtocol;
-        memoryProtocol.visualizeTrauma(
-          anchorElement,
-          anchor.traumaType === 'combined' ? anchor.primaryType : anchor.traumaType,
-          anchor.intensity
-        );
-      }
-    });
-  }
-
-  /**
-   * Prepare content for a specific ritual stage
-   * @param {string} stage - Stage identifier
-   * @returns {Object} Stage content
-   */
-  prepareStageContent(stage) {
-    switch (stage) {
-      case 'introduction':
-        return {
-          title: 'The Veil Thins',
-          description: 'Before you lies the threshold to VoidBloom. Through this ritual, your unique perception patterns will be mapped, your trauma affinities identified, and your path through our collection revealed.',
-          action: 'Begin the descent',
-          background: 'ritual-intro-bg'
-        };
-
-      case 'traumaAssessment':
-        return {
-          title: 'Patterns of Perception',
-          description: 'Respond to these inquiries truthfully. There are no correct answers—only authentic ones.',
-          questions: this.affinityQuestions,
-          action: 'Continue to symbol alignment',
-          background: 'ritual-assessment-bg'
-        };
-
-      case 'symbolAlignment':
-        return {
-          title: 'Symbolic Resonance',
-          description: 'These symbols have chosen you. They will serve as anchors throughout your journey.',
-          primaryTrauma: this.state.primaryTrauma,
-          secondaryTrauma: this.state.secondaryTrauma,
-          symbols: [
-            {
-              id: `symbol-${this.state.primaryTrauma}-prime`,
-              traumaType: this.state.primaryTrauma,
-              intensity: 0.8,
-              name: `Primary ${this.formatTraumaType(this.state.primaryTrauma)} Symbol`,
-              description: `Your dominant affinity resonates with patterns of ${this.state.primaryTrauma}.`
-            },
-            {
-              id: `symbol-${this.state.secondaryTrauma}-alt`,
-              traumaType: this.state.secondaryTrauma,
-              intensity: 0.5,
-              name: `Secondary ${this.formatTraumaType(this.state.secondaryTrauma)} Symbol`,
-              description: `Your secondary affinity reveals ${this.state.secondaryTrauma} patterns.`
-            },
-            {
-              id: `symbol-resonance-${this.state.primaryTrauma}-${this.state.secondaryTrauma}`,
-              traumaType: 'combined',
-              intensity: 0.6,
-              name: 'Resonance Symbol',
-              description: `The unique interference pattern created by your ${this.state.primaryTrauma}/${this.state.secondaryTrauma} combination.`
-            }
-          ],
-          action: 'Establish coherence anchors',
-          background: 'ritual-symbols-bg'
-        };
-
-      case 'coherenceAnchoring':
-        return {
-          title: 'Coherence Anchoring',
-          description: 'These anchors will maintain your unique trauma signature across your journey through VoidBloom.',
-          anchors: this.state.coherenceAnchors,
-          action: 'Witness your narrative seeds',
-          background: 'ritual-anchoring-bg'
-        };
-
-      case 'narrativeSeeding':
-        return {
-          title: 'Narrative Genesis',
-          description: 'These fragments will evolve throughout your experience, accumulating meaning and coherence.',
-          narratives: this.state.narrativeSeeds,
-          action: 'Complete the ritual',
-          background: 'ritual-narrative-bg'
-        };
-
-      case 'completion':
-        return {
-          title: 'Initiation Complete',
-          description: 'Your trauma affinities have been mapped, your coherence anchors established, and your narrative seeds planted. The VoidBloom experience is now attuned to your unique pattern.',
-          traumaProfile: Object.entries(this.state.derivedAffinities)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(([type, value]) => ({
-              type,
-              value: (value * 100).toFixed(0) + '%',
-              label: this.formatTraumaType(type)
-            })),
-          action: 'Enter VoidBloom',
-          destination: '/',
-          background: 'ritual-completion-bg'
-        };
-
-      default:
-        return {
-          title: 'Undefined Stage',
-          description: 'This stage has not been implemented yet.',
-          action: 'Continue anyway',
-          background: 'ritual-default-bg'
-        };
-    }
-  }
-
-  /**
-   * Format a trauma type for display
-   * @param {string} traumaType - The trauma type identifier
-   * @returns {string} Formatted trauma type
-   */
-  formatTraumaType(traumaType) {
-    return traumaType.charAt(0).toUpperCase() + traumaType.slice(1);
-  }
-
-  /**
-   * Get the current state of the ritual
-   * @returns {Object} Current ritual state
-   */
-  getCurrentRitualState() {
-    return {
-      stage: this.state.currentStage,
-      content: this.prepareStageContent(this.state.currentStage),
-      progress: this.calculateProgress(),
-      ritualInProgress: this.state.ritualInProgress
-    };
-  }
-
-  /**
-   * Handle new user event
-   * @param {Object} data - New user event data
-   */
   handleNewUser(data) {
-    // Automatically begin ritual for new users
-    if (!this.state.ritualInProgress && data.requiresInitiation !== false) {
-      this.beginRitual();
+    // Check if we should auto-start the ritual for new users
+    if (data.autoInitiate && this.shouldInitiateRitual()) {
+      this.beginInitiationSequence();
     }
   }
 
-  /**
-   * Handle a ritual response from NeuralBus
-   * @param {Object} data - Response data
-   */
-  handleRitualResponse(data) {
-    if (!data || !data.questionId || !data.responseId) return;
+  handleRitualStart() {
+    if (this.shouldInitiateRitual()) {
+      this.beginInitiationSequence();
+    }
+  }
 
-    this.submitResponse(data.questionId, data.responseId);
+  handleRitualSkip(data) {
+    // For development/testing - skip ritual with predefined trauma profile
+    localStorage.setItem('voidbloom_initiated', 'true');
+    localStorage.setItem('voidbloom_primary_trauma', data.traumaType || 'recursion');
+    localStorage.setItem('voidbloom_coherence_baseline', (data.coherence || 0.5).toString());
+
+    const traumaAffinities = {};
+    traumaAffinities[data.traumaType || 'recursion'] = 0.7;
+
+    // Add some secondary traumas
+    const secondaryTypes = [
+      'abandonment',
+      'fragmentation',
+      'surveillance',
+      'displacement',
+      'dissolution',
+    ];
+    secondaryTypes.forEach((type) => {
+      if (type !== data.traumaType) {
+        traumaAffinities[type] = Math.random() * 0.3;
+      }
+    });
+
+    localStorage.setItem('voidbloom_trauma_affinities', JSON.stringify(traumaAffinities));
+
+    // Announce ritual completion
+    if (typeof NeuralBus !== 'undefined') {
+      NeuralBus.publish('ritual:completed', {
+        traumaAffinities: traumaAffinities,
+        primaryTrauma: data.traumaType || 'recursion',
+        coherenceBaseline: data.coherence || 0.5,
+        skipped: true,
+        timestamp: Date.now(),
+      });
+    }
   }
 }
 
-// Create global instance
-window.RitualEngine = RitualEngine;
-export default RitualEngine;
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  window.voidBloom = window.voidBloom || {};
+  window.voidBloom.ritualEngine = new RitualEngine();
+
+  // Connect to Neural Bus if available
+  if (typeof NeuralBus !== 'undefined') {
+    window.voidBloom.ritualEngine.connectToNeuralBus();
+  } else {
+    // Try again when Neural Bus might be loaded
+    window.addEventListener('neuralbus:initialized', () => {
+      window.voidBloom.ritualEngine.connectToNeuralBus();
+    });
+  }
+});
