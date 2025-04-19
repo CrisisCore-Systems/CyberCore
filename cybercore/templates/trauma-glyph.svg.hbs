@@ -1,0 +1,107 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 
+    VoidBloom Trauma Glyph: {{ trauma.type }}
+    Generated: {{ timestamp }}
+  -->
+  
+  <!-- Base circle -->
+  <circle cx="60" cy="60" r="50" fill="none" stroke="{{ trauma.visualProperties.primaryColor }}" stroke-width="2" />
+  
+  {{#if (eq trauma.type "abandonment")}}
+    <!-- Abandonment glyph - spiral disconnection -->
+    <path d="M60,60 m0,-30 a30,30 0 1,1 -30,30 a15,15 0 0,0 0,-15" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-dasharray="1, 4" />
+    <circle cx="30" cy="75" r="5" fill="{{ trauma.visualProperties.primaryColor }}" opacity="0.8" />
+    
+  {{else if (eq trauma.type "fragmentation")}}
+    <!-- Fragmentation glyph - broken segments -->
+    <path d="M60,10 L60,40 M30,30 L50,50 M10,60 L40,60 M30,90 L50,70 M60,110 L60,80 M90,90 L70,70 M110,60 L80,60 M90,30 L70,50" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linecap="round" />
+    <circle cx="60" cy="60" r="8" fill="{{ trauma.visualProperties.primaryColor }}" opacity="0.8" />
+    
+  {{else if (eq trauma.type "surveillance")}}
+    <!-- Surveillance glyph - watching eye -->
+    <ellipse cx="60" cy="60" rx="35" ry="25" 
+             fill="none" 
+             stroke="{{ trauma.visualProperties.primaryColor }}" 
+             stroke-width="2.5" />
+    <circle cx="60" cy="60" r="12" 
+            fill="none" 
+            stroke="{{ trauma.visualProperties.primaryColor }}" 
+            stroke-width="2.5" />
+    <circle cx="60" cy="60" r="5" 
+            fill="{{ trauma.visualProperties.primaryColor }}" />
+    
+  {{else if (eq trauma.type "recursion")}}
+    <!-- Recursion glyph - nested patterns -->
+    <path d="M60,25 L80,60 L60,95 L40,60 Z" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5" />
+    <path d="M60,40 L70,60 L60,80 L50,60 Z" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5" />
+    <circle cx="60" cy="60" r="5" 
+            fill="{{ trauma.visualProperties.primaryColor }}" />
+    
+  {{else if (eq trauma.type "displacement")}}
+    <!-- Displacement glyph - shifted locations -->
+    <path d="M40,40 L80,40 L80,80 L40,80 Z" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2"
+          stroke-dasharray="4 2" />
+    <path d="M35,50 L75,50 L75,90 L35,90 Z" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5" />
+    <line x1="40" y1="40" x2="35" y2="50" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="1.5" />
+    <line x1="80" y1="40" x2="75" y2="50" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="1.5" />
+    <line x1="80" y1="80" x2="75" y2="90" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="1.5" />
+    <line x1="40" y1="80" x2="35" y2="90" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="1.5" />
+    
+  {{else if (eq trauma.type "dissolution")}}
+    <!-- Dissolution glyph - fading essence -->
+    <path d="M60,30 C85,30 85,60 60,60 C35,60 35,90 60,90" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linecap="round" />
+    <circle cx="60" cy="30" r="4" fill="{{ trauma.visualProperties.primaryColor }}" opacity="0.9" />
+    <circle cx="60" cy="60" r="4" fill="{{ trauma.visualProperties.primaryColor }}" opacity="0.6" />
+    <circle cx="60" cy="90" r="4" fill="{{ trauma.visualProperties.primaryColor }}" opacity="0.3" />
+    
+  {{else}}
+    <!-- Default glyph -->
+    <path d="M30,30 L90,90 M30,90 L90,30" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="2.5" />
+    <circle cx="60" cy="60" r="15" 
+            fill="none" 
+            stroke="{{ trauma.visualProperties.primaryColor }}" 
+            stroke-width="2.5" />
+  {{/if}}
+  
+  <!-- Outer effect -->
+  <circle cx="60" cy="60" r="55" 
+          fill="none" 
+          stroke="{{ trauma.visualProperties.primaryColor }}" 
+          stroke-width="0.5"
+          opacity="0.5" />
+</svg>

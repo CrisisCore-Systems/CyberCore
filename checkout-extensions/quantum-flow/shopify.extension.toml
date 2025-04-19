@@ -1,0 +1,48 @@
+{
+  "name": "Quantum Flow Checkout Experience",
+  "version": "1.0.0",
+  "shopify-extension": {
+    "type": "checkout_ui_extension",
+    "capabilities": {
+      "network_access": true,
+      "block_progress": true,
+      "payment_method_capabilities": {
+        "payment_method_info": true
+      },
+      "api_access": {
+        "metadata": true,
+        "shop": true
+      }
+    },
+    "metafields": [
+      {
+        "namespace": "voidbloom_trauma_private",
+        "key": "encoding",
+        "type": "json"
+      },
+      {
+        "namespace": "voidbloom_memory_protected",
+        "key": "state",
+        "type": "json"
+      },
+      {
+        "namespace": "voidbloom_coherence_state",
+        "key": "metrics",
+        "type": "json"
+      },
+      {
+        "namespace": "voidbloom_quantum_config",
+        "key": "checkout_settings",
+        "type": "json"
+      }
+    ],
+    "extension_points": [
+      "Checkout::Dynamic::Render",
+      "Checkout::DeliveryAddress::RenderBefore",
+      "Checkout::PaymentMethod::RenderAfter",
+      "Checkout::CartLines::RenderAfter",
+      "Checkout::ShippingMethods::RenderAfter",
+      "Checkout::Contact::RenderAfter"
+    ]
+  }
+}

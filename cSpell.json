@@ -1,0 +1,9 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": ["KALYIM", "xlarge", "xxlarge", "Exan", "Csvg", "Cpath", "Ccircle", "Crect"],
+  "ignorePaths": ["node_modules/**", "coverage/**", "test-results/**", ".git/**"],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "ignoreWords": []
+}

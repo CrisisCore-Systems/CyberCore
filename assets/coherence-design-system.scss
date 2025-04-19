@@ -1,0 +1,726 @@
+// filepath: c:\Users\user\Documents\Projects\CyberCore\assets\coherence-design-system.scss
+// VoidBloom Design System
+// VERSION: 3.7.1
+// ARCHITECT: KALYIM /* cspell:disable-line */
+
+// 1. TRAUMA COLOR SPECTRUMS
+$trauma-colors: (
+  abandonment: (
+    primary: #001433,
+    secondary: #0a2855,
+    tertiary: #1e4477,
+    accent: #375e98,
+    highlight: #5177b8,
+  ),
+  fragmentation: (
+    primary: #580a87,
+    secondary: #6b23a7,
+    tertiary: #7f3cc8,
+    accent: #9356d9,
+    highlight: #a771e3,
+  ),
+  recursion: (
+    primary: #023a1d,
+    secondary: #0b542e,
+    tertiary: #1e7044,
+    accent: #38a46a,
+    highlight: #50c686,
+  ),
+  surveillance: (
+    primary: #005466,
+    secondary: #006f87,
+    tertiary: #0094b3,
+    accent: #00b9df,
+    highlight: #33d6f5,
+  ),
+  displacement: (
+    primary: #663300,
+    secondary: #884400,
+    tertiary: #aa5500,
+    accent: #dd7700,
+    highlight: #ff9b22,
+  ),
+  dissolution: (
+    primary: #660066,
+    secondary: #880088,
+    tertiary: #aa00aa,
+    accent: #cc00cc,
+    highlight: #ff00ff,
+  ),
+);
+
+// 2. FIBONACCI SPACING SYSTEM
+$spacing-units: (
+  quantum: 1px,
+  micro: 2px,
+  tiny: 3px,
+  small: 5px,
+  medium: 8px,
+  large: 13px,
+  xlarge: 21px,
+  /* cspell:disable-line */ xxlarge: 34px,
+  /* cspell:disable-line */ mega: 55px,
+  ultra: 89px,
+);
+
+// 3. TYPOGRAPHY SCALES
+$font-ratios: (
+  'dissolution': 1.414,
+  // Slip ratio
+  'recursion': 1.618,
+  // Golden ratio
+  'surveillance': 1.2,
+  // Minor third
+  'abandonment': 1.333,
+  // Perfect fourth
+  'fragmentation': 1.5,
+  // Perfect fifth
+  'displacement': 1.25 // Major third,,
+);
+
+// 4. BASE FONT SIZES
+$base-font-size: 16px;
+$heading-font-family: 'Exan' /* cspell:disable-line */, 'Monument Extended', sans-serif;
+$body-font-family: 'IBM Plex Mono', 'Space Mono', monospace;
+
+// 5. TRAUMA-SPECIFIC DECORATIVE ELEMENTS
+$trauma-patterns: (
+  'abandonment':
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%235177B8' fill-opacity='0.1' d='M0 0h100v100H0z'/%3E%3Ccircle cx='50' cy='50' r='40' stroke='%235177B8' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3C/svg%3E"),
+  /* cspell:disable-line */ 'fragmentation':
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%23A771E3' fill-opacity='0.1' d='M0 0L50 0L100 50L100 100L50 100L0 50z'/%3E%3C/svg%3E"),
+  /* cspell:disable-line */ 'recursion':
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect x='20' y='20' width='60' height='60' stroke='%2350C686' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3Crect x='30' y='30' width='40' height='40' stroke='%2350C686' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3Crect x='40' y='40' width='20' height='20' stroke='%2350C686' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3C/svg%3E"),
+  /* cspell:disable-line */ 'surveillance':
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%2333D6F5' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='30' stroke='%2333D6F5' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='20' stroke='%2333D6F5' stroke-width='0.5' fill='none' stroke-opacity='0.2'/%3E%3C/svg%3E"),
+  /* cspell:disable-line */ 'displacement':
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,100 M0,20 L80,100 M20,0 L100,80 M0,40 L60,100 M40,0 L100,60' stroke='%23FF9B22' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C/svg%3E"),
+  /* cspell:disable-line */ 'dissolution':
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M20,20 L80,20 L80,80 L20,80 z' stroke='%23FF00FF' stroke-width='0.5' fill='none' stroke-opacity='0.2' stroke-dasharray='4,4'/%3E%3C/svg%3E"),
+  /* cspell:disable-line */
+);
+
+// 6. ANIMATION TIMING VARIABLES
+$animation-speeds: (
+  'abandonment': 4s,
+  'fragmentation': 0.8s,
+  'recursion': 3s,
+  'surveillance': 2s,
+  'displacement': 1.5s,
+  'dissolution': 5s,
+);
+
+$animation-easings: (
+  'abandonment': cubic-bezier(0.22, 1, 0.36, 1),
+  'fragmentation': cubic-bezier(0.33, 1, 0.68, 1),
+  'recursion': cubic-bezier(0.83, 0, 0.17, 1),
+  'surveillance': cubic-bezier(0.47, 0, 0.745, 0.715),
+  'displacement': cubic-bezier(0.22, 0.61, 0.36, 1),
+  'dissolution': cubic-bezier(0.37, 0, 0.63, 1),
+);
+
+// 7. BLOOM EFFECTS
+@mixin bloom-effect($color, $intensity: 0.5) {
+  --bloom-color: #{$color};
+  --bloom-intensity: #{$intensity};
+  filter: drop-shadow(0 0 calc(var(--bloom-intensity) * 5px) var(--bloom-color));
+  transition: filter 0.5s ease;
+
+  &:hover {
+    filter: drop-shadow(0 0 calc(var(--bloom-intensity) * 12px) var(--bloom-color));
+  }
+}
+
+// 8. TRAUMA-SPECIFIC MIXINS
+
+// Abandonment: Characterized by void space, emptiness, distance
+@mixin trauma-abandonment($intensity: 0.5) {
+  --trauma-color: #{map-get(map-get($trauma-colors, 'abandonment'), 'accent')};
+  --trauma-pattern: #{map-get($trauma-patterns, 'abandonment')};
+  --trauma-intensity: #{$intensity};
+  --animation-speed: #{map-get($animation-speeds, 'abandonment')};
+  --animation-easing: #{map-get($animation-easings, 'abandonment')};
+
+  background-color: map-get(map-get($trauma-colors, 'abandonment'), 'primary');
+  background-image: var(--trauma-pattern);
+  color: rgba(255, 255, 255, calc(0.6 + (var(--trauma-intensity) * 0.4)));
+
+  // Void-like animation
+  animation: void-pulse var(--animation-speed) var(--animation-easing) infinite alternate;
+
+  @at-root {
+    @keyframes void-pulse {
+      0% {
+        box-shadow: inset 0 0 calc(50px * var(--trauma-intensity)) rgba(0, 0, 0, 0.8);
+      }
+      100% {
+        box-shadow: inset 0 0 calc(90px * var(--trauma-intensity)) rgba(0, 0, 0, 0.9);
+      }
+    }
+  }
+
+  // Apply bloom effect
+  @include bloom-effect(map-get(map-get($trauma-colors, 'abandonment'), 'highlight'), $intensity);
+}
+
+// Fragmentation: Characterized by broken parts, shattered pieces
+@mixin trauma-fragmentation($intensity: 0.5) {
+  --trauma-color: #{map-get(map-get($trauma-colors, 'fragmentation'), 'accent')};
+  --trauma-pattern: #{map-get($trauma-patterns, 'fragmentation')};
+  --trauma-intensity: #{$intensity};
+  --animation-speed: #{map-get($animation-speeds, 'fragmentation')};
+  --animation-easing: #{map-get($animation-easings, 'fragmentation')};
+
+  background-color: map-get(map-get($trauma-colors, 'fragmentation'), 'primary');
+  background-image: var(--trauma-pattern);
+  color: rgba(255, 255, 255, calc(0.6 + (var(--trauma-intensity) * 0.4)));
+
+  // Shattered animation
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        transparent calc(50% - 1px),
+        rgba(167, 113, 227, calc(0.1 * var(--trauma-intensity))) calc(50% - 1px),
+        rgba(167, 113, 227, calc(0.1 * var(--trauma-intensity))) calc(50% + 1px),
+        transparent calc(50% + 1px)
+      ),
+      linear-gradient(
+        135deg,
+        transparent calc(50% - 1px),
+        rgba(167, 113, 227, calc(0.1 * var(--trauma-intensity))) calc(50% - 1px),
+        rgba(167, 113, 227, calc(0.1 * var(--trauma-intensity))) calc(50% + 1px),
+        transparent calc(50% + 1px)
+      );
+    pointer-events: none;
+  }
+
+  // Apply bloom effect
+  @include bloom-effect(map-get(map-get($trauma-colors, 'fragmentation'), 'highlight'), $intensity);
+}
+
+// Recursion: Characterized by repeating patterns
+@mixin trauma-recursion($intensity: 0.5) {
+  --trauma-color: #{map-get(map-get($trauma-colors, 'recursion'), 'accent')};
+  --trauma-pattern: #{map-get($trauma-patterns, 'recursion')};
+  --trauma-intensity: #{$intensity};
+  --animation-speed: #{map-get($animation-speeds, 'recursion')};
+  --animation-easing: #{map-get($animation-easings, 'recursion')};
+
+  background-color: map-get(map-get($trauma-colors, 'recursion'), 'primary');
+  background-image: var(--trauma-pattern);
+  color: rgba(255, 255, 255, calc(0.6 + (var(--trauma-intensity) * 0.4)));
+
+  // Loop animation
+  animation: recursion-loop var(--animation-speed) var(--animation-easing) infinite;
+
+  @at-root {
+    @keyframes recursion-loop {
+      0%,
+      100% {
+        background-position: 0% 0%;
+        background-size: 100% 100%;
+      }
+      50% {
+        background-position: calc(var(--trauma-intensity) * 10%) calc(var(--trauma-intensity) * 10%);
+        background-size: calc(100% - var(--trauma-intensity) * 20%)
+          calc(100% - var(--trauma-intensity) * 20%);
+      }
+    }
+  }
+
+  // Apply bloom effect
+  @include bloom-effect(map-get(map-get($trauma-colors, 'recursion'), 'highlight'), $intensity);
+}
+
+// Surveillance: Characterized by observation, scanning
+@mixin trauma-surveillance($intensity: 0.5) {
+  --trauma-color: #{map-get(map-get($trauma-colors, 'surveillance'), 'accent')};
+  --trauma-pattern: #{map-get($trauma-patterns, 'surveillance')};
+  --trauma-intensity: #{$intensity};
+  --animation-speed: #{map-get($animation-speeds, 'surveillance')};
+  --animation-easing: #{map-get($animation-easings, 'surveillance')};
+
+  background-color: map-get(map-get($trauma-colors, 'surveillance'), 'primary');
+  background-image: var(--trauma-pattern);
+  color: rgba(255, 255, 255, calc(0.6 + (var(--trauma-intensity) * 0.4)));
+
+  // Scanning animation
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: rgba(51, 214, 245, calc(0.3 * var(--trauma-intensity)));
+    animation: scan-line var(--animation-speed) var(--animation-easing) infinite;
+    pointer-events: none;
+  }
+
+  @at-root {
+    @keyframes scan-line {
+      0% {
+        top: -5px;
+        opacity: 0;
+      }
+      5% {
+        opacity: calc(0.8 * var(--trauma-intensity));
+      }
+      95% {
+        opacity: calc(0.8 * var(--trauma-intensity));
+      }
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+  }
+
+  // Apply bloom effect
+  @include bloom-effect(map-get(map-get($trauma-colors, 'surveillance'), 'highlight'), $intensity);
+}
+
+// Displacement: Characterized by shifting, warping
+@mixin trauma-displacement($intensity: 0.5) {
+  --trauma-color: #{map-get(map-get($trauma-colors, 'displacement'), 'accent')};
+  --trauma-pattern: #{map-get($trauma-patterns, 'displacement')};
+  --trauma-intensity: #{$intensity};
+  --animation-speed: #{map-get($animation-speeds, 'displacement')};
+  --animation-easing: #{map-get($animation-easings, 'displacement')};
+
+  background-color: map-get(map-get($trauma-colors, 'displacement'), 'primary');
+  background-image: var(--trauma-pattern);
+  color: rgba(255, 255, 255, calc(0.6 + (var(--trauma-intensity) * 0.4)));
+
+  // Warping animation
+  animation: displacement-warp var(--animation-speed) var(--animation-easing) infinite alternate;
+
+  @at-root {
+    @keyframes displacement-warp {
+      0% {
+        transform: skew(0deg, 0deg);
+      }
+      100% {
+        transform: skew(calc(var(--trauma-intensity) * 5deg), calc(var(--trauma-intensity) * 3deg));
+      }
+    }
+  }
+
+  // Apply bloom effect
+  @include bloom-effect(map-get(map-get($trauma-colors, 'displacement'), 'highlight'), $intensity);
+}
+
+// Dissolution: Characterized by decay, entropy
+@mixin trauma-dissolution($intensity: 0.5) {
+  --trauma-color: #{map-get(map-get($trauma-colors, 'dissolution'), 'accent')};
+  --trauma-pattern: #{map-get($trauma-patterns, 'dissolution')};
+  --trauma-intensity: #{$intensity};
+  --animation-speed: #{map-get($animation-speeds, 'dissolution')};
+  --animation-easing: #{map-get($animation-easings, 'dissolution')};
+
+  background-color: map-get(map-get($trauma-colors, 'dissolution'), 'primary');
+  background-image: var(--trauma-pattern);
+  color: rgba(255, 255, 255, calc(0.6 + (var(--trauma-intensity) * 0.4)));
+
+  // Decay animation
+  animation: dissolution-fade var(--animation-speed) var(--animation-easing) infinite alternate;
+
+  @at-root {
+    @keyframes dissolution-fade {
+      0% {
+        opacity: 1;
+        background-color: map-get(map-get($trauma-colors, 'dissolution'), 'primary');
+      }
+      100% {
+        opacity: calc(1 - (var(--trauma-intensity) * 0.3));
+        background-color: mix(
+          map-get(map-get($trauma-colors, 'dissolution'), 'primary'),
+          black,
+          70%
+        );
+      }
+    }
+  }
+
+  // Apply bloom effect
+  @include bloom-effect(map-get(map-get($trauma-colors, 'dissolution'), 'highlight'), $intensity);
+}
+
+// 9. TYPOGRAPHY SYSTEM
+@mixin trauma-typography($trauma-type: 'recursion', $size-name: 'base') {
+  $ratio: map-get($font-ratios, $trauma-type);
+
+  @if $size-name == 'xs' {
+    font-size: $base-font-size / ($ratio * 1.2);
+  } @else if $size-name == 'sm' {
+    font-size: $base-font-size / $ratio;
+  } @else if $size-name == 'base' {
+    font-size: $base-font-size;
+  } @else if $size-name == 'lg' {
+    font-size: $base-font-size * $ratio;
+  } @else if $size-name == 'xl' {
+    font-size: $base-font-size * $ratio * $ratio;
+  } @else if $size-name == '2xl' {
+    font-size: $base-font-size * $ratio * $ratio * $ratio;
+  } @else if $size-name == '3xl' {
+    font-size: $base-font-size * $ratio * $ratio * $ratio * $ratio;
+  }
+
+  // Add trauma-specific typography features
+  @if $trauma-type == 'abandonment' {
+    letter-spacing: 0.05em;
+    font-weight: 300;
+  } @else if $trauma-type == 'fragmentation' {
+    letter-spacing: 0.03em;
+    word-spacing: 0.08em;
+    font-weight: 400;
+  } @else if $trauma-type == 'recursion' {
+    letter-spacing: 0;
+    font-weight: 500;
+  } @else if $trauma-type == 'surveillance' {
+    letter-spacing: 0.02em;
+    font-weight: 400;
+    text-transform: uppercase;
+  } @else if $trauma-type == 'displacement' {
+    letter-spacing: -0.01em;
+    font-weight: 500;
+    font-style: italic;
+  } @else if $trauma-type == 'dissolution' {
+    letter-spacing: 0.01em;
+    font-weight: 300;
+    font-feature-settings: 'salt' 1;
+  }
+}
+
+// 10. COHERENCE-RESPONSIVE COMPONENTS
+.trauma-node {
+  padding: map-get($spacing-units, 'large');
+  margin-bottom: map-get($spacing-units, 'medium');
+  border-radius: 3px;
+  transition: all 0.3s ease;
+
+  // Default state
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.8);
+
+  // Apply trauma-specific styles based on data attribute
+  &[data-trauma='abandonment'] {
+    @include trauma-abandonment(var(--intensity, 0.5));
+
+    .node-title {
+      @include trauma-typography('abandonment', 'xl');
+    }
+  }
+
+  &[data-trauma='fragmentation'] {
+    @include trauma-fragmentation(var(--intensity, 0.5));
+
+    .node-title {
+      @include trauma-typography('fragmentation', 'xl');
+    }
+  }
+
+  &[data-trauma='recursion'] {
+    @include trauma-recursion(var(--intensity, 0.5));
+
+    .node-title {
+      @include trauma-typography('recursion', 'xl');
+    }
+  }
+
+  &[data-trauma='surveillance'] {
+    @include trauma-surveillance(var(--intensity, 0.5));
+
+    .node-title {
+      @include trauma-typography('surveillance', 'xl');
+    }
+  }
+
+  &[data-trauma='displacement'] {
+    @include trauma-displacement(var(--intensity, 0.5));
+
+    .node-title {
+      @include trauma-typography('displacement', 'xl');
+    }
+  }
+
+  &[data-trauma='dissolution'] {
+    @include trauma-dissolution(var(--intensity, 0.5));
+
+    .node-title {
+      @include trauma-typography('dissolution', 'xl');
+    }
+  }
+
+  // Coherence anchor styles
+  &.coherence-anchor {
+    border-width: 2px;
+    border-style: solid;
+
+    &[data-trauma='abandonment'] {
+      border-color: map-get(map-get($trauma-colors, 'abandonment'), 'highlight');
+    }
+
+    &[data-trauma='fragmentation'] {
+      border-color: map-get(map-get($trauma-colors, 'fragmentation'), 'highlight');
+    }
+
+    &[data-trauma='recursion'] {
+      border-color: map-get(map-get($trauma-colors, 'recursion'), 'highlight');
+    }
+
+    &[data-trauma='surveillance'] {
+      border-color: map-get(map-get($trauma-colors, 'surveillance'), 'highlight');
+    }
+
+    &[data-trauma='displacement'] {
+      border-color: map-get(map-get($trauma-colors, 'displacement'), 'highlight');
+    }
+
+    &[data-trauma='dissolution'] {
+      border-color: map-get(map-get($trauma-colors, 'dissolution'), 'highlight');
+    }
+  }
+
+  // Pulse effect for coherence anchors
+  .anchor-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 3px;
+      box-shadow: 0 0 15px var(--pulse-color, rgba(255, 255, 255, 0.5));
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 0.1;
+      }
+      50% {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  // Memory fragments container
+  .memory-fragments {
+    margin-top: map-get($spacing-units, 'medium');
+    padding: map-get($spacing-units, 'small');
+
+    .fragment {
+      margin-bottom: map-get($spacing-units, 'small');
+      padding: map-get($spacing-units, 'small');
+      background-color: rgba(0, 0, 0, 0.2);
+      border-left: 2px solid var(--trauma-color, white);
+      font-family: $body-font-family;
+      font-size: 0.9em;
+    }
+  }
+}
+
+// 11. BLOOM TEXT EFFECT
+.bloom-text {
+  display: inline-block;
+  color: var(--bloom-color, white);
+  text-shadow: 0 0 calc(5px * var(--bloom-intensity, 0.5)) var(--bloom-color, white);
+  animation: bloom-pulse 3s infinite alternate;
+
+  @keyframes bloom-pulse {
+    0% {
+      text-shadow: 0 0 calc(3px * var(--bloom-intensity, 0.5)) var(--bloom-color, white);
+    }
+    100% {
+      text-shadow: 0 0 calc(8px * var(--bloom-intensity, 0.5)) var(--bloom-color, white);
+    }
+  }
+}
+
+// 12. GLOBAL TRAUMA STATE CLASSES
+body {
+  &.trauma-active-abandonment {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(
+        circle at center,
+        transparent 30%,
+        map-get(map-get($trauma-colors, 'abandonment'), 'primary') 100%
+      );
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.3;
+      animation: void-expand 3s map-get($animation-easings, 'abandonment') forwards;
+    }
+
+    @keyframes void-expand {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 0.3;
+      }
+    }
+  }
+
+  &.trauma-active-fragmentation {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%23A771E3' fill-opacity='0.1' d='M0 0L50 0L100 50L100 100L50 100L0 50z'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.2;
+    }
+  }
+
+  // Add more global trauma states...
+
+  &.phase-transitioning {
+    animation: phase-transition 1s ease-in-out;
+
+    @keyframes phase-transition {
+      0% {
+        filter: hue-rotate(0deg) brightness(1);
+      }
+      50% {
+        filter: hue-rotate(180deg) brightness(1.5);
+      }
+      100% {
+        filter: hue-rotate(0deg) brightness(1);
+      }
+    }
+  }
+}
+
+// 13. RESPONSIVE ADJUSTMENTS
+@media (max-width: 768px) {
+  .trauma-node {
+    padding: map-get($spacing-units, 'medium');
+
+    .node-title {
+      font-size: calc(1.5rem * var(--trauma-intensity, 0.5));
+    }
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .trauma-node {
+    animation: none !important;
+
+    &::before,
+    &::after {
+      animation: none !important;
+    }
+  }
+
+  .bloom-text {
+    animation: none !important;
+  }
+
+  .anchor-pulse::after {
+    animation: none !important;
+  }
+}
+
+// 14. RITUAL ENGINE SPECIFIC STYLES
+.ritual-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: map-get($spacing-units, 'xxlarge'); /* cspell:disable-line */
+
+  &.ritual-intro-bg {
+    background: linear-gradient(to bottom, #000000, #1e1e2f);
+  }
+
+  &.ritual-assessment-bg {
+    background: linear-gradient(to bottom, #1e1e2f, #2d1e33);
+  }
+
+  &.ritual-symbols-bg {
+    background: linear-gradient(to bottom, #2d1e33, #2d2e40);
+  }
+
+  &.ritual-anchoring-bg {
+    background: linear-gradient(to bottom, #2d2e40, #1f2d40);
+  }
+
+  &.ritual-narrative-bg {
+    background: linear-gradient(to bottom, #1f2d40, #23243c);
+  }
+
+  &.ritual-completion-bg {
+    background: linear-gradient(to bottom, #23243c, #1e1e2f);
+  }
+}
+
+// 15. COHERENCE SYSTEM ROOT VARIABLES
+:root {
+  // Trauma colors as CSS variables
+  @each $trauma, $colors in $trauma-colors {
+    @each $shade, $color in $colors {
+      --trauma-#{$trauma}-#{$shade}: #{$color};
+    }
+    --trauma-#{$trauma}-color: #{map-get(map-get($trauma-colors, $trauma), 'accent')};
+  }
+
+  // Spacing system as CSS variables
+  @each $name, $size in $spacing-units {
+    --spacing-#{$name}: #{$size};
+  }
+
+  // Animation speeds as CSS variables
+  @each $trauma, $speed in $animation-speeds {
+    --animation-#{$trauma}-speed: #{$speed};
+  }
+
+  // Font ratios as CSS variables
+  @each $trauma, $ratio in $font-ratios {
+    --font-ratio-#{$trauma}: #{$ratio};
+  }
+}
+
+// Export variables for JS access
+:export {
+  @each $trauma, $colors in $trauma-colors {
+    trauma_#{$trauma}_primary: map-get($colors, 'primary');
+    trauma_#{$trauma}_accent: map-get($colors, 'accent');
+    trauma_#{$trauma}_highlight: map-get($colors, 'highlight');
+  }
+}

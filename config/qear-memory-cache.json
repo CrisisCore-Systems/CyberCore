@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-04-19T12:00:00Z",
+  "activeProfile": "VoidBloom",
+  "coherence": 0.85,
+  "mutationHistory": [
+    {
+      "type": "void_pulse",
+      "profile": "VoidBloom",
+      "source": "ambient",
+      "timestamp": "2025-04-19T11:55:00Z",
+      "coherence": 0.85
+    }
+  ],
+  "entropySnapshot": [0.423, 0.187, 0.904, 0.572, 0.331, 0.756, 0.212, 0.098],
+  "userTraces": []
+}

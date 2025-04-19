@@ -1,0 +1,27 @@
+{
+  "current": "CyberLotus",
+  "timestamp": "2025-04-19T06:37:34.565Z",
+  "sequence": [
+    {
+      "name": "CyberLotus",
+      "description": "Angular, electric, digital aesthetic phase",
+      "active": true,
+      "dominantTrauma": "surveillance",
+      "secondaryTrauma": "recursion"
+    },
+    {
+      "name": "AlienFlora",
+      "description": "Organic, growing, parasitic aesthetic phase",
+      "active": false,
+      "dominantTrauma": "displacement",
+      "secondaryTrauma": "fragmentation"
+    },
+    {
+      "name": "RollingVirus",
+      "description": "Infectious, spreading, corrupting aesthetic phase",
+      "active": false,
+      "dominantTrauma": "dissolution",
+      "secondaryTrauma": "abandonment"
+    }
+  ]
+}

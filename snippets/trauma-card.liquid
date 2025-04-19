@@ -1,0 +1,139 @@
+{% comment %}
+  VoidBloom Trauma Card
+  Purpose: Renders memory nodes with trauma-specific visual effects
+  Version: 3.7.1
+  
+  Data attributes:
+  - data-trauma: Primary trauma type
+  - data-intensity: Trauma intensity (1-100)
+  - data-timestamp: Memory timestamp
+  - data-recursion-depth: Recursive depth level
+  - data-secondary-trauma: Secondary trauma (optional)
+{% endcomment %}
+
+{% assign trauma_type = product.metafields.voidbloom.trauma_type | default: "recursion" %}
+{% assign intensity = product.metafields.voidbloom.intensity | default: 0.5 | times: 100 | round %}
+{% assign memory_date = product.metafields.voidbloom.memory_date | default: "now" | date: "%Y-%m-%d" %}
+{% assign recursion_depth = product.metafields.voidbloom.recursion_depth | default: 0 %}
+{% assign poem = product.metafields.voidbloom.poem_excerpt | default: "" | newline_to_br %}
+{% assign secondary_trauma = product.metafields.voidbloom.secondary_trauma | default: "" %}
+
+<div class="memory-node trauma-card" 
+     id="trauma-{{ product.id }}"
+     data-trauma="{{ trauma_type }}"
+     data-intensity="{{ intensity }}"
+     data-timestamp="{{ memory_date }}"
+     data-recursion-depth="{{ recursion_depth }}"
+     {% if secondary_trauma != "" %}data-secondary-trauma="{{ secondary_trauma }}"{% endif %}>
+  
+  <div class="trauma-card__inner">
+    <div class="trauma-card__glitch-wrapper">
+      <div class="trauma-card__image-container">
+        {% if product.featured_image %}
+          <img class="trauma-card__image" 
+               src="{{ product.featured_image | img_url: 'medium' }}" 
+               alt="{{ product.title | escape }}"
+               data-effect="glitch"
+               id="trauma-img-{{ product.id }}">
+        {% endif %}
+        
+        <div class="trauma-card__overlay"></div>
+      </div>
+      
+      <div class="trauma-card__bloom-layer" style="--bloom-intensity: {{ intensity | divided_by: 100.0 }}"></div>
+      
+      <div class="trauma-card__content">
+        <h3 class="trauma-card__title" data-effect="bloom">{{ product.title }}</h3>
+        
+        <div class="trauma-card__trauma-info">
+          <span class="trauma-card__trauma-type">{{ trauma_type }}</span>
+          <div class="trauma-card__intensity-meter">
+            <div class="trauma-card__intensity-fill" style="width: {{ intensity }}%"></div>
+          </div>
+        </div>
+        
+        {% if poem != "" %}
+          <div class="trauma-card__poem">
+            <div class="trauma-card__poem-text" data-effect="bloom">{{ poem }}</div>
+          </div>
+        {% endif %}
+        
+        <div class="trauma-card__meta">
+          <span class="trauma-card__date">{{ memory_date }}</span>
+          {% if recursion_depth > 0 %}
+            <span class="trauma-card__recursion">Depth {{ recursion_depth }}</span>
+          {% endif %}
+        </div>
+        
+        {% if product.metafields.voidbloom.connected_nodes %}
+          <div class="trauma-card__connections">
+            <h4 class="trauma-card__connections-title">Connected Memory Nodes</h4>
+            <ul class="trauma-card__connections-list">
+              {% for node_id in product.metafields.voidbloom.connected_nodes %}
+                <li class="trauma-card__connection" data-node-id="{{ node_id }}">
+                  <a href="/products/{{ node_id }}" class="trauma-card__connection-link">
+                    {{ node_id }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        
+        <div class="trauma-card__actions">
+          <button class="trauma-card__action-button trauma-card__memory-button" 
+                  data-action="activate-memory"
+                  data-trauma="{{ trauma_type }}"
+                  data-intensity="{{ intensity }}">
+            Activate Memory
+          </button>
+          
+          <a href="{{ product.url }}" class="trauma-card__action-button trauma-card__details-button">
+            Memory Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% if recursion_depth > 0 and recursion_depth < 4 %}
+    <div class="trauma-card__recursion-echoes">
+      {% for i in (1..recursion_depth) %}
+        <div class="trauma-card__recursion-echo" style="--echo-level: {{ i }}"></div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('memory-protocol:ready', function(e) {
+    const traumaCard = document.getElementById('trauma-{{ product.id }}');
+    const activateButton = traumaCard.querySelector('[data-action="activate-memory"]');
+    
+    activateButton.addEventListener('click', function() {
+      const traumaType = this.getAttribute('data-trauma');
+      const intensity = parseInt(this.getAttribute('data-intensity')) / 100;
+      
+      // Activate memory in protocol
+      if (window.MemoryProtocol) {
+        window.MemoryProtocol.activate({
+          traumaType: traumaType,
+          intensity: intensity,
+          duration: 3000,
+          globalEffect: true
+        });
+      }
+      
+      // Publish event to NeuralBus
+      if (window.NeuralBus) {
+        window.NeuralBus.publish('memory:node:viewed', {
+          id: 'trauma-{{ product.id }}',
+          type: traumaType,
+          intensity: intensity,
+          timestamp: Date.now(),
+          productId: '{{ product.id }}'
+        });
+      }
+    });
+  });
+</script>

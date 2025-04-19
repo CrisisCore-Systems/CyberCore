@@ -1,0 +1,836 @@
+{% comment %}
+  QUANTUM COLLECTION GRID
+  Collection grid display with quantum effects
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<section class="quantum-collection-grid"
+  data-neural-node
+  data-profile="{{ section.settings.mutation_profile }}"
+  data-glitch-level="{{ section.settings.glitch_level }}">
+
+  <div class="quantum-collection-backdrop"></div>
+  <div class="quantum-collection-particles" id="collection-particles"></div>
+
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-header">
+        <h2 class="section-title {% if section.settings.enable_title_effects %}glitch-text{% endif %}" data-text="{{ section.settings.title | escape }}">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <div class="section-subtitle">{{ section.settings.subtitle }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="collection-grid" style="--grid-columns: {{ section.settings.columns_desktop }}; --grid-columns-mobile: {{ section.settings.columns_mobile }};">
+      {% for block in section.blocks %}
+        {% if block.type == 'collection' %}
+          {% assign collection = collections[block.settings.collection] %}
+
+          {% if collection != blank %}
+            <div class="collection-card" {{ block.shopify_attributes }} data-flux-intensity="{{ block.settings.flux_intensity }}">
+              <a href="{{ collection.url }}" class="collection-card-link">
+                <div class="collection-card-inner">
+                  <div class="collection-image-wrapper">
+                    {% if collection.image != blank %}
+                      <div class="quantum-image-container {% if section.settings.enable_image_effects %}quantum-image{% endif %}">
+                        <div class="quantum-image-glitch"></div>
+                        <img src="{{ collection.image | img_url: '800x800', crop: 'center' }}"
+                          alt="{{ collection.title | escape }}"
+                          class="collection-image"
+                          loading="lazy">
+                      </div>
+                    {% elsif collection.products.first.featured_image != blank %}
+                      <div class="quantum-image-container {% if section.settings.enable_image_effects %}quantum-image{% endif %}">
+                        <div class="quantum-image-glitch"></div>
+                        <img src="{{ collection.products.first.featured_image | img_url: '800x800', crop: 'center' }}"
+                          alt="{{ collection.title | escape }}"
+                          class="collection-image"
+                          loading="lazy">
+                      </div>
+                    {% else %}
+                      <div class="collection-placeholder">
+                        {{ collection.title | slice: 0, 1 }}
+                      </div>
+                    {% endif %}
+
+                    {% if section.settings.show_overlay %}
+                      <div class="collection-overlay">
+                        {% if block.settings.custom_label != blank %}
+                          <div class="collection-label">{{ block.settings.custom_label }}</div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <div class="collection-info">
+                    <h3 class="collection-title">{{ collection.title }}</h3>
+
+                    {% if section.settings.show_description %}
+                      <div class="collection-description">
+                        {% if block.settings.custom_description != blank %}
+                          {{ block.settings.custom_description }}
+                        {% else %}
+                          {{ collection.description | strip_html | truncatewords: 15 }}
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                    {% if section.settings.show_product_count %}
+                      <div class="collection-product-count">
+                        {{ collection.products_count }} {% if collection.products_count == 1 %}artifact{% else %}artifacts{% endif %}
+                      </div>
+                    {% endif %}
+
+                    {% if block.settings.show_trauma_index %}
+                      <div class="collection-trauma-index" data-trauma-index="{{ block.settings.trauma_index }}">
+                        <div class="trauma-label">Trauma Index</div>
+                        <div class="trauma-value">{{ block.settings.trauma_index | times: 100 | round }}%</div>
+                        <div class="trauma-bar">
+                          <div class="trauma-progress" style="width: {{ block.settings.trauma_index | times: 100 }}%"></div>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if section.settings.show_view_button %}
+                      <div class="view-button-container">
+                        <span class="quantum-button">{{ section.settings.view_button_text }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            </div>
+
+          {% else %}
+            <div class="collection-card placeholder" {{ block.shopify_attributes }}>
+              <div class="collection-card-inner">
+                <div class="collection-placeholder-message">
+                  {{ 'collection.general.no_matches' | t }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size == 0 %}
+      <div class="placeholder-container">
+        <div class="placeholder-message">
+          <p>Add collection blocks to populate this section.</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .quantum-collection-grid {
+    position: relative;
+    padding: 6rem 2rem;
+    overflow: hidden;
+    background-color: rgba(10, 0, 20, 0.95);
+    color: #fff;
+  }
+
+  .quantum-collection-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(10, 0, 20, 0.9), rgba(30, 0, 60, 0.6));
+    z-index: 0;
+  }
+
+  .quantum-collection-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  .container {
+    max-width: 1440px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-family: 'Courier New', monospace;
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+    letter-spacing: 2px;
+    color: #fff;
+    position: relative;
+    display: inline-block;
+  }
+
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+
+  .glitch-text::before {
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    transform: translate(-0.04em, -0.04em);
+    opacity: 0.8;
+    color: rgba(255, 0, 255, 0.8);
+  }
+
+  .glitch-text::after {
+    animation: glitch-anim-2 5s infinite linear alternate-reverse;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    transform: translate(0.04em, 0.04em);
+    opacity: 0.8;
+    color: rgba(0, 255, 255, 0.8);
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Collection Grid */
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns, 3), 1fr);
+    gap: 2rem;
+  }
+
+  .collection-card {
+    position: relative;
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+
+  .collection-card:hover {
+    transform: translateY(-10px);
+  }
+
+  .collection-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+  }
+
+  .collection-card-inner {
+    background: rgba(30, 0, 60, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .collection-card:hover .collection-card-inner {
+    border-color: rgba(153, 0, 255, 0.7);
+    box-shadow: 0 0 20px rgba(153, 0, 255, 0.2);
+  }
+
+  .collection-image-wrapper {
+    position: relative;
+    padding-top: 75%; /* 4:3 Aspect Ratio */
+    overflow: hidden;
+  }
+
+  .quantum-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .collection-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .collection-card:hover .collection-image {
+    transform: scale(1.05);
+  }
+
+  .quantum-image-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(153, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+    opacity: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
+  .quantum-image:hover .quantum-image-glitch {
+    opacity: 0.8;
+    animation: quantum-glitch 2s infinite alternate;
+  }
+
+  .collection-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    background: linear-gradient(135deg, rgba(30, 0, 60, 0.7), rgba(80, 0, 160, 0.3));
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .collection-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(10, 0, 20, 0.7), transparent 70%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+  }
+
+  .collection-label {
+    display: inline-block;
+    background: rgba(153, 0, 255, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.9);
+    align-self: flex-start;
+  }
+
+  .collection-info {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .collection-title {
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+    color: rgba(153, 0, 255, 0.9);
+    font-weight: normal;
+  }
+
+  .collection-description {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .collection-product-count {
+    font-size: 0.9rem;
+    color: rgba(153, 0, 255, 0.7);
+    margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  .collection-trauma-index {
+    margin-bottom: 1.5rem;
+  }
+
+  .trauma-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.25rem;
+  }
+
+  .trauma-value {
+    font-size: 0.9rem;
+    color: rgba(153, 0, 255, 0.9);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 0.5rem;
+  }
+
+  .trauma-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(153, 0, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .trauma-progress {
+    height: 100%;
+    background: rgba(153, 0, 255, 0.7);
+    transition: width 0.3s ease;
+  }
+
+  .view-button-container {
+    margin-top: auto;
+  }
+
+  .quantum-button {
+    display: inline-block;
+    background: rgba(153, 0, 255, 0.2);
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    color: #fff;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .quantum-button:hover {
+    background: rgba(153, 0, 255, 0.3);
+    border-color: rgba(153, 0, 255, 0.7);
+  }
+
+  .quantum-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.3), transparent);
+    transition: all 0.6s ease;
+  }
+
+  .quantum-button:hover::before {
+    left: 100%;
+  }
+
+  .collection-placeholder-message {
+    padding: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Placeholder */
+  .placeholder-container {
+    padding: 4rem 2rem;
+    background: rgba(30, 0, 60, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.3);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .placeholder-message {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+  }
+
+  /* Animations */
+  @keyframes glitch-anim {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 1px); }
+    40% { transform: translate(-1px, -1px); }
+    60% { transform: translate(1px, 1px); }
+    80% { transform: translate(-1px, -1px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes glitch-anim-2 {
+    0% { transform: translate(0); }
+    20% { transform: translate(2px, 1px); }
+    40% { transform: translate(-1px, -1px); }
+    60% { transform: translate(1px, -1px); }
+    80% { transform: translate(1px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes quantum-glitch {
+    0% { clip-path: inset(0 0 0 0); }
+    5% { clip-path: inset(8% 0 0 0); }
+    10% { clip-path: inset(0 0 0 0); }
+    15% { clip-path: inset(0 0 8% 0); }
+    20% { clip-path: inset(50% 0 0 0); }
+    25% { clip-path: inset(0 0 0 0); }
+    30% { clip-path: inset(0 8% 0 0); }
+    35% { clip-path: inset(0 0 0 8%); }
+    40% { clip-path: inset(0 0 0 0); }
+    45% { clip-path: inset(0 0 8% 0); }
+    50% { clip-path: inset(8% 0 0 0); }
+    55% { clip-path: inset(0 0 0 0); }
+    60% { clip-path: inset(0 8% 0 0); }
+    65% { clip-path: inset(0 0 0 0); }
+    70% { clip-path: inset(0 0 0 8%); }
+    75% { clip-path: inset(0 0 0 0); }
+    80% { clip-path: inset(8% 0 0 0); }
+    85% { clip-path: inset(0 0 0 0); }
+    90% { clip-path: inset(0 8% 0 0); }
+    95% { clip-path: inset(0 0 8% 0); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .quantum-collection-grid {
+      padding: 4rem 1.5rem;
+    }
+
+    .collection-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .collection-grid {
+      grid-template-columns: repeat(var(--grid-columns-mobile, 1), 1fr);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quantum Visualizer for particles if available
+    if (window.QuantumVisualizer) {
+      const collectionSection = document.querySelector('.quantum-collection-grid');
+      const profile = collectionSection.getAttribute('data-profile') || 'VoidBloom';
+      const glitchLevel = parseFloat(collectionSection.getAttribute('data-glitch-level') || '0.5');
+
+      const collectionVisualizer = new QuantumVisualizer({
+        container: document.getElementById('collection-particles'),
+        particleCount: 30,
+        colorScheme: profile,
+        dimensions: '2d',
+        fractalMode: false,
+        intensity: glitchLevel
+      });
+
+      // Initialize with quantum state data
+      const quantumData = Array(10).fill().map((_, i) => ({
+        id: 'qc' + i,
+        state: Math.random() > 0.5 ? 'superposition' : 'entangled',
+        probability: Math.random(),
+        profile: profile
+      }));
+
+      collectionVisualizer.update(quantumData);
+
+      // Use Intersection Observer to activate quantum effects when visible
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            collectionVisualizer.activate();
+          } else {
+            collectionVisualizer.deactivate();
+          }
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(collectionSection);
+    }
+
+    // Collection cards hover effects
+    const collectionCards = document.querySelectorAll('.collection-card');
+
+    collectionCards.forEach(card => {
+      // Apply pulsing effect to trauma bars if present
+      const traumaBar = card.querySelector('.trauma-progress');
+      const fluxIntensity = parseFloat(card.getAttribute('data-flux-intensity') || '0.5');
+
+      if (traumaBar) {
+        // Subtle pulse animation for trauma bars
+        setInterval(() => {
+          const currentWidth = parseFloat(traumaBar.style.width);
+          const variationRange = 5 * fluxIntensity; // higher flux = more variation
+          const newWidth = currentWidth + (Math.random() * variationRange - variationRange/2);
+          traumaBar.style.width = `${Math.max(0, Math.min(100, newWidth))}%`;
+        }, 2000);
+      }
+    });
+
+    // Connect to NeuralBus if available
+    if (window.NeuralBus) {
+      const collectionSection = document.querySelector('.quantum-collection-grid');
+      const profile = collectionSection.getAttribute('data-profile') || 'VoidBloom';
+
+      if (NeuralBus.register) {
+        NeuralBus.register('quantum-collection-grid', {
+          version: '1.0.0',
+          profile: profile
+        });
+      }
+
+      // Subscribe to quantum mutation events
+      if (NeuralBus.subscribe) {
+        NeuralBus.subscribe('quantum:mutation', data => {
+          if (data.profile === profile || !data.profile) {
+            // Apply mutation effects to collection cards
+            document.querySelectorAll('.collection-card').forEach(card => {
+              // Brief border glow effect
+              card.querySelector('.collection-card-inner').style.borderColor = 'rgba(153, 0, 255, 0.8)';
+              card.querySelector('.collection-card-inner').style.boxShadow = '0 0 20px rgba(153, 0, 255, 0.4)';
+
+              // Temporarily activate glitch on images
+              const glitchElement = card.querySelector('.quantum-image-glitch');
+              if (glitchElement) {
+                glitchElement.style.opacity = '0.8';
+                glitchElement.style.animation = 'quantum-glitch 1s infinite alternate';
+
+                setTimeout(() => {
+                  glitchElement.style.opacity = '';
+                  glitchElement.style.animation = '';
+                }, 1000);
+              }
+
+              setTimeout(() => {
+                card.querySelector('.collection-card-inner').style.borderColor = '';
+                card.querySelector('.collection-card-inner').style.boxShadow = '';
+              }, 1000);
+
+              // Update trauma bars if present
+              const traumaBar = card.querySelector('.trauma-progress');
+              if (traumaBar) {
+                const traumaIndex = parseFloat(card.querySelector('.collection-trauma-index').getAttribute('data-trauma-index') || '0.5');
+                const mutationIntensity = data.intensity || 0.5;
+
+                // Stronger effect on trauma bars with index close to mutation intensity
+                if (Math.abs(traumaIndex - mutationIntensity) < 0.3) {
+                  traumaBar.style.backgroundColor = 'rgba(255, 0, 255, 0.8)';
+
+                  setTimeout(() => {
+                    traumaBar.style.backgroundColor = '';
+                  }, 1500);
+                }
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Quantum Collection Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Memory Archives"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Explore our quantum artifacts"
+    },
+    {
+      "type": "select",
+      "id": "mutation_profile",
+      "label": "Mutation Profile",
+      "options": [
+        {
+          "value": "CyberLotus",
+          "label": "CyberLotus (Pink/Cyan)"
+        },
+        {
+          "value": "ObsidianBloom",
+          "label": "ObsidianBloom (Purple/Pink)"
+        },
+        {
+          "value": "VoidBloom",
+          "label": "VoidBloom (Purple/Magenta)"
+        },
+        {
+          "value": "NeonVortex",
+          "label": "NeonVortex (Blue/Orange)"
+        }
+      ],
+      "default": "VoidBloom"
+    },
+    {
+      "type": "range",
+      "id": "glitch_level",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Glitch Intensity",
+      "default": 0.4
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_title_effects",
+      "label": "Enable Title Glitch Effects",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_effects",
+      "label": "Enable Image Quantum Effects",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 1,
+      "label": "Columns on mobile",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show Collection Overlay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show Collection Description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show Product Count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_button",
+      "label": "Show View Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_button_text",
+      "label": "View Button Text",
+      "default": "Access Memory Archive"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom_label",
+          "label": "Custom Label",
+          "info": "Leave blank to hide the label"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_description",
+          "label": "Custom Description",
+          "info": "Overrides the collection description"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_trauma_index",
+          "label": "Show Trauma Index",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "trauma_index",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "label": "Trauma Index",
+          "default": 0.5
+        },
+        {
+          "type": "range",
+          "id": "flux_intensity",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "label": "Flux Intensity",
+          "default": 0.5,
+          "info": "Controls the visual fluctuations for this collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quantum Collection Grid",
+      "category": "Collections",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

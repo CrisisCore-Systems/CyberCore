@@ -1,0 +1,51 @@
+{
+  "name": "CyberCore Trauma Taxonomy Manager",
+  "version": "1.0.0",
+  "shopify-extension": {
+    "type": "admin_ui_extension",
+    "access_scopes": [
+      "write_products",
+      "read_products",
+      "write_metafields",
+      "read_metafields",
+      "write_themes",
+      "read_themes"
+    ],
+    "metafields": [
+      {
+        "namespace": "voidbloom_trauma_private",
+        "key": "encoding",
+        "type": "json"
+      },
+      {
+        "namespace": "voidbloom_memory_protected",
+        "key": "state",
+        "type": "json"
+      },
+      {
+        "namespace": "voidbloom_coherence_state",
+        "key": "metrics",
+        "type": "json"
+      },
+      {
+        "namespace": "voidbloom_quantum_config",
+        "key": "checkout_settings",
+        "type": "json"
+      }
+    ],
+    "mount_points": {
+      "admin.product-details": {
+        "component": "./ProductTraumaEditor.jsx",
+        "position": "right"
+      },
+      "admin.app.settings": {
+        "component": "./CoherenceSettingsManager.jsx",
+        "position": "bottom"
+      },
+      "admin.navigation.links": {
+        "component": "./NavigationLinks.jsx",
+        "position": "top"
+      }
+    }
+  }
+}

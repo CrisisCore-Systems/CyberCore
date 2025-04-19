@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@assets/*": ["./assets/*"],
+      "@core/*": ["./Core/*"],
+      "@config/*": ["./config/*"],
+      "@blueprints/*": ["./blueprints/*"],
+      "@cybercore/*": ["./cybercore/*"],
+      "@templates/*": ["./templates/*"],
+      "@sections/*": ["./sections/*"],
+      "@snippets/*": ["./snippets/*"],
+      "@layout/*": ["./layout/*"]
+    },
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+    "noEmit": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "assets/**/*.js",
+    "Core/**/*.js",
+    "cybercore/**/*.js",
+    "scripts/**/*.js",
+    "tests/**/*.js",
+    "*.js",
+    "config/**/*.json",
+    "blueprints/**/*.json"
+  ],
+  "exclude": ["node_modules", "coverage", "test-results", "**/node_modules/*", "**/.git/*", "dist"],
+  "typeAcquisition": {
+    "enable": true,
+    "include": ["jest", "node"]
+  }
+}

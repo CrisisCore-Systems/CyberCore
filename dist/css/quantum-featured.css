@@ -1,0 +1,594 @@
+/**
+ * QUANTUM-FEATURED.CSS
+ * Central theme system using CSS custom properties for consistent styling across profiles
+ *
+ * @MutationCompatible: All Variants
+ * @StrategyProfile: quantum-entangled
+ * @Version: 2.0.0
+ */
+
+/* Base Theme Variables */
+:root {
+  /* Core Colors */
+  --color-primary: #00ffff;
+  --color-secondary: #0088ff;
+  --color-accent: #80ffff;
+  --color-background: #001a33;
+  --color-foreground: #f0f8ff;
+  --color-surface: rgba(0, 26, 51, 0.9);
+  --color-error: #ff3c5a;
+  --color-success: #2de370;
+
+  /* Typography */
+  --font-family-primary: 'IBM Plex Mono', monospace;
+  --font-family-secondary: 'IBM Plex Sans', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+  /* Animation */
+  --animation-speed-slow: 1.5s;
+  --animation-speed-normal: 0.8s;
+  --animation-speed-fast: 0.3s;
+  --animation-timing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-timing-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --animation-timing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --animation-timing-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Effects */
+  --glow-intensity: 5px;
+  --glow-spread: 15px;
+  --glitch-intensity: 0.5;
+  --trauma-intensity: 0;
+  --bloom-intensity: 0.8;
+
+  /* UI Sizing */
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 16px;
+  --border-width-thin: 1px;
+  --border-width-normal: 2px;
+  --border-width-thick: 4px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* Hologram Specific */
+  --hologram-intensity: 1;
+  --hologram-primary-color: var(--color-primary);
+  --hologram-secondary-color: var(--color-secondary);
+  --hologram-accent-color: var(--color-accent);
+}
+
+/* CyberLotus Profile */
+.profile-cyberlotus,
+[data-profile='cyberlotus'] {
+  --color-primary: #00ffff;
+  --color-secondary: #0088ff;
+  --color-accent: #80ffff;
+  --color-background: #001a33;
+  --color-foreground: #f0f8ff;
+  --color-surface: rgba(0, 26, 51, 0.9);
+
+  --glow-intensity: 5px;
+  --animation-speed-normal: 0.8s;
+  --glitch-intensity: 0.5;
+  --hologram-intensity: 1;
+}
+
+/* ObsidianBloom Profile */
+.profile-obsidianbloom,
+[data-profile='obsidianbloom'] {
+  --color-primary: #ff00ff;
+  --color-secondary: #8800ff;
+  --color-accent: #ff80ff;
+  --color-background: #330033;
+  --color-foreground: #f8f0ff;
+  --color-surface: rgba(51, 0, 51, 0.9);
+
+  --glow-intensity: 6px;
+  --animation-speed-normal: 1s;
+  --glitch-intensity: 0.7;
+  --hologram-intensity: 1.2;
+}
+
+/* VoidBloom Profile */
+.profile-voidbloom,
+[data-profile='voidbloom'] {
+  --color-primary: #9900ff;
+  --color-secondary: #6600cc;
+  --color-accent: #cc80ff;
+  --color-background: #1a0033;
+  --color-foreground: #f0f0ff;
+  --color-surface: rgba(26, 0, 51, 0.9);
+
+  --glow-intensity: 4px;
+  --animation-speed-normal: 1.2s;
+  --glitch-intensity: 0.8;
+  --hologram-intensity: 0.9;
+}
+
+/* NeonVortex Profile */
+.profile-neonvortex,
+[data-profile='neonvortex'] {
+  --color-primary: #00ff66;
+  --color-secondary: #00cc44;
+  --color-accent: #80ffaa;
+  --color-background: #003319;
+  --color-foreground: #f0fff8;
+  --color-surface: rgba(0, 51, 25, 0.9);
+
+  --glow-intensity: 7px;
+  --animation-speed-normal: 0.5s;
+  --glitch-intensity: 0.6;
+  --hologram-intensity: 1.1;
+}
+
+/* Trauma State Modifiers */
+.trauma-state-glitch,
+[data-trauma='glitch'] {
+  --trauma-intensity: 0.8;
+  --glitch-intensity: 1;
+  --animation-speed-normal: calc(var(--animation-speed-normal) * 0.7);
+}
+
+.trauma-state-void,
+[data-trauma='void'] {
+  --trauma-intensity: 0.7;
+  --color-primary: color-mix(in srgb, var(--color-primary), black 40%);
+  --color-secondary: color-mix(in srgb, var(--color-secondary), black 40%);
+  --color-accent: color-mix(in srgb, var(--color-accent), black 40%);
+}
+
+.trauma-state-echo,
+[data-trauma='echo'] {
+  --trauma-intensity: 0.6;
+  --glow-intensity: calc(var(--glow-intensity) * 1.5);
+  --animation-speed-normal: calc(var(--animation-speed-normal) * 1.2);
+}
+
+.trauma-state-fracture,
+[data-trauma='fracture'] {
+  --trauma-intensity: 0.9;
+  --glitch-intensity: 0.9;
+  --glow-intensity: calc(var(--glow-intensity) * 0.7);
+}
+
+/* Common Components */
+
+/* Quantum Button */
+.quantum-btn {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  border: var(--border-width-normal) solid var(--color-primary);
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all var(--animation-speed-fast) var(--animation-timing-default);
+  position: relative;
+  overflow: hidden;
+}
+
+.quantum-btn:hover {
+  box-shadow: 0 0 var(--glow-intensity) var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-surface), var(--color-primary) 10%);
+}
+
+.quantum-btn:active {
+  transform: translateY(2px);
+}
+
+.quantum-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-primary), transparent 70%),
+    transparent
+  );
+  transition: all var(--animation-speed-normal) var(--animation-timing-default);
+}
+
+.quantum-btn:hover::before {
+  left: 100%;
+}
+
+/* Quantum Card */
+.quantum-card {
+  background-color: var(--color-surface);
+  border: var(--border-width-thin) solid var(--color-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: 0 0 var(--glow-intensity) rgba(var(--color-primary), 0.2);
+  transition: all var(--animation-speed-normal) var(--animation-timing-default);
+}
+
+.quantum-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 calc(var(--glow-intensity) * 1.5)
+    color-mix(in srgb, var(--color-primary), transparent 40%);
+}
+
+/* Quantum Input */
+.quantum-input {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: var(--border-width-thin) solid var(--color-secondary);
+  border-radius: var(--border-radius-md);
+  color: var(--color-foreground);
+  font-family: var(--font-family-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all var(--animation-speed-fast) var(--animation-timing-default);
+}
+
+.quantum-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 var(--glow-intensity) color-mix(in srgb, var(--color-primary), transparent 70%);
+}
+
+/* Quantum Loader */
+.quantum-loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: var(--border-width-normal) solid rgba(var(--color-primary), 0.2);
+  border-top-color: var(--color-primary);
+  animation: quantum-spin var(--animation-speed-normal) linear infinite;
+}
+
+@keyframes quantum-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Quantum Glow Text */
+.quantum-glow-text {
+  color: var(--color-foreground);
+  text-shadow: 0 0 var(--glow-intensity) var(--color-primary);
+  transition: text-shadow var(--animation-speed-normal) var(--animation-timing-default);
+}
+
+.quantum-glow-text:hover {
+  text-shadow: 0 0 calc(var(--glow-intensity) * 1.5) var(--color-primary);
+}
+
+/* Glitch Animation */
+@keyframes quantum-glitch {
+  0% {
+    transform: translate(0);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(calc(var(--glitch-intensity) * -5px), calc(var(--glitch-intensity) * 3px));
+    opacity: 0.9;
+  }
+  40% {
+    transform: translate(calc(var(--glitch-intensity) * 5px), calc(var(--glitch-intensity) * -3px));
+    opacity: 0.8;
+  }
+  60% {
+    transform: translate(calc(var(--glitch-intensity) * -3px), calc(var(--glitch-intensity) * 5px));
+    opacity: 0.9;
+  }
+  80% {
+    transform: translate(calc(var(--glitch-intensity) * 3px), calc(var(--glitch-intensity) * -5px));
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0);
+    opacity: 1;
+  }
+}
+
+.quantum-glitch {
+  animation: quantum-glitch calc(var(--animation-speed-fast) * 0.8) step-end infinite;
+}
+
+/* Hologram Specific */
+.quantum-hologram {
+  --hologram-primary-color: var(--color-primary);
+  --hologram-secondary-color: var(--color-secondary);
+  --hologram-accent-color: var(--color-accent);
+  --hologram-glow-intensity: var(--glow-intensity);
+  --hologram-intensity: var(--hologram-intensity, 1);
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.quantum-hologram::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 10px;
+  background: linear-gradient(90deg, transparent, var(--hologram-primary-color), transparent);
+  border-radius: 50%;
+  opacity: 0.7;
+  filter: blur(3px);
+}
+
+/* Quantum Featured Products Section
+================================================== */
+.quantum-featured {
+  position: relative;
+  padding: var(--spacing-2xl) 0;
+  background: linear-gradient(180deg, rgba(5, 0, 20, 0.9) 0%, rgba(15, 0, 40, 0.95) 100%);
+  overflow: hidden;
+}
+
+.quantum-featured::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('quantum-grid.svg');
+  background-size: cover;
+  opacity: 0.15;
+  pointer-events: none;
+  animation: quantumPulse var(--animation-speed-slow) infinite alternate ease-in-out;
+}
+
+.quantum-featured .section-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  position: relative;
+  z-index: 2;
+}
+
+.quantum-featured .section-title {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-2xl);
+  color: var(--color-accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-md);
+  text-shadow: 0 0 var(--glow-intensity) rgba(224, 176, 255, 0.5);
+}
+
+.quantum-featured .section-line {
+  width: 120px;
+  height: var(--border-width-thick);
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  margin: 0 auto;
+}
+
+.quantum-display-container {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.quantum-backdrop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(140, 80, 220, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hologram-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  position: relative;
+  z-index: 3;
+}
+
+.hologram-product {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  background: var(--color-surface);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 var(--glow-intensity) rgba(140, 80, 220, 0.2);
+  padding: var(--spacing-lg);
+  transition: all var(--animation-speed-normal) var(--animation-timing-default);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.hologram-product::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(140, 80, 220, 0.1) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.hologram-product:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(140, 80, 220, 0.25);
+}
+
+.hologram-product:hover .hologram-effect {
+  opacity: 1;
+}
+
+.hologram-display {
+  position: relative;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.hologram-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hologram-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--border-radius-md);
+  transition: all var(--animation-speed-fast) ease;
+}
+
+.hologram-image.placeholder {
+  background: linear-gradient(45deg, rgba(100, 60, 180, 0.2), rgba(140, 80, 220, 0.2));
+  border-radius: var(--border-radius-md);
+}
+
+.hologram-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(140, 80, 220, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity var(--animation-speed-fast) ease;
+}
+
+.hologram-info {
+  position: relative;
+  z-index: 2;
+}
+
+.hologram-title {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-md);
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.05em;
+}
+
+.hologram-price {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-lg);
+  color: #9c8dd1;
+  margin-bottom: var(--spacing-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.hologram-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.ritual-button {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--animation-speed-fast) ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ritual-button.primary {
+  background: linear-gradient(45deg, #6d41b0, #9e5aea);
+  color: var(--color-foreground);
+  border: none;
+  box-shadow: 0 5px 15px rgba(140, 80, 220, 0.25);
+}
+
+.ritual-button.primary:hover {
+  background: linear-gradient(45deg, #7d51c0, #ae6afa);
+  box-shadow: 0 8px 20px rgba(140, 80, 220, 0.4);
+  transform: translateY(-2px);
+}
+
+.ritual-button.secondary {
+  background: transparent;
+  color: var(--color-accent);
+  border: var(--border-width-thin) solid rgba(224, 176, 255, 0.5);
+}
+
+.ritual-button.secondary:hover {
+  background: rgba(224, 176, 255, 0.1);
+  border-color: rgba(224, 176, 255, 0.8);
+  box-shadow: 0 0 var(--glow-intensity) rgba(224, 176, 255, 0.2);
+}
+
+.quantum-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-2xl);
+}
+
+/* Animations */
+@keyframes quantumPulse {
+  0% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .quantum-featured {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .quantum-featured .section-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .hologram-container {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .hologram-display {
+    height: 200px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hologram-actions {
+    flex-direction: column;
+  }
+
+  .hologram-actions .ritual-button {
+    width: 100%;
+  }
+}

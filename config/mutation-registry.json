@@ -1,0 +1,153 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-04-19T12:00:00Z",
+  "traumaTypes": {
+    "trauma_dissolution": {
+      "priority": 9,
+      "mutationTypes": ["fade", "blur", "ghost_trail"],
+      "coherenceRange": [0.1, 0.6],
+      "phase_bias": ["rolling-virus"],
+      "visualEffects": ["opacity-pulse", "blur-transition"],
+      "audioEffects": ["low-frequency-hum"],
+      "intensity": 0.8
+    },
+    "trauma_recursion": {
+      "priority": 8,
+      "mutationTypes": ["echo_text", "self-replicate", "ui_loop"],
+      "trigger_keywords": ["memory", "loop", "again"],
+      "phase_bias": ["cyber-lotus"],
+      "visualEffects": ["text-repetition", "fractal-echo"],
+      "audioEffects": ["echo-delay"],
+      "intensity": 0.7
+    },
+    "trauma_fragmentation": {
+      "priority": 7,
+      "mutationTypes": ["shatter", "slice", "fragment_ui"],
+      "coherenceRange": [0.2, 0.5],
+      "phase_bias": ["obsidian-bloom"],
+      "visualEffects": ["split-elements", "pixel-sorting"],
+      "audioEffects": ["glitch-stutter"],
+      "intensity": 0.9
+    },
+    "trauma_surveillance": {
+      "priority": 6,
+      "mutationTypes": ["scan_lines", "data_leak", "glitch_text"],
+      "trigger_keywords": ["watching", "seen", "observed"],
+      "phase_bias": ["neon-vortex"],
+      "visualEffects": ["scan-line", "static-noise"],
+      "audioEffects": ["transmission-static"],
+      "intensity": 0.6
+    },
+    "trauma_abandonment": {
+      "priority": 5,
+      "mutationTypes": ["fade_out", "isolation", "desaturate"],
+      "coherenceRange": [0.3, 0.7],
+      "phase_bias": ["void-bloom"],
+      "visualEffects": ["desaturation", "vignette"],
+      "audioEffects": ["distant-reverb"],
+      "intensity": 0.5
+    }
+  },
+  "profiles": {
+    "CyberLotus": {
+      "priority": 4,
+      "mutationTypes": ["illuminate", "transcend", "neural_matrix"],
+      "coherenceRange": [0.5, 1.0],
+      "visualEffects": ["glow", "brightness-pulse"],
+      "audioEffects": ["harmonic-tones"],
+      "intensity": 0.7,
+      "styleVariables": {
+        "--quantum-hue": "240deg",
+        "--glitch-intensity": "0.7",
+        "--neural-boost": "enabled"
+      }
+    },
+    "ObsidianBloom": {
+      "priority": 4,
+      "mutationTypes": ["shadow", "crystallize", "depth_shift"],
+      "coherenceRange": [0.4, 0.8],
+      "visualEffects": ["shadow-pulse", "crystalline-overlay"],
+      "audioEffects": ["deep-resonance"],
+      "intensity": 0.4,
+      "styleVariables": {
+        "--quantum-hue": "310deg",
+        "--glitch-intensity": "0.4",
+        "--neural-boost": "partial"
+      }
+    },
+    "VoidBloom": {
+      "priority": 5,
+      "mutationTypes": ["void_pulse", "recursive_descent", "echo_chamber"],
+      "coherenceRange": [0.2, 0.6],
+      "visualEffects": ["void-ripple", "fractal-recursion"],
+      "audioEffects": ["void-whispers"],
+      "intensity": 0.85,
+      "styleVariables": {
+        "--quantum-hue": "165deg",
+        "--glitch-intensity": "0.85",
+        "--neural-boost": "recursive",
+        "--temporal-echo": "0.6"
+      }
+    },
+    "NeonVortex": {
+      "priority": 4,
+      "mutationTypes": ["energy_surge", "spiral", "amplify"],
+      "coherenceRange": [0.3, 0.9],
+      "visualEffects": ["neon-glow", "spiral-motion"],
+      "audioEffects": ["rising-tone"],
+      "intensity": 0.6,
+      "styleVariables": {
+        "--quantum-hue": "85deg",
+        "--glitch-intensity": "0.6",
+        "--neural-boost": "amplified",
+        "--vortex-strength": "0.8"
+      }
+    }
+  },
+  "triggers": {
+    "user_interaction": {
+      "hover": {
+        "weight": 0.1,
+        "coherence_effect": 0.05,
+        "mutation_chance": 0.1
+      },
+      "click": {
+        "weight": 0.3,
+        "coherence_effect": 0.1,
+        "mutation_chance": 0.2
+      },
+      "scroll": {
+        "weight": 0.2,
+        "coherence_effect": 0.02,
+        "mutation_chance": 0.05
+      }
+    },
+    "time_decay": {
+      "base_rate": 0.05,
+      "recovery_rate": 0.02,
+      "ambient_mutation_chance": 0.3
+    },
+    "lore_keywords": {
+      "memory": {
+        "trauma_type": "recursion",
+        "intensity_boost": 0.2
+      },
+      "void": {
+        "trauma_type": "abandonment",
+        "intensity_boost": 0.3
+      },
+      "watching": {
+        "trauma_type": "surveillance",
+        "intensity_boost": 0.2
+      },
+      "broken": {
+        "trauma_type": "fragmentation",
+        "intensity_boost": 0.2
+      },
+      "fading": {
+        "trauma_type": "dissolution",
+        "intensity_boost": 0.3
+      }
+    }
+  }
+}

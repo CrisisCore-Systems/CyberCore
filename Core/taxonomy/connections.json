@@ -1,0 +1,118 @@
+{
+  "abandonment": [
+    {
+      "type": "dissolution",
+      "score": 0.85
+    },
+    {
+      "type": "displacement",
+      "score": 0.7
+    },
+    {
+      "type": "fragmentation",
+      "score": 0.45
+    },
+    {
+      "type": "recursion",
+      "score": 0.3
+    }
+  ],
+  "fragmentation": [
+    {
+      "type": "dissolution",
+      "score": 0.75
+    },
+    {
+      "type": "recursion",
+      "score": 0.6
+    },
+    {
+      "type": "displacement",
+      "score": 0.5
+    },
+    {
+      "type": "abandonment",
+      "score": 0.45
+    },
+    {
+      "type": "surveillance",
+      "score": 0.4
+    }
+  ],
+  "recursion": [
+    {
+      "type": "fragmentation",
+      "score": 0.6
+    },
+    {
+      "type": "surveillance",
+      "score": 0.55
+    },
+    {
+      "type": "dissolution",
+      "score": 0.4
+    },
+    {
+      "type": "displacement",
+      "score": 0.35
+    },
+    {
+      "type": "abandonment",
+      "score": 0.3
+    }
+  ],
+  "surveillance": [
+    {
+      "type": "recursion",
+      "score": 0.55
+    },
+    {
+      "type": "fragmentation",
+      "score": 0.4
+    },
+    {
+      "type": "displacement",
+      "score": 0.3
+    }
+  ],
+  "displacement": [
+    {
+      "type": "abandonment",
+      "score": 0.7
+    },
+    {
+      "type": "dissolution",
+      "score": 0.65
+    },
+    {
+      "type": "fragmentation",
+      "score": 0.5
+    },
+    {
+      "type": "recursion",
+      "score": 0.35
+    },
+    {
+      "type": "surveillance",
+      "score": 0.3
+    }
+  ],
+  "dissolution": [
+    {
+      "type": "abandonment",
+      "score": 0.85
+    },
+    {
+      "type": "fragmentation",
+      "score": 0.75
+    },
+    {
+      "type": "displacement",
+      "score": 0.65
+    },
+    {
+      "type": "recursion",
+      "score": 0.4
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "metafields": [
+    {
+      "namespace": "voidbloom",
+      "key": "trauma_type",
+      "name": "Trauma Type",
+      "description": "Primary trauma classification for this memory node",
+      "type": "single_line_text_field",
+      "validations": {
+        "options": [
+          {"value": "abandonment", "name": "Abandonment"},
+          {"value": "fragmentation", "name": "Fragmentation"},
+          {"value": "recursion", "name": "Recursion"},
+          {"value": "surveillance", "name": "Surveillance"},
+          {"value": "displacement", "name": "Displacement"},
+          {"value": "dissolution", "name": "Dissolution"}
+        ]
+      }
+    },
+    {
+      "namespace": "voidbloom",
+      "key": "intensity",
+      "name": "Trauma Intensity",
+      "description": "Intensity level of trauma expression (0.1-1.0)",
+      "type": "number_decimal",
+      "validations": {
+        "min": 0.1,
+        "max": 1.0
+      }
+    },
+    {
+      "namespace": "voidbloom",
+      "key": "memory_date",
+      "name": "Memory Timestamp",
+      "description": "Date/time of the encoded memory",
+      "type": "date_time"
+    },
+    {
+      "namespace": "voidbloom",
+      "key": "connected_nodes",
+      "name": "Connected Memory Nodes",
+      "description": "Related products in the trauma network",
+      "type": "list.single_line_text_field"
+    },
+    {
+      "namespace": "voidbloom",
+      "key": "recursion_depth",
+      "name": "Recursion Depth",
+      "description": "Recursive embedding level in the memory system",
+      "type": "number_integer",
+      "validations": {
+        "min": 0,
+        "max": 7
+      }
+    },
+    {
+      "namespace": "voidbloom",
+      "key": "poem_excerpt",
+      "name": "Memory Poem",
+      "description": "Poetic expression of the encoded trauma",
+      "type": "multi_line_text_field"
+    },
+    {
+      "namespace": "voidbloom",
+      "key": "secondary_trauma",
+      "name": "Secondary Trauma",
+      "description": "Secondary trauma classification (optional)",
+      "type": "single_line_text_field",
+      "validations": {
+        "options": [
+          {"value": "abandonment", "name": "Abandonment"},
+          {"value": "fragmentation", "name": "Fragmentation"},
+          {"value": "recursion", "name": "Recursion"},
+          {"value": "surveillance", "name": "Surveillance"},
+          {"value": "displacement", "name": "Displacement"},
+          {"value": "dissolution", "name": "Dissolution"}
+        ]
+      }
+    }
+  ]
+}

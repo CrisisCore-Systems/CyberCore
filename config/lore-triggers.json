@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-04-19T12:00:00Z",
+  "lore_triggers": {
+    "memory_fragments": {
+      "trauma_type": "recursion",
+      "keywords": ["memory", "loop", "echo", "again", "recursive", "repeat"],
+      "mutation_boost": 0.3,
+      "profile_bias": "CyberLotus",
+      "override_mutations": ["echo_text", "self-replicate"]
+    },
+    "void_whispers": {
+      "trauma_type": "abandonment",
+      "keywords": ["void", "empty", "alone", "forgotten", "lost", "silence"],
+      "mutation_boost": 0.4,
+      "profile_bias": "VoidBloom",
+      "override_mutations": ["fade_out", "isolation"]
+    },
+    "surveillance_trauma": {
+      "trauma_type": "surveillance",
+      "keywords": ["watching", "seen", "eyes", "observed", "monitor", "camera"],
+      "mutation_boost": 0.3,
+      "profile_bias": "NeonVortex",
+      "override_mutations": ["scan_lines", "data_leak"]
+    },
+    "fragmented_self": {
+      "trauma_type": "fragmentation",
+      "keywords": ["broken", "shattered", "pieces", "fragment", "split", "divided"],
+      "mutation_boost": 0.35,
+      "profile_bias": "ObsidianBloom",
+      "override_mutations": ["shatter", "fragment_ui"]
+    },
+    "fading_reality": {
+      "trauma_type": "dissolution",
+      "keywords": ["fading", "dissolving", "melting", "blurring", "disappearing", "erasing"],
+      "mutation_boost": 0.4,
+      "profile_bias": "VoidBloom",
+      "override_mutations": ["fade", "blur"]
+    }
+  },
+  "narrative_arcs": {
+    "recursive_descent": {
+      "triggers": ["memory_fragments", "fragmented_self", "fading_reality"],
+      "sequence_boost": 0.5,
+      "coherence_effect": -0.3,
+      "profile_transition": ["CyberLotus", "ObsidianBloom", "VoidBloom"],
+      "description": "Progression through layers of nested memories, each more fractured than the last"
+    },
+    "surveillance_state": {
+      "triggers": ["surveillance_trauma", "void_whispers"],
+      "sequence_boost": 0.4,
+      "coherence_effect": -0.25,
+      "profile_transition": ["NeonVortex", "ObsidianBloom"],
+      "description": "The feeling of being constantly watched as reality dissolves into isolation"
+    },
+    "memory_dissolution": {
+      "triggers": ["memory_fragments", "fading_reality"],
+      "sequence_boost": 0.45,
+      "coherence_effect": -0.35,
+      "profile_transition": ["CyberLotus", "VoidBloom"],
+      "description": "Memories begin to blur and fade, losing definition and coherence"
+    }
+  },
+  "user_experience_hooks": {
+    "temporal_echo": {
+      "requires_trigger": "memory_fragments",
+      "view_duration_threshold": 5000,
+      "dom_effect": {
+        "replicate_elements": true,
+        "opacity_fade": 0.4,
+        "positioning_shift": "cascade",
+        "z_index_range": [-1, -5],
+        "animation_duration": 2000
+      },
+      "audio_effect": {
+        "play_sample": "echo.mp3",
+        "volume": 0.3,
+        "fade_duration": 1500
+      }
+    },
+    "void_ripple": {
+      "requires_trigger": "void_whispers",
+      "view_duration_threshold": 3000,
+      "dom_effect": {
+        "ripple_from_center": true,
+        "distortion_amount": 0.2,
+        "color_shift_hue": 165,
+        "animation_duration": 1800
+      },
+      "audio_effect": {
+        "play_sample": "void_whisper.mp3",
+        "volume": 0.25,
+        "spatial_position": "surround"
+      }
+    },
+    "data_glitch": {
+      "requires_trigger": "surveillance_trauma",
+      "view_duration_threshold": 2500,
+      "dom_effect": {
+        "scanline_overlay": true,
+        "text_corruption": 0.15,
+        "pixel_sorting": true,
+        "animation_duration": 1200
+      },
+      "audio_effect": {
+        "play_sample": "data_corruption.mp3",
+        "volume": 0.2,
+        "frequency_modulation": "rising"
+      }
+    }
+  }
+}

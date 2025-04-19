@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VoidBloom Configuration Schema",
+  "description": "Configuration schema for VoidBloom memory data synchronization",
+  "type": "object",
+  "required": ["shopify"],
+  "properties": {
+    "shopify": {
+      "type": "object",
+      "required": ["shop", "accessToken", "apiVersion"],
+      "properties": {
+        "shop": {
+          "type": "string",
+          "description": "Shopify store domain (without https://)",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*\\.myshopify\\.com$"
+        },
+        "accessToken": {
+          "type": "string",
+          "description": "Shopify Admin API access token"
+        },
+        "apiVersion": {
+          "type": "string",
+          "description": "Shopify API version",
+          "pattern": "^20[0-9]{2}-[0-9]{2}$",
+          "default": "2023-10"
+        }
+      }
+    },
+    "memoryApi": {
+      "type": "object",
+      "required": ["apiUrl", "apiKey"],
+      "properties": {
+        "apiUrl": {
+          "type": "string",
+          "description": "Memory API endpoint URL",
+          "format": "uri"
+        },
+        "apiKey": {
+          "type": "string",
+          "description": "API key for authentication"
+        },
+        "retryAttempts": {
+          "type": "integer",
+          "description": "Number of retry attempts for failed API calls",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 10
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "API call timeout in milliseconds",
+          "default": 10000,
+          "minimum": 1000
+        }
+      }
+    },
+    "sync": {
+      "type": "object",
+      "properties": {
+        "interval": {
+          "type": "string",
+          "description": "Cron expression for sync schedule",
+          "default": "0 0 * * *"
+        },
+        "batchSize": {
+          "type": "integer",
+          "description": "Number of products to process in a batch",
+          "default": 50,
+          "minimum": 1,
+          "maximum": 250
+        },
+        "concurrency": {
+          "type": "integer",
+          "description": "Number of concurrent requests",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 10
+        },
+        "backfill": {
+          "type": "boolean",
+          "description": "Whether to perform a complete backfill on startup",
+          "default": false
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["error", "warn", "info", "debug", "trace"],
+          "default": "info"
+        },
+        "file": {
+          "type": "string",
+          "description": "Path to log file"
+        },
+        "rotation": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "Maximum log file size",
+              "default": "10M"
+            },
+            "files": {
+              "type": "integer",
+              "description": "Number of log files to keep",
+              "default": 5
+            }
+          }
+        }
+      }
+    }
+  }
+}

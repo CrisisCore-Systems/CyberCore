@@ -1,0 +1,628 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="69" errors="0" failures="65" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2025-04-18" time="17:55:16">
+  <environment clr-version="4.0.30319.42000" user-domain="DESKTOP-S7HU3QJ" cwd="C:\Users\user\Documents\Projects\CyberCore" platform="Microsoft Windows 10 Pro|C:\Windows|\Device\Harddisk0\Partition3" machine-name="DESKTOP-S7HU3QJ" nunit-version="2.5.8.0" os-version="10.0.19045" user="user" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Failure" success="False" time="825.977" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\get-quantum-vulnerability.tests.ps1" executed="True" result="Failure" success="False" time="806.0956" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\get-quantum-vulnerability.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Get-QuantumVulnerability Tests" executed="True" result="Failure" success="False" time="805.3131" asserts="0" description="Get-QuantumVulnerability Tests">
+            <results>
+              <test-suite type="TestFixture" name="Get-QuantumVulnerability Tests.Vulnerability Detection" executed="True" result="Failure" success="False" time="805.2709" asserts="0" description="Get-QuantumVulnerability Tests.Vulnerability Detection">
+                <results>
+                  <test-case description="Should detect vulnerable components" name="Get-QuantumVulnerability Tests.Vulnerability Detection.Should detect vulnerable components" time="549.2043" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>RuntimeException: Cannot compare "System.Object" because it is not IComparable.</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\Get-QuantumVulnerability.ps1:1062
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\get-quantum-vulnerability.tests.ps1:27</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should identify critical vulnerabilities correctly" name="Get-QuantumVulnerability Tests.Vulnerability Detection.Should identify critical vulnerabilities correctly" time="127.9887" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>RuntimeException: Cannot compare "System.Object" because it is not IComparable.</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\Get-QuantumVulnerability.ps1:1062
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\get-quantum-vulnerability.tests.ps1:27</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should flag outdated scans" name="Get-QuantumVulnerability Tests.Vulnerability Detection.Should flag outdated scans" time="127.989" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>RuntimeException: Cannot compare "System.Object" because it is not IComparable.</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\Get-QuantumVulnerability.ps1:1062
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\get-quantum-vulnerability.tests.ps1:27</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\invoke-quantum-mutation.tests.ps1" executed="True" result="Failure" success="False" time="1.8366" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\invoke-quantum-mutation.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Quantum Mutation Tests" executed="True" result="Failure" success="False" time="1.6165" asserts="0" description="Quantum Mutation Tests">
+            <results>
+              <test-suite type="TestFixture" name="Quantum Mutation Tests.Mutation Operations" executed="True" result="Failure" success="False" time="1.5805" asserts="0" description="Quantum Mutation Tests.Mutation Operations">
+                <results>
+                  <test-case description="Should correctly apply quantum mutations" name="Quantum Mutation Tests.Mutation Operations.Should correctly apply quantum mutations" time="0.6553" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Should reject invalid mutation types" name="Quantum Mutation Tests.Mutation Operations.Should reject invalid mutation types" time="0.4579" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected an exception with message like '*Invalid mutation type*' to be thrown, but no exception was thrown.</message>
+                      <stack-trace>at Should -Throw "*Invalid mutation type*", C:\Users\user\Documents\Projects\CyberCore\tests\unit\invoke-quantum-mutation.tests.ps1:61
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\invoke-quantum-mutation.tests.ps1:60</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should validate security nonce" name="Quantum Mutation Tests.Mutation Operations.Should validate security nonce" time="0.4184" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-forge.tests.ps1" executed="True" result="Failure" success="False" time="1.0691" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-forge.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Quantum Forge Tests" executed="True" result="Failure" success="False" time="0.8677" asserts="0" description="Quantum Forge Tests">
+            <results>
+              <test-suite type="TestFixture" name="Quantum Forge Tests.Basic Functionality" executed="True" result="Failure" success="False" time="0.8346" asserts="0" description="Quantum Forge Tests.Basic Functionality">
+                <results>
+                  <test-case description="Should initialize quantum forge environment" name="Quantum Forge Tests.Basic Functionality.Should initialize quantum forge environment" time="0.4588" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>CommandNotFoundException: The term 'Initialize-QuantumForge' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-forge.tests.ps1:13</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should process quantum blueprints correctly" name="Quantum Forge Tests.Basic Functionality.Should process quantum blueprints correctly" time="0.3295" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>CommandNotFoundException: The term 'Process-QuantumBlueprint' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-forge.tests.ps1:29</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1" executed="True" result="Failure" success="False" time="7.3266" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Export-QuantumDocs" executed="True" result="Failure" success="False" time="7.1516" asserts="0" description="Export-QuantumDocs">
+            <results>
+              <test-suite type="TestFixture" name="Export-QuantumDocs.Output Directory Management" executed="True" result="Success" success="True" time="1.0415" asserts="0" description="Export-QuantumDocs.Output Directory Management">
+                <results>
+                  <test-case description="Should create the output directory if it doesn't exist" name="Export-QuantumDocs.Output Directory Management.Should create the output directory if it doesn't exist" time="0.4571" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Should backup existing documentation when output directory exists" name="Export-QuantumDocs.Output Directory Management.Should backup existing documentation when output directory exists" time="0.5372" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Export-QuantumDocs.Documentation Format Options" executed="True" result="Failure" success="False" time="2.7803" asserts="0" description="Export-QuantumDocs.Documentation Format Options">
+                <results>
+                  <test-case description="Should generate Markdown format documentation" name="Export-QuantumDocs.Documentation Format Options.Should generate Markdown format documentation" time="0.6895" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>FormatException: Input string was not in a correct format.
+PSInvalidCastException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ArgumentTransformationMetadataException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ParameterBindingArgumentTransformationException: Cannot process argument transformation on parameter 'Times'. Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:175</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should generate HTML format documentation" name="Export-QuantumDocs.Documentation Format Options.Should generate HTML format documentation" time="0.4973" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>FormatException: Input string was not in a correct format.
+PSInvalidCastException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ArgumentTransformationMetadataException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ParameterBindingArgumentTransformationException: Cannot process argument transformation on parameter 'Times'. Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:185</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should generate JSON format documentation" name="Export-QuantumDocs.Documentation Format Options.Should generate JSON format documentation" time="0.5029" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>FormatException: Input string was not in a correct format.
+PSInvalidCastException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ArgumentTransformationMetadataException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ParameterBindingArgumentTransformationException: Cannot process argument transformation on parameter 'Times'. Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:195</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Export-QuantumDocs.Detail Level Control" executed="True" result="Failure" success="False" time="3.9807" asserts="0" description="Export-QuantumDocs.Detail Level Control">
+                <results>
+                  <test-case description="Should respect Basic detail level" name="Export-QuantumDocs.Detail Level Control.Should respect Basic detail level" time="0.3095" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected $true, but got $false.</message>
+                      <stack-trace>at $Script:detailLevelTracker.ContainsKey("Basic") | Should -Be $true, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:233
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:233</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should respect Full detail level" name="Export-QuantumDocs.Detail Level Control.Should respect Full detail level" time="0.8093" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected $true, but got $false.</message>
+                      <stack-trace>at $Script:detailLevelTracker.ContainsKey("Full") | Should -Be $true, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:242
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:242</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Export-QuantumDocs.Content Generation Options" executed="True" result="Failure" success="False" time="5.1109" asserts="0" description="Export-QuantumDocs.Content Generation Options">
+                <results>
+                  <test-case description="Should include registry information when requested" name="Export-QuantumDocs.Content Generation Options.Should include registry information when requested" time="0.4561" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected Out-File in module PSTestConfig to be called at least 1 times, but was called 0 times</message>
+                      <stack-trace>at Should -Invoke Out-File -Times 1 -ParameterFilter {, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:252
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:252</stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case description="Should include schemas when requested" name="Export-QuantumDocs.Content Generation Options.Should include schemas when requested" time="0.6297" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>FormatException: Input string was not in a correct format.
+PSInvalidCastException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ArgumentTransformationMetadataException: Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."
+ParameterBindingArgumentTransformationException: Cannot process argument transformation on parameter 'Times'. Cannot convert value "AtLeast" to type "System.Int32". Error: "Input string was not in a correct format."</message>
+                      <stack-trace>at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:262</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Export-QuantumDocs.Mythological Pattern Analysis" executed="True" result="Failure" success="False" time="5.8823" asserts="0" description="Export-QuantumDocs.Mythological Pattern Analysis">
+                <results>
+                  <test-case description="Should perform mythological pattern analysis when enabled" name="Export-QuantumDocs.Mythological Pattern Analysis.Should perform mythological pattern analysis when enabled" time="0.726" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected $true, but got $false.</message>
+                      <stack-trace>at $mythologicalSpy | Should -Be $true, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:283
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:283</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Export-QuantumDocs.Recursion Depth Control" executed="True" result="Failure" success="False" time="6.2325" asserts="0" description="Export-QuantumDocs.Recursion Depth Control">
+                <results>
+                  <test-case description="Should respect specified recursion depth" name="Export-QuantumDocs.Recursion Depth Control.Should respect specified recursion depth" time="0.3271" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected $true, but got $false.</message>
+                      <stack-trace>at $recursionSpy | Should -Be $true, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:302
+at &lt;ScriptBlock&gt;, C:\Users\user\Documents\Projects\CyberCore\tests\unit\documentation\Export-QuantumDocs.tests.ps1:302</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\infrastructure\Install-TestDependencies.tests.ps1" executed="True" result="Failure" success="False" time="8.5988" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\infrastructure\Install-TestDependencies.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Install-TestDependencies" executed="True" result="Failure" success="False" time="8.4571" asserts="0" description="Install-TestDependencies">
+            <results>
+              <test-suite type="TestFixture" name="Install-TestDependencies.PowerShell Dependency Installation" executed="True" result="Failure" success="False" time="3.2318" asserts="0" description="Install-TestDependencies.PowerShell Dependency Installation">
+                <results>
+                  <test-case description="Should install Pester if not already installed" name="Install-TestDependencies.PowerShell Dependency Installation.Should install Pester if not already installed" time="0.9762" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should skip Pester installation if already installed" name="Install-TestDependencies.PowerShell Dependency Installation.Should skip Pester installation if already installed" time="0.6438" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should install PSScriptAnalyzer if not already installed" name="Install-TestDependencies.PowerShell Dependency Installation.Should install PSScriptAnalyzer if not already installed" time="0.6858" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should skip PSScriptAnalyzer installation if already installed" name="Install-TestDependencies.PowerShell Dependency Installation.Should skip PSScriptAnalyzer installation if already installed" time="0.9012" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Install-TestDependencies.JavaScript Dependency Installation" executed="True" result="Failure" success="False" time="4.9211" asserts="0" description="Install-TestDependencies.JavaScript Dependency Installation">
+                <results>
+                  <test-case description="Should install Node.js dependencies when not skipped" name="Install-TestDependencies.JavaScript Dependency Installation.Should install Node.js dependencies when not skipped" time="0.8043" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should skip Node.js dependencies when specified" name="Install-TestDependencies.JavaScript Dependency Installation.Should skip Node.js dependencies when specified" time="0.8519" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Install-TestDependencies.Package Repository Setup" executed="True" result="Failure" success="False" time="5.7798" asserts="0" description="Install-TestDependencies.Package Repository Setup">
+                <results>
+                  <test-case description="Should configure NuGet package provider if needed" name="Install-TestDependencies.Package Repository Setup.Should configure NuGet package provider if needed" time="0.0644" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>RuntimeException: Mock data are not setup for this scope, what happened?</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should set PSGallery as trusted repository" name="Install-TestDependencies.Package Repository Setup.Should set PSGallery as trusted repository" time="0.7596" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Install-TestDependencies.Force Parameter Behavior" executed="True" result="Failure" success="False" time="6.4007" asserts="0" description="Install-TestDependencies.Force Parameter Behavior">
+                <results>
+                  <test-case description="Should force install modules when Force is specified" name="Install-TestDependencies.Force Parameter Behavior.Should force install modules when Force is specified" time="0.5915" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>ParameterBindingValidationException: Cannot bind argument to parameter 'Block' because it is null.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\infrastructure\run-tests.tests.ps1" executed="True" result="Failure" success="False" time="0.2077" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\infrastructure\run-tests.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Run-Tests" executed="True" result="Failure" success="False" time="0.0646" asserts="0" description="Run-Tests">
+            <results>
+              <test-suite type="TestFixture" name="Run-Tests.Test Directory Setup" executed="True" result="Failure" success="False" time="0" asserts="0" description="Run-Tests.Test Directory Setup">
+                <results>
+                  <test-case description="Should create test output directory if it doesn't exist" name="Run-Tests.Test Directory Setup.Should create test output directory if it doesn't exist" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Run-Tests.PowerShell Test Execution" executed="True" result="Failure" success="False" time="0" asserts="0" description="Run-Tests.PowerShell Test Execution">
+                <results>
+                  <test-case description="Should run PowerShell tests when not skipped" name="Run-Tests.PowerShell Test Execution.Should run PowerShell tests when not skipped" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should skip PowerShell tests when JSOnly is specified" name="Run-Tests.PowerShell Test Execution.Should skip PowerShell tests when JSOnly is specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should report PowerShell test success correctly" name="Run-Tests.PowerShell Test Execution.Should report PowerShell test success correctly" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should report PowerShell test failures correctly" name="Run-Tests.PowerShell Test Execution.Should report PowerShell test failures correctly" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Run-Tests.JavaScript Test Execution" executed="True" result="Failure" success="False" time="0" asserts="0" description="Run-Tests.JavaScript Test Execution">
+                <results>
+                  <test-case description="Should run JavaScript tests when not skipped" name="Run-Tests.JavaScript Test Execution.Should run JavaScript tests when not skipped" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should skip JavaScript tests when PSOnly is specified" name="Run-Tests.JavaScript Test Execution.Should skip JavaScript tests when PSOnly is specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should include coverage when not skipped" name="Run-Tests.JavaScript Test Execution.Should include coverage when not skipped" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should skip coverage when specified" name="Run-Tests.JavaScript Test Execution.Should skip coverage when specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should report JavaScript test success correctly" name="Run-Tests.JavaScript Test Execution.Should report JavaScript test success correctly" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should report JavaScript test failures correctly" name="Run-Tests.JavaScript Test Execution.Should report JavaScript test failures correctly" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Run-Tests.Verbose Mode" executed="True" result="Failure" success="False" time="0" asserts="0" description="Run-Tests.Verbose Mode">
+                <results>
+                  <test-case description="Should pass verbose flag to test configuration when specified" name="Run-Tests.Verbose Mode.Should pass verbose flag to test configuration when specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Run-Tests.Summary Output" executed="True" result="Failure" success="False" time="0" asserts="0" description="Run-Tests.Summary Output">
+                <results>
+                  <test-case description="Should display summary with correct test counts" name="Run-Tests.Summary Output.Should display summary with correct test counts" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Run-Tests.Combined Test Results" executed="True" result="Failure" success="False" time="0" asserts="0" description="Run-Tests.Combined Test Results">
+                <results>
+                  <test-case description="Should succeed when all tests pass" name="Run-Tests.Combined Test Results.Should succeed when all tests pass" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should fail when PowerShell tests fail" name="Run-Tests.Combined Test Results.Should fail when PowerShell tests fail" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should fail when JavaScript tests fail" name="Run-Tests.Combined Test Results.Should fail when JavaScript tests fail" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should fail when both PowerShell and JavaScript tests fail" name="Run-Tests.Combined Test Results.Should fail when both PowerShell and JavaScript tests fail" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\security\deploy-quantum.tests.ps1" executed="True" result="Failure" success="False" time="0.1728" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\security\deploy-quantum.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Deploy-Quantum" executed="True" result="Failure" success="False" time="0.0432" asserts="0" description="Deploy-Quantum">
+            <results>
+              <test-suite type="TestFixture" name="Deploy-Quantum.Deployment Prerequisites Validation" executed="True" result="Failure" success="False" time="0" asserts="0" description="Deploy-Quantum.Deployment Prerequisites Validation">
+                <results>
+                  <test-case description="Should validate required files exist before deployment" name="Deploy-Quantum.Deployment Prerequisites Validation.Should validate required files exist before deployment" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should proceed when all prerequisites are met" name="Deploy-Quantum.Deployment Prerequisites Validation.Should proceed when all prerequisites are met" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Deploy-Quantum.Nonce Rotation" executed="True" result="Failure" success="False" time="0" asserts="0" description="Deploy-Quantum.Nonce Rotation">
+                <results>
+                  <test-case description="Should rotate security nonces for non-Development environments" name="Deploy-Quantum.Nonce Rotation.Should rotate security nonces for non-Development environments" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should not rotate nonces for Development environment" name="Deploy-Quantum.Nonce Rotation.Should not rotate nonces for Development environment" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Deploy-Quantum.Integrity Checks" executed="True" result="Failure" success="False" time="0" asserts="0" description="Deploy-Quantum.Integrity Checks">
+                <results>
+                  <test-case description="Should run integrity checks in strict policy mode" name="Deploy-Quantum.Integrity Checks.Should run integrity checks in strict policy mode" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should block deployment if integrity check fails and policy is Strict" name="Deploy-Quantum.Integrity Checks.Should block deployment if integrity check fails and policy is Strict" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Deploy-Quantum.Deployment" executed="True" result="Failure" success="False" time="0" asserts="0" description="Deploy-Quantum.Deployment">
+                <results>
+                  <test-case description="Should create the deployment directory if it doesn't exist" name="Deploy-Quantum.Deployment.Should create the deployment directory if it doesn't exist" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should create a deployment manifest" name="Deploy-Quantum.Deployment.Should create a deployment manifest" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Deploy-Quantum.Rebuild Functionality" executed="True" result="Failure" success="False" time="0" asserts="0" description="Deploy-Quantum.Rebuild Functionality">
+                <results>
+                  <test-case description="Should rebuild artifacts when ForceRebuild is specified" name="Deploy-Quantum.Rebuild Functionality.Should rebuild artifacts when ForceRebuild is specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should block deployment if rebuild fails" name="Deploy-Quantum.Rebuild Functionality.Should block deployment if rebuild fails" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\security\quantum-inspector.tests.ps1" executed="True" result="Failure" success="False" time="0.4854" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\security\quantum-inspector.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Quantum-Inspector" executed="True" result="Failure" success="False" time="0.2868" asserts="0" description="Quantum-Inspector">
+            <results>
+              <test-suite type="TestFixture" name="Quantum-Inspector.Component Requirements" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Inspector.Component Requirements">
+                <results>
+                  <test-case description="Should validate required components exist" name="Quantum-Inspector.Component Requirements.Should validate required components exist" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should detect missing required components" name="Quantum-Inspector.Component Requirements.Should detect missing required components" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Inspector.Mutation Compatibility" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Inspector.Mutation Compatibility">
+                <results>
+                  <test-case description="Should identify components compatible with a specific mutation profile" name="Quantum-Inspector.Mutation Compatibility.Should identify components compatible with a specific mutation profile" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Inspector.DeepScan Mode" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Inspector.DeepScan Mode">
+                <results>
+                  <test-case description="Should perform additional checks when DeepScan is enabled" name="Quantum-Inspector.DeepScan Mode.Should perform additional checks when DeepScan is enabled" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Inspector.Reporting" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Inspector.Reporting">
+                <results>
+                  <test-case description="Should generate an inspection report when specified" name="Quantum-Inspector.Reporting.Should generate an inspection report when specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should respect custom output path for reports" name="Quantum-Inspector.Reporting.Should respect custom output path for reports" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Inspector.MutationCheck Mode" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Inspector.MutationCheck Mode">
+                <results>
+                  <test-case description="Should perform mutation compatibility checks when enabled" name="Quantum-Inspector.MutationCheck Mode.Should perform mutation compatibility checks when enabled" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Inspector.Health Score Calculation" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Inspector.Health Score Calculation">
+                <results>
+                  <test-case description="Should calculate health score based on component status" name="Quantum-Inspector.Health Score Calculation.Should calculate health score based on component status" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="TestFixture" name="C:\Users\user\Documents\Projects\CyberCore\tests\unit\security\quantum-integrity.tests.ps1" executed="True" result="Failure" success="False" time="0.1843" asserts="0" description="C:\Users\user\Documents\Projects\CyberCore\tests\unit\security\quantum-integrity.tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Quantum-Integrity" executed="True" result="Failure" success="False" time="0.045" asserts="0" description="Quantum-Integrity">
+            <results>
+              <test-suite type="TestFixture" name="Quantum-Integrity.Integrity Verification Mode" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Integrity.Integrity Verification Mode">
+                <results>
+                  <test-case description="Should verify integrity of files registered in quantum registry" name="Quantum-Integrity.Integrity Verification Mode.Should verify integrity of files registered in quantum registry" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should detect integrity violations when file hash doesn't match registry" name="Quantum-Integrity.Integrity Verification Mode.Should detect integrity violations when file hash doesn't match registry" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Integrity.Repair Mode" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Integrity.Repair Mode">
+                <results>
+                  <test-case description="Should create backups when CreateBackups is specified" name="Quantum-Integrity.Repair Mode.Should create backups when CreateBackups is specified" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should add missing mutation markers to files" name="Quantum-Integrity.Repair Mode.Should add missing mutation markers to files" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case description="Should update the registry with new hash values after repair" name="Quantum-Integrity.Repair Mode.Should update the registry with new hash values after repair" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Quantum-Integrity.Mutation Profile Filtering" executed="True" result="Failure" success="False" time="0" asserts="0" description="Quantum-Integrity.Mutation Profile Filtering">
+                <results>
+                  <test-case description="Should only process files with the specified mutation profile" name="Quantum-Integrity.Mutation Profile Filtering.Should only process files with the specified mutation profile" time="0" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>This test should run but it did not. Most likely a setup in some parent block failed.</message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

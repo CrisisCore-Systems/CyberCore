@@ -1,0 +1,200 @@
+{% comment %}
+  quantum-pulse.liquid
+  Visual pulse indicator for dimensional nodes and products
+  
+  @MutationCompatible: VoidBloom
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% assign pulse_size = intensity | times: 1.0 | default: 1 %}
+{% assign pulse_class = "pulse-intensity-" | append: pulse_size | floor %}
+
+<div class="quantum-pulse {{ pulse_class }}" data-intensity="{{ pulse_size }}">
+  <div class="pulse-indicator">
+    <div class="pulse-core"></div>
+    <div class="pulse-wave"></div>
+    <div class="pulse-wave delayed"></div>
+  </div>
+  
+  <div class="pulse-metrics">
+    <div class="metric-value">{{ intensity }}</div>
+    <div class="metric-label">signal</div>
+  </div>
+</div>
+
+<style>
+  .quantum-pulse {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  .pulse-indicator {
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .pulse-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: rgba(153, 0, 255, 0.8);
+    border-radius: 50%;
+    z-index: 2;
+  }
+  
+  .pulse-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    border-radius: 50%;
+    animation: pulse-wave 3s infinite cubic-bezier(0.3, 0.6, 0.7, 0.3);
+  }
+  
+  .pulse-wave.delayed {
+    animation-delay: 1.5s;
+  }
+  
+  .pulse-metrics {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .metric-value {
+    font-size: 0.9rem;
+    color: rgba(153, 0, 255, 0.9);
+  }
+  
+  .metric-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(153, 0, 255, 0.6);
+  }
+  
+  /* Intensity variations */
+  .pulse-intensity-1 .pulse-core {
+    background: rgba(153, 0, 255, 0.6);
+  }
+  
+  .pulse-intensity-1 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.3);
+    animation-duration: 4s;
+  }
+  
+  .pulse-intensity-2 .pulse-core {
+    background: rgba(153, 0, 255, 0.7);
+  }
+  
+  .pulse-intensity-2 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.4);
+    animation-duration: 3.5s;
+  }
+  
+  .pulse-intensity-3 .pulse-core {
+    background: rgba(153, 0, 255, 0.8);
+  }
+  
+  .pulse-intensity-3 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.5);
+    animation-duration: 3s;
+  }
+  
+  .pulse-intensity-4 .pulse-core {
+    background: rgba(153, 0, 255, 0.85);
+    box-shadow: 0 0 3px rgba(153, 0, 255, 0.4);
+  }
+  
+  .pulse-intensity-4 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.6);
+    animation-duration: 2.5s;
+  }
+  
+  .pulse-intensity-5 .pulse-core {
+    background: rgba(153, 0, 255, 0.9);
+    box-shadow: 0 0 5px rgba(153, 0, 255, 0.5);
+  }
+  
+  .pulse-intensity-5 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.7);
+    animation-duration: 2s;
+  }
+  
+  .pulse-intensity-6 .pulse-core {
+    background: rgba(153, 0, 255, 0.95);
+    box-shadow: 0 0 7px rgba(153, 0, 255, 0.6);
+  }
+  
+  .pulse-intensity-6 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.8);
+    border-width: 2px;
+    animation-duration: 1.8s;
+  }
+  
+  .pulse-intensity-7 .pulse-core,
+  .pulse-intensity-8 .pulse-core,
+  .pulse-intensity-9 .pulse-core,
+  .pulse-intensity-10 .pulse-core {
+    background: rgba(153, 0, 255, 1);
+    box-shadow: 0 0 10px rgba(153, 0, 255, 0.7);
+  }
+  
+  .pulse-intensity-7 .pulse-wave,
+  .pulse-intensity-8 .pulse-wave,
+  .pulse-intensity-9 .pulse-wave,
+  .pulse-intensity-10 .pulse-wave {
+    border-color: rgba(153, 0, 255, 0.9);
+    border-width: 2px;
+    animation-duration: 1.5s;
+  }
+  
+  @keyframes pulse-wave {
+    0% {
+      width: 6px;
+      height: 6px;
+      opacity: 1;
+    }
+    100% {
+      width: 30px;
+      height: 30px;
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const pulses = document.querySelectorAll('.quantum-pulse');
+    
+    pulses.forEach(pulse => {
+      const intensity = parseFloat(pulse.getAttribute('data-intensity'));
+      
+      // Register with NeuralBus
+      if (window.NeuralBus) {
+        window.NeuralBus.publish('pulse:registered', {
+          element: pulse,
+          intensity: intensity,
+          timestamp: Date.now()
+        });
+      }
+      
+      // Add subtle random variations to the animation
+      const waves = pulse.querySelectorAll('.pulse-wave');
+      waves.forEach(wave => {
+        const randomOffset = Math.random() * 0.3;
+        wave.style.animationDuration = (3 - intensity * 0.2 + randomOffset) + 's';
+      });
+    });
+  });
+</script>

@@ -1,0 +1,46 @@
+{
+  "recommendations": [
+    // Linting & Formatting
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "aaron-bond.better-comments",
+    "davidanson.vscode-markdownlint",
+
+    // Testing & Debugging
+    "firsttris.vscode-jest-runner",
+    "orta.vscode-jest",
+    "ryanluker.vscode-coverage-gutters",
+
+    // Git Integration
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // JavaScript/TypeScript Support
+    "wix.vscode-import-cost",
+    "christian-kohler.path-intellisense",
+    "visualstudioexptteam.vscodeintellicode",
+
+    // PowerShell Support
+    "ms-vscode.powershell",
+
+    // Shopify Liquid Support
+    "sissel.shopify-liquid",
+
+    // HTML/CSS/XML Tools
+    "formulahendry.auto-rename-tag",
+    "ritwickdey.liveserver",
+    "csstools.postcss",
+
+    // API Testing
+    "rangav.vscode-thunder-client",
+    "humao.rest-client",
+
+    // Documentation
+    "yzhang.markdown-all-in-one",
+
+    // Misc Tools
+    "gruntfuggly.todo-tree",
+    "quicktype.quicktype"
+  ]
+}

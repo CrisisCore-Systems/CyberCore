@@ -1,0 +1,1289 @@
+{% comment %}
+  QUANTUM CONTENT SECTION
+  Rich text content with quantum visualizer effects
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: neural-enhanced
+  @Version: 1.0.0
+{% endcomment %}
+
+<section class="quantum-content"
+  data-neural-node
+  data-section-id="{{ section.id }}"
+  data-particle-count="{{ section.settings.particle_count }}"
+  data-particle-speed="{{ section.settings.particle_speed }}"
+  data-glitch-intensity="{{ section.settings.glitch_intensity }}"
+  style="--content-width: {{ section.settings.content_width }}px;">
+
+  <div class="quantum-backdrop"></div>
+  <div class="quantum-particles" id="quantum-particles-{{ section.id }}"></div>
+
+  <div class="container" style="max-width: {{ section.settings.content_width }}px;">
+    {% if section.settings.title != blank %}
+      <div class="section-header">
+        <h2 class="section-title {% if section.settings.enable_title_effects %}quantum-glitch{% endif %}"
+          data-text="{{ section.settings.title | escape }}">
+          {{ section.settings.title }}
+        </h2>
+        {% if section.settings.subtitle != blank %}
+          <div class="section-subtitle">{{ section.settings.subtitle }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="content-grid">
+      {% if section.settings.image != blank %}
+        <div class="content-image-wrapper {% if section.settings.image_position == 'left' %}order-first{% else %}order-last{% endif %}">
+          <div class="quantum-image-container {% if section.settings.enable_image_effects %}quantum-image{% endif %}">
+            <div class="quantum-image-glitch"></div>
+            <img src="{{ section.settings.image | img_url: '1000x' }}"
+              alt="{{ section.settings.image_alt | escape }}"
+              class="content-image"
+              loading="lazy">
+
+            {% if section.settings.enable_hologram %}
+              <div class="hologram-overlay">
+                <div class="hologram-lines"></div>
+                <div class="hologram-circle"></div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="content-text-wrapper">
+        <div class="quantum-rich-text">
+          {{ section.settings.content }}
+        </div>
+
+        {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+          <div class="button-container">
+            <a href="{{ section.settings.button_link }}" class="quantum-button">
+              {{ section.settings.button_label }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="quantum-blocks">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text' %}
+              <div class="quantum-block text-block" {{ block.shopify_attributes }}>
+                {% if block.settings.heading != blank %}
+                  <h3 class="block-heading {% if block.settings.enable_heading_effects %}quantum-glitch-subtle{% endif %}"
+                    data-text="{{ block.settings.heading | escape }}">
+                    {{ block.settings.heading }}
+                  </h3>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="block-text">{{ block.settings.text }}</div>
+                {% endif %}
+              </div>
+
+            {% when 'feature' %}
+              <div class="quantum-block feature-block" {{ block.shopify_attributes }}>
+                <div class="feature-icon-wrapper">
+                  {% if block.settings.icon_type == 'svg' and block.settings.svg_code != blank %}
+                    <div class="feature-icon svg-icon">
+                      {{ block.settings.svg_code }}
+                    </div>
+                  {% else %}
+                    <div class="feature-icon default-icon">
+                      <div class="neural-icon-pulse"></div>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="feature-content">
+                  {% if block.settings.heading != blank %}
+                    <h3 class="feature-heading">{{ block.settings.heading }}</h3>
+                  {% endif %}
+
+                  {% if block.settings.text != blank %}
+                    <div class="feature-text">{{ block.settings.text }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+            {% when 'lore' %}
+              <div class="quantum-block lore-block" {{ block.shopify_attributes }}
+                data-lore-id="{{ block.settings.lore_id }}"
+                data-fractal-index="{{ block.settings.fractal_index }}">
+                <div class="lore-fragment">
+                  {% if block.settings.heading != blank %}
+                    <div class="lore-heading">{{ block.settings.heading }}</div>
+                  {% endif %}
+
+                  <div class="lore-text">
+                    {% if block.settings.text != blank %}
+                      {{ block.settings.text }}
+                    {% endif %}
+                  </div>
+
+                  {% if block.settings.meta_tag != blank %}
+                    <div class="lore-meta-tag">{{ block.settings.meta_tag }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+            {% when 'quantum_data' %}
+              <div class="quantum-block data-block" {{ block.shopify_attributes }}
+                data-entanglement="{{ block.settings.entanglement_type }}"
+                data-fractal-depth="{{ block.settings.fractal_depth }}">
+                <div class="data-visualizer" id="visualizer-{{ block.id }}"></div>
+
+                {% if block.settings.heading != blank %}
+                  <h3 class="data-heading">{{ block.settings.heading }}</h3>
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+                  <div class="data-description">{{ block.settings.description }}</div>
+                {% endif %}
+
+                <div class="data-metrics">
+                  {% for i in (1..3) %}
+                    {% assign metric_label = block.settings['metric_label_' | append: i] %}
+                    {% assign metric_value = block.settings['metric_value_' | append: i] %}
+
+                    {% if metric_label != blank and metric_value != blank %}
+                      <div class="data-metric">
+                        <div class="metric-label">{{ metric_label }}</div>
+                        <div class="metric-value">{{ metric_value }}</div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .quantum-content {
+    position: relative;
+    padding: 6rem 2rem;
+    overflow: hidden;
+    background-color: rgba(10, 0, 20, 0.95);
+    color: #fff;
+    --content-width: 1200px;
+  }
+
+  .quantum-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(10, 0, 20, 0.9), rgba(30, 0, 60, 0.6));
+    z-index: 0;
+  }
+
+  .quantum-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  .container {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-family: 'Courier New', monospace;
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+    letter-spacing: 2px;
+    color: #fff;
+    position: relative;
+    display: inline-block;
+  }
+
+  .quantum-glitch {
+    position: relative;
+    display: inline-block;
+  }
+
+  .quantum-glitch::before,
+  .quantum-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+
+  .quantum-glitch::before {
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    transform: translate(-0.04em, -0.04em);
+    opacity: 0.8;
+    color: rgba(255, 0, 255, 0.8);
+  }
+
+  .quantum-glitch::after {
+    animation: glitch-anim-2 5s infinite linear alternate-reverse;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    transform: translate(0.04em, 0.04em);
+    opacity: 0.8;
+    color: rgba(0, 255, 255, 0.8);
+  }
+
+  .quantum-glitch-subtle::before,
+  .quantum-glitch-subtle::after {
+    animation-duration: 10s;
+    opacity: 0.5;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Content Grid */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .order-first {
+      order: -1;
+    }
+
+    .order-last {
+      order: 1;
+    }
+  }
+
+  /* Content Image */
+  .content-image-wrapper {
+    position: relative;
+  }
+
+  .quantum-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .content-image {
+    width: 100%;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .quantum-image:hover .content-image {
+    transform: scale(1.05);
+  }
+
+  .quantum-image-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(153, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+    opacity: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
+  .quantum-image:hover .quantum-image-glitch {
+    opacity: 0.8;
+    animation: quantum-glitch 2s infinite alternate;
+  }
+
+  /* Hologram Effect */
+  .hologram-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+  }
+
+  .quantum-image:hover .hologram-overlay {
+    opacity: 0.6;
+  }
+
+  .hologram-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(153, 0, 255, 0.2) 3px,
+      transparent 4px
+    );
+    animation: hologram-scan 10s linear infinite;
+  }
+
+  .hologram-circle {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
+    background: radial-gradient(
+      circle at center,
+      rgba(153, 0, 255, 0.1) 0%,
+      rgba(0, 255, 255, 0.1) 30%,
+      transparent 70%
+    );
+    transform: rotate(0deg);
+    animation: hologram-rotate 20s linear infinite;
+  }
+
+  /* Content Text */
+  .content-text-wrapper {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .quantum-rich-text h1,
+  .quantum-rich-text h2,
+  .quantum-rich-text h3,
+  .quantum-rich-text h4,
+  .quantum-rich-text h5,
+  .quantum-rich-text h6 {
+    color: rgba(153, 0, 255, 0.9);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  .quantum-rich-text h1 {
+    font-size: 2.2rem;
+  }
+
+  .quantum-rich-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .quantum-rich-text h3 {
+    font-size: 1.5rem;
+  }
+
+  .quantum-rich-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .quantum-rich-text ul,
+  .quantum-rich-text ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .quantum-rich-text li {
+    margin-bottom: 0.5rem;
+  }
+
+  .quantum-rich-text a {
+    color: rgba(153, 0, 255, 0.9);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(153, 0, 255, 0.4);
+    transition: all 0.2s ease;
+  }
+
+  .quantum-rich-text a:hover {
+    color: rgba(255, 0, 255, 0.9);
+    border-bottom-color: rgba(255, 0, 255, 0.6);
+  }
+
+  .quantum-rich-text blockquote {
+    border-left: 3px solid rgba(153, 0, 255, 0.6);
+    padding-left: 1.5rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .quantum-rich-text pre {
+    background: rgba(30, 0, 60, 0.3);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 1.5rem;
+  }
+
+  .quantum-rich-text code {
+    font-family: 'Courier New', monospace;
+    background: rgba(30, 0, 60, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+
+  /* Button */
+  .button-container {
+    margin-top: 2rem;
+  }
+
+  .quantum-button {
+    display: inline-block;
+    background: rgba(153, 0, 255, 0.2);
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    color: #fff;
+    text-align: center;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quantum-button:hover {
+    background: rgba(153, 0, 255, 0.3);
+    border-color: rgba(153, 0, 255, 0.7);
+  }
+
+  .quantum-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.3), transparent);
+    transition: all 0.6s ease;
+  }
+
+  .quantum-button:hover::before {
+    left: 100%;
+  }
+
+  /* Quantum Blocks */
+  .quantum-blocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .quantum-block {
+    background: rgba(30, 0, 60, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.3);
+    border-radius: 8px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .quantum-block:hover {
+    border-color: rgba(153, 0, 255, 0.6);
+    box-shadow: 0 0 20px rgba(153, 0, 255, 0.2);
+    transform: translateY(-5px);
+  }
+
+  /* Text Block */
+  .text-block .block-heading {
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+    color: rgba(153, 0, 255, 0.9);
+    font-family: 'Courier New', monospace;
+  }
+
+  .text-block .block-text {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+  }
+
+  /* Feature Block */
+  .feature-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .feature-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(153, 0, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .feature-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: rgba(153, 0, 255, 0.9);
+  }
+
+  .default-icon {
+    width: 40px;
+    height: 40px;
+    position: relative;
+  }
+
+  .default-icon::before,
+  .default-icon::after {
+    content: '';
+    position: absolute;
+    background: rgba(153, 0, 255, 0.9);
+  }
+
+  .default-icon::before {
+    width: 100%;
+    height: 4px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  .default-icon::after {
+    width: 4px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .neural-icon-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(153, 0, 255, 0.3) 0%, transparent 70%);
+    animation: pulse-animation 3s infinite;
+    z-index: 1;
+  }
+
+  .feature-heading {
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    color: rgba(153, 0, 255, 0.9);
+    font-family: 'Courier New', monospace;
+  }
+
+  .feature-text {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+  }
+
+  /* Lore Block */
+  .lore-block {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lore-fragment {
+    padding: 1rem;
+    border-left: 3px solid rgba(153, 0, 255, 0.6);
+    background: rgba(30, 0, 60, 0.2);
+    margin: 1rem 0;
+  }
+
+  .lore-heading {
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+    color: rgba(153, 0, 255, 0.9);
+    font-family: 'Courier New', monospace;
+  }
+
+  .lore-text {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .lore-meta-tag {
+    display: inline-block;
+    background: rgba(153, 0, 255, 0.2);
+    border: 1px solid rgba(153, 0, 255, 0.4);
+    padding: 0.3rem 0.8rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    font-family: 'Courier New', monospace;
+    color: rgba(153, 0, 255, 0.9);
+  }
+
+  /* Quantum Data Block */
+  .data-block {
+    position: relative;
+  }
+
+  .data-visualizer {
+    height: 150px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    background: rgba(30, 0, 60, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .data-heading {
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    color: rgba(153, 0, 255, 0.9);
+    font-family: 'Courier New', monospace;
+  }
+
+  .data-description {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .data-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .data-metric {
+    flex: 1;
+    min-width: calc(33% - 1rem);
+    background: rgba(30, 0, 60, 0.4);
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .metric-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+    color: rgba(153, 0, 255, 0.9);
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Animations */
+  @keyframes glitch-anim {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 1px); }
+    40% { transform: translate(-1px, -1px); }
+    60% { transform: translate(1px, 1px); }
+    80% { transform: translate(-1px, -1px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes glitch-anim-2 {
+    0% { transform: translate(0); }
+    20% { transform: translate(2px, 1px); }
+    40% { transform: translate(-1px, -1px); }
+    60% { transform: translate(1px, -1px); }
+    80% { transform: translate(1px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes quantum-glitch {
+    0% { clip-path: inset(0 0 0 0); }
+    5% { clip-path: inset(8% 0 0 0); }
+    10% { clip-path: inset(0 0 0 0); }
+    15% { clip-path: inset(0 0 8% 0); }
+    20% { clip-path: inset(50% 0 0 0); }
+    25% { clip-path: inset(0 0 0 0); }
+    30% { clip-path: inset(0 8% 0 0); }
+    35% { clip-path: inset(0 0 0 8%); }
+    40% { clip-path: inset(0 0 0 0); }
+    45% { clip-path: inset(0 0 8% 0); }
+    50% { clip-path: inset(8% 0 0 0); }
+    55% { clip-path: inset(0 0 0 0); }
+    60% { clip-path: inset(0 8% 0 0); }
+    65% { clip-path: inset(0 0 0 0); }
+    70% { clip-path: inset(0 0 0 8%); }
+    75% { clip-path: inset(0 0 0 0); }
+    80% { clip-path: inset(8% 0 0 0); }
+    85% { clip-path: inset(0 0 0 0); }
+    90% { clip-path: inset(0 8% 0 0); }
+    95% { clip-path: inset(0 0 8% 0); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes hologram-scan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+  }
+
+  @keyframes hologram-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse-animation {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.2; }
+    100% { transform: scale(1); opacity: 0.5; }
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .quantum-content {
+      padding: 4rem 1.5rem;
+    }
+
+    .quantum-blocks {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .quantum-blocks {
+      grid-template-columns: 1fr;
+    }
+
+    .data-metrics {
+      flex-direction: column;
+    }
+
+    .data-metric {
+      min-width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quantum Visualizer for particles if available
+    if (window.QuantumVisualizer) {
+      const contentSection = document.querySelector('.quantum-content');
+      const sectionId = contentSection.getAttribute('data-section-id');
+      const particleCount = parseInt(contentSection.getAttribute('data-particle-count') || '20');
+      const particleSpeed = parseFloat(contentSection.getAttribute('data-particle-speed') || '0.5');
+      const glitchIntensity = parseFloat(contentSection.getAttribute('data-glitch-intensity') || '0.3');
+
+      const contentVisualizer = new QuantumVisualizer({
+        container: document.getElementById(`quantum-particles-${sectionId}`),
+        particleCount: particleCount,
+        colorScheme: 'VoidBloom',
+        dimensions: '2d',
+        speed: particleSpeed,
+        fractalMode: false,
+        intensity: glitchIntensity
+      });
+
+      // Initialize with quantum state data
+      const quantumData = Array(5).fill().map((_, i) => ({
+        id: 'qc' + i,
+        state: Math.random() > 0.5 ? 'superposition' : 'entangled',
+        probability: Math.random(),
+        profile: 'neural-enhanced'
+      }));
+
+      contentVisualizer.update(quantumData);
+
+      // Use Intersection Observer to activate quantum effects when visible
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            contentVisualizer.activate();
+          } else {
+            contentVisualizer.deactivate();
+          }
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(contentSection);
+
+      // Initialize data block visualizers
+      document.querySelectorAll('.data-block').forEach(block => {
+        const visualizerId = block.querySelector('.data-visualizer').id;
+        const entanglementType = block.getAttribute('data-entanglement') || 'quantum';
+        const fractalDepth = parseInt(block.getAttribute('data-fractal-depth') || '3');
+
+        if (visualizerId) {
+          const dataVisualizer = new QuantumVisualizer({
+            container: document.getElementById(visualizerId),
+            particleCount: 15,
+            colorScheme: 'VoidBloom',
+            dimensions: '2d',
+            entanglementType: entanglementType,
+            fractalDepth: fractalDepth,
+            fractalMode: true,
+            intensity: 0.7
+          });
+
+          const visualizerData = Array(fractalDepth).fill().map((_, i) => ({
+            id: visualizerId + i,
+            state: 'fractal',
+            probability: (i + 1) / fractalDepth,
+            profile: 'data-visualizer'
+          }));
+
+          dataVisualizer.update(visualizerData);
+          dataVisualizer.activate();
+
+          // Add interaction
+          const visualizerElement = document.getElementById(visualizerId);
+          visualizerElement.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Update visualizer based on mouse position
+            dataVisualizer.interact({
+              x: x / rect.width,
+              y: y / rect.height,
+              intensity: glitchIntensity
+            });
+          });
+        }
+      });
+    }
+
+    // Connect to NeuralBus if available
+    if (window.NeuralBus) {
+      const contentSection = document.querySelector('.quantum-content');
+
+      if (NeuralBus.register) {
+        NeuralBus.register('quantum-content', {
+          version: '1.0.0',
+          profile: 'neural-enhanced'
+        });
+      }
+
+      // Subscribe to lore events
+      if (NeuralBus.subscribe) {
+        NeuralBus.subscribe('lore:fragment', data => {
+          if (data.loreId) {
+            // Find lore blocks with matching ID
+            document.querySelectorAll(`.lore-block[data-lore-id="${data.loreId}"]`).forEach(block => {
+              // Apply highlight effect
+              block.style.borderColor = 'rgba(255, 0, 255, 0.8)';
+              block.style.boxShadow = '0 0 20px rgba(255, 0, 255, 0.4)';
+
+              setTimeout(() => {
+                block.style.borderColor = '';
+                block.style.boxShadow = '';
+              }, 3000);
+            });
+          }
+        });
+
+        // Subscribe to quantum mutation events
+        NeuralBus.subscribe('quantum:mutation', data => {
+          // Apply mutation effects
+          document.querySelectorAll('.quantum-block').forEach(block => {
+            block.style.borderColor = 'rgba(153, 0, 255, 0.8)';
+            block.style.boxShadow = '0 0 20px rgba(153, 0, 255, 0.4)';
+
+            setTimeout(() => {
+              block.style.borderColor = '';
+              block.style.boxShadow = '';
+            }, 2000);
+          });
+        });
+      }
+    }
+
+    // Initialize any LoreGenerator instances if available
+    if (window.LoreGenerator) {
+      document.querySelectorAll('.lore-block').forEach(block => {
+        const loreId = block.getAttribute('data-lore-id');
+        const fractalIndex = parseInt(block.getAttribute('data-fractal-index') || '1');
+
+        if (loreId) {
+          const loreGenerator = new LoreGenerator({
+            targetElement: block.querySelector('.lore-text'),
+            loreId: loreId,
+            fractalIndex: fractalIndex,
+            autoExpand: false
+          });
+
+          // Add event listener to expand lore on click
+          block.addEventListener('click', function() {
+            loreGenerator.expand();
+          });
+        }
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Quantum Content",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Quantum Reality"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Explore the neural landscape of our quantum reality"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_title_effects",
+      "label": "Enable Title Glitch Effects",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image Alt Text",
+      "default": "Quantum Visualization"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_effects",
+      "label": "Enable Image Quantum Effects",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hologram",
+      "label": "Enable Hologram Effect",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Navigate the shifting boundaries of reality with our quantum-enhanced experiences. Our neural network has evolved beyond conventional limitations, offering unprecedented access to the fractal nature of consciousness.</p><p>Each interaction deepens the neural pathways, creating a personalized experience that adapts to your unique quantum signature.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "label": "Content Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "particle_count",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "label": "Particle Count",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "particle_speed",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1,
+      "label": "Particle Speed",
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "glitch_intensity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Glitch Intensity",
+      "default": 0.3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Neural Integration"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Our quantum algorithms process reality at speeds beyond conventional computing, allowing for predictive analysis of potential futures and parallel realities.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_heading_effects",
+          "label": "Enable Heading Glitch Effects",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Reality Distortion"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Our patented reality distortion fields create immersive experiences that transcend conventional perception.</p>"
+        },
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Icon Type",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default (plus)"
+            },
+            {
+              "value": "svg",
+              "label": "Custom SVG"
+            }
+          ],
+          "default": "default"
+        },
+        {
+          "type": "html",
+          "id": "svg_code",
+          "label": "SVG Code",
+          "info": "Custom SVG icon code"
+        }
+      ]
+    },
+    {
+      "type": "lore",
+      "name": "Lore Fragment",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "The Fractal Collapse"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>When the Void Council initiated the third quantum collapse, few expected the fractal patterns to stabilize. The neural networks adapted, evolving beyond their programmed constraints.</p>"
+        },
+        {
+          "type": "text",
+          "id": "lore_id",
+          "label": "Lore ID",
+          "info": "Unique identifier for this lore fragment",
+          "default": "collapse-03"
+        },
+        {
+          "type": "range",
+          "id": "fractal_index",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Fractal Index",
+          "default": 2,
+          "info": "Depth level in the lore fractal"
+        },
+        {
+          "type": "text",
+          "id": "meta_tag",
+          "label": "Meta Tag",
+          "default": "Void Council Archives"
+        }
+      ]
+    },
+    {
+      "type": "quantum_data",
+      "name": "Quantum Data",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Neural Activity"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Real-time quantum fluctuations in the neural substrate.</p>"
+        },
+        {
+          "type": "select",
+          "id": "entanglement_type",
+          "label": "Entanglement Type",
+          "options": [
+            {
+              "value": "quantum",
+              "label": "Quantum"
+            },
+            {
+              "value": "neural",
+              "label": "Neural"
+            },
+            {
+              "value": "fractal",
+              "label": "Fractal"
+            }
+          ],
+          "default": "quantum"
+        },
+        {
+          "type": "range",
+          "id": "fractal_depth",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Fractal Depth",
+          "default": 3
+        },
+        {
+          "type": "text",
+          "id": "metric_label_1",
+          "label": "Metric 1 Label",
+          "default": "Coherence"
+        },
+        {
+          "type": "text",
+          "id": "metric_value_1",
+          "label": "Metric 1 Value",
+          "default": "87%"
+        },
+        {
+          "type": "text",
+          "id": "metric_label_2",
+          "label": "Metric 2 Label",
+          "default": "Entropy"
+        },
+        {
+          "type": "text",
+          "id": "metric_value_2",
+          "label": "Metric 2 Value",
+          "default": "0.42"
+        },
+        {
+          "type": "text",
+          "id": "metric_label_3",
+          "label": "Metric 3 Label",
+          "default": "Fractal Depth"
+        },
+        {
+          "type": "text",
+          "id": "metric_value_3",
+          "label": "Metric 3 Value",
+          "default": "3.14"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quantum Content",
+      "category": "Content",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "lore"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

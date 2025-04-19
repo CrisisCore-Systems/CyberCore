@@ -1,0 +1,84 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 
+    VoidBloom Phase Symbol: {{ phase.name }}
+    Generated: {{ timestamp }}
+  -->
+  
+  <!-- Base shape -->
+  <circle cx="60" cy="60" r="50" fill="none" stroke="{{ phase.primaryColor }}" stroke-width="2" />
+  
+  {{#if (eq phaseName "cyber-lotus")}}
+    <!-- Cyber Lotus symbol -->
+    <path d="M60,20 C75,30 90,30 90,60 C90,90 75,90 60,75 C45,90 30,90 30,60 C30,30 45,30 60,20 Z" 
+          fill="none" 
+          stroke="{{ phase.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linejoin="round" />
+    <circle cx="60" cy="60" r="8" 
+            fill="{{ phase.primaryColor }}" 
+            opacity="0.8" />
+    <circle cx="60" cy="60" r="15" 
+            fill="none" 
+            stroke="{{ phase.secondaryColor }}" 
+            stroke-width="1.5"
+            stroke-dasharray="3 2" />
+    
+  {{else if (eq phaseName "alien-flora")}}
+    <!-- Alien Flora symbol -->
+    <path d="M60,20 C70,40 90,40 75,60 C90,80 70,80 60,100 C50,80 30,80 45,60 C30,40 50,40 60,20 Z" 
+          fill="none" 
+          stroke="{{ phase.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linejoin="round" />
+    <path d="M60,35 C65,45 75,45 68,60 C75,75 65,75 60,85 C55,75 45,75 52,60 C45,45 55,45 60,35 Z" 
+          fill="none" 
+          stroke="{{ phase.secondaryColor }}" 
+          stroke-width="1.5" />
+    <circle cx="60" cy="60" r="5" 
+            fill="{{ phase.primaryColor }}" 
+            opacity="0.8" />
+    
+  {{else if (eq phaseName "rolling-virus")}}
+    <!-- Rolling Virus symbol -->
+    <path d="M35,50 C35,35 45,30 60,30 C75,30 85,35 85,50 C85,65 75,70 60,70 C45,70 35,65 35,50 Z" 
+          fill="none" 
+          stroke="{{ phase.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linejoin="round" />
+    <path d="M40,75 L80,75 M45,83 L75,83 M50,91 L70,91" 
+          stroke="{{ phase.primaryColor }}" 
+          stroke-width="2.5"
+          stroke-linecap="round" />
+    <circle cx="47" cy="50" r="5" 
+            fill="{{ phase.primaryColor }}" 
+            opacity="0.8" />
+    <circle cx="73" cy="50" r="5" 
+            fill="{{ phase.primaryColor }}" 
+            opacity="0.8" />
+    
+  {{else}}
+    <!-- Default phase symbol -->
+    <path d="M30,60 L60,30 L90,60 L60,90 Z" 
+          fill="none" 
+          stroke="{{ phase.primaryColor }}" 
+          stroke-width="2.5" />
+    <circle cx="60" cy="60" r="10" 
+            fill="none" 
+            stroke="{{ phase.secondaryColor }}" 
+            stroke-width="1.5" />
+  {{/if}}
+  
+  <!-- Phase identifier -->
+  <text x="60" y="115" 
+        font-family="monospace" 
+        font-size="8" 
+        fill="{{ phase.primaryColor }}" 
+        text-anchor="middle">{{ phase.name }}</text>
+  
+  <!-- Outer effect -->
+  <circle cx="60" cy="60" r="55" 
+          fill="none" 
+          stroke="{{ phase.primaryColor }}" 
+          stroke-width="0.5"
+          opacity="0.5" />
+</svg>

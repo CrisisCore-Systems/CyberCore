@@ -1,0 +1,122 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Dev Server",
+      "program": "${workspaceFolder}/dev-server.js",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "restart": true,
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "runtimeArgs": ["--preserve-symlinks"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Jest Tests",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+      "args": ["--runInBand", "--watchAll=false"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      }
+    },
+    {
+      "type": "node",
+      "name": "Debug Current Jest Test",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": ["--runInBand", "--no-cache", "--testPathPattern=${fileBasenameNoExtension}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Quantum Components Tests",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+      "args": ["--runInBand", "--testPathPattern=quantum"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Initialize Taxonomy",
+      "program": "${workspaceFolder}/initialize-taxonomy.js",
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "PowerShell",
+      "request": "launch",
+      "name": "Debug PowerShell Script",
+      "script": "${file}",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "createTemporaryIntegratedConsole": true
+    },
+    {
+      "name": "Debug Quantum Forge",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/quantum-forge.ps1",
+      "cwd": "${workspaceFolder}",
+      "createTemporaryIntegratedConsole": true
+    },
+    {
+      "name": "Debug Deploy Quantum",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/deploy-quantum.ps1",
+      "cwd": "${workspaceFolder}",
+      "args": ["-Environment", "Development"],
+      "createTemporaryIntegratedConsole": true
+    },
+    {
+      "name": "Debug Quantum Inspector",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/quantum-inspector.ps1",
+      "cwd": "${workspaceFolder}",
+      "createTemporaryIntegratedConsole": true
+    },
+    {
+      "name": "Debug Browser",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/deploy/dev",
+      "sourceMapPathOverrides": {
+        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
+        "webpack:///./*": "${workspaceFolder}/*",
+        "webpack:///*": "*"
+      }
+    },
+    {
+      "name": "Debug Cybercore CLI",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/cybercore-cli.js",
+      "args": ["--help"],
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Server + Browser",
+      "configurations": ["Debug Dev Server", "Debug Browser"]
+    },
+    {
+      "name": "Quantum Full Stack",
+      "configurations": ["Debug Dev Server", "Debug Browser", "Debug Quantum Forge"]
+    }
+  ]
+}

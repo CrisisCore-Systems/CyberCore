@@ -1,0 +1,351 @@
+{% comment %}
+  product-hologram.liquid
+  Holographic product visualization for VoidBloom architecture
+  
+  @MutationCompatible: VoidBloom
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% assign model_url = product.metafields.cybercore.model_url %}
+{% assign has_hologram = model_url != blank %}
+{% assign product_trauma_codes = product.metafields.cybercore.trauma_codes | split: "," %}
+{% assign dimensional_depth = product.metafields.cybercore.dimensional_depth | default: 1 %}
+
+<div class="product-hologram-container" data-dimensional-depth="{{ dimensional_depth }}">
+  {% if has_hologram %}
+    <cart-preview-hologram
+      class="product-hologram"
+      product-id="{{ product.id }}"
+      model-url="{{ model_url }}"
+      profile="VoidBloom"
+      width="100%"
+      height="400px">
+      
+      <div class="hologram-loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Materializing artifact...</div>
+      </div>
+      
+      <div class="hologram-error hidden">
+        <div class="error-icon">!</div>
+        <div class="error-text">Hologram failed to materialize</div>
+      </div>
+      
+      <img src="{{ product.featured_image | img_url: '800x800', crop: 'center' }}" 
+           alt="{{ product.title | escape }}" 
+           class="hologram-fallback hidden" />
+    </cart-preview-hologram>
+    
+    <div class="hologram-controls">
+      <button class="hologram-control rotate-left" aria-label="Rotate left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+      </button>
+      
+      <button class="hologram-control glitch-effect" aria-label="Glitch effect">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v2"></path>
+          <path d="M12 16v6"></path>
+          <path d="M12 12h8"></path>
+          <path d="M12 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8Z"></path>
+          <path d="M8 20a4 4 0 1 0 8 0"></path>
+        </svg>
+      </button>
+      
+      <button class="hologram-control reset-view" aria-label="Reset view">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+          <path d="M21 3v5h-5"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="hologram-badge">VoidBloom Hologram</div>
+  {% else %}
+    <div class="product-image-container">
+      <img src="{{ product.featured_image | img_url: '800x800', crop: 'center' }}" 
+           alt="{{ product.title | escape }}" 
+           class="product-image" />
+      
+      <div class="dimensional-overlay depth-{{ dimensional_depth }}">
+        <div class="dimensional-marker"></div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .product-hologram-container {
+    position: relative;
+    background: rgba(10, 0, 20, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  
+  .product-hologram {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    background-color: transparent;
+  }
+  
+  .hologram-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 0, 20, 0.5);
+    z-index: 10;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(153, 0, 255, 0.1);
+    border-top-color: rgba(153, 0, 255, 0.8);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+  }
+  
+  .loading-text {
+    margin-top: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: rgba(153, 0, 255, 0.8);
+  }
+  
+  .hologram-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 0, 0, 0.7);
+    z-index: 11;
+  }
+  
+  .error-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 0, 80, 0.2);
+    border: 2px solid rgba(255, 0, 80, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: rgba(255, 0, 80, 0.8);
+    margin-bottom: 1rem;
+  }
+  
+  .error-text {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: rgba(255, 0, 80, 0.8);
+  }
+  
+  .hologram-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .hologram-controls {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 5;
+  }
+  
+  .hologram-control {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(153, 0, 255, 0.4);
+    color: rgba(153, 0, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .hologram-control:hover {
+    background: rgba(153, 0, 255, 0.2);
+    border-color: rgba(153, 0, 255, 0.6);
+    transform: translateY(-2px);
+  }
+  
+  .hologram-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(153, 0, 255, 0.2);
+    border: 1px solid rgba(153, 0, 255, 0.4);
+    color: rgba(153, 0, 255, 0.9);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    z-index: 5;
+  }
+  
+  /* Product image fallback */
+  .product-image-container {
+    position: relative;
+    padding-top: 100%;
+    overflow: hidden;
+  }
+  
+  .product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .dimensional-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+  
+  .depth-1 .dimensional-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.5), transparent);
+    animation: scan-down 8s infinite linear;
+  }
+  
+  .depth-2 .dimensional-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.7), transparent);
+    box-shadow: 0 0 10px rgba(153, 0, 255, 0.3);
+    animation: scan-down 6s infinite linear;
+  }
+  
+  .depth-3 .dimensional-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.9), transparent);
+    box-shadow: 0 0 15px rgba(153, 0, 255, 0.5);
+    animation: scan-down 4s infinite linear;
+  }
+  
+  .depth-3 .dimensional-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 50%, rgba(153, 0, 255, 0.2) 100%);
+    animation: pulse-fade 4s infinite alternate ease-in-out;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes scan-down {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(400px); }
+  }
+  
+  @keyframes pulse-fade {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.7; }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add product hologram controls
+    const controls = document.querySelectorAll('.hologram-control');
+    const hologram = document.querySelector('cart-preview-hologram');
+    
+    controls.forEach(control => {
+      control.addEventListener('click', () => {
+        if (!hologram) return;
+        
+        if (control.classList.contains('rotate-left')) {
+          // Trigger rotation via Neural Bus
+          if (window.NeuralBus) {
+            window.NeuralBus.publish('hologram:rotate', {
+              direction: 'left',
+              speed: 2,
+              productId: hologram.getAttribute('product-id')
+            });
+          }
+        } else if (control.classList.contains('glitch-effect')) {
+          // Trigger glitch effect via Neural Bus
+          if (window.NeuralBus) {
+            window.NeuralBus.publish('glitch:trigger', {
+              intensity: 0.7,
+              duration: 800,
+              target: hologram
+            });
+          }
+        } else if (control.classList.contains('reset-view')) {
+          // Reset view via Neural Bus
+          if (window.NeuralBus) {
+            window.NeuralBus.publish('hologram:reset', {
+              productId: hologram.getAttribute('product-id')
+            });
+          }
+        }
+      });
+    });
+    
+    // Apply dimensional depth to hologram if available
+    const container = document.querySelector('.product-hologram-container');
+    if (container && hologram) {
+      const depth = container.dataset.dimensionalDepth;
+      
+      // Set hologram depth via Neural Bus
+      if (window.NeuralBus && depth) {
+        window.NeuralBus.publish('hologram:set:depth', {
+          depth: parseInt(depth, 10),
+          productId: hologram.getAttribute('product-id')
+        });
+      }
+    }
+  });
+</script>

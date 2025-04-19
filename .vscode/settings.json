@@ -1,0 +1,233 @@
+{
+  // General editor settings
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.rulers": [100],
+  "editor.wordWrap": "off",
+  "editor.linkedEditing": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.snippetSuggestions": "top",
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "editor.inlineSuggest.enabled": true,
+
+  // Workbench settings
+  "workbench.colorCustomizations": {
+    "editorError.foreground": "#ff5370",
+    "editorWarning.foreground": "#ffcb6b",
+    "editorInfo.foreground": "#82aaff"
+  },
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.highlightModifiedTabs": true,
+
+  // ESLint configuration
+  "eslint.validate": ["javascript", "javascriptreact"],
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeActionsOnSave.rules": ["!no-unused-vars", "!@typescript-eslint/no-unused-vars"],
+  "eslint.options": {
+    "overrideConfigFile": ".eslintrc.js"
+  },
+
+  // Prettier configuration
+  "prettier.requireConfig": true,
+  "prettier.configPath": ".prettierrc",
+
+  // JavaScript settings
+  "javascript.format.enable": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.quoteStyle": "single",
+  "javascript.referencesCodeLens.enabled": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.inlayHints.parameterNames.enabled": "all",
+  "javascript.validate.enable": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Jest settings
+  "jest.autoRun": "off",
+  "jest.showCoverageOnLoad": true,
+  "jest.jestCommandLine": "npm run test --",
+  "jest.enableInlineErrorMessages": true,
+  "jest.enableCodeLens": true,
+  "jest.runMode": "run",
+  "jest.showOutput": "terminal",
+  "jest.showTerminalOutput": "both",
+
+  // PowerShell settings
+  "powershell.integratedConsole.showOnStartup": false,
+  "powershell.codeFormatting.autoCorrectAliases": true,
+  "powershell.pester.useLegacyCodeLens": false,
+  "powershell.codeFormatting.pipelineIndentationStyle": "IncreaseIndentationForFirstPipeline",
+  "powershell.codeFormatting.preset": "Custom",
+  "powershell.codeFormatting.alignPropertyValuePairs": true,
+  "powershell.enableProfileLoading": true,
+
+  // GitLens settings
+  "gitlens.codeLens.enabled": true,
+  "gitlens.hovers.enabled": true,
+  "gitlens.currentLine.enabled": true,
+  "gitlens.showWelcomeOnInstall": false,
+  "gitlens.showWhatsNewAfterUpgrades": false,
+
+  // Liquid settings
+  "files.associations": {
+    "*.liquid": "liquid",
+    "*.config.js": "javascript",
+    "*.ps1": "powershell",
+    "quantum-*.js": "javascript"
+  },
+
+  // Todo Tree settings
+  "todo-tree.general.tags": ["TODO", "FIXME", "BUG", "HACK", "QUANTUM", "NEURAL"],
+  "todo-tree.highlights.customHighlight": {
+    "QUANTUM": {
+      "foreground": "#9370DB",
+      "background": "#2E2E2E",
+      "iconColour": "#9370DB"
+    },
+    "NEURAL": {
+      "foreground": "#20B2AA",
+      "background": "#2E2E2E",
+      "iconColour": "#20B2AA"
+    }
+  },
+  "todo-tree.filtering.excludeGlobs": [
+    "**/node_modules/**",
+    "**/coverage/**",
+    "**/test-results/**"
+  ],
+  "todo-tree.general.revealBehaviour": "start of todo",
+
+  // JSON settings
+  "json.schemas": [
+    {
+      "fileMatch": ["*/config/*.json"],
+      "url": "./config/config.schema.json"
+    },
+    {
+      "fileMatch": ["*/blueprints/*.json"],
+      "url": "./blueprints/core.json"
+    }
+  ],
+
+  // YAML settings
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml",
+    "./config/config.schema.json": "config/*.json"
+  },
+
+  // Coverage Gutters
+  "coverage-gutters.showLineCoverage": true,
+  "coverage-gutters.showRulerCoverage": true,
+  "coverage-gutters.coverageFileNames": ["lcov.info", "cov.xml", "coverage.xml"],
+  "coverage-gutters.showGutterCoverage": true,
+
+  // Live Server
+  "liveServer.settings.root": "/deploy/dev",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.donotVerifyTags": true,
+  "liveServer.settings.ignoreFiles": [".git/**", "node_modules/**", "tests/**"],
+
+  // Path Intellisense
+  "path-intellisense.extensionOnImport": true,
+  "path-intellisense.mappings": {
+    "@": "${workspaceFolder}",
+    "@assets": "${workspaceFolder}/assets",
+    "@core": "${workspaceFolder}/Core",
+    "@config": "${workspaceFolder}/config"
+  },
+
+  // Project Manager
+  "projectManager.git.baseFolders": ["C:\\Users\\user\\Documents\\Projects"],
+
+  // Better Comments
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#FF2D00",
+      "strikethrough": false,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "?",
+      "color": "#3498DB",
+      "strikethrough": false,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "todo",
+      "color": "#FF8C00",
+      "strikethrough": false,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "quantum",
+      "color": "#9370DB",
+      "strikethrough": false,
+      "backgroundColor": "transparent"
+    },
+    {
+      "tag": "neural",
+      "color": "#20B2AA",
+      "strikethrough": false,
+      "backgroundColor": "transparent"
+    }
+  ],
+
+  // Import Cost
+  "importCost.largePackageColor": "#EC407A",
+  "importCost.mediumPackageColor": "#26A69A",
+  "importCost.smallPackageColor": "#66BB6A",
+
+  // Auto Rename Tag
+  "auto-rename-tag.activationOnLanguage": ["html", "xml", "javascript", "liquid"],
+
+  // REST Client & Thunder Client
+  "rest-client.enableTelemetry": false,
+  "thunder-client.saveToWorkspace": true,
+  "thunder-client.workspaceRelativePath": "./thunder-tests",
+
+  // Markdown settings for documentation
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
+  },
+
+  // Misc
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/coverage": false,
+    "**/test-results": false
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/coverage": true,
+    "**/test-results": true
+  },
+  "telemetry.telemetryLevel": "off",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
+}

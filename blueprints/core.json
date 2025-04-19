@@ -1,0 +1,6 @@
+﻿{
+  "sections": ["quantum-header.liquid"],
+  "snippets": ["meta-social.liquid", "quantum-layer.liquid"],
+  "assets": ["neural-bus.js", "cart-system.js", "glitch-engine.js"],
+  "layout": ["theme.liquid"]
+}

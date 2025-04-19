@@ -1,0 +1,172 @@
+{% comment %}
+  quantum-dashboard.liquid
+  Admin dashboard for visualizing product mutation states and quantum entanglement
+  
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<div class="dashboard-container">
+  <div id="quantum-visualizer" class="quantum-visualizer-container"></div>
+</div>
+
+{% unless settings.disable_quantum_scripts %}
+  <script type="module">
+    // Import required CyberCore components
+    import { NeuralBus } from "{{ 'neural-bus.js' | asset_url }}";
+    import { QuantumVisualizer } from "{{ 'quantum-visualizer.js' | asset_url }}";
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Neural Bus if not already initialized
+      if (typeof window.NeuralBus === 'undefined') {
+        window.NeuralBus = NeuralBus;
+        NeuralBus.initialize();
+      }
+      
+      // Initialize Quantum Visualizer
+      QuantumVisualizer.initialize({
+        debug: {{ settings.debug_mode | default: false | json }}
+      });
+      
+      // Fetch initial product data if needed
+      {% if request.page_type == 'page' and page.handle == 'quantum-dashboard' %}
+        // Fetch all products for initial visualizer state
+        fetch('/products.json?limit=250')
+          .then(response => response.json())
+          .then(data => {
+            if (data && data.products && Array.isArray(data.products)) {
+              // Process each product
+              data.products.forEach(product => {
+                // Determine mutation profile from tags
+                let profile = 'CyberLotus'; // Default profile
+                
+                if (product.tags && Array.isArray(product.tags)) {
+                  if (product.tags.includes('voidbloom')) {
+                    profile = 'VoidBloom';
+                  } else if (product.tags.includes('obsidianbloom')) {
+                    profile = 'ObsidianBloom';
+                  } else if (product.tags.includes('neonvortex')) {
+                    profile = 'NeonVortex';
+                  }
+                }
+                
+                // Check for 3D/AR capabilities
+                const has3dModel = product.media && product.media.some(m => m.media_type === 'model');
+                const hasArModel = has3dModel && product.media.some(m => 
+                  m.media_type === 'model' && m.sources && m.sources.some(s => s.format === 'usdz')
+                );
+                
+                // Add to visualizer
+                QuantumVisualizer.updateProduct(
+                  product.id,
+                  profile,
+                  'init',
+                  {
+                    arSupported: hasArModel,
+                    hologramSupported: has3dModel,
+                    data: {
+                      title: product.title,
+                      handle: product.handle,
+                      tags: product.tags
+                    }
+                  }
+                );
+              });
+              
+              console.log(`Loaded ${data.products.length} products into Quantum Visualizer`);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching initial product data:', error);
+          });
+      {% endif %}
+      
+      // Set up NeuralBus event listeners for real-time updates
+      NeuralBus.subscribe('cart:item:added', function(data) {
+        // Notify user of quantum events
+        if (data && data.item) {
+          const toast = document.createElement('div');
+          toast.className = 'quantum-toast';
+          toast.innerHTML = `
+            <div class="toast-icon">🔮</div>
+            <div class="toast-content">
+              <div class="toast-title">Quantum Mutation Detected</div>
+              <div class="toast-message">Product #${data.item.product_id} entered cart matrix</div>
+            </div>
+          `;
+          
+          document.body.appendChild(toast);
+          
+          // Remove after animation
+          setTimeout(() => {
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+              toast.classList.remove('show');
+              setTimeout(() => {
+                toast.remove();
+              }, 300);
+            }, 3000);
+          }, 10);
+        }
+      });
+    });
+  </script>
+  
+  <style>
+    .dashboard-container {
+      padding: 20px;
+      background-color: #0a0a0a;
+      min-height: 800px;
+    }
+    
+    .quantum-visualizer-container {
+      min-height: 800px;
+    }
+    
+    .quantum-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      background-color: rgba(10, 10, 10, 0.9);
+      border-left: 3px solid #00ffff;
+      padding: 12px 15px;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+    
+    .quantum-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .toast-icon {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #00ffff;
+    }
+    
+    .toast-message {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+  </style>
+{% endunless %}

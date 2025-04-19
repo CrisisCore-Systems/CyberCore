@@ -1,0 +1,137 @@
+/* Tailwind CSS Integration */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import existing quantum styles */
+@import 'quantum-featured.css';
+
+/* Custom Tailwind Components */
+@layer components {
+  /* Quantum Button Tailwind Component */
+  .tw-quantum-btn {
+    @apply bg-surface text-primary border-normal border-primary rounded-md
+           font-primary font-medium px-md py-sm relative overflow-hidden
+           transition duration-[var(--animation-speed-fast)] ease-[var(--animation-timing-default)];
+  }
+
+  .tw-quantum-btn:hover {
+    @apply shadow-[0_0_var(--glow-intensity)_var(--color-primary)];
+    background-color: color-mix(in srgb, var(--color-surface), var(--color-primary) 10%);
+  }
+
+  /* Quantum Card Tailwind Component */
+  .tw-quantum-card {
+    @apply bg-surface border-thin border-primary rounded-lg p-lg
+           shadow-[0_0_var(--glow-intensity)_rgba(var(--color-primary),0.2)]
+           transition duration-[var(--animation-speed-normal)] ease-[var(--animation-timing-default)];
+  }
+
+  .tw-quantum-card:hover {
+    @apply transform -translate-y-[5px];
+    box-shadow: 0 0 calc(var(--glow-intensity) * 1.5)
+      color-mix(in srgb, var(--color-primary), transparent 40%);
+  }
+
+  /* Trauma-specific card effects */
+  .tw-trauma-abandonment {
+    @apply shadow-trauma-abandonment;
+  }
+
+  .tw-trauma-fragmentation {
+    @apply shadow-trauma-fragmentation;
+  }
+
+  .tw-trauma-surveillance {
+    @apply shadow-trauma-surveillance;
+  }
+
+  .tw-trauma-recursion {
+    @apply shadow-trauma-recursion;
+  }
+
+  .tw-trauma-displacement {
+    @apply shadow-trauma-displacement;
+  }
+
+  .tw-trauma-dissolution {
+    @apply shadow-trauma-dissolution;
+  }
+
+  /* Quantum Input Tailwind Component */
+  .tw-quantum-input {
+    @apply bg-opacity-20 bg-black border-thin border-secondary rounded-md text-foreground
+           font-primary px-md py-sm transition duration-[var(--animation-speed-fast)]
+           ease-[var(--animation-timing-default)];
+  }
+
+  .tw-quantum-input:focus {
+    @apply outline-none border-primary;
+    box-shadow: 0 0 var(--glow-intensity) color-mix(in srgb, var(--color-primary), transparent 70%);
+  }
+
+  /* Quantum Loader Tailwind Component */
+  .tw-quantum-loader {
+    @apply w-10 h-10 rounded-full border-normal border-opacity-20 border-primary
+           border-t-primary animate-quantum-spin;
+  }
+
+  /* Quantum Glow Text Tailwind Component */
+  .tw-quantum-glow-text {
+    @apply text-foreground shadow-[0_0_var(--glow-intensity)_var(--color-primary)]
+           transition-[text-shadow] duration-[var(--animation-speed-normal)]
+           ease-[var(--animation-timing-default)];
+  }
+
+  .tw-quantum-glow-text:hover {
+    text-shadow: 0 0 calc(var(--glow-intensity) * 1.5) var(--color-primary);
+  }
+
+  /* Quantum Glitch Effect */
+  .tw-quantum-glitch {
+    @apply animate-quantum-glitch;
+  }
+
+  /* Hologram Container */
+  .tw-hologram-container {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-xl relative z-3;
+  }
+
+  /* Hologram Product Card */
+  .tw-hologram-product {
+    @apply relative rounded-lg bg-surface backdrop-blur-md
+           shadow-[0_0_var(--glow-intensity)_rgba(140,80,220,0.2)]
+           p-lg transition duration-[var(--animation-speed-normal)]
+           ease-[var(--animation-timing-default)] flex flex-col overflow-hidden;
+  }
+
+  .tw-hologram-product:hover {
+    @apply transform -translate-y-[10px] shadow-[0_15px_35px_rgba(140,80,220,0.25)];
+  }
+
+  /* Ritual Buttons */
+  .tw-ritual-button {
+    @apply font-secondary text-sm font-bold tracking-wider uppercase
+           py-sm px-lg rounded-md cursor-pointer transition duration-[var(--animation-speed-fast)]
+           ease-linear inline-flex items-center justify-center;
+  }
+
+  .tw-ritual-button-primary {
+    @apply bg-gradient-to-r from-[#6d41b0] to-[#9e5aea] text-foreground border-none
+           shadow-[0_5px_15px_rgba(140,80,220,0.25)];
+  }
+
+  .tw-ritual-button-primary:hover {
+    @apply bg-gradient-to-r from-[#7d51c0] to-[#ae6afa] shadow-[0_8px_20px_rgba(140,80,220,0.4)]
+           transform -translate-y-[2px];
+  }
+
+  .tw-ritual-button-secondary {
+    @apply bg-transparent text-accent border-thin border-[rgba(224,176,255,0.5)];
+  }
+
+  .tw-ritual-button-secondary:hover {
+    @apply bg-[rgba(224,176,255,0.1)] border-[rgba(224,176,255,0.8)]
+           shadow-[0_0_var(--glow-intensity)_rgba(224,176,255,0.2)];
+  }
+}

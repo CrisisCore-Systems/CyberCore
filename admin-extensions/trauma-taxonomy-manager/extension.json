@@ -1,0 +1,78 @@
+{
+  "name": "Trauma Taxonomy Manager",
+  "version": "1.0.0",
+  "description": "Advanced management interface for product trauma taxonomies and coherence systems",
+  "entrypoint": "index.js",
+  "permissions": [
+    "read_products",
+    "write_products",
+    "read_metafields",
+    "write_metafields",
+    "read_orders",
+    "read_customers"
+  ],
+  "interfaces": [
+    {
+      "type": "product_details",
+      "component": "TaxonomyEditor",
+      "position": "product.aside.primary",
+      "title": "Trauma Taxonomy"
+    },
+    {
+      "type": "settings",
+      "component": "TaxonomySettings",
+      "position": "settings.products.tabs",
+      "title": "Trauma Coherence System"
+    },
+    {
+      "type": "analytics",
+      "component": "TraumaAnalytics",
+      "position": "analytics.overview.tabs",
+      "title": "Trauma Analytics"
+    }
+  ],
+  "hooks": [
+    {
+      "event": "product.update",
+      "handler": "onProductUpdate"
+    },
+    {
+      "event": "order.create",
+      "handler": "onOrderCreate"
+    }
+  ],
+  "settings": {
+    "coherenceThreshold": {
+      "type": "number",
+      "default": 0.65,
+      "label": "Coherence Threshold",
+      "description": "Minimum coherence score required for discount application"
+    },
+    "traumaWeightings": {
+      "type": "object",
+      "default": {
+        "abandonment": 1.15,
+        "fragmentation": 1.22,
+        "surveillance": 1.18,
+        "recursion": 1.24,
+        "displacement": 1.12,
+        "dissolution": 1.3
+      },
+      "label": "Trauma Type Weightings",
+      "description": "Price multipliers for each trauma type"
+    },
+    "enableQuantumMutation": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable Quantum Mutation",
+      "description": "Allow dynamic trauma type emergence based on purchase patterns"
+    },
+    "narrativeResonanceLevel": {
+      "type": "select",
+      "options": ["low", "medium", "high", "extreme"],
+      "default": "medium",
+      "label": "Narrative Resonance Level",
+      "description": "Determines how strongly narrative elements influence trauma coherence"
+    }
+  }
+}

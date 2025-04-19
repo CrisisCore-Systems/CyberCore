@@ -1,0 +1,467 @@
+{% comment %}
+  VoidBloom Section: {{ name }}
+  Generated: {{ timestamp }}
+  {% if trauma %}
+  Trauma Type: {{ trauma.type }}
+  Trauma Intensity: {{ trauma.intensity }}
+  Recursion Depth: {{ trauma.recursionDepth }}
+  {% endif %}
+  {% if phase %}
+  Phase: {{ phase.name }}
+  {% endif %}
+{% endcomment %}
+
+<section class="voidbloom-section section-{{ name }}" 
+  {% if trauma %}
+  data-trauma-type="{{ trauma.type }}"
+  data-trauma-intensity="{{ trauma.intensity }}"
+  data-recursion-depth="{{ trauma.recursionDepth }}"
+  data-glitch-freq="{{ trauma.visualProperties.glitchFrequency }}"
+  data-pulse-speed="{{ trauma.visualProperties.pulseSpeed }}"
+  data-corruption-type="{{ trauma.visualProperties.corruptionType }}"
+  style="--trauma-primary: {{ trauma.visualProperties.primaryColor }}; --trauma-secondary: {{ trauma.visualProperties.secondaryColor }}; --trauma-primary-rgba: {{ trauma.visualProperties.primaryColorRgba }}; --trauma-secondary-rgba: {{ trauma.visualProperties.secondaryColorRgba }};"
+  {% endif %}
+  {% if phase %}
+  data-phase="{{ phaseName }}"
+  style="--phase-primary: {{ phase.primaryColor }}; --phase-secondary: {{ phase.secondaryColor }}; --phase-tertiary: {{ phase.tertiaryColor }}; --phase-accent: {{ phase.accentColor }}; --phase-background: {{ phase.background }}; --phase-text: {{ phase.textColor }};"
+  {% endif %}
+>
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 class="section-title">{{ name | replace: '-', ' ' | capitalize }}</h2>
+      {% if trauma %}
+      <div class="trauma-indicator">
+        <span class="trauma-type">{{ trauma.typeName }}</span>
+        <span class="trauma-intensity">{{ trauma.intensity }}</span>
+        <div class="trauma-glyph">
+          {% include 'trauma-glyph' with type: trauma.type %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="section-content">
+      <!-- Section content goes here -->
+      {% if trauma.poem %}
+      <div class="trauma-poem">
+        <blockquote>
+          {{ trauma.poem | newline_to_br }}
+        </blockquote>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if trauma %}
+    <div class="trauma-manifestations">
+      <h3>Manifestations</h3>
+      <ul>
+        {% for manifestation in trauma.manifestations %}
+        <li>{{ manifestation }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if phase %}
+    <div class="phase-indicator">
+      <span class="phase-name">{{ phase.name }}</span>
+      <div class="phase-description">{{ phase.description }}</div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "{{ name | replace: '-', ' ' | capitalize }}",
+  "tag": "section",
+  "class": "section section-{{ name }}",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "{{ name | replace: '-', ' ' | capitalize }}"
+    },
+    {% if trauma %}
+    {
+      "type": "range",
+      "id": "trauma_intensity",
+      "label": "Trauma Intensity",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.1,
+      "default": {{ trauma.intensity }}
+    },
+    {
+      "type": "range",
+      "id": "recursion_depth",
+      "label": "Recursion Depth",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": {{ trauma.recursionDepth }}
+    },
+    {% endif %}
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable Animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "{{ name | replace: '-', ' ' | capitalize }}",
+      "category": "VoidBloom"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.section-{{ name }} {
+  position: relative;
+  padding: 4rem 2rem;
+  color: var(--phase-text, #E5E5EB);
+  background-color: var(--phase-background, #0A0A0E);
+  overflow: hidden;
+}
+
+.section-{{ name }}::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(
+      circle at 50% 50%, 
+      var(--trauma-primary-rgba, rgba(0,0,0,0)), 
+      transparent 70%
+    );
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.section-{{ name }} .section-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-{{ name }} .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--trauma-primary, #9D00FF);
+}
+
+.section-{{ name }} .section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--trauma-primary, #9D00FF);
+  margin: 0;
+}
+
+.section-{{ name }} .trauma-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-{{ name }} .trauma-type {
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.section-{{ name }} .trauma-intensity {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  background-color: var(--trauma-primary, #9D00FF);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.section-{{ name }} .trauma-glyph {
+  width: 2rem;
+  height: 2rem;
+}
+
+.section-{{ name }} .section-content {
+  position: relative;
+}
+
+.section-{{ name }} .trauma-poem {
+  margin: 2rem 0;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid var(--trauma-primary, #9D00FF);
+}
+
+.section-{{ name }} .trauma-poem blockquote {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--trauma-primary, #9D00FF);
+  opacity: 0.8;
+}
+
+.section-{{ name }} .trauma-manifestations {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+}
+
+.section-{{ name }} .trauma-manifestations h3 {
+  font-size: 1.25rem;
+  margin-top: 0;
+  color: var(--trauma-primary, #9D00FF);
+}
+
+.section-{{ name }} .trauma-manifestations ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.section-{{ name }} .trauma-manifestations li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.section-{{ name }} .trauma-manifestations li:last-child {
+  border-bottom: none;
+}
+
+.section-{{ name }} .phase-indicator {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--phase-tertiary, rgba(0, 0, 0, 0.3));
+  border-radius: 0.25rem;
+}
+
+.section-{{ name }} .phase-name {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--phase-primary, #9D00FF);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-{{ name }} .phase-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+{% if trauma %}
+/* Trauma-specific effects */
+{% case trauma.visualProperties.corruptionType %}
+{% when "distortion" %}
+.section-{{ name }}::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    var(--trauma-primary-rgba) 10px,
+    var(--trauma-primary-rgba) 12px
+  );
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+{% when "pixelation" %}
+.section-{{ name }} .section-content {
+  position: relative;
+}
+.section-{{ name }} .section-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' fill='{{ trauma.visualProperties.primaryColor | replace: '#', '%23' }}' fill-opacity='0.1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.1;
+  z-index: -1;
+  pointer-events: none;
+}
+{% when "scan-lines" %}
+.section-{{ name }}::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    transparent 1px,
+    var(--trauma-primary-rgba) 1px,
+    var(--trauma-primary-rgba) 2px
+  );
+  background-size: 100% 4px;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+{% when "feedback-loop" %}
+.section-{{ name }} .section-inner {
+  position: relative;
+}
+.section-{{ name }} .section-inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--trauma-primary, #9D00FF);
+  border-radius: 1px;
+  opacity: 0.1;
+  z-index: -1;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+.section-{{ name }} .section-inner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--trauma-primary, #9D00FF);
+  border-radius: 2px;
+  opacity: 0.05;
+  z-index: -1;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+{% when "offset" %}
+.section-{{ name }} .section-title,
+.section-{{ name }} .trauma-type,
+.section-{{ name }} .trauma-poem blockquote {
+  position: relative;
+}
+.section-{{ name }} .section-title::after,
+.section-{{ name }} .trauma-type::after,
+.section-{{ name }} .trauma-poem blockquote::after {
+  content: attr(data-content);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--trauma-primary, #9D00FF);
+  clip-path: inset(0 0 0 50%);
+  transform: translateX(2px);
+  opacity: 0.5;
+  z-index: -1;
+}
+{% when "dissolution" %}
+.section-{{ name }} {
+  position: relative;
+}
+.section-{{ name }}::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--phase-background, #0A0A0E)
+  );
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+{% endcase %}
+{% endif %}
+
+@media screen and (max-width: 768px) {
+  .section-{{ name }} {
+    padding: 3rem 1rem;
+  }
+  
+  .section-{{ name }} .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .section-{{ name }} .section-title {
+    font-size: 1.5rem;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  const section = document.querySelector('.section-{{ name }}');
+  
+  {% if trauma %}
+  // Apply trauma effects
+  const traumaType = section.getAttribute('data-trauma-type');
+  const traumaIntensity = parseFloat(section.getAttribute('data-trauma-intensity'));
+  const recursionDepth = parseInt(section.getAttribute('data-recursion-depth'));
+  const glitchFreq = parseFloat(section.getAttribute('data-glitch-freq'));
+  const pulseSpeed = parseFloat(section.getAttribute('data-pulse-speed'));
+  const corruptionType = section.getAttribute('data-corruption-type');
+  
+  if (traumaType && traumaIntensity > 0) {
+    // Add glitch effect based on trauma type
+    const glitchProbability = glitchFreq * traumaIntensity;
+    
+    // Apply glitch effect randomly based on probability
+    setInterval(() => {
+      if (Math.random() < glitchProbability) {
+        applyGlitchEffect(section, traumaType, traumaIntensity, recursionDepth);
+      }
+    }, 5000); // Check every 5 seconds
+  }
+  
+  // Prepare titles for offset effect if needed
+  if (corruptionType === 'offset') {
+    const titles = section.querySelectorAll('.section-title, .trauma-type, .trauma-poem blockquote');
+    titles.forEach(title => {
+      title.setAttribute('data-content', title.textContent);
+    });
+  }
+  {% endif %}
+  
+  // Helper function to apply glitch effect
+  function applyGlitchEffect(element, traumaType, intensity, depth) {
+    // Add glitch class temporarily
+    element.classList.add('glitching');
+    
+    // Remove after short duration
+    setTimeout(() => {
+      element.classList.remove('glitching');
+    }, 500 + Math.random() * 1000 * intensity);
+  }
+});
+{% endjavascript %}

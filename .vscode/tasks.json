@@ -1,0 +1,140 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Dev Server",
+      "type": "shell",
+      "command": "node dev-server.js",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "npm run test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Run Quantum Tests",
+      "type": "shell",
+      "command": "npm run test -- --testPathPattern=quantum",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Initialize Taxonomy",
+      "type": "shell",
+      "command": "node initialize-taxonomy.js",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Run Quantum Forge",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\quantum-forge.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Run Quantum Inspector",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\quantum-inspector.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Deploy to Development",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\deploy-quantum.ps1 -Environment Development",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "ESLint: Fix All",
+      "type": "shell",
+      "command": "npx eslint . --fix",
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "Generate Coverage Report",
+      "type": "shell",
+      "command": "npm run test:coverage",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Quantum Vulnerability Scan",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\Get-QuantumVulnerability.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Export Quantum Documentation",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\Export-QuantumDocs.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Invoke Quantum Mutation",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\Invoke-QuantumMutation.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Full Quantum Test Suite",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Initialize Taxonomy",
+        "Run Tests",
+        "Run Quantum Forge",
+        "Run Quantum Inspector"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

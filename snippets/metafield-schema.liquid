@@ -1,0 +1,224 @@
+{% comment %}
+  VoidBloom Metafield Schema
+  VERSION 4.2.1
+  TRAUMA ENCODING SPECIFICATION
+{% endcomment %}
+
+{% assign schema = {
+  namespace: "voidbloom",
+  fields: {
+    trauma_type: {
+      type: "single_line_text",
+      valid_values: ["abandonment", "fragmentation", "surveillance", "recursion", "displacement", "dissolution"],
+      default: null
+    },
+    trauma_subtype: {
+      type: "single_line_text",
+      validation: "subtype_must_match_primary",
+      default: null
+    },
+    memory_phase: {
+      type: "single_line_text",
+      valid_values: ["cyber-lotus", "alien-flora", "rolling-virus"],
+      default: "cyber-lotus"
+    },
+    coherence_sensitivity: {
+      type: "number_decimal",
+      min: 0,
+      max: 1,
+      default: 0.5
+    },
+    recursion_depth: {
+      type: "number_integer",
+      min: 1,
+      max: 5,
+      default: 1
+    },
+    memory_fragments: {
+      type: "multi_line_text",
+      delimiter: "|",
+      max_fragments: 5
+    },
+    bloom_intensity: {
+      type: "number_decimal",
+      min: 0,
+      max: 1,
+      default: 0.7
+    },
+    quantum_state: {
+      type: "single_line_text",
+      valid_values: ["superposition", "entangled", "collapsed", "decoherent"],
+      default: "superposition"
+    },
+    narrative_weight: {
+      type: "number_decimal",
+      min: 0,
+      max: 1,
+      default: 0.5
+    },
+    observer_effect: {
+      type: "boolean",
+      default: true
+    },
+    coherence_anchor_id: {
+      type: "single_line_text",
+      validation: "must_exist_in_persistence",
+      default: null
+    },
+    dissolution_rate: {
+      type: "number_decimal",
+      min: 0,
+      max: 0.01,
+      default: 0.0001
+    },
+    resonance_frequency: {
+      type: "number_decimal",
+      min: 0.1,
+      max: 10,
+      default: 1.618
+    },
+    surveillance_visibility: {
+      type: "number_decimal",
+      min: 0,
+      max: 1,
+      default: 0.5
+    },
+    displacement_vector: {
+      type: "json",
+      schema: {
+        x: "number",
+        y: "number",
+        z: "number"
+      },
+      default: { x: 0, y: 0, z: 0 }
+    },
+    fragmentation_pattern: {
+      type: "single_line_text",
+      valid_values: ["radial", "linear", "recursive", "chaotic", "prismatic"],
+      default: "radial"
+    },
+    abandonment_void_size: {
+      type: "number_decimal",
+      min: 0,
+      max: 1,
+      default: 0.5
+    }
+  }
+} %}
+
+{% comment %}
+  Helper functions for metafield validation
+{% endcomment %}
+
+{% assign validation_functions = {
+  validate_trauma_subtype: '
+    function validateTraumaSubtype(product) {
+      const primaryType = product.metafields.voidbloom.trauma_type;
+      const subType = product.metafields.voidbloom.trauma_subtype;
+
+      if (!subType) return true;
+
+      const validSubtypes = {
+        "abandonment": ["void", "absence", "detachment", "isolation", "desertion"],
+        "fragmentation": ["shattered", "broken", "divided", "split", "segmented"],
+        "surveillance": ["observed", "monitored", "tracked", "recorded", "scrutinized"],
+        "recursion": ["loop", "cycle", "iteration", "repetition", "regression"],
+        "displacement": ["shifted", "warped", "relocated", "misplaced", "dislocated"],
+        "dissolution": ["decay", "entropy", "fading", "disintegration", "corruption"]
+      };
+
+      return validSubtypes[primaryType] && validSubtypes[primaryType].includes(subType);
+    }
+  ',
+  validate_coherence_anchor: '
+    function validateCoherenceAnchor(product) {
+      const anchorId = product.metafields.voidbloom.coherence_anchor_id;
+
+      if (!anchorId) return true;
+
+      // This would actually check against the persistence layer
+      // In liquid this is mocked, the real validation happens in JS
+      return true;
+    }
+  '
+} %}
+
+{% comment %}
+  Example validation usage
+{% endcomment %}
+
+{% if product.metafields.voidbloom.trauma_type %}
+  {% assign is_valid_trauma_type = false %}
+  {% for valid_value in schema.fields.trauma_type.valid_values %}
+    {% if valid_value == product.metafields.voidbloom.trauma_type %}
+      {% assign is_valid_trauma_type = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if is_valid_trauma_type == false %}
+    {% comment %}
+      Handle invalid value - in practice this would be handled by JS validation
+    {% endcomment %}
+  {% endif %}
+{% endif %}
+
+{% comment %}
+  Accessing trauma-specific styling
+{% endcomment %}
+
+{% capture trauma_classes %}
+  {% if product.metafields.voidbloom.trauma_type %}
+    trauma-{{ product.metafields.voidbloom.trauma_type }}
+    {% if product.metafields.voidbloom.trauma_subtype %}
+      subtype-{{ product.metafields.voidbloom.trauma_subtype }}
+    {% endif %}
+    {% if product.metafields.voidbloom.memory_phase %}
+      phase-{{ product.metafields.voidbloom.memory_phase }}
+    {% endif %}
+  {% endif %}
+{% endcapture %}
+
+{% comment %}
+  Display trauma-specific content
+{% endcomment %}
+
+{% if product.metafields.voidbloom.trauma_type %}
+  <div class="trauma-node {{ trauma_classes | strip }}"
+       data-trauma="{{ product.metafields.voidbloom.trauma_type }}"
+       data-intensity="{{ product.metafields.voidbloom.bloom_intensity | default: schema.fields.bloom_intensity.default }}"
+       data-coherence="{{ product.metafields.voidbloom.coherence_sensitivity | default: schema.fields.coherence_sensitivity.default }}"
+       data-quantum-state="{{ product.metafields.voidbloom.quantum_state | default: schema.fields.quantum_state.default }}"
+       data-recursion-depth="{{ product.metafields.voidbloom.recursion_depth | default: schema.fields.recursion_depth.default }}">
+
+    <div class="node-content">
+      <h3 class="node-title">{{ product.title }}</h3>
+
+      <div class="trauma-description">
+        {% case product.metafields.voidbloom.trauma_type %}
+          {% when 'abandonment' %}
+            <p class="trauma-text">An expansive void stretches before you. {{ product.title }} exists in this absence.</p>
+          {% when 'fragmentation' %}
+            <p class="trauma-text">Shattered into countless pieces, {{ product.title }} exists across multiple planes.</p>
+          {% when 'surveillance' %}
+            <p class="trauma-text">{{ product.title }} observes while being observed, caught in the eternal gaze.</p>
+          {% when 'recursion' %}
+            <p class="trauma-text">{{ product.title }} repeats itself endlessly, each iteration slightly different.</p>
+          {% when 'displacement' %}
+            <p class="trauma-text">Existing in the wrong place, {{ product.title }} has been shifted from its origin.</p>
+          {% when 'dissolution' %}
+            <p class="trauma-text">Slowly fading into entropy, {{ product.title }} exists in controlled decay.</p>
+        {% endcase %}
+      </div>
+
+      {% if product.metafields.voidbloom.memory_fragments %}
+        <div class="memory-fragments">
+          {% assign fragments = product.metafields.voidbloom.memory_fragments | split: '|' %}
+          {% for fragment in fragments %}
+            <div class="fragment" data-fragment-id="fragment-{{ forloop.index }}">{{ fragment }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
