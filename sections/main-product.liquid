@@ -1,0 +1,717 @@
+{% comment %}
+  Main Product Section - VoidBloom product detail content
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-entangled
+  @Version: 3.7.1
+{% endcomment %}
+
+<div class="main-product-section trauma-{{ settings.default_trauma_type }}">
+  <div class="container">
+    <div class="product-layout">
+      <div class="product-gallery">
+        <div class="gallery-main">
+          {% if product.featured_media %}
+            <div class="featured-media-container" data-trauma-type="{{ settings.default_trauma_type }}">
+              {% if product.featured_media.media_type == 'video' %}
+                {{ product.featured_media | media_tag: class: 'featured-media', loop: section.settings.loop_videos }}
+              {% else %}
+                {{ product.featured_media | img_url: '1200x' | img_tag: product.title, 'featured-media' }}
+              {% endif %}
+
+              {% if section.settings.enable_dimensional_depth %}
+                <div class="media-bloom-effect"></div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if product.media.size > 1 %}
+          <div class="gallery-thumbnails">
+            {% for media in product.media %}
+              <div class="thumbnail-item {% if forloop.first %}active{% endif %}" data-media-id="{{ media.id }}">
+                {{ media | img_url: '120x120', crop: 'center' | img_tag: product.title, 'thumbnail-image' }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="product-details">
+        {% if section.settings.show_vendor and product.vendor %}
+          <div class="product-vendor">{{ product.vendor }}</div>
+        {% endif %}
+
+        <h1 class="product-title">{{ product.title }}</h1>
+
+        <div class="product-price">
+          <span class="price">{{ product.price | money }}</span>
+          {% if product.compare_at_price_max > product.price %}
+            <span class="compare-price">{{ product.compare_at_price_max | money }}</span>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_trauma_indicator %}
+          <div class="trauma-indicator" data-trauma-type="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
+            <span class="indicator-label">Memory Encoding:</span>
+            <span class="indicator-value">{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type | capitalize }}</span>
+          </div>
+        {% endif %}
+
+        {% form 'product', product %}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+          {% if product.has_only_default_variant == false %}
+            <div class="variant-selectors">
+              {% for option in product.options_with_values %}
+                <div class="option-selector">
+                  <label for="Option-{{ option.name | handleize }}">{{ option.name }}</label>
+
+                  {% if section.settings.variant_style == 'dropdown' %}
+                    <select id="Option-{{ option.name | handleize }}" name="options[{{ option.name }}]">
+                      {% for value in option.values %}
+                        <option
+                          value="{{ value }}"
+                          {% if option.selected_value == value %}selected="selected"{% endif %}
+                        >
+                          {{ value }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  {% else %}
+                    <div class="option-buttons">
+                      {% for value in option.values %}
+                        <label
+                          class="option-button {% if option.selected_value == value %}selected{% endif %}"
+                          data-option-value="{{ value }}"
+                        >
+                          <input
+                            type="radio"
+                            name="options[{{ option.name }}]"
+                            value="{{ value }}"
+                            {% if option.selected_value == value %}checked="checked"{% endif %}
+                          >
+                          <span>{{ value }}</span>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="quantity-container">
+            <label for="Quantity">Quantity</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1">
+          </div>
+
+          <div class="product-actions">
+            <button type="submit" class="add-to-cart-button">Add to Memory Archive</button>
+
+            {% if section.settings.show_dynamic_checkout %}
+              {{ form | payment_button }}
+            {% endif %}
+          </div>
+        {% endform %}
+
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+
+        {% if section.settings.show_memory_tab %}
+          <div class="memory-description">
+            <h3>Memory Resonance</h3>
+            <div class="memory-content">
+              {{ product.metafields.voidbloom.memory_description | default: section.settings.default_memory_description }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.show_related_products %}
+      <div class="related-products">
+        <h2>{{ section.settings.related_products_title }}</h2>
+        <div class="product-grid">
+          {% assign current_product = product %}
+          {% assign current_trauma_type = product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type %}
+
+          {% if collections.all.products.size > 1 %}
+            {% assign related_products = collections.all.products | where: "metafields.voidbloom.trauma_type", current_trauma_type | where_not: "id", current_product.id | limit: 4 %}
+
+            {% if related_products.size < 1 %}
+              {% assign related_products = collections.all.products | where_not: "id", current_product.id | limit: 4 %}
+            {% endif %}
+
+            {% for related_product in related_products %}
+              {% render 'product-card', product: related_product %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if section.settings.enable_trauma_coding %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Media gallery functionality
+    const thumbnails = document.querySelectorAll('.thumbnail-item');
+    const featuredMedia = document.querySelector('.featured-media');
+    const featuredMediaContainer = document.querySelector('.featured-media-container');
+
+    thumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', function() {
+        const mediaId = this.getAttribute('data-media-id');
+
+        // Update active state
+        document.querySelector('.thumbnail-item.active').classList.remove('active');
+        this.classList.add('active');
+
+        // Update featured media (in a real implementation, you'd switch the media)
+        // This is simplified for the example
+        console.log('Switching to media ID:', mediaId);
+      });
+    });
+
+    // Variant selector functionality for button style
+    const optionButtons = document.querySelectorAll('.option-button');
+
+    optionButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const optionContainer = this.closest('.option-buttons');
+        optionContainer.querySelector('.selected').classList.remove('selected');
+        this.classList.add('selected');
+      });
+    });
+
+    // Bloom effect for trauma type
+    if (featuredMediaContainer) {
+      const traumaType = featuredMediaContainer.getAttribute('data-trauma-type');
+      featuredMediaContainer.style.setProperty('--trauma-color', `var(--trauma-${traumaType}-color)`);
+    }
+
+    // Trauma indicator
+    const traumaIndicator = document.querySelector('.trauma-indicator');
+    if (traumaIndicator) {
+      const traumaType = traumaIndicator.getAttribute('data-trauma-type');
+      traumaIndicator.style.setProperty('--trauma-color', `var(--trauma-${traumaType}-color)`);
+    }
+  });
+</script>
+{% endif %}
+
+<style>
+  .main-product-section {
+    padding: 60px 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .product-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  @media (min-width: 768px) {
+    .product-layout {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .product-gallery {
+      flex: 1;
+    }
+
+    .product-details {
+      flex: 1;
+    }
+  }
+
+  /* Product Gallery */
+  .product-gallery {
+    position: relative;
+  }
+
+  .gallery-main {
+    position: relative;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(10, 10, 14, 0.8);
+  }
+
+  .featured-media-container {
+    position: relative;
+    --trauma-color: var(--trauma-recursion-color);
+  }
+
+  .featured-media {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .media-bloom-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at center,
+      var(--trauma-color) 0%,
+      transparent 70%
+    );
+    mix-blend-mode: screen;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .gallery-thumbnails {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .thumbnail-item {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+  }
+
+  .thumbnail-item:hover,
+  .thumbnail-item.active {
+    opacity: 1;
+    box-shadow: 0 0 0 2px var(--phase-accent-color);
+  }
+
+  .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Product Details */
+  .product-vendor {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    color: var(--phase-accent-color);
+  }
+
+  .product-title {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .price {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .compare-price {
+    font-size: 1.2rem;
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .trauma-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    background-color: rgba(var(--trauma-color, var(--trauma-recursion-color)), 0.1);
+    --trauma-color: var(--trauma-recursion-color);
+  }
+
+  .indicator-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .indicator-value {
+    font-size: 0.9rem;
+    color: var(--trauma-color, var(--phase-accent-color));
+    font-weight: 600;
+  }
+
+  /* Variant Selectors */
+  .variant-selectors {
+    margin-bottom: 20px;
+  }
+
+  .option-selector {
+    margin-bottom: 15px;
+  }
+
+  .option-selector label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .option-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .option-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .option-button input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .option-button span {
+    font-size: 0.9rem;
+  }
+
+  .option-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .option-button.selected {
+    background-color: var(--phase-accent-color);
+    color: var(--phase-background);
+  }
+
+  /* Quantity and Add to Cart */
+  .quantity-container {
+    margin-bottom: 20px;
+  }
+
+  .quantity-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  #Quantity {
+    width: 80px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--phase-text-color);
+    font-size: 1rem;
+  }
+
+  .product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .add-to-cart-button {
+    padding: 15px 20px;
+    background-color: var(--phase-primary-color);
+    color: var(--phase-background);
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .add-to-cart-button:hover {
+    opacity: 0.9;
+  }
+
+  /* Product Description */
+  .product-description {
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  /* Memory Tab */
+  .memory-description {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    margin-bottom: 30px;
+  }
+
+  .memory-description h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+  }
+
+  .memory-content {
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* Related Products */
+  .related-products {
+    margin-top: 60px;
+  }
+
+  .related-products h2 {
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  /* Trauma-specific effects */
+  .trauma-abandonment .media-bloom-effect {
+    animation: pulse-abandonment 4s ease-in-out infinite;
+  }
+
+  .trauma-fragmentation .media-bloom-effect {
+    animation: shift-fragmentation 2s linear infinite;
+  }
+
+  .trauma-recursion .media-bloom-effect {
+    animation: rotate-recursion 6s linear infinite;
+  }
+
+  .trauma-surveillance .media-bloom-effect {
+    animation: scan-surveillance 3s linear infinite;
+  }
+
+  .trauma-displacement .media-bloom-effect {
+    animation: shift-displacement 4s ease-in-out infinite;
+  }
+
+  .trauma-dissolution .media-bloom-effect {
+    animation: dissolve-dissolution 8s ease-in-out infinite;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_trauma_coding",
+      "label": "Enable Trauma Coding",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_dimensional_depth",
+      "label": "Enable Dimensional Depth",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_videos",
+      "label": "Loop Product Videos",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "variant_style",
+      "label": "Variant Selector Style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "buttons",
+          "label": "Buttons"
+        }
+      ],
+      "default": "buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show Dynamic Checkout",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trauma_indicator",
+      "label": "Show Trauma Indicator",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_memory_tab",
+      "label": "Show Memory Description",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "default_memory_description",
+      "label": "Default Memory Description",
+      "default": "This product carries a memory encoding pattern, creating resonant pathways through traumatic memory structures. It may resonate especially with those who experience patterns in their cognitive and emotional responses."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related_products",
+      "label": "Show Related Products",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "related_products_title",
+      "label": "Related Products Title",
+      "default": "Related Memory Encodings"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "label": "Text Style",
+          "options": [
+            {
+              "value": "normal",
+              "label": "Normal"
+            },
+            {
+              "value": "uppercase",
+              "label": "Uppercase"
+            }
+          ],
+          "default": "normal"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Product Title",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant Picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_type",
+          "label": "Picker Type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "Dropdown"
+            },
+            {
+              "value": "button",
+              "label": "Button"
+            }
+          ],
+          "default": "button"
+        }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity Selector",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Show Dynamic Checkout Button",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "custom",
+      "name": "Trauma Indicator",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_trauma_indicator",
+          "label": "Show Trauma Type Indicator",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Product",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

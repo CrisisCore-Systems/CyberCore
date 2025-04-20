@@ -1,0 +1,531 @@
+{% comment %}
+  Main Collection Section - VoidBloom collection display
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-entangled
+  @Version: 3.7.1
+{% endcomment %}
+
+<div class="main-collection-section trauma-{{ settings.default_trauma_type }}">
+  <div class="container">
+    {% if section.settings.enable_filtering or section.settings.enable_sorting %}
+      <div class="collection-controls">
+        {% if section.settings.enable_filtering %}
+          <div class="filter-container">
+            <button class="filter-toggle" aria-expanded="false" aria-controls="CollectionFilters">
+              <span>Filter</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 12L10 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M4 8H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M2 4H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+            
+            <div id="CollectionFilters" class="collection-filters">
+              <div class="filter-group trauma-type">
+                <h3 class="filter-heading">Memory Encoding</h3>
+                <ul class="filter-options">
+                  {% assign trauma_types = "abandonment,fragmentation,recursion,surveillance,displacement,dissolution" | split: "," %}
+                  {% for trauma in trauma_types %}
+                    <li class="filter-option">
+                      <label class="filter-label">
+                        <input type="checkbox" name="filter.trauma-type" value="{{ trauma }}">
+                        <span class="checkmark"></span>
+                        <span class="label-text">{{ trauma | capitalize }}</span>
+                      </label>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              
+              <div class="filter-group price">
+                <h3 class="filter-heading">Price Range</h3>
+                <div class="price-range">
+                  <input type="range" id="PriceMin" min="0" max="1000" step="10" value="0">
+                  <input type="range" id="PriceMax" min="0" max="1000" step="10" value="1000">
+                  <div class="price-inputs">
+                    <span>$<input type="number" id="PriceMinInput" min="0" max="1000" value="0"></span>
+                    <span>$<input type="number" id="PriceMaxInput" min="0" max="1000" value="1000"></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="filter-group availability">
+                <h3 class="filter-heading">Availability</h3>
+                <ul class="filter-options">
+                  <li class="filter-option">
+                    <label class="filter-label">
+                      <input type="checkbox" name="filter.inventory" value="in-stock">
+                      <span class="checkmark"></span>
+                      <span class="label-text">In stock</span>
+                    </label>
+                  </li>
+                  <li class="filter-option">
+                    <label class="filter-label">
+                      <input type="checkbox" name="filter.inventory" value="out-of-stock">
+                      <span class="checkmark"></span>
+                      <span class="label-text">Out of stock</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+              
+              <div class="filter-actions">
+                <button type="button" class="clear-filters-button">Clear all</button>
+                <button type="button" class="apply-filters-button">Apply filters</button>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.enable_sorting %}
+          <div class="sort-container">
+            <label for="SortBy">Sort by</label>
+            <select id="SortBy" class="sort-by">
+              <option value="manual">Featured</option>
+              <option value="price-ascending">Price: Low to High</option>
+              <option value="price-descending">Price: High to Low</option>
+              <option value="title-ascending">Alphabetically: A-Z</option>
+              <option value="title-descending">Alphabetically: Z-A</option>
+              <option value="created-descending">Date: New to Old</option>
+              <option value="created-ascending">Date: Old to New</option>
+              <option value="best-selling">Best Selling</option>
+            </select>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="collection-products">
+      {% paginate collection.products by section.settings.products_per_page %}
+        <div class="product-grid">
+          {% for product in collection.products %}
+            <div class="product-card-wrapper">
+              {% render 'product-card', 
+                product: product, 
+                show_trauma_indicator: section.settings.show_trauma_indicators
+              %}
+            </div>
+          {% else %}
+            <div class="empty-collection">
+              <div class="empty-message">
+                <h2>No memory artifacts found</h2>
+                <p>Try adjusting your filters or search terms.</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        {% if paginate.pages > 1 %}
+          {% render 'pagination', paginate: paginate %}
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Filter toggle
+    const filterToggle = document.querySelector('.filter-toggle');
+    const collectionFilters = document.getElementById('CollectionFilters');
+    
+    if (filterToggle && collectionFilters) {
+      filterToggle.addEventListener('click', function() {
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !expanded);
+        collectionFilters.classList.toggle('active');
+      });
+    }
+    
+    // Price range inputs
+    const priceMin = document.getElementById('PriceMin');
+    const priceMax = document.getElementById('PriceMax');
+    const priceMinInput = document.getElementById('PriceMinInput');
+    const priceMaxInput = document.getElementById('PriceMaxInput');
+    
+    if (priceMin && priceMinInput) {
+      priceMin.addEventListener('input', function() {
+        priceMinInput.value = this.value;
+      });
+      
+      priceMinInput.addEventListener('change', function() {
+        priceMin.value = this.value;
+      });
+    }
+    
+    if (priceMax && priceMaxInput) {
+      priceMax.addEventListener('input', function() {
+        priceMaxInput.value = this.value;
+      });
+      
+      priceMaxInput.addEventListener('change', function() {
+        priceMax.value = this.value;
+      });
+    }
+    
+    // Sort by
+    const sortBy = document.getElementById('SortBy');
+    
+    if (sortBy) {
+      // Get the URL parameter for sort_by
+      const urlParams = new URLSearchParams(window.location.search);
+      const sortParam = urlParams.get('sort_by');
+      
+      if (sortParam) {
+        sortBy.value = sortParam;
+      }
+      
+      sortBy.addEventListener('change', function() {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort_by', this.value);
+        window.location.href = url.toString();
+      });
+    }
+    
+    // Filter actions
+    const clearFiltersButton = document.querySelector('.clear-filters-button');
+    const applyFiltersButton = document.querySelector('.apply-filters-button');
+    
+    if (clearFiltersButton) {
+      clearFiltersButton.addEventListener('click', function() {
+        // Reset all filter checkboxes
+        document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        
+        // Reset price range
+        if (priceMin) priceMin.value = priceMin.min;
+        if (priceMinInput) priceMinInput.value = priceMin.min;
+        if (priceMax) priceMax.value = priceMax.max;
+        if (priceMaxInput) priceMaxInput.value = priceMax.max;
+      });
+    }
+    
+    if (applyFiltersButton) {
+      applyFiltersButton.addEventListener('click', function() {
+        // Initialize filter parameters
+        const url = new URL(window.location.href);
+        
+        // Clear existing filter parameters
+        for (const key of [...url.searchParams.keys()]) {
+          if (key.startsWith('filter.')) {
+            url.searchParams.delete(key);
+          }
+        }
+        
+        // Add trauma type filters
+        const traumaTypeFilters = document.querySelectorAll('input[name="filter.trauma-type"]:checked');
+        if (traumaTypeFilters.length > 0) {
+          traumaTypeFilters.forEach(filter => {
+            url.searchParams.append('filter.trauma-type', filter.value);
+          });
+        }
+        
+        // Add price range filter
+        if (priceMinInput && priceMaxInput) {
+          url.searchParams.set('filter.price.min', priceMinInput.value);
+          url.searchParams.set('filter.price.max', priceMaxInput.value);
+        }
+        
+        // Add inventory filter
+        const inventoryFilters = document.querySelectorAll('input[name="filter.inventory"]:checked');
+        if (inventoryFilters.length > 0) {
+          inventoryFilters.forEach(filter => {
+            url.searchParams.append('filter.inventory', filter.value);
+          });
+        }
+        
+        // Navigate to filtered URL
+        window.location.href = url.toString();
+      });
+    }
+  });
+</script>
+
+<style>
+  .main-collection-section {
+    padding: 60px 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Collection Controls */
+  .collection-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+  }
+  
+  /* Filter Styles */
+  .filter-container {
+    position: relative;
+  }
+  
+  .filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--phase-text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .filter-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .collection-filters {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 300px;
+    background-color: var(--phase-background);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: none;
+  }
+  
+  .collection-filters.active {
+    display: block;
+  }
+  
+  .filter-group {
+    margin-bottom: 25px;
+  }
+  
+  .filter-heading {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .filter-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .filter-option {
+    margin-bottom: 8px;
+  }
+  
+  .filter-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .filter-label input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .checkmark {
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin-right: 10px;
+    position: relative;
+  }
+  
+  .filter-label input:checked ~ .checkmark:after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--phase-accent-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .label-text {
+    font-size: 0.9rem;
+  }
+  
+  /* Price Range */
+  .price-range {
+    margin-top: 10px;
+  }
+  
+  .price-range input[type="range"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .price-inputs {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .price-inputs input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--phase-text-color);
+  }
+  
+  /* Filter Actions */
+  .filter-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .clear-filters-button,
+  .apply-filters-button {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  .clear-filters-button {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--phase-text-color);
+  }
+  
+  .clear-filters-button:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .apply-filters-button {
+    background-color: var(--phase-accent-color);
+    border: none;
+    color: var(--phase-background);
+  }
+  
+  .apply-filters-button:hover {
+    opacity: 0.9;
+  }
+  
+  /* Sort By */
+  .sort-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .sort-container label {
+    font-size: 0.9rem;
+  }
+  
+  .sort-by {
+    padding: 8px 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--phase-text-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  /* Product Grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+  
+  /* Empty Collection */
+  .empty-collection {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+  }
+  
+  .empty-message h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .empty-message p {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .collection-controls {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .filter-container, .sort-container {
+      width: 100%;
+    }
+    
+    .collection-filters {
+      width: 100%;
+    }
+    
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Main Collection",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trauma_indicators",
+      "label": "Show trauma indicators",
+      "default": true,
+      "info": "Show trauma type indicators on product cards"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Collection",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

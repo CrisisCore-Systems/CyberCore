@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "main": {
+      "type": "cart-template",
+      "settings": {
+        "show_note": true,
+        "show_memory_resonance": true,
+        "show_quantum_checkout": true,
+        "quantum_checkout_text": "Quantum Checkout"
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "title": "Memory Resonances",
+        "products_to_show": 4,
+        "default_trauma_encoding": "recursion"
+      }
+    }
+  },
+  "order": ["main", "recommendations"]
+}

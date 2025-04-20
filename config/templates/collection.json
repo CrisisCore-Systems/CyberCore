@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "products_per_page": 12,
+        "enable_filtering": true,
+        "enable_sorting": true,
+        "show_trauma_indicators": true
+      }
+    },
+    "banner": {
+      "type": "collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": true,
+        "enable_trauma_encoding": true
+      }
+    }
+  },
+  "order": ["banner", "main"]
+}

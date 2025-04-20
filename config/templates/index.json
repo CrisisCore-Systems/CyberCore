@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-index",
+      "settings": {
+        "show_quantum_effects": true,
+        "enable_trauma_coding": true
+      }
+    },
+    "quantum-featured-products": {
+      "type": "quantum-featured-products",
+      "settings": {
+        "title": "Featured Memory Encodings",
+        "description": "Our most resonant traumatic memory patterns",
+        "products_to_show": 4,
+        "show_trauma_indicators": true
+      }
+    },
+    "quantum-content": {
+      "type": "quantum-content",
+      "settings": {
+        "title": "VoidBloom Memory System",
+        "text": "<p>Each VoidBloom product contains an encoding of traumatic memory that resonates with your own patterns, creating a bridge between conscious experience and latent knowledge.</p>",
+        "button_label": "Learn More",
+        "button_link": "/pages/about-voidbloom"
+      }
+    },
+    "quantum-testimonials": {
+      "type": "quantum-testimonials",
+      "settings": {
+        "title": "Memory Experiences",
+        "testimonials_to_show": 3
+      }
+    }
+  },
+  "order": ["main", "quantum-featured-products", "quantum-content", "quantum-testimonials"]
+}

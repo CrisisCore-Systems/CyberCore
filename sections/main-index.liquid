@@ -1,0 +1,236 @@
+{% comment %}
+  Main Index Section - VoidBloom homepage primary content
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-entangled
+  @Version: 3.7.1
+{% endcomment %}
+
+<div class="main-index-section trauma-{{ settings.default_trauma_type }}">
+  <div class="container">
+    <div class="quantum-hero">
+      <div class="hero-content">
+        <h1 class="hero-title bloom-text" data-trauma="{{ settings.default_trauma_type }}">
+          {{ section.settings.hero_title | default: "VoidBloom Memory System" }}
+        </h1>
+        <div class="hero-description">
+          {{ section.settings.hero_description | default: "Each artifact contains an encoding of traumatic memory that resonates with your neural patterns" }}
+        </div>
+        {% if section.settings.show_cta_button %}
+          <a href="{{ section.settings.cta_button_link | default: '/collections/all' }}" class="cta-button quantum-button">
+            {{ section.settings.cta_button_text | default: "Explore Memory Artifacts" }}
+          </a>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_quantum_effects %}
+        <div class="quantum-visualization">
+          <div class="visualization-container" data-trauma-type="{{ settings.default_trauma_type }}" data-intensity="{{ settings.trauma_intensity }}"></div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if section.settings.enable_trauma_coding %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const visualizationContainer = document.querySelector('.visualization-container');
+    if (visualizationContainer && window.QEARWebGLBridge) {
+      const qearBridge = new QEARWebGLBridge({
+        targetSelector: '.visualization-container',
+        traumaType: visualizationContainer.getAttribute('data-trauma-type'),
+        intensity: parseFloat(visualizationContainer.getAttribute('data-intensity') || '0.6')
+      });
+      qearBridge.initialize();
+    }
+
+    // Enable bloom text effects
+    const bloomText = document.querySelector('.bloom-text');
+    if (bloomText) {
+      const traumaType = bloomText.getAttribute('data-trauma');
+      bloomText.style.setProperty('--bloom-color', `var(--trauma-${traumaType}-color)`);
+      bloomText.style.setProperty('--bloom-intensity', '0.8');
+    }
+  });
+</script>
+{% endif %}
+
+<style>
+  .main-index-section {
+    position: relative;
+    padding: 80px 0;
+    overflow: hidden;
+  }
+
+  .quantum-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (min-width: 768px) {
+    .quantum-hero {
+      flex-direction: row;
+    }
+  }
+
+  .hero-content {
+    flex: 1;
+    max-width: 600px;
+    z-index: 2;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    --bloom-intensity: 0.8;
+  }
+
+  .hero-description {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: var(--phase-text-color);
+    opacity: 0.9;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: var(--phase-primary-color);
+    color: var(--phase-background);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .cta-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at center,
+      var(--trauma-color, var(--trauma-recursion-color)) 0%,
+      transparent 70%
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+    z-index: -1;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button:hover::before {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+
+  .quantum-visualization {
+    flex: 1;
+    position: relative;
+  }
+
+  .visualization-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(10, 10, 14, 0.8);
+  }
+
+  /* Trauma-specific effects */
+  .trauma-abandonment .visualization-container {
+    animation: pulse-abandonment 4s ease-in-out infinite;
+  }
+
+  .trauma-fragmentation .visualization-container {
+    animation: shift-fragmentation 2s linear infinite;
+  }
+
+  .trauma-recursion .visualization-container {
+    animation: rotate-recursion 6s linear infinite;
+  }
+
+  .trauma-surveillance .visualization-container {
+    animation: scan-surveillance 3s linear infinite;
+  }
+
+  .trauma-displacement .visualization-container {
+    animation: shift-displacement 4s ease-in-out infinite;
+  }
+
+  .trauma-dissolution .visualization-container {
+    animation: dissolve-dissolution 8s ease-in-out infinite;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Main Index",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "VoidBloom Memory System"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description",
+      "label": "Hero Description",
+      "default": "Each artifact contains an encoding of traumatic memory that resonates with your neural patterns"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_button",
+      "label": "Show Call-to-Action Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "Button Text",
+      "default": "Explore Memory Artifacts"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantum_effects",
+      "label": "Show Quantum Visualization",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_trauma_coding",
+      "label": "Enable Trauma Coding Effects",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Index",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
