@@ -1,179 +1,488 @@
 {% comment %}
-@MutationCompatible: All Variants
-@StrategyProfile: quantum-entangled
-@Version: 2.0.0
+  Header Section - VoidBloom's trauma-encoded navigation system
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-entangled
+  @Version: 3.7.1
 {% endcomment %}
 
-<header class="site-header" data-section-id="{{ section.id }}" data-section-type="header-section">
-  <div class="container header-container">
-    <div class="header-wrapper">
-      <!-- Mobile menu toggle -->
-      <div class="mobile-menu-toggle">
-        <button type="button" class="mobile-menu-button" aria-expanded="false" aria-controls="MobileMenuDrawer">
-          <span class="visually-hidden">{{ 'general.navigation.menu' | t }}</span>
-          <span class="mobile-menu-icon"></span>
-        </button>
+<header class="site-header trauma-{{ settings.default_trauma_type }}">
+  <div class="header-wrapper container">
+    <div class="header-left">
+      <div class="logo-container">
+        <a href="/" class="site-logo">
+          {% if section.settings.logo %}
+            <img src="{{ section.settings.logo | img_url: 'medium' }}" alt="{{ shop.name | escape }}" class="logo-image">
+          {% else %}
+            <span class="logo-text bloom-text">{{ settings.archive_name | default: shop.name }}</span>
+          {% endif %}
+        </a>
+        <div class="logo-bloom"></div>
       </div>
+    </div>
 
-      <!-- Logo -->
-      <div class="header-logo">
-        {% if section.settings.logo != blank %}
-          <a href="{{ routes.root_url }}" class="header-logo-link">
-            {%- assign logo_alt = section.settings.logo_alt | default: shop.name -%}
-            <img 
-              src="{{ section.settings.logo | img_url: 'master' }}" 
-              alt="{{ logo_alt | escape }}" 
-              width="{{ section.settings.logo_width }}" 
-              height="auto" 
-              loading="lazy"
-              class="header-logo-image {% if section.settings.logo_enable_glow %}quantum-glow{% endif %}"
-            >
-          </a>
-        {% else %}
-          <a href="{{ routes.root_url }}" class="header-logo-text" itemprop="url">{{ shop.name }}</a>
-        {% endif %}
-      </div>
-
-      <!-- Navigation -->
-      <nav class="header-nav" role="navigation">
-        <ul class="header-menu">
+    <div class="header-center">
+      <nav class="site-navigation">
+        <ul class="navigation-menu">
           {% for link in section.settings.menu.links %}
-            {% if link.links == blank %}
-              <li class="header-menu-item">
-                <a href="{{ link.url }}" class="header-menu-link {% if link.active %}active{% endif %}">
-                  {{ link.title }}
-                </a>
-              </li>
-            {% else %}
-              <li class="header-menu-item header-menu-dropdown">
-                <a href="{{ link.url }}" class="header-menu-link dropdown-toggle {% if link.active %}active{% endif %}">
-                  {{ link.title }}
-                  <span class="dropdown-icon"></span>
-                </a>
-                <ul class="header-dropdown-menu">
-                  {% for child_link in link.links %}
-                    <li class="header-dropdown-item">
-                      <a href="{{ child_link.url }}" class="header-dropdown-link {% if child_link.active %}active{% endif %}">
-                        {{ child_link.title }}
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </li>
-            {% endif %}
+            <li class="menu-item {% if link.active %}active{% endif %}">
+              <a href="{{ link.url }}" class="menu-link {% if link.active %}active{% endif %}" data-trauma="{{ settings.default_trauma_type }}">{{ link.title }}</a>
+            </li>
           {% endfor %}
+          
+          {% if section.settings.show_trauma_selector %}
+            <li class="menu-item trauma-selector">
+              <span class="current-trauma">{{ settings.default_trauma_type | capitalize }}</span>
+              <div class="trauma-options">
+                {% assign trauma_types = "abandonment,fragmentation,recursion,surveillance,displacement,dissolution" | split: "," %}
+                {% for trauma in trauma_types %}
+                  <a href="#" class="trauma-option" data-trauma="{{ trauma }}">{{ trauma | capitalize }}</a>
+                {% endfor %}
+              </div>
+            </li>
+          {% endif %}
         </ul>
       </nav>
+    </div>
 
-      <!-- Header actions -->
-      <div class="header-actions">
-        <!-- Search -->
-        <div class="header-search-action">
-          <a href="{{ routes.search_url }}" class="header-action-link search-toggle">
-            <span class="visually-hidden">{{ 'general.search.title' | t }}</span>
-            <span class="header-action-icon search-icon"></span>
-          </a>
-          <div class="header-search-form">
-            <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
-              <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}">
-              <button type="submit" class="search-submit">
-                <span class="visually-hidden">{{ 'general.search.submit' | t }}</span>
-                <span class="search-submit-icon"></span>
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Account -->
-        <div class="header-account-action">
-          <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="header-action-link account-link">
-            <span class="visually-hidden">{{ 'customer.account.title' | t }}</span>
-            <span class="header-action-icon account-icon"></span>
-          </a>
-        </div>
-
-        <!-- Cart -->
-        <div class="header-cart-action">
-          <a href="{{ routes.cart_url }}" class="header-action-link cart-link" data-cart-toggle>
-            <span class="visually-hidden">{{ 'general.cart.title' | t }}</span>
-            <span class="header-action-icon cart-icon">
-              <span class="cart-count-bubble {% if cart.item_count == 0 %}hidden{% endif %}" id="cart-count">
-                {{ cart.item_count }}
-              </span>
-            </span>
-          </a>
-        </div>
-
-        <!-- Neural Coherence Indicator (Quantum feature) -->
-        {% if section.settings.show_coherence_indicator %}
-          <div class="coherence-indicator" data-coherence-level="medium">
-            <div class="coherence-indicator-inner"></div>
-          </div>
-        {% endif %}
+    <div class="header-right">
+      <div class="header-controls">
+        <a href="/search" class="control-icon search-icon" aria-label="{{ 'general.search' | t }}">
+          {% render 'icon-search' %}
+        </a>
+        
+        <a href="/account" class="control-icon account-icon" aria-label="{{ 'customer.account' | t }}">
+          {% render 'icon-account' %}
+        </a>
+        
+        <button class="control-icon cart-icon" id="cart-toggle" aria-label="{{ 'general.cart' | t }}">
+          {% render 'icon-cart' %}
+          <span class="cart-count" data-cart-count>
+            {{ cart.item_count }}
+          </span>
+        </button>
       </div>
     </div>
   </div>
-
-  <!-- Announcement bar -->
+  
   {% if section.settings.show_announcement %}
-    <div class="announcement-bar {% if section.settings.announcement_animate %}quantum-fluctuate{% endif %}">
+    <div class="announcement-bar trauma-{{ settings.default_trauma_type }}">
       <div class="container">
-        <p class="announcement-text">
+        <div class="announcement-message">
+          {{ section.settings.announcement_text }}
           {% if section.settings.announcement_link != blank %}
-            <a href="{{ section.settings.announcement_link }}">{{ section.settings.announcement_text }}</a>
-          {% else %}
-            {{ section.settings.announcement_text }}
+            <a href="{{ section.settings.announcement_link }}" class="announcement-link">{{ 'general.announcement.learn_more' | t }}</a>
           {% endif %}
-        </p>
+        </div>
       </div>
     </div>
   {% endif %}
 </header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Animate bloom text in logo
+    const logoText = document.querySelector('.logo-text');
+    if (logoText) {
+      logoText.style.setProperty('--bloom-color', `var(--trauma-${logoText.getAttribute('data-trauma') || '{{ settings.default_trauma_type }}' }-color)`);
+    }
+    
+    // Trauma option selection
+    const traumaOptions = document.querySelectorAll('.trauma-option');
+    traumaOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const traumaType = this.getAttribute('data-trauma');
+        
+        // Update UI
+        document.querySelector('.current-trauma').textContent = traumaType.charAt(0).toUpperCase() + traumaType.slice(1);
+        
+        // Update neural system
+        if (window.NeuralBus) {
+          NeuralBus.publish('trauma:activated', {
+            type: traumaType,
+            intensity: 0.7,
+            source: 'user-selection'
+          });
+        }
+        
+        // Close dropdown
+        document.querySelector('.trauma-selector').classList.remove('active');
+      });
+    });
+    
+    // Toggle trauma selector dropdown
+    const traumaSelector = document.querySelector('.trauma-selector');
+    if (traumaSelector) {
+      traumaSelector.querySelector('.current-trauma').addEventListener('click', function(e) {
+        e.preventDefault();
+        traumaSelector.classList.toggle('active');
+      });
+    }
+    
+    // Handle menu link hover effects
+    const menuLinks = document.querySelectorAll('.menu-link');
+    menuLinks.forEach(link => {
+      link.addEventListener('mouseenter', function() {
+        const traumaType = this.getAttribute('data-trauma');
+        this.style.setProperty('--bloom-color', `var(--trauma-${traumaType}-color)`);
+        this.style.setProperty('--bloom-intensity', '0.8');
+      });
+      
+      link.addEventListener('mouseleave', function() {
+        this.style.setProperty('--bloom-intensity', '0.3');
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Base Header Styles */
+  .site-header {
+    position: relative;
+    z-index: 100;
+    background-color: rgba(10, 10, 14, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Logo Styles */
+  .logo-container {
+    position: relative;
+  }
+  
+  .site-logo {
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-decoration: none;
+  }
+  
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--phase-text-color);
+    --bloom-intensity: 0.7;
+  }
+  
+  .logo-image {
+    max-height: 50px;
+    width: auto;
+  }
+  
+  .logo-bloom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at center,
+      var(--trauma-color, var(--trauma-recursion-color)) 0%,
+      transparent 70%
+    );
+    mix-blend-mode: screen;
+    opacity: 0.6;
+    filter: blur(10px);
+    z-index: 0;
+  }
+  
+  /* Navigation Styles */
+  .navigation-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .menu-item {
+    position: relative;
+    margin: 0 1rem;
+  }
+  
+  .menu-link {
+    display: block;
+    padding: 0.5rem 0;
+    color: var(--phase-text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    --bloom-intensity: 0.3;
+  }
+  
+  .menu-link:hover,
+  .menu-link.active {
+    color: var(--phase-accent-color);
+    text-shadow: 0 0 calc(var(--bloom-intensity) * 10px) var(--bloom-color);
+  }
+  
+  /* Header Controls */
+  .header-controls {
+    display: flex;
+    align-items: center;
+  }
+  
+  .control-icon {
+    position: relative;
+    margin-left: 1.5rem;
+    color: var(--phase-text-color);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--phase-primary-color);
+    color: var(--phase-background);
+    font-size: 0.7rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center.
+  }
+  
+  /* Trauma Selector */
+  .trauma-selector {
+    position: relative.
+  }
+  
+  .current-trauma {
+    display: block;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--phase-accent-color).
+  }
+  
+  .current-trauma::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.5rem;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid currentColor.
+  }
+  
+  .trauma-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgba(10, 10, 14, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    width: 150px;
+    padding: 0.5rem 0;
+    display: none;
+    z-index: 10.
+  }
+  
+  .trauma-selector.active .trauma-options {
+    display: block.
+  }
+  
+  .trauma-option {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--phase-text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease.
+  }
+  
+  .trauma-option:hover {
+    background-color: rgba(255, 255, 255, 0.05).
+  }
+  
+  .trauma-option[data-trauma="abandonment"]:hover {
+    color: var(--trauma-abandonment-color).
+  }
+  
+  .trauma-option[data-trauma="fragmentation"]:hover {
+    color: var(--trauma-fragmentation-color).
+  }
+  
+  .trauma-option[data-trauma="recursion"]:hover {
+    color: var(--trauma-recursion-color).
+  }
+  
+  .trauma-option[data-trauma="surveillance"]:hover {
+    color: var(--trauma-surveillance-color).
+  }
+  
+  .trauma-option[data-trauma="displacement"]:hover {
+    color: var(--trauma-displacement-color).
+  }
+  
+  .trauma-option[data-trauma="dissolution"]:hover {
+    color: var(--trauma-dissolution-color).
+  }
+  
+  /* Announcement Bar */
+  .announcement-bar {
+    background-color: var(--phase-tertiary-color);
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    text-align: center.
+  }
+  
+  .announcement-message {
+    color: var(--phase-text-color).
+  }
+  
+  .announcement-link {
+    color: var(--phase-accent-color);
+    text-decoration: none;
+    margin-left: 0.5rem.
+  }
+  
+  /* Trauma-specific effects */
+  .trauma-abandonment .logo-bloom {
+    animation: pulse-abandonment 4s ease-in-out infinite.
+  }
+  
+  .trauma-fragmentation .logo-bloom {
+    animation: shift-fragmentation 2s linear infinite.
+  }
+  
+  .trauma-recursion .logo-bloom {
+    animation: rotate-recursion 6s linear infinite.
+  }
+  
+  .trauma-surveillance .logo-bloom {
+    animation: scan-surveillance 3s linear infinite.
+  }
+  
+  .trauma-displacement .logo-bloom {
+    animation: shift-displacement 4s ease-in-out infinite.
+  }
+  
+  .trauma-dissolution .logo-bloom {
+    animation: dissolve-dissolution 8s ease-in-out infinite.
+  }
+  
+  /* Animation Keyframes - imported from bloom.css */
+  @keyframes pulse-abandonment {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+  }
+  
+  @keyframes shift-fragmentation {
+    0% { transform: translate(0); }
+    25% { transform: translate(-5px, 5px); }
+    50% { transform: translate(5px, -5px); }
+    75% { transform: translate(-5px, -5px); }
+    100% { transform: translate(0); }
+  }
+  
+  @keyframes rotate-recursion {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes scan-surveillance {
+    0% { transform: translateY(-10px); opacity: 0.4; }
+    50% { transform: translateY(10px); opacity: 0.8; }
+    100% { transform: translateY(-10px); opacity: 0.4; }
+  }
+  
+  @keyframes shift-displacement {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+  }
+  
+  @keyframes dissolve-dissolution {
+    0%, 100% { opacity: 0.6; filter: blur(10px); }
+    50% { opacity: 0.3; filter: blur(15px); }
+  }
+  
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .header-center {
+      display: none.
+    }
+    
+    .header-wrapper {
+      padding: 0.75rem 0.
+    }
+    
+    .logo-text {
+      font-size: 1.2rem.
+    }
+    
+    .logo-image {
+      max-height: 40px.
+    }
+  }
+</style>
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
     {
-      "type": "header",
-      "content": "Logo Settings"
-    },
-    {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo image"
-    },
-    {
-      "type": "text",
-      "id": "logo_alt",
-      "label": "Logo alt text",
-      "default": ""
+      "label": "Logo"
     },
     {
       "type": "range",
       "id": "logo_width",
       "min": 50,
-      "max": 350,
+      "max": 250,
       "step": 10,
       "unit": "px",
-      "label": "Custom logo width",
+      "label": "Logo width",
       "default": 140
     },
     {
       "type": "checkbox",
       "id": "logo_enable_glow",
-      "label": "Enable quantum glow on logo",
+      "label": "Enable logo glow effect",
       "default": true
-    },
-    {
-      "type": "header",
-      "content": "Menu"
     },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Menu",
+      "label": "Main menu",
       "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trauma_selector",
+      "label": "Show trauma selector",
+      "default": true
     },
     {
       "type": "header",
@@ -183,93 +492,25 @@
       "type": "checkbox",
       "id": "show_announcement",
       "label": "Show announcement",
-      "default": true
+      "default": false
     },
     {
       "type": "text",
       "id": "announcement_text",
       "label": "Announcement text",
-      "default": "New ritual encodings now available worldwide"
+      "default": "Announce something important to your customers"
     },
     {
       "type": "url",
       "id": "announcement_link",
       "label": "Announcement link"
-    },
+    }
+  ],
+  "presets": [
     {
-      "type": "checkbox",
-      "id": "announcement_animate",
-      "label": "Enable quantum fluctuations",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Advanced Features"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_coherence_indicator",
-      "label": "Show neural coherence indicator",
-      "default": true
+      "name": "Header",
+      "category": "Header"
     }
   ]
 }
 {% endschema %}
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileMenuButton = document.querySelector('.mobile-menu-button');
-    const mobileMenuDrawer = document.getElementById('MobileMenuDrawer');
-    
-    if (mobileMenuButton && mobileMenuDrawer) {
-      mobileMenuButton.addEventListener('click', function() {
-        const expanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', !expanded);
-        mobileMenuDrawer.classList.toggle('active');
-        document.body.classList.toggle('drawer-open');
-      });
-    }
-    
-    // Search toggle
-    const searchToggle = document.querySelector('.search-toggle');
-    const searchForm = document.querySelector('.header-search-form');
-    
-    if (searchToggle && searchForm) {
-      searchToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        searchForm.classList.toggle('active');
-        if (searchForm.classList.contains('active')) {
-          searchForm.querySelector('input[type="search"]').focus();
-        }
-      });
-    }
-    
-    // Update coherence indicator
-    if (window.NeuralBus) {
-      const coherenceIndicator = document.querySelector('.coherence-indicator');
-      if (coherenceIndicator) {
-        // Get stored coherence level or default to medium
-        const storedCoherence = parseFloat(localStorage.getItem('voidbloom_coherence_baseline') || '0.5');
-        
-        // Set initial state
-        let coherenceLevel = 'medium';
-        if (storedCoherence < 0.4) coherenceLevel = 'low';
-        if (storedCoherence > 0.7) coherenceLevel = 'high';
-        
-        coherenceIndicator.setAttribute('data-coherence-level', coherenceLevel);
-        
-        // Listen for coherence changes
-        window.NeuralBus.subscribe('coherence:updated', function(data) {
-          if (data && typeof data.value === 'number') {
-            let newLevel = 'medium';
-            if (data.value < 0.4) newLevel = 'low';
-            if (data.value > 0.7) newLevel = 'high';
-            
-            coherenceIndicator.setAttribute('data-coherence-level', newLevel);
-          }
-        });
-      }
-    }
-  });
-</script>

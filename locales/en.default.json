@@ -1,0 +1,215 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content"
+    },
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "404": {
+      "title": "404 - Page Not Found",
+      "subtext": "The page you requested does not exist.",
+      "link": "Continue shopping"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "password_page": {
+      "opening_soon": "Opening Soon",
+      "login_form_heading": "Enter store using password",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "signup_form_heading": "Find out when we open",
+      "signup_form_email_label": "Email",
+      "signup_form_email_placeholder": "Your email",
+      "signup_form_submit": "Submit",
+      "signup_form_success": "We will send you an email right before we open!",
+      "admin_link_html": "Are you the store owner? <a href=\"/admin\">Log in here</a>",
+      "password_link": "Enter using password"
+    },
+    "social": {
+      "share_on_facebook": "Share",
+      "share_on_twitter": "Tweet",
+      "share_on_pinterest": "Pin it",
+      "alt_text": {
+        "share_on_facebook": "Share on Facebook",
+        "share_on_twitter": "Tweet on Twitter",
+        "share_on_pinterest": "Pin on Pinterest"
+      }
+    },
+    "search": {
+      "title": "Search the Void",
+      "placeholder": "Search our store",
+      "submit": "Search",
+      "heading": {
+        "one": "Search result",
+        "other": "Search results"
+      },
+      "results_with_count": {
+        "one": "{{ count }} result for \"{{ terms }}\"",
+        "other": "{{ count }} results for \"{{ terms }}\""
+      },
+      "no_results": "No results found for \"{{ terms }}\".",
+      "no_results_html": "Please try a different search term or go back to the <a href=\"/\">home page</a>."
+    },
+    "newsletter_form": {
+      "newsletter_email": "Join our mailing list",
+      "email_placeholder": "Email address",
+      "confirmation": "Thanks for subscribing",
+      "submit": "Subscribe"
+    },
+    "cart": {
+      "title": "Memory Archive",
+      "note": "Add a note to your order",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "savings": "You're saving",
+      "taxes_included_but_shipping_at_checkout": "Tax included and shipping calculated at checkout",
+      "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+      "taxes_and_shipping_policy_html": "Taxes and <a href=\"{{ link }}\">shipping</a> calculated at checkout.",
+      "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
+      "update": "Update",
+      "checkout": "Memory Extraction",
+      "empty": "Your memory vault is currently empty.",
+      "continue_shopping": "Continue collecting memories",
+      "empty_message": "Your memory vault is empty",
+      "item_quantity": "Item quantity",
+      "savings": "You're saving",
+      "with_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      }
+    },
+    "memory_resonance": {
+      "title": "Memory Resonance",
+      "coherence": "Coherence Level",
+      "trauma_distribution": "Trauma Distribution"
+    },
+    "menu": "System Navigation",
+    "currency": "Currency",
+    "powered_by_shopify": "Powered by Shopify",
+    "copyright": "All rights reserved."
+  },
+  "sections": {
+    "header": {
+      "menu": "Menu",
+      "cart_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      }
+    },
+    "featured_collection": {
+      "view_all": "View all"
+    },
+    "featured_blog": {
+      "view_all": "View all"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Enter Memory Archive",
+      "description": "Description",
+      "on_sale": "Sale",
+      "product_variants": "Product variants",
+      "media": {
+        "open_featured_media": "Open featured media in gallery view",
+        "play_video": "Play video",
+        "gallery_viewer": "Gallery Viewer",
+        "load_image": "Load image {{ index }} in gallery view"
+      },
+      "quantity": {
+        "label": "Intensity",
+        "input_label": "Quantity for {{ product }}",
+        "increase": "Increase quantity for {{ product }}",
+        "decrease": "Decrease quantity for {{ product }}"
+      },
+      "price": {
+        "regular_price": "Regular price",
+        "sale_price": "Sale price"
+      },
+      "pickup_availability": {
+        "view_store_info": "View store information",
+        "check_other_stores": "Check availability at other stores",
+        "pick_up_available": "Pickup available",
+        "pick_up_currently_unavailable": "Pickup currently unavailable",
+        "pick_up_available_at_html": "Pickup available at <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"color-foreground\">{{ location_name }}</span>"
+      },
+      "increase_quantity": "Increase quantity",
+      "decrease_quantity": "Decrease quantity",
+      "increase_depth": "Increase dimensional depth",
+      "decrease_depth": "Decrease dimensional depth",
+      "memory_encoding": "Memory Encoding",
+      "memory_encoding_title": "Memory Encoding Profile",
+      "trauma_type": "Trauma Type",
+      "resonance": "Resonance",
+      "compatibility": "Trauma Compatibility",
+      "quick_add": "Quick add",
+      "view_details": "View details",
+      "sold_out": "Memory Corrupted",
+      "unavailable": "Memory Inaccessible",
+      "vendor": "Vendor",
+      "type": "Type",
+      "sku": "SKU",
+      "material": "Material",
+      "dimensions": "Dimensions",
+      "customer_reviews": "Customer Reviews",
+      "details_title": "Product Details",
+      "reviews": "Reviews",
+      "in_stock": "Memory Available"
+    },
+    "price": "Resonance Value"
+  },
+  "collection": {
+    "sort_by": "Order Memories By",
+    "title": "Memory Collection"
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Here's your {{ value }} gift card for {{ shop }}!",
+      "subtext": "Your gift card",
+      "gift_card_code": "Gift card code",
+      "shop_link": "Continue shopping",
+      "remaining_html": "Remaining {{ balance }}",
+      "add_to_apple_wallet": "Add to Apple Wallet",
+      "qr_image_alt": "QR code — scan to redeem gift card",
+      "copy_code": "Copy code",
+      "expired": "Expired",
+      "copy_code_success": "Code copied successfully",
+      "print_gift_card": "Print"
+    }
+  },
+  "date_formats": {
+    "month_day_year": "%B %d, %Y"
+  },
+  "customer": {
+    "account": {
+      "title": "Memory Profile",
+      "details": "Account Details",
+      "view_addresses": "View Addresses",
+      "return": "Return to Account Details"
+    },
+    "log_out": "Terminate Session",
+    "orders": {
+      "title": "Order History",
+      "order_number": "Order",
+      "order_number_link": "Order number {{ number }}",
+      "date": "Date",
+      "payment_status": "Payment Status",
+      "fulfillment_status": "Fulfillment Status",
+      "total": "Total",
+      "none": "You haven't placed any orders yet."
+    },
+    "log_in": "Access Archive",
+    "register": "Begin Memory Protocol"
+  },
+  "errors": {
+    "404": "Memory Fragment Not Found",
+    "page_not_found": "The memory fragment you're seeking has been lost or corrupted.",
+    "login_required": "Archive access required"
+  }
+}

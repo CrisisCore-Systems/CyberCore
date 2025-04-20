@@ -1,0 +1,123 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div class="template-product">
+  <!-- Render the product-template section -->
+  {% section 'product-template' %}
+
+  <!-- Recommended Products -->
+  {% section 'product-recommendations' %}
+</div>
+
+{% comment %}
+  Product Template infused with VoidBloom memorywear mythology.
+{% endcomment %}
+
+<section class="product-page phase-{{ product.metafields.voidbloom.memory_phase | default: 'cyber-lotus' }}">
+  <h1 class="product-title">{{ product.title }}</h1>
+  <div class="product-meta">
+    <div class="trauma-type">{{ product.metafields.voidbloom.trauma_type | capitalize }}</div>
+    <div class="memory-phase">{{ product.metafields.voidbloom.memory_phase | replace: '-', ' ' | capitalize }}</div>
+  </div>
+
+  <div class="product-container">
+    <div class="product-gallery">
+      <div class="trauma-visualization" data-trauma="{{ product.metafields.voidbloom.trauma_type }}">
+        {% for image in product.images %}
+          <div class="gallery-item{% if forloop.first %} active{% endif %}">
+            <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}"
+                 data-intensity="{{ product.metafields.voidbloom.intensity | default: 0.5 }}">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="product-info">
+      <div class="product-price-container">
+        <div class="product-price">{{ product.price | money }}</div>
+        <div class="coherence-indicator" data-coherence="{{ product.metafields.voidbloom_coherence_state.value | default: 0.5 }}"></div>
+      </div>
+
+      <div class="product-description">
+        {{ product.description }}
+      </div>
+
+      <div class="trauma-encoding-details">
+        <h3>Memory Encoding Details</h3>
+        <div class="encoding-metrics">
+          <div class="encoding-metric">
+            <span class="metric-label">Intensity</span>
+            <div class="metric-bar">
+              <div class="metric-fill" style="width: {{ product.metafields.voidbloom.intensity | times: 100 }}%"></div>
+            </div>
+          </div>
+
+          <div class="encoding-metric">
+            <span class="metric-label">Resonance</span>
+            <div class="metric-bar">
+              <div class="metric-fill" style="width: {{ product.metafields.voidbloom.resonance | times: 100 }}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="encoding-description">
+          {{ product.metafields.voidbloom.encoding_description }}
+        </div>
+      </div>
+
+      <form method="post" action="/cart/add" class="product-form">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button type="submit" class="add-to-cart trauma-{{ product.metafields.voidbloom.trauma_type | default: 'recursion' }}">
+          Enter Memory Archive
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="trauma-compatibility">
+    <h3>Memory Compatibility</h3>
+    <div class="compatibility-grid">
+      {% assign trauma_types = "abandonment,fragmentation,surveillance,recursion,displacement,dissolution" | split: "," %}
+      {% for trauma in trauma_types %}
+        {% assign compatibility_key = "compatibility_" | append: trauma %}
+        {% assign compatibility_value = product.metafields.voidbloom[compatibility_key] | default: 0.5 %}
+        <div class="compatibility-item trauma-{{ trauma }}" data-value="{{ compatibility_value }}">
+          <div class="compatibility-label">{{ trauma | capitalize }}</div>
+          <div class="compatibility-indicator">
+            <div class="indicator-fill" style="width: {{ compatibility_value | times: 100 }}%"></div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize memory protocol for this product
+    if (window.MemoryProtocol) {
+      const traumaType = '{{ product.metafields.voidbloom.trauma_type | default: "recursion" }}';
+      const traumaIntensity = {{ product.metafields.voidbloom.intensity | default: 0.5 }};
+
+      MemoryProtocol.activate({
+        traumaType: traumaType,
+        intensity: traumaIntensity,
+        globalEffect: false
+      });
+    }
+
+    // Initialize quantum hologram if available
+    if (window.HologramComponent && document.querySelector('.trauma-visualization')) {
+      new HologramComponent({
+        targetSelector: '.trauma-visualization',
+        traumaType: '{{ product.metafields.voidbloom.trauma_type | default: "recursion" }}',
+        intensity: {{ product.metafields.voidbloom.intensity | default: 0.5 }}
+      });
+    }
+  });
+</script>

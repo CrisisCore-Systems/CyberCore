@@ -1,0 +1,197 @@
+[
+  {
+    "namespace": "voidbloom",
+    "key": "trauma_type",
+    "name": "Trauma Type",
+    "description": "Defines the trauma encoding for this artifact",
+    "type": "single_line_text_field",
+    "validations": [
+      {
+        "name": "choices",
+        "value": "[\"abandonment\", \"fragmentation\", \"surveillance\", \"recursion\", \"displacement\", \"dissolution\"]"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "memory_phase",
+    "type": "single_line_text_field",
+    "name": "Memory Phase",
+    "description": "Associates this artifact with a memory phase"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "intensity",
+    "name": "Encoding Intensity",
+    "description": "The intensity level of the trauma encoding (0.1-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.1"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "resonance",
+    "name": "Resonance Level",
+    "description": "The resonance level with the user's own trauma patterns (0.1-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.1"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "encoding_description",
+    "name": "Encoding Description",
+    "description": "Detailed description of the memory encoding process",
+    "type": "multi_line_text_field"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "compatibility_abandonment",
+    "name": "Abandonment Compatibility",
+    "description": "Compatibility level with abandonment trauma (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "compatibility_fragmentation",
+    "name": "Fragmentation Compatibility",
+    "description": "Compatibility level with fragmentation trauma (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "compatibility_surveillance",
+    "name": "Surveillance Compatibility",
+    "description": "Compatibility level with surveillance trauma (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "compatibility_recursion",
+    "name": "Recursion Compatibility",
+    "description": "Compatibility level with recursion trauma (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "compatibility_displacement",
+    "name": "Displacement Compatibility",
+    "description": "Compatibility level with displacement trauma (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "compatibility_dissolution",
+    "name": "Dissolution Compatibility",
+    "description": "Compatibility level with dissolution trauma (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ]
+  },
+  {
+    "namespace": "voidbloom_memory_protected",
+    "key": "state",
+    "name": "Memory State",
+    "description": "Protected memory state for customer experience",
+    "type": "json",
+    "access": {
+      "admin": "read",
+      "storefront": "read_only"
+    }
+  },
+  {
+    "namespace": "voidbloom_coherence_state",
+    "key": "value",
+    "name": "Coherence State",
+    "description": "Current coherence state value (0.0-1.0)",
+    "type": "number_decimal",
+    "validations": [
+      {
+        "name": "min",
+        "value": "0.0"
+      },
+      {
+        "name": "max",
+        "value": "1.0"
+      }
+    ],
+    "access": {
+      "admin": "read_write",
+      "storefront": "read_only"
+    }
+  }
+]

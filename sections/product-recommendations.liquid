@@ -1,0 +1,173 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+<div class="product-recommendations-section" data-section-id="{{ section.id }}" data-section-type="product-recommendations">
+  <div class="container">
+    <h2 class="section-title">{{ section.settings.title }}</h2>
+
+    <div class="product-recommendations"
+      data-product-id="{{ product.id }}"
+      data-limit="{{ section.settings.products_to_show }}"
+      data-trauma-type="{{ product.metafields.voidbloom.trauma_type | default: section.settings.default_trauma_encoding }}">
+
+      <div class="product-grid initial-loading">
+        <div class="loading-indicator"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="related-products-section">
+  <h2 class="section-title">Memory Echoes</h2>
+  <div class="product-grid">
+    {% for product in recommendations %}
+      <div class="related-product trauma-{{ product.metafields.voidbloom.trauma_type | handleize }}">
+        <a href="{{ product.url }}">
+          <div class="product-image-container">
+            <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+            <div class="trauma-overlay" data-trauma="{{ product.metafields.voidbloom.trauma_type }}"></div>
+          </div>
+          <h3 class="product-title">{{ product.title }}</h3>
+          <div class="trauma-indicator">
+            <span class="trauma-type">{{ product.metafields.voidbloom.trauma_type | capitalize }}</span>
+            <span class="trauma-intensity">{{ product.metafields.voidbloom.intensity | times: 100 | round }}%</span>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initial loading state
+    const recommendationsContainer = document.querySelector('.product-recommendations');
+
+    if (!recommendationsContainer) return;
+
+    const productId = recommendationsContainer.getAttribute('data-product-id');
+    const limit = parseInt(recommendationsContainer.getAttribute('data-limit'), 10) || 4;
+    const traumaType = recommendationsContainer.getAttribute('data-trauma-type');
+
+    if (!productId) return;
+
+    // Fetch recommendations from Shopify's recommendations API
+    const requestUrl = `/recommendations/products?section_id={{ section.id }}&product_id=${productId}&limit=${limit}`;
+
+    fetch(requestUrl)
+      .then(response => response.text())
+      .then(text => {
+        const container = document.querySelector('.product-recommendations .product-grid');
+        if (container) {
+          container.classList.remove('initial-loading');
+          container.innerHTML = text;
+
+          // Apply quantum effects if enabled
+          if (window.voidBloom && window.voidBloom.quantumEngine) {
+            window.voidBloom.quantumEngine.processElements(container.querySelectorAll('.product-card'));
+          }
+
+          // Apply trauma filters
+          if (window.voidBloom && window.voidBloom.ritualEngine && traumaType) {
+            window.voidBloom.ritualEngine.applyTraumaFilters(container, traumaType);
+          }
+        }
+      })
+      .catch(e => {
+        console.error('Error loading product recommendations:', e);
+        const container = document.querySelector('.product-recommendations .product-grid');
+        if (container) {
+          container.innerHTML = '<p class="error-message">Could not load product recommendations</p>';
+        }
+      });
+
+    // Apply trauma visualizations to recommendations
+    document.querySelectorAll('.trauma-overlay').forEach(overlay => {
+      const traumaType = overlay.getAttribute('data-trauma');
+      if (traumaType && window.MemoryProtocol) {
+        MemoryProtocol.visualizeTrauma(overlay, traumaType, 0.3);
+      }
+    });
+
+    // Hover effects for trauma products
+    document.querySelectorAll('.related-product').forEach(product => {
+      product.addEventListener('mouseenter', function() {
+        const traumaType = this.querySelector('.trauma-overlay').getAttribute('data-trauma');
+        if (traumaType && window.MemoryProtocol) {
+          MemoryProtocol.visualizeTrauma(this, traumaType, 0.5);
+        }
+      });
+
+      product.addEventListener('mouseleave', function() {
+        const traumaType = this.querySelector('.trauma-overlay').getAttribute('data-trauma');
+        if (traumaType && window.MemoryProtocol) {
+          MemoryProtocol.visualizeTrauma(this, traumaType, 0.2);
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Memory Resonance"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Maximum products to show",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "default_trauma_encoding",
+      "label": "Default trauma encoding",
+      "options": [
+        {
+          "value": "abandonment",
+          "label": "Abandonment"
+        },
+        {
+          "value": "fragmentation",
+          "label": "Fragmentation"
+        },
+        {
+          "value": "surveillance",
+          "label": "Surveillance"
+        },
+        {
+          "value": "recursion",
+          "label": "Recursion"
+        },
+        {
+          "value": "displacement",
+          "label": "Displacement"
+        },
+        {
+          "value": "dissolution",
+          "label": "Dissolution"
+        }
+      ],
+      "default": "recursion"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Recommendations",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
