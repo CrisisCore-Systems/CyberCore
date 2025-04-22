@@ -1,0 +1,177 @@
+{% comment %}
+  Main Search Section - For search results with quantum effects
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<div class="main-search-section">
+  <div class="container">
+    <div class="search-page">
+      <div class="search-header">
+        <h1 class="search-title">{{ section.settings.title | default: 'general.search.title' | t }}</h1>
+      </div>
+
+      <div class="search-form-container">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+          <div class="search-form-field">
+            <input
+              type="search"
+              name="q"
+              id="Search"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ section.settings.placeholder | default: 'general.search.placeholder' | t }}"
+              class="search-input"
+              aria-label="{{ 'general.search.placeholder' | t }}"
+            >
+            <button type="submit" class="search-submit">
+              <span class="visually-hidden">{{ 'general.search.submit' | t }}</span>
+              <span class="search-submit-icon"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {% if search.performed %}
+        <div class="search-results">
+          <div class="search-stats">
+            <h2 class="search-results-count">
+              {% if search.results_count > 0 %}
+                {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+              {% else %}
+                {{ 'general.search.no_results' | t: terms: search.terms }}
+              {% endif %}
+            </h2>
+          </div>
+
+          {% if search.results_count > 0 %}
+            <div class="search-results-list">
+              {% for item in search.results %}
+                <div class="search-result-item" data-trauma-resonance="0.{{ forloop.index | times: 137 | modulo: 100 }}">
+                  {% if item.object_type == 'product' %}
+                    <div class="search-product">
+                      <div class="search-product-image">
+                        {% if item.featured_image %}
+                          <a href="{{ item.url }}">
+                            <img
+                              src="{{ item.featured_image | img_url: '300x' }}"
+                              alt="{{ item.featured_image.alt | escape }}"
+                              loading="lazy"
+                              width="150"
+                              height="{{ 150 | divided_by: item.featured_image.aspect_ratio | round }}"
+                            >
+                          </a>
+                        {% endif %}
+                      </div>
+
+                      <div class="search-product-details">
+                        <h3 class="search-product-title">
+                          <a href="{{ item.url }}">{{ item.title }}</a>
+                        </h3>
+
+                        <div class="search-product-price">
+                          {% if item.price_varies %}
+                            <span class="price-range">{{ item.price_min | money }} - {{ item.price_max | money }}</span>
+                          {% else %}
+                            <span class="price">{{ item.price | money }}</span>
+                          {% endif %}
+                        </div>
+
+                        {% if item.metafields.voidbloom.trauma_type %}
+                          <div class="search-product-trauma">
+                            <span class="trauma-type">{{ item.metafields.voidbloom.trauma_type | capitalize }}</span>
+                            <div class="trauma-intensity-bar">
+                              <div class="trauma-intensity-fill" style="width: {{ item.metafields.voidbloom.intensity | default: 0.7 | times: 100 }}%;"></div>
+                            </div>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="search-content">
+                      <h3 class="search-content-title">
+                        <a href="{{ item.url }}">{{ item.title }}</a>
+                      </h3>
+
+                      <div class="search-content-type">
+                        {{ item.object_type | capitalize }}
+                      </div>
+
+                      {% if item.content %}
+                        <div class="search-content-excerpt">
+                          {{ item.content | strip_html | truncatewords: 50 }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+
+            {% if paginate.pages > 1 %}
+              <div class="search-pagination">
+                {% render 'pagination', paginate: paginate %}
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="search-no-results">
+              <p>{{ 'general.search.no_results_html' | t }}</p>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Apply quantum effects to search results
+    if (window.voidBloom && window.voidBloom.quantumEngine) {
+      const searchResults = document.querySelectorAll('.search-result-item');
+      window.voidBloom.quantumEngine.processElements(searchResults);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Search Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Search page title",
+      "default": "Search our store"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Search field placeholder text",
+      "default": "Search for memory artifacts, trauma types..."
+    },
+    {
+      "type": "header",
+      "content": "Quantum Search Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quantum_effects",
+      "label": "Enable quantum search effects",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trauma_indicators",
+      "label": "Show trauma indicators",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search Results",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

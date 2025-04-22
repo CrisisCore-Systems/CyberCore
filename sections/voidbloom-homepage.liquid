@@ -1,0 +1,1344 @@
+{% comment %}
+  VoidBloom Ritual Homepage - Rich implementation with full feature set
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-entangled
+  @Version: 3.7.1
+{% endcomment %}
+
+<div class="voidbloom-homepage" data-neural-node data-profile="VoidBloom">
+  <div class="void-backdrop"></div>
+
+  <!-- Ritualized Entry -->
+  <section class="ritual-entry" id="ritual-entry" data-neural-node data-depth="1">
+    <div class="entry-backdrop"></div>
+    <div class="entry-content">
+      <h1 class="ritual-title glitch-text" data-text="{{ section.settings.title | default: 'VoidBloom' }}">
+        {{ section.settings.title | default: 'VoidBloom' }}
+      </h1>
+
+      <div class="ritual-subtitle">{{ section.settings.subtitle | default: 'Memory Archive System' }}</div>
+
+      <div class="entry-description">
+        {{ section.settings.description | default: 'Access the void. Recover lost memories. Integrate trauma signals.' }}
+      </div>
+
+      <div class="entry-actions">
+        <a href="{{ section.settings.cta_link | default: '/collections/all' }}" class="ritual-button primary">
+          {{ section.settings.cta_text | default: 'Explore Memory Artifacts' }}
+        </a>
+
+        <button class="ritual-button secondary quantum-trigger" data-mutation="VoidBloom" data-intensity="0.8">
+          Initiate Protocol
+        </button>
+      </div>
+    </div>
+
+    <div class="void-particles" id="entry-particles"></div>
+  </section>
+
+  <!-- Bloom Protocol -->
+  <section class="bloom-protocol" id="bloom-protocol" data-neural-node data-depth="2">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.protocol_title | default: 'Bloom Protocol' }}</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="protocol-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'protocol_step' %}
+          <div class="protocol-step" data-step="{{ forloop.index }}" data-neural-node {{ block.shopify_attributes }}>
+            <div class="step-number">{{ forloop.index }}</div>
+            <h3 class="step-title">{{ block.settings.title }}</h3>
+            <div class="step-description">{{ block.settings.description }}</div>
+
+            {% if block.settings.image %}
+              <div class="step-image">
+                <img src="{{ block.settings.image | img_url: '400x400', crop: 'center' }}" alt="{{ block.settings.title }}" loading="lazy">
+                <div class="image-glitch-overlay"></div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %} Fallback if no blocks {% endcomment %}
+      {% if section.blocks.size == 0 or section.blocks | where: 'type', 'protocol_step' | size == 0 %}
+        <div class="protocol-step" data-step="1" data-neural-node>
+          <div class="step-number">1</div>
+          <h3 class="step-title">Memory Acquisition</h3>
+          <div class="step-description">Select memory artifacts that resonate with your trauma signature.</div>
+        </div>
+
+        <div class="protocol-step" data-step="2" data-neural-node>
+          <div class="step-number">2</div>
+          <h3 class="step-title">Deep Integration</h3>
+          <div class="step-description">Integrate memory fragments through the void network.</div>
+        </div>
+
+        <div class="protocol-step" data-step="3" data-neural-node>
+          <div class="step-number">3</div>
+          <h3 class="step-title">Dimensional Collapse</h3>
+          <div class="step-description">Witness the collapse of dimensional barriers as trauma materializes.</div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Signal Wall - Featured Collection -->
+  <section class="signal-wall" id="signal-wall" data-neural-node data-depth="3">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.collection_title | default: 'Signal Wall' }}</h2>
+      <div class="section-line"></div>
+    </div>
+
+    {% assign featured_collection = collections[section.settings.featured_collection] %}
+    {% assign collection_limit = section.settings.collection_limit | default: 4 %}
+
+    <div class="signal-grid">
+      {% if featured_collection != blank %}
+        {% for product in featured_collection.products limit: collection_limit %}
+          {% render 'trauma-card', product: product %}
+        {% endfor %}
+      {% else %}
+        {% comment %} Placeholder content {% endcomment %}
+        <div class="trauma-card" data-neural-node>
+          <div class="trauma-image placeholder">
+            <div class="trauma-depth depth-1"></div>
+          </div>
+          <h3 class="trauma-title">Neural Fragment</h3>
+          <div class="trauma-price">$45.00</div>
+        </div>
+
+        <div class="trauma-card" data-neural-node>
+          <div class="trauma-image placeholder">
+            <div class="trauma-depth depth-2"></div>
+          </div>
+          <h3 class="trauma-title">Memory Shard</h3>
+          <div class="trauma-price">$65.00</div>
+        </div>
+
+        <div class="trauma-card" data-neural-node>
+          <div class="trauma-image placeholder">
+            <div class="trauma-depth depth-3"></div>
+          </div>
+          <h3 class="trauma-title">Void Echo</h3>
+          <div class="trauma-price">$85.00</div>
+        </div>
+
+        <div class="trauma-card" data-neural-node>
+          <div class="trauma-image placeholder">
+            <div class="trauma-depth depth-2"></div>
+          </div>
+          <h3 class="trauma-title">Signal Ripple</h3>
+          <div class="trauma-price">$55.00</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="signal-actions">
+      <a href="{{ featured_collection.url | default: '/collections/all' }}" class="ritual-button secondary">
+        View All Signals
+      </a>
+    </div>
+  </section>
+
+  <!-- Quantum Featured Products - Holographic Display -->
+  <section class="quantum-featured" id="quantum-featured" data-neural-node data-depth="4">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.quantum_title | default: 'Quantum Resonance' }}</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="quantum-display-container">
+      <div class="quantum-backdrop"></div>
+      <div class="hologram-container" data-hologram-container>
+        {% assign quantum_collection = collections[section.settings.quantum_collection] %}
+        {% assign quantum_limit = section.settings.quantum_limit | default: 3 %}
+
+        {% if quantum_collection != blank %}
+          {% for product in quantum_collection.products limit: quantum_limit %}
+            <div class="hologram-product" data-product-id="{{ product.id }}" data-neural-node>
+              <div class="hologram-display">
+                {% if product.featured_image %}
+                  <div class="hologram-image">
+                    <img src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" alt="{{ product.title }}" loading="lazy">
+                    <div class="hologram-effect"></div>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="hologram-info">
+                <h3 class="hologram-title">{{ product.title }}</h3>
+                <div class="hologram-price">{{ product.price | money }}</div>
+                <div class="hologram-actions">
+                  <a href="{{ product.url }}" class="ritual-button primary">View Details</a>
+                  <button class="ritual-button secondary add-to-vault" data-product-id="{{ product.id }}" data-variant-id="{{ product.variants.first.id }}">
+                    Add to Vault
+                  </button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          {% comment %} Placeholder content {% endcomment %}
+          <div class="hologram-product" data-neural-node>
+            <div class="hologram-display">
+              <div class="hologram-image placeholder">
+                <div class="hologram-effect"></div>
+              </div>
+            </div>
+            <div class="hologram-info">
+              <h3 class="hologram-title">Dimensional Resonator</h3>
+              <div class="hologram-price">$129.00</div>
+              <div class="hologram-actions">
+                <a href="/products/dimensional-resonator" class="ritual-button primary">View Details</a>
+                <button class="ritual-button secondary add-to-vault" data-product-id="placeholder">
+                  Add to Vault
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hologram-product" data-neural-node>
+            <div class="hologram-display">
+              <div class="hologram-image placeholder">
+                <div class="hologram-effect"></div>
+              </div>
+            </div>
+            <div class="hologram-info">
+              <h3 class="hologram-title">Neural Interface Module</h3>
+              <div class="hologram-price">$179.00</div>
+              <div class="hologram-actions">
+                <a href="/products/neural-interface" class="ritual-button primary">View Details</a>
+                <button class="ritual-button secondary add-to-vault" data-product-id="placeholder">
+                  Add to Vault
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hologram-product" data-neural-node>
+            <div class="hologram-display">
+              <div class="hologram-image placeholder">
+                <div class="hologram-effect"></div>
+              </div>
+            </div>
+            <div class="hologram-info">
+              <h3 class="hologram-title">Void Extractor</h3>
+              <div class="hologram-price">$149.00</div>
+              <div class="hologram-actions">
+                <a href="/products/void-extractor" class="ritual-button primary">View Details</a>
+                <button class="ritual-button secondary add-to-vault" data-product-id="placeholder">
+                  Add to Vault
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if quantum_collection != blank %}
+        <div class="quantum-actions">
+          <a href="{{ quantum_collection.url }}" class="ritual-button secondary">
+            Explore Quantum Collection
+          </a>
+        </div>
+      {% else %}
+        <div class="quantum-actions">
+          <a href="/collections/all" class="ritual-button secondary">
+            Explore Quantum Collection
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Archive Timeline -->
+  <section class="archive-timeline" id="archive-timeline" data-neural-node data-depth="2">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.timeline_title | default: 'Archive Timeline' }}</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="timeline-container">
+      <div class="timeline-line"></div>
+
+      {% for block in section.blocks %}
+        {% if block.type == 'timeline_entry' %}
+          <div class="timeline-entry" data-year="{{ block.settings.year }}" data-neural-node {{ block.shopify_attributes }}>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-year">{{ block.settings.year }}</div>
+              <h3 class="timeline-title">{{ block.settings.title }}</h3>
+              <div class="timeline-description">{{ block.settings.description }}</div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %} Fallback if no blocks {% endcomment %}
+      {% if section.blocks.size == 0 or section.blocks | where: 'type', 'timeline_entry' | size == 0 %}
+        <div class="timeline-entry" data-year="2018" data-neural-node>
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2018</div>
+            <h3 class="timeline-title">First Neural Collapse</h3>
+            <div class="timeline-description">Initial discovery of the void network and its memory storage capabilities.</div>
+          </div>
+        </div>
+
+        <div class="timeline-entry" data-year="2021" data-neural-node>
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2021</div>
+            <h3 class="timeline-title">Trauma Encoding Protocol</h3>
+            <div class="timeline-description">Development of methods to encode and materialize trauma as wearable artifacts.</div>
+          </div>
+        </div>
+
+        <div class="timeline-entry" data-year="2025" data-neural-node>
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2025</div>
+            <h3 class="timeline-title">VoidBloom Manifestation</h3>
+            <div class="timeline-description">Full integration of the quantum system for public memory acquisition.</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Neural Testimonials - Build Trust -->
+  <section class="neural-testimonials" id="neural-testimonials" data-neural-node data-depth="2">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.testimonial_title | default: 'Neural Imprints' }}</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="testimonial-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'testimonial' %}
+          <div class="testimonial-card" data-neural-node {{ block.shopify_attributes }}>
+            <div class="testimonial-content">
+              <div class="testimonial-quote">{{ block.settings.quote }}</div>
+              <div class="testimonial-author">{{ block.settings.author }}</div>
+              {% if block.settings.verified %}
+                <div class="testimonial-verified">Verified Purchase</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %} Fallback if no blocks {% endcomment %}
+      {% if section.blocks.size == 0 or section.blocks | where: 'type', 'testimonial' | size == 0 %}
+        <div class="testimonial-card" data-neural-node>
+          <div class="testimonial-content">
+            <div class="testimonial-quote">"The quantum entanglement in these products has completely transformed my neural interface experience. Trauma resonance is at peak efficiency."</div>
+            <div class="testimonial-author">Alex K.</div>
+            <div class="testimonial-verified">Verified Purchase</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card" data-neural-node>
+          <div class="testimonial-content">
+            <div class="testimonial-quote">"Memory acquisition has never been this seamless. The dimensional collapse protocols exceed all expectations."</div>
+            <div class="testimonial-author">Morgan T.</div>
+            <div class="testimonial-verified">Verified Purchase</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card" data-neural-node>
+          <div class="testimonial-content">
+            <div class="testimonial-quote">"VoidBloom's artifacts have the highest trauma resonance I've experienced. Fast shipping and perfect integration with my existing void network."</div>
+            <div class="testimonial-author">Jamie R.</div>
+            <div class="testimonial-verified">Verified Purchase</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<style>
+  .voidbloom-homepage {
+    position: relative;
+    background: #0a0014;
+    color: rgba(255, 255, 255, 0.9);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .void-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(40, 0, 80, 0.2) 0%, rgba(10, 0, 20, 0.9) 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Section Styles */
+  section {
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    max-width: 1440px;
+    position: relative;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .section-title {
+    font-family: 'Courier New', monospace;
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+    position: relative;
+    display: inline-block;
+    letter-spacing: 1px;
+  }
+
+  .section-line {
+    height: 1px;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.7), transparent);
+    margin: 0 auto;
+  }
+
+  /* Ritualized Entry */
+  .ritual-entry {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding-top: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .entry-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(153, 0, 255, 0.1) 0%, transparent 70%);
+    z-index: -1;
+    animation: pulse-fade 15s infinite alternate ease-in-out;
+  }
+
+  .ritual-title {
+    font-family: 'Courier New', monospace;
+    font-size: 4rem;
+    margin: 0 0 1rem 0;
+    letter-spacing: 2px;
+    position: relative;
+  }
+
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+
+  .glitch-text::before {
+    animation: glitch-anim 10s infinite linear alternate-reverse;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    transform: translate(-0.04em, -0.04em);
+    opacity: 0.8;
+    color: rgba(255, 0, 255, 0.8);
+  }
+
+  .glitch-text::after {
+    animation: glitch-anim-2 10s infinite linear alternate-reverse;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    transform: translate(0.04em, 0.04em);
+    opacity: 0.8;
+    color: rgba(0, 255, 255, 0.8);
+  }
+
+  .ritual-subtitle {
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: rgba(153, 0, 255, 0.9);
+    letter-spacing: 1px;
+  }
+
+  .entry-description {
+    max-width: 600px;
+    margin: 0 auto 3rem auto;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .entry-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ritual-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ritual-button.primary {
+    background: rgba(153, 0, 255, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .ritual-button.primary:hover {
+    background: rgba(153, 0, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(153, 0, 255, 0.3);
+  }
+
+  .ritual-button.secondary {
+    background: transparent;
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .ritual-button.secondary:hover {
+    background: rgba(153, 0, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(153, 0, 255, 0.2);
+  }
+
+  .void-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Bloom Protocol */
+  .bloom-protocol {
+    background: rgba(10, 0, 20, 0.7);
+    border-top: 1px solid rgba(153, 0, 255, 0.2);
+    border-bottom: 1px solid rgba(153, 0, 255, 0.2);
+  }
+
+  .protocol-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .protocol-step {
+    position: relative;
+    padding: 1.5rem;
+    background: rgba(153, 0, 255, 0.05);
+    border: 1px solid rgba(153, 0, 255, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .protocol-step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
+    border-color: rgba(153, 0, 255, 0.4);
+  }
+
+  .step-number {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 40px;
+    height: 40px;
+    background: rgba(153, 0, 255, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .step-title {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    color: rgba(153, 0, 255, 0.9);
+  }
+
+  .step-description {
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+  }
+
+  .step-image {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .step-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .image-glitch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(153, 0, 255, 0.1) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Signal Wall */
+  .signal-wall {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .signal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .signal-actions {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  /* Trauma Card (Fallback) */
+  .trauma-card {
+    position: relative;
+    background: rgba(153, 0, 255, 0.05);
+    border: 1px solid rgba(153, 0, 255, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .trauma-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
+    border-color: rgba(153, 0, 255, 0.4);
+  }
+
+  .trauma-image {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect ratio */
+    background: rgba(153, 0, 255, 0.05);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .trauma-image.placeholder {
+    background: linear-gradient(135deg, rgba(20, 0, 40, 1) 0%, rgba(40, 0, 80, 1) 100%);
+  }
+
+  .trauma-depth {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .depth-1 {
+    border-top: 1px solid rgba(153, 0, 255, 0.5);
+  }
+
+  .depth-2 {
+    border-top: 2px solid rgba(153, 0, 255, 0.7);
+    border-bottom: 1px solid rgba(153, 0, 255, 0.5);
+  }
+
+  .depth-3 {
+    border: 1px solid rgba(153, 0, 255, 0.7);
+    box-shadow: 0 0 10px rgba(153, 0, 255, 0.3) inset;
+  }
+
+  .trauma-title {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .trauma-price {
+    font-size: 1rem;
+    color: rgba(153, 0, 255, 0.9);
+  }
+
+  /* Quantum Featured Products */
+  .quantum-display-container {
+    position: relative;
+    padding: 2rem;
+    background: rgba(10, 0, 20, 0.7);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .quantum-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(153, 0, 255, 0.2) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hologram-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hologram-product {
+    background: rgba(153, 0, 255, 0.05);
+    border: 1px solid rgba(153, 0, 255, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .hologram-product:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.2);
+    border-color: rgba(153, 0, 255, 0.4);
+  }
+
+  .hologram-display {
+    position: relative;
+    padding: 1rem;
+  }
+
+  .hologram-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .hologram-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .hologram-image.placeholder {
+    padding-top: 100%;
+    background: linear-gradient(135deg, rgba(20, 0, 40, 1) 0%, rgba(40, 0, 80, 1) 100%);
+  }
+
+  .hologram-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(153, 0, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hologram-product:hover .hologram-image img {
+    transform: scale(1.05);
+  }
+
+  .hologram-info {
+    padding: 1.5rem;
+  }
+
+  .hologram-title {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .hologram-price {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: rgba(153, 0, 255, 0.9);
+  }
+
+  .hologram-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .quantum-actions {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  /* Archive Timeline */
+  .archive-timeline {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    background: rgba(10, 0, 20, 0.7);
+    border-top: 1px solid rgba(153, 0, 255, 0.2);
+    border-bottom: 1px solid rgba(153, 0, 255, 0.2);
+  }
+
+  .timeline-container {
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(153, 0, 255, 0.3);
+    transform: translateX(-50%);
+  }
+
+  .timeline-entry {
+    position: relative;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .timeline-entry:nth-child(odd) .timeline-content {
+    margin-left: 50%;
+    padding-left: 2rem;
+    text-align: left;
+  }
+
+  .timeline-entry:nth-child(even) .timeline-content {
+    margin-right: 50%;
+    padding-right: 2rem;
+    text-align: right;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(153, 0, 255, 0.3);
+    border: 1px solid rgba(153, 0, 255, 0.5);
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  .timeline-marker::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: rgba(153, 0, 255, 0.7);
+    border-radius: 50%;
+  }
+
+  .timeline-content {
+    position: relative;
+    width: 45%;
+    background: rgba(153, 0, 255, 0.05);
+    border: 1px solid rgba(153, 0, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .timeline-content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
+    border-color: rgba(153, 0, 255, 0.4);
+  }
+
+  .timeline-year {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: rgba(153, 0, 255, 0.9);
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .timeline-description {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+  }
+
+  /* Neural Testimonials */
+  .neural-testimonials {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .testimonial-card {
+    position: relative;
+    padding: 1.5rem;
+    background: rgba(153, 0, 255, 0.05);
+    border: 1px solid rgba(153, 0, 255, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
+    border-color: rgba(153, 0, 255, 0.4);
+  }
+
+  .testimonial-content {
+    text-align: center;
+  }
+
+  .testimonial-quote {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .testimonial-author {
+    font-size: 1rem;
+    color: rgba(153, 0, 255, 0.9);
+    margin-bottom: 0.5rem;
+  }
+
+  .testimonial-verified {
+    font-size: 0.9rem;
+    color: rgba(0, 255, 0, 0.9);
+  }
+
+  /* Animations */
+  @keyframes pulse-fade {
+    0% { opacity: 0.3; transform: scale(0.95); }
+    100% { opacity: 0.7; transform: scale(1.05); }
+  }
+
+  @keyframes glitch-anim {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 1px); }
+    40% { transform: translate(-1px, -1px); }
+    60% { transform: translate(1px, 1px); }
+    80% { transform: translate(-1px, -1px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes glitch-anim-2 {
+    0% { transform: translate(0); }
+    20% { transform: translate(2px, 1px); }
+    40% { transform: translate(-1px, -1px); }
+    60% { transform: translate(1px, -1px); }
+    80% { transform: translate(1px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .ritual-title {
+      font-size: 2.5rem;
+    }
+
+    .ritual-subtitle {
+      font-size: 1.2rem;
+    }
+
+    .timeline-line {
+      left: 20px;
+    }
+
+    .timeline-entry:nth-child(odd) .timeline-content,
+    .timeline-entry:nth-child(even) .timeline-content {
+      margin-left: 40px;
+      margin-right: 0;
+      padding-left: 1.5rem;
+      padding-right: 1rem;
+      text-align: left;
+      width: calc(100% - 60px);
+    }
+
+    .timeline-marker {
+      left: 20px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quantum Visualizer for particles if available
+    if (window.QuantumVisualizer) {
+      const entryParticles = new QuantumVisualizer({
+        container: document.getElementById('entry-particles'),
+        particleCount: 100,
+        colorScheme: 'VoidBloom',
+        dimensions: '2d',
+        fractalMode: true
+      });
+
+      // Generate some initial quantum state data
+      const initialData = Array(20).fill().map((_, i) => ({
+        id: 'p' + i,
+        state: Math.random() > 0.5 ? 'superposition' : 'entangled',
+        probability: Math.random(),
+        profile: 'VoidBloom'
+      }));
+
+      entryParticles.update(initialData);
+    }
+
+    // Initialize GlitchEngine for text glitching if available
+    if (window.GlitchEngine) {
+      const textGlitch = new GlitchEngine({
+        targetSelector: '.glitch-text',
+        glitchMode: 'text',
+        intensity: 0.3,
+        autoStart: false
+      });
+
+      // Trigger occasional glitches
+      setInterval(() => {
+        textGlitch.pulse({
+          intensity: 0.5 + Math.random() * 0.5,
+          duration: 300 + Math.random() * 500
+        });
+      }, 5000);
+    }
+
+    // Connect to NeuralBus if available
+    if (window.NeuralBus) {
+      // Register homepage with NeuralBus
+      if (NeuralBus.register) {
+        NeuralBus.register('voidbloom-homepage', {
+          version: '1.0.0',
+          profile: 'VoidBloom'
+        });
+      }
+
+      // Set up quantum trigger buttons
+      const quantumTriggers = document.querySelectorAll('.quantum-trigger');
+      quantumTriggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          const profile = trigger.dataset.mutation || 'VoidBloom';
+          const intensity = parseFloat(trigger.dataset.intensity) || 0.5;
+
+          // Publish mutation event
+          NeuralBus.publish('quantum:mutation', {
+            profile,
+            intensity,
+            source: 'homepage',
+            timestamp: Date.now()
+          });
+
+          // Provide visual feedback
+          if (window.GlitchEngine) {
+            const pageGlitch = new GlitchEngine({
+              targetSelector: '.voidbloom-homepage',
+              glitchMode: 'rgb-shift',
+              intensity: intensity,
+              autoStart: false
+            });
+
+            pageGlitch.pulse({
+              duration: 1000
+            });
+          }
+        });
+      });
+
+      // Subscribe to quantum mutation events
+      NeuralBus.subscribe('quantum:mutation', data => {
+        if (data.profile === 'VoidBloom') {
+          // Update particle visualizer if available
+          if (window.entryParticles && window.entryParticles.update) {
+            const currentData = window.entryParticles.currentState || [];
+            window.entryParticles.update(currentData.map(item => ({
+              ...item,
+              probability: Math.random(),
+              profile: 'VoidBloom'
+            })));
+          }
+        }
+      });
+    }
+
+    // Intersection Observer for section animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+
+          // Notify NeuralBus about section visibility
+          if (window.NeuralBus) {
+            NeuralBus.publish('section:visible', {
+              id: entry.target.id,
+              depth: entry.target.dataset.depth || '1',
+              timestamp: Date.now()
+            });
+          }
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    // Observe all sections
+    document.querySelectorAll('section[id]').forEach(section => {
+      observer.observe(section);
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "VoidBloom Ritual Homepage",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Section"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "VoidBloom"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Memory Archive System"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Access the void. Recover lost memories. Integrate trauma signals.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "Explore Memory Artifacts"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Bloom Protocol Section"
+    },
+    {
+      "type": "text",
+      "id": "protocol_title",
+      "label": "Section Title",
+      "default": "Bloom Protocol"
+    },
+    {
+      "type": "header",
+      "content": "Signal Wall Section"
+    },
+    {
+      "type": "text",
+      "id": "collection_title",
+      "label": "Section Title",
+      "default": "Signal Wall"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Featured Collection"
+    },
+    {
+      "type": "range",
+      "id": "collection_limit",
+      "label": "Number of Products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Quantum Featured Products Section"
+    },
+    {
+      "type": "text",
+      "id": "quantum_title",
+      "label": "Section Title",
+      "default": "Quantum Resonance"
+    },
+    {
+      "type": "collection",
+      "id": "quantum_collection",
+      "label": "Quantum Collection"
+    },
+    {
+      "type": "range",
+      "id": "quantum_limit",
+      "label": "Number of Products",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Archive Timeline Section"
+    },
+    {
+      "type": "text",
+      "id": "timeline_title",
+      "label": "Section Title",
+      "default": "Archive Timeline"
+    },
+    {
+      "type": "header",
+      "content": "Neural Testimonials Section"
+    },
+    {
+      "type": "text",
+      "id": "testimonial_title",
+      "label": "Section Title",
+      "default": "Neural Imprints"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "protocol_step",
+      "name": "Protocol Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title",
+          "default": "Memory Acquisition"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Step Description",
+          "default": "Select memory artifacts that resonate with your trauma signature."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Step Image"
+        }
+      ]
+    },
+    {
+      "type": "timeline_entry",
+      "name": "Timeline Entry",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year",
+          "default": "2025"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Entry Title",
+          "default": "VoidBloom Manifestation"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Entry Description",
+          "default": "Full integration of the quantum system for public memory acquisition."
+        }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "The quantum entanglement in these products has completely transformed my neural interface experience."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Alex K."
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified Purchase",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VoidBloom Ritual Homepage",
+      "category": "Custom Content"
+    }
+  ]
+}
+{% endschema %}
