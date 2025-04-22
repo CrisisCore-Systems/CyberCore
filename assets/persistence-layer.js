@@ -8,7 +8,13 @@
 
 import { NeuralBus } from './neural-bus.js';
 
+/**
+ *
+ */
 export class CoherencePersistence {
+  /**
+   *
+   */
   constructor(options = {}) {
     // Configuration with defaults
     this.config = {

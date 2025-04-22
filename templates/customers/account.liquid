@@ -1,0 +1,141 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+<div class="template-customer-account">
+  <div class="container">
+    {% if customer %}
+      <div class="account-page">
+        <header class="account-header">
+          <h1 class="account-title">{{ 'customer.account.title' | t }}</h1>
+          <a href="{{ routes.account_logout_url }}" class="account-logout-link">{{ 'customer.log_out' | t }}</a>
+        </header>
+
+        <div class="account-details">
+          <h2 class="account-section-title">{{ 'customer.account.details' | t }}</h2>
+
+          <div class="account-info-grid">
+            <div class="account-info-name">
+              <h3 class="account-info-label">Name</h3>
+              <p class="account-info-value">{{ customer.name }}</p>
+            </div>
+
+            <div class="account-info-email">
+              <h3 class="account-info-label">Email</h3>
+              <p class="account-info-value">{{ customer.email }}</p>
+            </div>
+
+            {% if customer.metafields.voidbloom_memory_protected.state %}
+              <div class="memory-profile">
+                <h3 class="memory-profile-title">Memory Profile</h3>
+                <div class="memory-profile-content">
+                  <div class="memory-profile-coherence">
+                    <div class="memory-profile-label">Coherence Baseline</div>
+                    <div class="memory-profile-value">{{ customer.metafields.voidbloom_memory_protected.state.coherenceBaseline | times: 100 | round }}%</div>
+                  </div>
+
+                  {% if customer.metafields.voidbloom_memory_protected.state.primaryTrauma %}
+                    <div class="memory-profile-primary-trauma">
+                      <div class="memory-profile-label">Primary Resonance</div>
+                      <div class="memory-profile-value trauma-{{ customer.metafields.voidbloom_memory_protected.state.primaryTrauma }}">
+                        {{ customer.metafields.voidbloom_memory_protected.state.primaryTrauma | capitalize }}
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="account-orders">
+          <h2 class="account-section-title">{{ 'customer.orders.title' | t }}</h2>
+
+          {% paginate customer.orders by 5 %}
+            {% if customer.orders.size > 0 %}
+              <div class="orders-table-container">
+                <table class="orders-table">
+                  <thead>
+                    <tr>
+                      <th class="order-number">{{ 'customer.orders.order_number' | t }}</th>
+                      <th class="order-date">{{ 'customer.orders.date' | t }}</th>
+                      <th class="order-payment-status">{{ 'customer.orders.payment_status' | t }}</th>
+                      <th class="order-fulfillment-status">{{ 'customer.orders.fulfillment_status' | t }}</th>
+                      <th class="order-total">{{ 'customer.orders.total' | t }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for order in customer.orders %}
+                      <tr class="order-item" data-order-id="{{ order.id }}">
+                        <td class="order-number">
+                          <a href="{{ order.customer_url }}" class="order-link">{{ 'customer.orders.order_number_link' | t: number: order.name }}</a>
+                        </td>
+                        <td class="order-date">{{ order.created_at | date: format: 'date' }}</td>
+                        <td class="order-payment-status">{{ order.financial_status_label }}</td>
+                        <td class="order-fulfillment-status">{{ order.fulfillment_status_label }}</td>
+                        <td class="order-total">{{ order.total_price | money }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+              {% if paginate.pages > 1 %}
+                <div class="orders-pagination">
+                  {% render 'pagination', paginate: paginate %}
+                </div>
+              {% endif %}
+            {% else %}
+              <div class="orders-empty">
+                <p class="orders-empty-text">{{ 'customer.orders.none' | t }}</p>
+              </div>
+            {% endif %}
+          {% endpaginate %}
+        </div>
+
+        {% if customer.metafields.voidbloom_memory_protected.state %}
+          <div class="memory-archive">
+            <h2 class="memory-archive-title">Memory Resonance Archive</h2>
+
+            <div class="trauma-distribution">
+              <h3 class="trauma-distribution-title">Trauma Resonance Distribution</h3>
+              <div class="trauma-distribution-chart" data-trauma-chart></div>
+            </div>
+
+            <div class="memory-timeline">
+              <h3 class="memory-timeline-title">Memory Timeline</h3>
+              <div class="memory-timeline-chart" data-memory-timeline></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="account-not-logged-in">
+        <h1 class="account-not-logged-in-title">Memory Archive Access</h1>
+        <p class="account-not-logged-in-message">Please sign in to access your memory archive.</p>
+        <div class="account-login-action">
+          <a href="{{ routes.account_login_url }}" class="button">Sign In</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize trauma distribution chart if available
+    if (window.voidBloom && window.voidBloom.ritualEngine) {
+      const traumaChart = document.querySelector('[data-trauma-chart]');
+      if (traumaChart) {
+        window.voidBloom.ritualEngine.renderTraumaDistribution(traumaChart);
+      }
+
+      const timelineChart = document.querySelector('[data-memory-timeline]');
+      if (timelineChart) {
+        window.voidBloom.ritualEngine.renderMemoryTimeline(timelineChart);
+      }
+    }
+  });
+</script>

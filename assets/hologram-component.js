@@ -354,22 +354,22 @@ class CartPreviewHologram extends HTMLElement {
     if (oldValue === newValue) return;
 
     switch (name) {
-      case 'product-id':
-        this.#productId = newValue;
-        this.#loadProductData();
-        break;
-      case 'model-url':
-        this.#modelUrl = newValue;
-        this.#updateModel();
-        break;
-      case 'profile':
-        this.#mutationProfile = newValue;
-        this.#updateProfile();
-        break;
-      case 'ar-mode':
-        this.#arMode = newValue === 'true';
-        this.#updateArMode();
-        break;
+    case 'product-id':
+      this.#productId = newValue;
+      this.#loadProductData();
+      break;
+    case 'model-url':
+      this.#modelUrl = newValue;
+      this.#updateModel();
+      break;
+    case 'profile':
+      this.#mutationProfile = newValue;
+      this.#updateProfile();
+      break;
+    case 'ar-mode':
+      this.#arMode = newValue === 'true';
+      this.#updateArMode();
+      break;
     }
   }
 
@@ -634,18 +634,18 @@ class CartPreviewHologram extends HTMLElement {
     let color = 0x00ffff; // Default cyan
 
     switch (this.#mutationProfile) {
-      case 'CyberLotus':
-        color = 0x00ffff; // Cyan
-        break;
-      case 'ObsidianBloom':
-        color = 0xff00ff; // Magenta
-        break;
-      case 'VoidBloom':
-        color = 0x9900ff; // Purple
-        break;
-      case 'NeonVortex':
-        color = 0x00ff66; // Neon green
-        break;
+    case 'CyberLotus':
+      color = 0x00ffff; // Cyan
+      break;
+    case 'ObsidianBloom':
+      color = 0xff00ff; // Magenta
+      break;
+    case 'VoidBloom':
+      color = 0x9900ff; // Purple
+      break;
+    case 'NeonVortex':
+      color = 0x00ff66; // Neon green
+      break;
     }
 
     this.#renderer.setHologramColor(color);

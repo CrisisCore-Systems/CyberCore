@@ -1,0 +1,39 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+<div class="template-404">
+  <div class="container">
+    <div class="page-404">
+      <div class="page-404-content">
+        <h1 class="page-404-title">{{ 'general.404.title' | t }}</h1>
+        <div class="page-404-message">
+          <p>{{ 'general.404.subtext' | t }}</p>
+        </div>
+        <div class="page-404-action">
+          <a href="{{ routes.root_url }}" class="button">{{ 'general.404.link' | t }}</a>
+        </div>
+
+        <!-- Quantum effect visual - adds a glitchy "memory corruption" effect -->
+        <div class="memory-corruption" data-quantum-effect="corruption" data-intensity="0.6">
+          <div class="corruption-lines"></div>
+          <div class="corruption-static"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize corruption effect if quantum effects engine is available
+    if (window.voidBloom && window.voidBloom.glitchEngine) {
+      const corruptionElement = document.querySelector('[data-quantum-effect="corruption"]');
+      if (corruptionElement) {
+        window.voidBloom.glitchEngine.applyEffect(corruptionElement, 'corruption');
+      }
+    }
+  });
+</script>

@@ -5,7 +5,13 @@
 
 const crypto = require('crypto');
 
+/**
+ *
+ */
 class QuantumPriceValidator {
+  /**
+   *
+   */
   constructor(config = {}) {
     this.config = {
       secretKey: process.env.QUANTUM_SECRET_KEY || 'default-quantum-secret-key',

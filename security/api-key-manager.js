@@ -4,7 +4,13 @@
  * Version: 3.7.1
  */
 
+/**
+ *
+ */
 class ApiKeyManager {
+  /**
+   *
+   */
   constructor(options = {}) {
     // Configuration
     this.config = {
@@ -117,17 +123,17 @@ class ApiKeyManager {
 
     // Implementation depends on the storage method
     switch (this.config.storageMethod) {
-      case 'secured_metafields':
-        this.loadKeysFromMetafields();
-        break;
-      case 'environment_variables':
-        this.loadKeysFromEnvironment();
-        break;
-      case 'secure_storage':
-        this.loadKeysFromSecureStorage();
-        break;
-      default:
-        this.log(`Unknown storage method: ${this.config.storageMethod}`, 'error');
+    case 'secured_metafields':
+      this.loadKeysFromMetafields();
+      break;
+    case 'environment_variables':
+      this.loadKeysFromEnvironment();
+      break;
+    case 'secure_storage':
+      this.loadKeysFromSecureStorage();
+      break;
+    default:
+      this.log(`Unknown storage method: ${this.config.storageMethod}`, 'error');
     }
   }
 
@@ -494,17 +500,17 @@ class ApiKeyManager {
   saveKeys() {
     // Implementation depends on the storage method
     switch (this.config.storageMethod) {
-      case 'secured_metafields':
-        this.saveKeysToMetafields();
-        break;
-      case 'environment_variables':
-        this.log('Cannot save keys to environment variables', 'warn');
-        break;
-      case 'secure_storage':
-        this.saveKeysToSecureStorage();
-        break;
-      default:
-        this.log(`Unknown storage method: ${this.config.storageMethod}`, 'error');
+    case 'secured_metafields':
+      this.saveKeysToMetafields();
+      break;
+    case 'environment_variables':
+      this.log('Cannot save keys to environment variables', 'warn');
+      break;
+    case 'secure_storage':
+      this.saveKeysToSecureStorage();
+      break;
+    default:
+      this.log(`Unknown storage method: ${this.config.storageMethod}`, 'error');
     }
   }
 
@@ -850,15 +856,15 @@ class ApiKeyManager {
     const prefix = `[API-KEY-MANAGER ${timestamp}]`;
 
     switch (level) {
-      case 'error':
-        console.error(`${prefix} ${message}`);
-        break;
-      case 'warn':
-        console.warn(`${prefix} ${message}`);
-        break;
-      case 'info':
-      default:
-        console.log(`${prefix} ${message}`);
+    case 'error':
+      console.error(`${prefix} ${message}`);
+      break;
+    case 'warn':
+      console.warn(`${prefix} ${message}`);
+      break;
+    case 'info':
+    default:
+      console.log(`${prefix} ${message}`);
     }
   }
 }

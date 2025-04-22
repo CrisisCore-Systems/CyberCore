@@ -3,19 +3,19 @@
  * Provides type safety while maintaining compatibility with the original memory system
  */
 
-// Import the original JavaScript file
-const MemoryProtocolJS = require('./memory-protocol.js').default || require('./memory-protocol.js');
+// Import the original JavaScript file using ES module syntax
+import * as MemoryProtocolJS from './memory-protocol.js';
 
 // Define TypeScript interfaces for the MemoryProtocol
 export interface MemoryFragment {
   id: string;
   type: string;
-  content: any;
+  content: unknown;
   timestamp: number;
   tags: string[];
   priority: number;
   expiresAt?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface MemoryQuery {
@@ -28,6 +28,14 @@ export interface MemoryQuery {
   includeExpired?: boolean;
 }
 
+export interface MemoryProtocolOptions {
+  storageKey?: string;
+  autoSync?: boolean;
+  syncInterval?: number;
+  remoteEndpoint?: string;
+  [key: string]: unknown;
+}
+
 export interface MemoryProtocolInterface {
   // Properties
   isInitialized: boolean;
@@ -35,14 +43,14 @@ export interface MemoryProtocolInterface {
   lastSyncTimestamp: number;
 
   // Methods
-  initialize(options?: any): Promise<void>;
+  initialize(options?: MemoryProtocolOptions): Promise<void>;
   storeFragment(fragment: Partial<MemoryFragment>): MemoryFragment;
   retrieveFragment(fragmentId: string): MemoryFragment | null;
   queryFragments(query: MemoryQuery): MemoryFragment[];
   removeFragment(fragmentId: string): boolean;
   clearAllFragments(): void;
-  exportMemory(): Record<string, any>;
-  importMemory(data: Record<string, any>): boolean;
+  exportMemory(): Record<string, unknown>;
+  importMemory(data: Record<string, unknown>): boolean;
   sync(): Promise<boolean>;
 }
 

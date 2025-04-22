@@ -266,17 +266,17 @@ export class EnhancedCart {
         }
 
         switch (type) {
-          case 'quantum-state-result':
-            this.#applyQuantumState(result);
-            break;
+        case 'quantum-state-result':
+          this.#applyQuantumState(result);
+          break;
 
-          case 'trauma-patterns-result':
-            this.#applyTraumaPatterns(result);
-            break;
+        case 'trauma-patterns-result':
+          this.#applyTraumaPatterns(result);
+          break;
 
-          case 'mutation-profile-result':
-            this.#applyMutationProfile(result);
-            break;
+        case 'mutation-profile-result':
+          this.#applyMutationProfile(result);
+          break;
         }
       });
 
@@ -414,45 +414,45 @@ export class EnhancedCart {
     // Apply effect to hologram components
     this.#hologramComponents.forEach((component) => {
       switch (effectType) {
-        case 'add':
-          component.classList.add('cart-added-pulse');
-          setTimeout(() => {
-            component.classList.remove('cart-added-pulse');
-          }, 1000);
+      case 'add':
+        component.classList.add('cart-added-pulse');
+        setTimeout(() => {
+          component.classList.remove('cart-added-pulse');
+        }, 1000);
 
-          if (component.glitchEnabled) {
-            component.triggerGlitch(0.7, 300);
-          }
-          break;
+        if (component.glitchEnabled) {
+          component.triggerGlitch(0.7, 300);
+        }
+        break;
 
-        case 'remove':
-          if (component.glitchEnabled) {
-            component.triggerGlitch(0.5, 200);
-          }
-          break;
+      case 'remove':
+        if (component.glitchEnabled) {
+          component.triggerGlitch(0.5, 200);
+        }
+        break;
 
-        case 'update':
-          if (component.glitchEnabled) {
-            component.triggerGlitch(0.3, 150);
-          }
-          break;
+      case 'update':
+        if (component.glitchEnabled) {
+          component.triggerGlitch(0.3, 150);
+        }
+        break;
       }
     });
 
     // Apply effect to WebGL renderer if active
     if (this.#config.useWebGL && HologramRenderer.initialized) {
       switch (effectType) {
-        case 'add':
-          HologramRenderer.applyGlitch(0.7, 300);
-          break;
+      case 'add':
+        HologramRenderer.applyGlitch(0.7, 300);
+        break;
 
-        case 'remove':
-          HologramRenderer.applyGlitch(0.5, 200);
-          break;
+      case 'remove':
+        HologramRenderer.applyGlitch(0.5, 200);
+        break;
 
-        case 'update':
-          HologramRenderer.applyGlitch(0.3, 150);
-          break;
+      case 'update':
+        HologramRenderer.applyGlitch(0.3, 150);
+        break;
       }
     }
 

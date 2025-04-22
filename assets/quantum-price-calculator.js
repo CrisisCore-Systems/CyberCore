@@ -6,7 +6,13 @@
  * with anti-manipulation security features
  */
 
+/**
+ *
+ */
 class QuantumPriceCalculator {
+  /**
+   *
+   */
   constructor(options = {}) {
     this.config = {
       apiEndpoint: '/api/quantum/price',

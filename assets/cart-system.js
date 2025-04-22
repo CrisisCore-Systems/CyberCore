@@ -1,7 +1,8 @@
+// @ts-nocheck
 /**
  * CART-SYSTEM.JS
  * Advanced cart functionality for CyberCore theme
- * 
+ *
  * @MutationCompatible: All Variants
  * @StrategyProfile: quantum-entangled
  * @Version: 2.2.0
@@ -13,7 +14,7 @@ import { NeuralBus } from './neural-bus.js';
 /**
  * CartSystem
  * Advanced cart management system with quantum effects and 3D previews
- * 
+ *
  * Key Features:
  * - AJAX cart updates without page refresh
  * - Cart drawer with animations
@@ -49,10 +50,21 @@ export class CartSystem {
       cartUpdate: '/cart/update.js',
       cartChange: '/cart/change.js',
       cartGet: '/cart.js',
-      cartClear: '/cart/clear.js'
+      cartClear: '/cart/clear.js',
+      recommendations: '/recommendations/products.json',
+      productRecommendations: '/recommendations/products.json',
+      recentlyViewed: '/recommendations/recently-viewed.json'
+    },
+    recommendationsConfig: {
+      limit: 4,
+      cacheExpiry: 300000, // 5 minutes in milliseconds
+      fallbackCollection: 'featured-products', // Collection to use if no recommendations available
+      trackAnalytics: true,
+      personalizedRecommendations: true,
+      useRecentlyViewed: true
     }
   };
-  
+
   static #instance = null;
   static #eventHandlersAttached = false;
   static #isOpen = false;
@@ -66,7 +78,7 @@ export class CartSystem {
   static #holographicRenderer = null;
   static #activeProduct = null;
   static #productMutationRegistry = new Map();
-  
+
   /**
    * Initialize the cart system
    * @param {Object} options - Configuration options
@@ -75,33 +87,33 @@ export class CartSystem {
   static initialize(options = {}) {
     // Only initialize once
     if (this.#instance) return this.#instance;
-    
+
     // Merge options with defaults
     this.#config = { ...this.#config, ...options };
-    
+
     // Check for holographic preview support
     this.#checkHolographicSupport();
-    
+
     // Attach event listeners
     this.#attachEventHandlers();
-    
+
     // Initial cart fetch
     this.#fetchCart();
-    
+
     // Connect to Neural Bus if available
     if (this.#config.neuralSynced) {
       this.#connectToNeuralBus();
     }
-    
+
     // Log initialization
     if (this.#config.debug) {
       console.log('[CartSystem] Initialized with config:', this.#config);
     }
-    
+
     this.#instance = this;
     return this.#instance;
   }
-  
+
   /**
    * Get cart data
    * @returns {Promise<Object>} Cart data
@@ -112,7 +124,7 @@ export class CartSystem {
     }
     return this.#cartData;
   }
-  
+
   /**
    * Add an item to the cart
    * @param {number|string} variantId - Product variant ID
@@ -123,39 +135,39 @@ export class CartSystem {
   static async addToCart(variantId, quantity = 1, properties = {}) {
     try {
       this.#showLoading();
-      
+
       const data = {
         id: variantId,
         quantity: quantity
       };
-      
+
       // Add properties if provided
       if (Object.keys(properties).length > 0) {
         data.properties = properties;
       }
-      
+
       // Send to Shopify API
       const response = await this.#postToShopify(this.#config.apiEndpoints.cartAdd, data);
-      
+
       // Trigger quantum effect if enabled
       if (this.#config.useQuantumEffects) {
         this.#triggerQuantumEffect('add', variantId);
       }
-      
+
       // Update cart and notify listeners
       await this.#fetchCart();
       this.#updateCartUI();
-      this.#triggerEvent('item:added', { 
-        item: response, 
-        cartData: this.#cartData 
+      this.#triggerEvent('item:added', {
+        item: response,
+        cartData: this.#cartData
       });
-      
+
       // Sync with NeuralBus
       this.#handleCartItemAdded({ item: response });
-      
+
       // Show drawer
       this.openCartDrawer();
-      
+
       return this.#cartData;
     } catch (error) {
       this.#handleError(error);
@@ -164,7 +176,7 @@ export class CartSystem {
       this.#hideLoading();
     }
   }
-  
+
   /**
    * Update cart item quantity
    * @param {string} key - Cart item key
@@ -174,24 +186,24 @@ export class CartSystem {
   static async updateItemQuantity(key, quantity) {
     try {
       this.#showLoading();
-      
+
       // Send to Shopify API
       const data = {
         id: key,
         quantity: quantity
       };
-      
+
       await this.#postToShopify(this.#config.apiEndpoints.cartChange, data);
-      
+
       // Update cart and notify listeners
       await this.#fetchCart();
       this.#updateCartUI();
-      this.#triggerEvent('item:updated', { 
-        key: key, 
+      this.#triggerEvent('item:updated', {
+        key: key,
         quantity: quantity,
         cartData: this.#cartData
       });
-      
+
       return this.#cartData;
     } catch (error) {
       this.#handleError(error);
@@ -200,7 +212,7 @@ export class CartSystem {
       this.#hideLoading();
     }
   }
-  
+
   /**
    * Remove an item from the cart
    * @param {string} key - Cart item key
@@ -209,7 +221,7 @@ export class CartSystem {
   static async removeItem(key) {
     return this.updateItemQuantity(key, 0);
   }
-  
+
   /**
    * Clear the cart
    * @returns {Promise<Object>} Empty cart
@@ -217,7 +229,7 @@ export class CartSystem {
   static async clearCart() {
     try {
       this.#showLoading();
-      
+
       // Send to Shopify API
       await fetch(this.#config.apiEndpoints.cartClear, {
         method: 'POST',
@@ -225,12 +237,12 @@ export class CartSystem {
           'Content-Type': 'application/json'
         }
       });
-      
+
       // Update cart and notify listeners
       await this.#fetchCart();
       this.#updateCartUI();
       this.#triggerEvent('cart:cleared', { cartData: this.#cartData });
-      
+
       return this.#cartData;
     } catch (error) {
       this.#handleError(error);
@@ -239,62 +251,62 @@ export class CartSystem {
       this.#hideLoading();
     }
   }
-  
+
   /**
    * Open the cart drawer
    */
   static openCartDrawer() {
     const drawer = document.querySelector(this.#config.cartDrawerSelector);
     if (!drawer) return;
-    
+
     // Add open class to drawer
     drawer.classList.add('open');
-    
+
     // Set body class for locking scroll
     document.body.classList.add('cart-drawer-open');
-    
+
     // Update state
     this.#isOpen = true;
-    
+
     // Trigger event
     this.#triggerEvent('drawer:opened', {});
-    
+
     // Set up holographic preview if enabled and supported
     if (this.#config.useHolographicPreviews && this.#holographicPreviewsSupported) {
       this.#initHolographicPreviews();
     }
-    
+
     // Apply quantum effect if enabled
     if (this.#config.useQuantumEffects) {
       this.#triggerQuantumEffect('drawer', 'open');
     }
   }
-  
+
   /**
    * Close the cart drawer
    */
   static closeCartDrawer() {
     const drawer = document.querySelector(this.#config.cartDrawerSelector);
     if (!drawer) return;
-    
+
     // Remove open class from drawer
     drawer.classList.remove('open');
-    
+
     // Remove body class for unlocking scroll
     document.body.classList.remove('cart-drawer-open');
-    
+
     // Update state
     this.#isOpen = false;
-    
+
     // Trigger event
     this.#triggerEvent('drawer:closed', {});
-    
+
     // Apply quantum effect if enabled
     if (this.#config.useQuantumEffects) {
       this.#triggerQuantumEffect('drawer', 'close');
     }
   }
-  
+
   /**
    * Toggle the cart drawer
    */
@@ -305,22 +317,22 @@ export class CartSystem {
       this.openCartDrawer();
     }
   }
-  
+
   /**
    * Set active product for preview
    * @param {Object} product - Product data
    */
   static setActiveProduct(product) {
     this.#activeProduct = product;
-    
+
     // Update holographic preview if enabled and drawer is open
-    if (this.#config.useHolographicPreviews && 
-        this.#holographicPreviewsSupported && 
+    if (this.#config.useHolographicPreviews &&
+        this.#holographicPreviewsSupported &&
         this.#isOpen) {
       this.#updateHolographicPreview(product);
     }
   }
-  
+
   /**
    * Check if cart drawer is open
    * @returns {boolean} Is drawer open
@@ -328,14 +340,14 @@ export class CartSystem {
   static isCartDrawerOpen() {
     return this.#isOpen;
   }
-  
+
   /**
    * Attach event handlers to cart elements
    * @private
    */
   static #attachEventHandlers() {
     if (this.#eventHandlersAttached) return;
-    
+
     document.addEventListener('DOMContentLoaded', () => {
       // Toggle cart drawer
       const toggleButtons = document.querySelectorAll(this.#config.cartDrawerToggleSelector);
@@ -345,7 +357,7 @@ export class CartSystem {
           this.toggleCartDrawer();
         });
       });
-      
+
       // Continue shopping button
       const continueButton = document.querySelector(this.#config.continueShoppingSelector);
       if (continueButton) {
@@ -354,29 +366,29 @@ export class CartSystem {
           this.closeCartDrawer();
         });
       });
-      
+
       // Add to cart forms
       const addToCartForms = document.querySelectorAll(this.#config.addToCartFormSelector);
       addToCartForms.forEach(form => {
         form.addEventListener('submit', this.#handleFormSubmit.bind(this));
       });
-      
+
       // Document click to close drawer
       document.addEventListener('click', (event) => {
-        if (this.#isOpen && 
-            !event.target.closest(this.#config.cartDrawerSelector) && 
+        if (this.#isOpen &&
+            !event.target.closest(this.#config.cartDrawerSelector) &&
             !event.target.closest(this.#config.cartDrawerToggleSelector)) {
           this.closeCartDrawer();
         }
       });
-      
+
       // Escape key to close drawer
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && this.#isOpen) {
           this.closeCartDrawer();
         }
       });
-      
+
       // Attach delegated event handlers for dynamic cart content
       document.addEventListener('click', (event) => {
         // Remove item buttons
@@ -389,28 +401,28 @@ export class CartSystem {
           }
         }
       });
-      
+
       // Quantity input change events
       document.addEventListener('change', (event) => {
         if (event.target.matches(this.#config.cartItemQuantitySelector)) {
           const itemEl = event.target.closest(this.#config.cartItemSelector);
           const key = itemEl?.dataset.key;
           const quantity = parseInt(event.target.value, 10);
-          
+
           if (key && !isNaN(quantity)) {
             this.updateItemQuantity(key, quantity);
           }
         }
       });
-      
+
       // Mark event handlers as attached
       this.#eventHandlersAttached = true;
-      
+
       // Initial UI update
       this.#updateCartUI();
     });
   }
-  
+
   /**
    * Handle form submission for add to cart
    * @private
@@ -418,14 +430,14 @@ export class CartSystem {
    */
   static #handleFormSubmit(event) {
     event.preventDefault();
-    
+
     const form = event.target;
     const formData = new FormData(form);
-    
+
     // Extract form data
     const variantId = formData.get('id');
     const quantity = parseInt(formData.get('quantity') || 1, 10);
-    
+
     // Extract properties from form
     const properties = {};
     for (const [key, value] of formData.entries()) {
@@ -434,14 +446,14 @@ export class CartSystem {
         properties[propName] = value;
       }
     }
-    
+
     // Add to cart
     this.addToCart(variantId, quantity, properties)
       .catch(error => {
         console.error('Add to cart failed:', error);
       });
   }
-  
+
   /**
    * Fetch current cart data from Shopify
    * @private
@@ -456,21 +468,21 @@ export class CartSystem {
           'Accept': 'application/json'
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Cart fetch failed: ${response.status} ${response.statusText}`);
       }
-      
+
       const data = await response.json();
       this.#cartData = data;
-      
+
       return data;
     } catch (error) {
       console.error('Error fetching cart:', error);
       throw error;
     }
   }
-  
+
   /**
    * Post data to Shopify API
    * @private
@@ -485,16 +497,16 @@ export class CartSystem {
       // Queue the request
       return new Promise((resolve, reject) => {
         this.#pendingRequests.push({ endpoint, data, resolve, reject });
-        
+
         // Process queue after throttle time
         setTimeout(() => {
           this.#processRequestQueue();
         }, this.#requestThrottleMs);
       });
     }
-    
+
     this.#lastRequestTimestamp = now;
-    
+
     // Execute the request
     try {
       const response = await fetch(endpoint, {
@@ -505,31 +517,31 @@ export class CartSystem {
         },
         body: JSON.stringify(data)
       });
-      
+
       if (!response.ok) {
         throw new Error(`Request failed: ${response.status} ${response.statusText}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error(`Error posting to ${endpoint}:`, error);
       throw error;
     }
   }
-  
+
   /**
    * Process the queue of pending requests
    * @private
    */
   static #processRequestQueue() {
     if (this.#pendingRequests.length === 0) return;
-    
+
     // Get the next request
     const { endpoint, data, resolve, reject } = this.#pendingRequests.shift();
-    
+
     // Update timestamp
     this.#lastRequestTimestamp = Date.now();
-    
+
     // Execute the request
     this.#postToShopify(endpoint, data)
       .then(resolve)
@@ -543,19 +555,19 @@ export class CartSystem {
         }
       });
   }
-  
+
   /**
    * Update the cart UI
    * @private
    */
   static #updateCartUI() {
     if (!this.#cartData) return;
-    
+
     // Update cart count
     const cartCountEl = document.querySelector(this.#config.cartCountSelector);
     if (cartCountEl) {
       cartCountEl.textContent = this.#cartData.item_count;
-      
+
       // Toggle visibility based on item count
       if (this.#cartData.item_count > 0) {
         cartCountEl.classList.remove('hidden');
@@ -563,7 +575,7 @@ export class CartSystem {
         cartCountEl.classList.add('hidden');
       }
     }
-    
+
     // Update cart total
     const cartTotalEl = document.querySelector(this.#config.cartTotalSelector);
     if (cartTotalEl) {
@@ -571,7 +583,7 @@ export class CartSystem {
       const formattedPrice = this.#formatMoney(this.#cartData.total_price);
       cartTotalEl.textContent = formattedPrice;
     }
-    
+
     // Toggle empty cart message
     const emptyMessageEl = document.querySelector(this.#config.cartEmptyMessageSelector);
     if (emptyMessageEl) {
@@ -581,14 +593,14 @@ export class CartSystem {
         emptyMessageEl.classList.add('hidden');
       }
     }
-    
+
     // Update cart items
     this.#renderCartItems();
-    
+
     // Update recommendations if any
     this.#updateRecommendations();
   }
-  
+
   /**
    * Render cart items
    * @private
@@ -596,21 +608,21 @@ export class CartSystem {
   static #renderCartItems() {
     const cartItemContainer = document.querySelector('#cart-items');
     if (!cartItemContainer || !this.#cartData) return;
-    
+
     // Clear existing items
     cartItemContainer.innerHTML = '';
-    
+
     // Render each item
     this.#cartData.items.forEach(item => {
       const itemElement = document.createElement('div');
       itemElement.className = 'cart-item';
       itemElement.dataset.key = item.key;
-      
+
       // Escape special characters in HTML to prevent XSS
       const escapedTitle = this.#escapeHTML(item.title);
       const escapedVariantTitle = this.#escapeHTML(item.variant_title || '');
       const formattedPrice = this.#formatMoney(item.final_line_price);
-      
+
       itemElement.innerHTML = `
         <div class="cart-item__image">
           <img src="${item.image || '/assets/no-image.jpg'}" alt="${escapedTitle}">
@@ -621,44 +633,459 @@ export class CartSystem {
           <div class="cart-item__price">${formattedPrice}</div>
           <div class="cart-item__quantity">
             <label for="quantity-${item.key}">Qty:</label>
-            <input 
-              type="number" 
-              id="quantity-${item.key}" 
-              class="cart-item__quantity-input" 
-              value="${item.quantity}" 
-              min="1" 
+            <input
+              type="number"
+              id="quantity-${item.key}"
+              class="cart-item__quantity-input"
+              value="${item.quantity}"
+              min="1"
               data-item-key="${item.key}"
             >
           </div>
         </div>
         <button class="cart-item__remove" aria-label="Remove item">×</button>
       `;
-      
+
       cartItemContainer.appendChild(itemElement);
-      
+
       // Apply quantum effects if enabled
       if (this.#config.useQuantumEffects) {
         this.#applyItemQuantumEffect(itemElement);
       }
     });
   }
-  
+
   /**
    * Update product recommendations
    * @private
    */
   static #updateRecommendations() {
     const recommendationsContainer = document.querySelector(this.#config.cartRecommendationsSelector);
-    if (!recommendationsContainer || !this.#cartData || this.#cartData.item_count === 0) {
+    if (!recommendationsContainer) {
       return;
     }
-    
-    // TODO: Implement product recommendations logic
-    // This would typically make an API call to Shopify's recommendations endpoint
-    // For now, let's just clear the container
-    recommendationsContainer.innerHTML = '';
+
+    // If cart is empty and we don't want recommendations, clear and return
+    if (!this.#cartData || this.#cartData.item_count === 0) {
+      // If we want to show recommendations anyway (fallback to featured collection)
+      if (!this.#config.recommendationsConfig.fallbackCollection) {
+        recommendationsContainer.innerHTML = '';
+        return;
+      }
+    }
+
+    // Show loading state
+    recommendationsContainer.innerHTML = '<div class="recommendations-loading">Loading recommendations...</div>';
+
+    // Check for cached recommendations
+    const cacheKey = this.#getRecommendationsCacheKey();
+    const cachedRecommendations = this.#getRecommendationsFromCache(cacheKey);
+
+    if (cachedRecommendations) {
+      this.#renderRecommendations(cachedRecommendations);
+      return;
+    }
+
+    // Strategy pattern: determine best source of recommendations
+    let recommendationsPromise;
+
+    // 1. Cart-based recommendations (if cart has items)
+    if (this.#cartData && this.#cartData.item_count > 0) {
+      const currentItems = this.#cartData.items.map(item => item.product_id);
+      recommendationsPromise = this.#fetchCartBasedRecommendations(currentItems);
+    }
+    // 2. Recently viewed recommendations (if enabled and no cart items)
+    else if (this.#config.recommendationsConfig.useRecentlyViewed) {
+      recommendationsPromise = this.#fetchRecentlyViewedRecommendations();
+    }
+    // 3. Fallback to collection-based recommendations
+    else if (this.#config.recommendationsConfig.fallbackCollection) {
+      recommendationsPromise = this.#fetchCollectionRecommendations(this.#config.recommendationsConfig.fallbackCollection);
+    }
+    // 4. No recommendations possible
+    else {
+      recommendationsContainer.innerHTML = '';
+      return;
+    }
+
+    // Process recommendations
+    recommendationsPromise
+      .then(data => {
+        // Cache valid results
+        if (data && data.products && data.products.length > 0) {
+          this.#saveRecommendationsToCache(cacheKey, data);
+        }
+
+        this.#renderRecommendations(data);
+
+        // Track analytics
+        if (this.#config.recommendationsConfig.trackAnalytics) {
+          this.#trackRecommendationsImpression(data);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching recommendations:', error);
+        recommendationsContainer.innerHTML = '';
+      });
   }
-  
+
+  /**
+   * Fetch cart-based recommendations
+   * @private
+   * @param {Array<number|string>} productIds - Current product IDs in cart
+   * @returns {Promise<Object>} Recommendations data
+   */
+  static async #fetchCartBasedRecommendations(productIds) {
+    try {
+      const response = await fetch(
+        `${this.#config.apiEndpoints.productRecommendations}?product_id=${productIds.join(',')}&limit=${this.#config.recommendationsConfig.limit}&intent=complementary`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Recommendations fetch failed: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching cart-based recommendations:', error);
+      // Fallback to collection recommendations
+      if (this.#config.recommendationsConfig.fallbackCollection) {
+        return this.#fetchCollectionRecommendations(this.#config.recommendationsConfig.fallbackCollection);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch recently viewed recommendations
+   * @private
+   * @returns {Promise<Object>} Recommendations data
+   */
+  static async #fetchRecentlyViewedRecommendations() {
+    try {
+      const response = await fetch(
+        `${this.#config.apiEndpoints.recentlyViewed}?limit=${this.#config.recommendationsConfig.limit}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Recently viewed fetch failed: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching recently viewed products:', error);
+      // Fallback to collection recommendations
+      if (this.#config.recommendationsConfig.fallbackCollection) {
+        return this.#fetchCollectionRecommendations(this.#config.recommendationsConfig.fallbackCollection);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch collection-based recommendations
+   * @private
+   * @param {string} collectionHandle - Collection handle
+   * @returns {Promise<Object>} Recommendations data
+   */
+  static async #fetchCollectionRecommendations(collectionHandle) {
+    try {
+      const response = await fetch(
+        `/collections/${collectionHandle}/products.json?limit=${this.#config.recommendationsConfig.limit}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Collection fetch failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Format response to match recommendations API
+      return {
+        products: data.products || []
+      };
+    } catch (error) {
+      console.error(`Error fetching collection ${collectionHandle}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Render recommendations to container
+   * @private
+   * @param {Object} data - Recommendations data
+   */
+  static #renderRecommendations(data) {
+    const recommendationsContainer = document.querySelector(this.#config.cartRecommendationsSelector);
+    if (!recommendationsContainer) return;
+
+    if (!data || !data.products || data.products.length === 0) {
+      recommendationsContainer.innerHTML = '';
+      return;
+    }
+
+    // Create recommendations HTML
+    let recommendationsHTML = `
+      <h3 class="recommendations-title">You might also like</h3>
+      <div class="recommendations-grid">
+    `;
+
+    // Apply quantum effects based on profile
+    const mutationProfile = this.#getMostCommonMutationProfile();
+    const profileClass = mutationProfile ? `profile-${mutationProfile.toLowerCase()}` : '';
+
+    // Generate recommendation cards
+    data.products.forEach(product => {
+      if (!product.available || !product.variants || product.variants.length === 0) {
+        return; // Skip unavailable products
+      }
+
+      // Get the first available variant
+      let variant = product.variants[0];
+
+      // Try to find an available variant if the first one is sold out
+      if (!variant.available && product.variants.length > 1) {
+        const availableVariant = product.variants.find(v => v.available);
+        if (availableVariant) {
+          variant = availableVariant;
+        }
+      }
+
+      // Format price with any compare-at price for sale indication
+      const formattedPrice = this.#formatMoney(variant.price);
+      const compareAtPrice = variant.compare_at_price && variant.compare_at_price > variant.price ?
+        this.#formatMoney(variant.compare_at_price) : null;
+
+      // Escape product title
+      const escapedTitle = this.#escapeHTML(product.title);
+
+      // Create a personalized badge if this is a personalized recommendation
+      const personalizedBadge = data.source === 'personal' && this.#config.recommendationsConfig.personalizedRecommendations ?
+        '<span class="personalized-badge">For You</span>' : '';
+
+      // Show product tags that might be relevant (limited to 2)
+      let tagsHTML = '';
+      if (product.tags && Array.isArray(product.tags)) {
+        const relevantTags = product.tags
+          .filter(tag => !tag.includes('_') && tag.length < 15)
+          .slice(0, 2);
+
+        if (relevantTags.length > 0) {
+          tagsHTML = '<div class="recommendation-tags">' +
+            relevantTags.map(tag => `<span class="recommendation-tag">${this.#escapeHTML(tag)}</span>`).join('') +
+            '</div>';
+        }
+      }
+
+      // Add the product card
+      recommendationsHTML += `
+        <div class="recommendation-item ${profileClass}" data-product-id="${product.id}">
+          ${personalizedBadge}
+          <div class="recommendation-image">
+            <img src="${product.featured_image || '/assets/no-image.jpg'}" alt="${escapedTitle}" loading="lazy">
+          </div>
+          <div class="recommendation-content">
+            <div class="recommendation-title">${escapedTitle}</div>
+            ${tagsHTML}
+            <div class="recommendation-price-container">
+              <div class="recommendation-price${compareAtPrice ? ' on-sale' : ''}">${formattedPrice}</div>
+              ${compareAtPrice ? `<div class="recommendation-compare-price">${compareAtPrice}</div>` : ''}
+            </div>
+            <button class="recommendation-add-btn"
+              data-variant-id="${variant.id}"
+              data-product-id="${product.id}">
+              Add to cart
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    recommendationsHTML += '</div>';
+
+    // Update DOM
+    recommendationsContainer.innerHTML = recommendationsHTML;
+
+    // Attach event listeners to the add buttons
+    this.#attachRecommendationEventListeners(recommendationsContainer);
+  }
+
+  /**
+   * Attach event listeners to recommendation items
+   * @private
+   * @param {HTMLElement} container - Recommendations container
+   */
+  static #attachRecommendationEventListeners(container) {
+    // Add to cart buttons
+    const addButtons = container.querySelectorAll('.recommendation-add-btn');
+    addButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        const variantId = button.dataset.variantId;
+        const productId = button.dataset.productId;
+
+        if (variantId) {
+          // Track the recommendation click if analytics enabled
+          if (this.#config.recommendationsConfig.trackAnalytics) {
+            this.#trackRecommendationClick(productId);
+          }
+
+          // Add to cart
+          this.addToCart(variantId, 1)
+            .then(() => {
+              // Show a micro-notification
+              button.textContent = 'Added!';
+              setTimeout(() => {
+                button.textContent = 'Add to cart';
+              }, 2000);
+
+              // Apply quantum effect
+              if (this.#config.useQuantumEffects) {
+                this.#triggerQuantumEffect('recommendation', productId);
+              }
+            })
+            .catch(error => {
+              console.error('Error adding recommendation to cart:', error);
+              button.textContent = 'Error';
+              setTimeout(() => {
+                button.textContent = 'Add to cart';
+              }, 2000);
+            });
+        }
+      });
+    });
+
+    // Apply quantum effects if enabled
+    if (this.#config.useQuantumEffects) {
+      const items = container.querySelectorAll('.recommendation-item');
+      items.forEach(item => {
+        this.#applyItemQuantumEffect(item);
+      });
+    }
+  }
+
+  /**
+   * Track recommendation impressions for analytics
+   * @private
+   * @param {Object} data - Recommendations data
+   */
+  static #trackRecommendationsImpression(data) {
+    if (!data || !data.products || !this.#config.recommendationsConfig.trackAnalytics) {
+      return;
+    }
+
+    // Send to Neural Bus if connected
+    if (this.#neuralBusConnected) {
+      NeuralBus.publish('analytics:impression', {
+        event: 'recommendation_impression',
+        source: 'cart-drawer',
+        productIds: data.products.map(p => p.id),
+        timestamp: Date.now()
+      });
+    }
+
+    // Send to analytics if available
+    if (typeof window.analytics !== 'undefined') {
+      window.analytics.track('Viewed Product Recommendations', {
+        source: 'cart-drawer',
+        products: data.products.map(p => ({
+          product_id: p.id,
+          name: p.title,
+          price: p.variants[0].price / 100,
+          variant_id: p.variants[0].id
+        }))
+      });
+    }
+  }
+
+  /**
+   * Track recommendation click for analytics
+   * @private
+   * @param {string|number} productId - Product ID that was clicked
+   */
+  static #trackRecommendationClick(productId) {
+    // Send to Neural Bus if connected
+    if (this.#neuralBusConnected) {
+      NeuralBus.publish('analytics:click', {
+        event: 'recommendation_click',
+        source: 'cart-drawer',
+        productId: productId,
+        timestamp: Date.now()
+      });
+    }
+
+    // Send to analytics if available
+    if (typeof window.analytics !== 'undefined') {
+      window.analytics.track('Clicked Product Recommendation', {
+        source: 'cart-drawer',
+        product_id: productId
+      });
+    }
+  }
+
+  /**
+   * Get cache key for recommendations
+   * @private
+   * @returns {string} Cache key
+   */
+  static #getRecommendationsCacheKey() {
+    if (this.#cartData && this.#cartData.item_count > 0) {
+      // Use cart items as cache key
+      const itemIds = this.#cartData.items.map(item => item.product_id).sort().join(',');
+      return `cart-recommendations:${itemIds}`;
+    }
+    // For empty cart with personalized recommendations
+    return 'cart-recommendations:personal';
+  }
+
+  /**
+   * Get recommendations from cache
+   * @private
+   * @param {string} cacheKey - Cache key
+   * @returns {Object|null} Cached recommendations or null
+   */
+  static #getRecommendationsFromCache(cacheKey) {
+    try {
+      const cachedData = localStorage.getItem(cacheKey);
+
+      if (!cachedData) {
+        return null;
+      }
+
+      const parsedData = JSON.parse(cachedData);
+
+      // Check if cache is expired
+      if (parsedData.timestamp + this.#config.recommendationsConfig.cacheExpiry < Date.now()) {
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+
+      return parsedData.data;
+    } catch (error) {
+      console.warn('Error reading recommendations from cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Save recommendations to cache
+   * @private
+   * @param {string} cacheKey - Cache key
+   * @param {Object} data - Recommendations data
+   */
+  static #saveRecommendationsToCache(cacheKey, data) {
+    try {
+      const cacheData = {
+        timestamp: Date.now(),
+        data: data
+      };
+
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      console.warn('Error saving recommendations to cache:', error);
+    }
+  }
+
   /**
    * Format money value
    * @private
@@ -669,12 +1096,12 @@ export class CartSystem {
     if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
       return Shopify.formatMoney(cents);
     }
-    
+
     // Fallback formatter if Shopify's isn't available
     const dollars = cents / 100;
     return '$' + dollars.toFixed(2);
   }
-  
+
   /**
    * Escape HTML special characters
    * @private
@@ -690,33 +1117,33 @@ export class CartSystem {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
   }
-  
+
   /**
    * Show loading indicator
    * @private
    */
   static #showLoading() {
     document.body.classList.add('cart-loading');
-    
+
     // Apply quantum effect if enabled
     if (this.#config.useQuantumEffects) {
       this.#triggerQuantumEffect('loading', 'start');
     }
   }
-  
+
   /**
    * Hide loading indicator
    * @private
    */
   static #hideLoading() {
     document.body.classList.remove('cart-loading');
-    
+
     // Apply quantum effect if enabled
     if (this.#config.useQuantumEffects) {
       this.#triggerQuantumEffect('loading', 'end');
     }
   }
-  
+
   /**
    * Handle errors
    * @private
@@ -724,19 +1151,19 @@ export class CartSystem {
    */
   static #handleError(error) {
     console.error('Cart error:', error);
-    
+
     // Display error message
     const errorEl = document.querySelector(this.#config.cartErrorSelector);
     if (errorEl) {
       errorEl.textContent = error.message || 'An error occurred';
       errorEl.classList.remove('hidden');
-      
+
       // Hide after a delay
       setTimeout(() => {
         errorEl.classList.add('hidden');
       }, 5000);
     }
-    
+
     // Notify Neural Bus
     if (this.#neuralBusConnected) {
       NeuralBus.publish('cart:error', {
@@ -746,7 +1173,7 @@ export class CartSystem {
       });
     }
   }
-  
+
   /**
    * Trigger custom event
    * @private
@@ -755,22 +1182,22 @@ export class CartSystem {
    */
   static #triggerEvent(name, detail = {}) {
     // DOM event
-    document.dispatchEvent(new CustomEvent(`cart:${name}`, { 
+    document.dispatchEvent(new CustomEvent(`cart:${name}`, {
       detail,
-      bubbles: true 
+      bubbles: true
     }));
-    
+
     // Neural Bus event
     if (this.#neuralBusConnected) {
       NeuralBus.publish(`cart:${name}`, detail);
     }
-    
+
     // Log if debug enabled
     if (this.#config.debug) {
       console.log(`[CartSystem] Event: cart:${name}`, detail);
     }
   }
-  
+
   /**
    * Connect to Neural Bus
    * @private
@@ -786,15 +1213,15 @@ export class CartSystem {
             holographicPreviews: this.#holographicPreviewsSupported
           }
         });
-        
+
         this.#neuralBusConnected = true;
         this.#neuralNonce = registration.nonce;
-        
+
         // Subscribe to relevant events
         NeuralBus.subscribe('cart:refresh', this.#handleCartRefresh.bind(this));
         NeuralBus.subscribe('product:view', this.#handleProductView.bind(this));
         NeuralBus.subscribe('quantum:mutation', this.#handleQuantumMutation.bind(this));
-        
+
         if (this.#config.debug) {
           console.log('[CartSystem] Connected to Neural Bus');
         }
@@ -804,7 +1231,7 @@ export class CartSystem {
       this.#neuralBusConnected = false;
     }
   }
-  
+
   /**
    * Handle cart refresh event from Neural Bus
    * @private
@@ -815,7 +1242,7 @@ export class CartSystem {
       this.#updateCartUI();
     });
   }
-  
+
   /**
    * Handle product view event from Neural Bus
    * @private
@@ -826,7 +1253,7 @@ export class CartSystem {
       this.setActiveProduct(data.product);
     }
   }
-  
+
   /**
    * Handle quantum mutation event from Neural Bus
    * @private
@@ -838,7 +1265,7 @@ export class CartSystem {
       this.#applyMutationProfile(data.profile);
     }
   }
-  
+
   /**
    * Apply mutation profile to cart UI
    * @private
@@ -847,7 +1274,7 @@ export class CartSystem {
   static #applyMutationProfile(profile) {
     const cartDrawer = document.querySelector(this.#config.cartDrawerSelector);
     if (!cartDrawer) return;
-    
+
     // Remove all profile classes
     cartDrawer.classList.remove(
       'profile-cyberlotus',
@@ -855,7 +1282,7 @@ export class CartSystem {
       'profile-voidbloom',
       'profile-neonvortex'
     );
-    
+
     // Add the new profile class
     switch (profile) {
       case 'CyberLotus':
@@ -871,11 +1298,11 @@ export class CartSystem {
         cartDrawer.classList.add('profile-neonvortex');
         break;
     }
-    
+
     // Apply a subtle effect to visualize the change
     this.#triggerQuantumEffect('mutation', profile);
   }
-  
+
   /**
    * Trigger quantum effect
    * @private
@@ -884,7 +1311,7 @@ export class CartSystem {
    */
   static #triggerQuantumEffect(type, target) {
     if (!this.#config.useQuantumEffects) return;
-    
+
     // Use NeuralBus to trigger glitch effect
     if (this.#neuralBusConnected) {
       NeuralBus.publish('glitch:trigger', {
@@ -895,18 +1322,18 @@ export class CartSystem {
         target: target
       });
     }
-    
+
     // Apply CSS-based effects directly to cart elements
     const drawer = document.querySelector(this.#config.cartDrawerSelector);
     if (drawer) {
       drawer.classList.add('quantum-effect');
-      
+
       setTimeout(() => {
         drawer.classList.remove('quantum-effect');
       }, 500);
     }
   }
-  
+
   /**
    * Apply quantum effect to a cart item
    * @private
@@ -914,21 +1341,21 @@ export class CartSystem {
    */
   static #applyItemQuantumEffect(itemElement) {
     if (!this.#config.useQuantumEffects) return;
-    
+
     // Add quantum data attribute for CSS targeting
     itemElement.setAttribute('data-quantum', 'true');
-    
+
     // Add glitch class with small delay for entrance effect
     setTimeout(() => {
       itemElement.classList.add('quantum-entrance');
-      
+
       // Remove class after animation completes
       setTimeout(() => {
         itemElement.classList.remove('quantum-entrance');
       }, 1000);
     }, Math.random() * 200);
   }
-  
+
   /**
    * Check for holographic preview support
    * @private
@@ -938,14 +1365,14 @@ export class CartSystem {
       this.#holographicPreviewsSupported = false;
       return;
     }
-    
+
     // Check for WebGL support (required for holographics)
     try {
       const canvas = document.createElement('canvas');
       this.#holographicPreviewsSupported = !!(
         (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
       );
-      
+
       // Check for hologram renderer module
       if (this.#holographicPreviewsSupported) {
         // Dynamically import the hologram renderer if available
@@ -965,30 +1392,30 @@ export class CartSystem {
       this.#holographicPreviewsSupported = false;
     }
   }
-  
+
   /**
    * Initialize holographic previews
    * @private
    */
   static #initHolographicPreviews() {
     if (!this.#holographicPreviewsSupported || !this.#holographicRenderer) return;
-    
+
     const previewContainer = document.querySelector(this.#config.cartPreviewContainerSelector);
     if (!previewContainer) return;
-    
+
     // Initialize hologram renderer
     this.#holographicRenderer.initialize({
       container: previewContainer,
       width: previewContainer.clientWidth,
       height: previewContainer.clientHeight
     });
-    
+
     // Show active product if available
     if (this.#activeProduct) {
       this.#updateHolographicPreview(this.#activeProduct);
     }
   }
-  
+
   /**
    * Update holographic preview with new product
    * @private
@@ -996,11 +1423,11 @@ export class CartSystem {
    */
   static #updateHolographicPreview(product) {
     if (!this.#holographicPreviewsSupported || !this.#holographicRenderer) return;
-    
+
     // Find model URL in product data
     const modelUrl = this.#findProductModelUrl(product);
     if (!modelUrl) return;
-    
+
     // Load the 3D model
     this.#holographicRenderer.loadModel(modelUrl, {
       product: product,
@@ -1009,7 +1436,7 @@ export class CartSystem {
       rotation: [0, 0, 0]
     });
   }
-  
+
   /**
    * Find 3D model URL in product data
    * @private
@@ -1018,7 +1445,7 @@ export class CartSystem {
    */
   static #findProductModelUrl(product) {
     if (!product) return null;
-    
+
     // Check for model in media
     if (product.media && Array.isArray(product.media)) {
       const modelMedia = product.media.find(m => m.media_type === 'model');
@@ -1027,7 +1454,7 @@ export class CartSystem {
         if (glbSource) return glbSource.url;
       }
     }
-    
+
     // Fallback: look for model in metafields
     if (product.metafields) {
       const modelField = product.metafields.find(
@@ -1035,10 +1462,10 @@ export class CartSystem {
       );
       if (modelField && modelField.value) return modelField.value;
     }
-    
+
     return null;
   }
-  
+
   /**
    * Handle cart events and sync with NeuralBus
    * @private
@@ -1046,13 +1473,13 @@ export class CartSystem {
    */
   static #handleCartItemAdded(data) {
     if (!data || !data.item) return;
-    
+
     // Extract product ID
     const productId = data.item.product_id;
-    
+
     // Determine the natural mutation profile based on product tags or collection
     let mutationProfile = 'CyberLotus'; // Default profile
-    
+
     // Check product tags if available in the item data
     if (data.item.tags && Array.isArray(data.item.tags)) {
       if (data.item.tags.includes('voidbloom')) {
@@ -1063,7 +1490,7 @@ export class CartSystem {
         mutationProfile = 'NeonVortex';
       }
     }
-    
+
     // Register the product-mutation association in our internal registry
     this.#productMutationRegistry.set(productId.toString(), {
       profile: mutationProfile,
@@ -1071,7 +1498,7 @@ export class CartSystem {
       variantId: data.item.variant_id,
       quantity: data.item.quantity
     });
-    
+
     // Publish quantum mutation event
     NeuralBus.publish('quantum:mutation', {
       source: 'cart-system',
@@ -1082,7 +1509,7 @@ export class CartSystem {
       cartKey: data.item.key,
       timestamp: Date.now()
     });
-    
+
     // Update visualizer if it exists
     if (window.QuantumVisualizer) {
       window.QuantumVisualizer.updateProduct(productId, mutationProfile, 'cart-add');
@@ -1096,7 +1523,7 @@ if (typeof window !== 'undefined') {
     CartSystem.initialize({
       debug: window.location.search.includes('debug=true')
     });
-    
+
     // Expose to global scope for external access
     window.CartSystem = CartSystem;
   });

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { HologramComponent } from '../assets/HologramComponent';
+import { HologramComponent } from '../../assets/HologramComponent';
 
 describe('HologramComponent', () => {
   let hologramElement;

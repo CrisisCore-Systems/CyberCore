@@ -252,56 +252,56 @@ program
     
     // Define metafields schema
     const schema = {
-      "trauma_type": {
-        "type": "single_line_text_field",
-        "name": "Trauma Type",
-        "description": "Primary trauma vector (abandonment, fragmentation, surveillance, recursion, displacement, dissolution)",
-        "validations": {
-          "required": true,
-          "allowed_values": [
-            "abandonment", 
-            "fragmentation", 
-            "surveillance", 
-            "recursion", 
-            "displacement", 
-            "dissolution"
+      'trauma_type': {
+        'type': 'single_line_text_field',
+        'name': 'Trauma Type',
+        'description': 'Primary trauma vector (abandonment, fragmentation, surveillance, recursion, displacement, dissolution)',
+        'validations': {
+          'required': true,
+          'allowed_values': [
+            'abandonment', 
+            'fragmentation', 
+            'surveillance', 
+            'recursion', 
+            'displacement', 
+            'dissolution'
           ]
         }
       },
-      "intensity": {
-        "type": "number_decimal",
-        "name": "Trauma Intensity",
-        "description": "Visual intensity of trauma effects (0.1-1.0)",
-        "validations": {
-          "required": true,
-          "min": 0.1,
-          "max": 1.0
+      'intensity': {
+        'type': 'number_decimal',
+        'name': 'Trauma Intensity',
+        'description': 'Visual intensity of trauma effects (0.1-1.0)',
+        'validations': {
+          'required': true,
+          'min': 0.1,
+          'max': 1.0
         }
       },
-      "recursion_depth": {
-        "type": "number_integer",
-        "name": "Recursion Depth",
-        "description": "Depth of trauma recursion layers",
-        "validations": {
-          "required": true,
-          "min": 1,
-          "max": 5
+      'recursion_depth': {
+        'type': 'number_integer',
+        'name': 'Recursion Depth',
+        'description': 'Depth of trauma recursion layers',
+        'validations': {
+          'required': true,
+          'min': 1,
+          'max': 5
         }
       },
-      "memory_date": {
-        "type": "date",
-        "name": "Memory Date",
-        "description": "Date associated with this memory node"
+      'memory_date': {
+        'type': 'date',
+        'name': 'Memory Date',
+        'description': 'Date associated with this memory node'
       },
-      "poem_excerpt": {
-        "type": "multi_line_text_field",
-        "name": "Poem Excerpt",
-        "description": "Poetic fragment associated with this trauma vector"
+      'poem_excerpt': {
+        'type': 'multi_line_text_field',
+        'name': 'Poem Excerpt',
+        'description': 'Poetic fragment associated with this trauma vector'
       },
-      "connected_nodes": {
-        "type": "json",
-        "name": "Connected Nodes",
-        "description": "Array of product IDs that are neuronally connected to this memory node"
+      'connected_nodes': {
+        'type': 'json',
+        'name': 'Connected Nodes',
+        'description': 'Array of product IDs that are neuronally connected to this memory node'
       }
     };
     

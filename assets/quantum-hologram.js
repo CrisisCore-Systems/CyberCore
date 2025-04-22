@@ -10,7 +10,13 @@
 
 import { NeuralBus } from './neural-bus.js';
 
+/**
+ *
+ */
 class QuantumHologram {
+  /**
+   *
+   */
   constructor() {
     // Core properties
     this.container = document.querySelector('[data-hologram-container]');
@@ -37,6 +43,9 @@ class QuantumHologram {
     this.init();
   }
 
+  /**
+   *
+   */
   init() {
     if (!this.container || this.products.length === 0) return;
 
@@ -242,6 +251,9 @@ class QuantumHologram {
     });
   }
 
+  /**
+   *
+   */
   setupEventListeners() {
     if (!this.isEnabled) return;
 
@@ -268,6 +280,9 @@ class QuantumHologram {
     });
   }
 
+  /**
+   *
+   */
   handleMouseMove(e) {
     if (!this.isEnabled) return;
 
@@ -313,6 +328,9 @@ class QuantumHologram {
     }
   }
 
+  /**
+   *
+   */
   handleMouseLeave(e) {
     if (!this.isEnabled) return;
 
@@ -342,6 +360,9 @@ class QuantumHologram {
     }
   }
 
+  /**
+   *
+   */
   createQuantumGrid() {
     // Create floating particles for the quantum grid effect
     const quantumFeatured = document.querySelector('.quantum-featured');
@@ -641,16 +662,16 @@ class QuantumHologram {
    */
   getProfileColor(profile) {
     switch (profile) {
-      case 'CyberLotus':
-        return 'rgba(0, 255, 255, 1)'; // Cyan
-      case 'ObsidianBloom':
-        return 'rgba(255, 0, 255, 1)'; // Magenta
-      case 'VoidBloom':
-        return 'rgba(153, 0, 255, 1)'; // Purple
-      case 'NeonVortex':
-        return 'rgba(0, 255, 102, 1)'; // Neon green
-      default:
-        return 'rgba(0, 255, 255, 1)'; // Default cyan
+    case 'CyberLotus':
+      return 'rgba(0, 255, 255, 1)'; // Cyan
+    case 'ObsidianBloom':
+      return 'rgba(255, 0, 255, 1)'; // Magenta
+    case 'VoidBloom':
+      return 'rgba(153, 0, 255, 1)'; // Purple
+    case 'NeonVortex':
+      return 'rgba(0, 255, 102, 1)'; // Neon green
+    default:
+      return 'rgba(0, 255, 255, 1)'; // Default cyan
     }
   }
 
@@ -808,6 +829,9 @@ class QuantumHologram {
     }
   }
 
+  /**
+   *
+   */
   addToVault(productId, variantId) {
     // Check if enhanced cart is available
     if (typeof window.enhancedCart !== 'undefined') {
@@ -853,6 +877,9 @@ class QuantumHologram {
     }
   }
 
+  /**
+   *
+   */
   simulateAddToVault(product) {
     // Create a clone of the product image for the animation
     const imageContainer = product.querySelector('.hologram-image');
@@ -900,6 +927,9 @@ class QuantumHologram {
     }, 10);
   }
 
+  /**
+   *
+   */
   pulseCartIcon() {
     const cartIcon = document.querySelector('.cart-icon');
     if (!cartIcon) return;

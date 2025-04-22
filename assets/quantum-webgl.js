@@ -911,16 +911,16 @@ class QuantumWebGLController {
    */
   getPhaseFromProfile(profile) {
     switch (profile) {
-      case 'CyberLotus':
-        return 'cyber-lotus';
-      case 'ObsidianBloom':
-        return 'obsidian-bloom';
-      case 'VoidBloom':
-        return 'void-bloom';
-      case 'NeonVortex':
-        return 'neon-vortex';
-      default:
-        return 'cyber-lotus';
+    case 'CyberLotus':
+      return 'cyber-lotus';
+    case 'ObsidianBloom':
+      return 'obsidian-bloom';
+    case 'VoidBloom':
+      return 'void-bloom';
+    case 'NeonVortex':
+      return 'neon-vortex';
+    default:
+      return 'cyber-lotus';
     }
   }
 
@@ -1291,14 +1291,14 @@ class QuantumWebGLController {
     const prefix = '[QEAR WebGL]';
 
     switch (level) {
-      case 'error':
-        console.error(`${prefix} ${message}`);
-        break;
-      case 'warn':
-        console.warn(`${prefix} ${message}`);
-        break;
-      default:
-        console.log(`${prefix} ${message}`);
+    case 'error':
+      console.error(`${prefix} ${message}`);
+      break;
+    case 'warn':
+      console.warn(`${prefix} ${message}`);
+      break;
+    default:
+      console.log(`${prefix} ${message}`);
     }
   }
 }

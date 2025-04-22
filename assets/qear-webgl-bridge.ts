@@ -3,11 +3,25 @@
  * Provides type safety while maintaining compatibility with the original WebGL bridge
  */
 
-// Import the original JavaScript file
-const QEARWebGLBridgeJS =
-  require('./qear-webgl-bridge.js').default || require('./qear-webgl-bridge.js');
+// Import the original JavaScript file using ES module syntax
+import * as QEARWebGLBridgeJS from './qear-webgl-bridge.js';
 
-// Define TypeScript interface for the QEAR WebGL Bridge
+// Define TypeScript interfaces for the QEAR WebGL Bridge
+export interface ConnectOptions {
+  connectorType?: string;
+  autoSync?: boolean;
+  syncInterval?: number;
+  renderMode?: string;
+  [key: string]: unknown;
+}
+
+export interface EffectParams {
+  intensity?: number;
+  duration?: number;
+  target?: string | HTMLElement;
+  [key: string]: unknown;
+}
+
 export interface QEARWebGLBridgeInterface {
   // Properties
   isConnected: boolean;
@@ -16,11 +30,11 @@ export interface QEARWebGLBridgeInterface {
   lastSyncTimestamp: number;
 
   // Methods
-  connect(targetElement: HTMLElement, options?: any): Promise<boolean>;
+  connect(targetElement: HTMLElement, options?: ConnectOptions): Promise<boolean>;
   disconnect(): void;
-  syncState(state: any): void;
-  applyEffect(effectName: string, params?: any): void;
-  registerEventHandler(eventType: string, handler: (event: any) => void): string;
+  syncState<T = unknown>(state: T): void;
+  applyEffect(effectName: string, params?: EffectParams): void;
+  registerEventHandler<T = unknown>(eventType: string, handler: (event: T) => void): string;
   unregisterEventHandler(handlerId: string): boolean;
   getPerformanceMetrics(): Record<string, number>;
 }

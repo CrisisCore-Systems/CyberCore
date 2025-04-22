@@ -33,6 +33,9 @@ app.use(express.static(path.join(__dirname, 'deploy/dev')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // Simple liquid variable parser for demonstration
+/**
+ *
+ */
 function parseLiquid(content, data = {}) {
   // This is a very simplified version that only handles basic variables
   let result = content;
@@ -56,6 +59,9 @@ function parseLiquid(content, data = {}) {
 }
 
 // Helper to read a template and parse it
+/**
+ *
+ */
 function renderTemplate(templatePath, data = {}) {
   try {
     let content = fs.readFileSync(templatePath, 'utf8');

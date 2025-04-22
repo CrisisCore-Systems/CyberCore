@@ -15,7 +15,13 @@ const yaml = require('js-yaml');
 const Handlebars = require('handlebars');
 const { TraumaEncoder } = require('../scripts/lib/encoder');
 
+/**
+ *
+ */
 class CybercoreGenerator {
+  /**
+   *
+   */
   constructor(options = {}) {
     this.options = {
       debug: false,
@@ -112,31 +118,31 @@ class CybercoreGenerator {
     let outputPath;
     
     switch (type) {
-      case 'section':
-        templatePath = path.join(this.options.templateDir, 'section.liquid.hbs');
-        outputPath = path.join(this.options.outputDir, 'sections', `${name}.liquid`);
-        break;
-      case 'snippet':
-        templatePath = path.join(this.options.templateDir, 'snippet.liquid.hbs');
-        outputPath = path.join(this.options.outputDir, 'snippets', `${name}.liquid`);
-        break;
-      case 'template':
-        templatePath = path.join(this.options.templateDir, 'template.liquid.hbs');
-        outputPath = path.join(this.options.outputDir, 'templates', `${name}.liquid`);
-        break;
-      case 'asset':
-        if (name.endsWith('.css') || name.endsWith('.js')) {
-          const ext = path.extname(name).substring(1);
-          templatePath = path.join(this.options.templateDir, `asset.${ext}.hbs`);
-          outputPath = path.join(this.options.outputDir, 'assets', name);
-        } else {
-          throw new Error('Asset name must end with .css or .js');
-        }
-        break;
-      case 'theme':
-        templatePath = path.join(this.options.templateDir, 'theme.css.hbs');
-        outputPath = path.join(this.options.outputDir, 'assets', 'themes', `${name}.css`);
-        break;
+    case 'section':
+      templatePath = path.join(this.options.templateDir, 'section.liquid.hbs');
+      outputPath = path.join(this.options.outputDir, 'sections', `${name}.liquid`);
+      break;
+    case 'snippet':
+      templatePath = path.join(this.options.templateDir, 'snippet.liquid.hbs');
+      outputPath = path.join(this.options.outputDir, 'snippets', `${name}.liquid`);
+      break;
+    case 'template':
+      templatePath = path.join(this.options.templateDir, 'template.liquid.hbs');
+      outputPath = path.join(this.options.outputDir, 'templates', `${name}.liquid`);
+      break;
+    case 'asset':
+      if (name.endsWith('.css') || name.endsWith('.js')) {
+        const ext = path.extname(name).substring(1);
+        templatePath = path.join(this.options.templateDir, `asset.${ext}.hbs`);
+        outputPath = path.join(this.options.outputDir, 'assets', name);
+      } else {
+        throw new Error('Asset name must end with .css or .js');
+      }
+      break;
+    case 'theme':
+      templatePath = path.join(this.options.templateDir, 'theme.css.hbs');
+      outputPath = path.join(this.options.outputDir, 'assets', 'themes', `${name}.css`);
+      break;
     }
     
     // Check if template exists

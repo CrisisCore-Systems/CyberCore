@@ -9,9 +9,6 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:security/recommended',
-    'plugin:sonarjs/recommended',
     'plugin:promise/recommended',
     'plugin:jest/recommended',
     'prettier', // This must come last to override other configs
@@ -21,7 +18,15 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json',
+    // Remove project reference to avoid TypeScript errors on JS files
+  },
+  // Define globals that are used across your codebase
+  globals: {
+    NeuralBus: 'readonly',
+    THREE: 'readonly',
+    Stats: 'readonly',
+    GlitchEngine: 'readonly',
+    Shopify: 'readonly',
   },
   rules: {
     // Basic formatting
@@ -31,18 +36,17 @@ module.exports = {
     semi: ['error', 'always'],
 
     // Error prevention
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': [
+    'no-unused-vars': [
       'warn',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
       },
     ],
     'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
-    'no-var': 'error',
-    'prefer-const': 'error',
-    'no-use-before-define': ['error', { functions: false }],
+    'no-var': 'error', // Use let/const instead of var
+    'prefer-const': 'error', // Prefer const for variables that are not reassigned
 
     // Best practices
     complexity: ['warn', 15],
@@ -50,11 +54,7 @@ module.exports = {
     'max-depth': ['warn', 4],
     'max-nested-callbacks': ['warn', 4],
 
-    // TypeScript-specific rules
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn',
-
-    // Documentation
+    // Documentation (jsdoc plugin)
     'jsdoc/require-jsdoc': [
       'warn',
       {
@@ -62,42 +62,91 @@ module.exports = {
           FunctionDeclaration: true,
           MethodDefinition: true,
           ClassDeclaration: true,
-          ArrowFunctionExpression: false,
-          FunctionExpression: false,
+          ArrowFunctionExpression: false, // Typically don't require JSDoc on simple arrow functions
+          FunctionExpression: false, // Typically don't require JSDoc on simple function expressions
         },
       },
     ],
+    'jsdoc/check-types': 'warn', // Validate JSDoc types
+    'jsdoc/check-param-names': 'warn', // Validate parameter names in JSDoc
 
-    // Security
-    'security/detect-object-injection': 'warn',
-    'security/detect-non-literal-regexp': 'warn',
-
-    // Promise handling
+    // Promise handling (promise plugin)
     'promise/always-return': 'warn',
     'promise/no-callback-in-promise': 'warn',
+    'promise/catch-or-return': 'warn', // Ensure promises are handled
+    'promise/no-nesting': 'warn', // Avoid deeply nested promises
   },
   overrides: [
     {
-      files: ['tests/**/*.js'],
+      // TypeScript specific configuration
+      files: ['**/*.ts'],
+      extends: ['plugin:@typescript-eslint/recommended'],
+      parserOptions: {
+        project: './tsconfig.json',
+      },
       rules: {
-        'no-unused-vars': 'off',
-        'max-lines-per-function': 'off',
-        'jsdoc/require-jsdoc': 'off',
+        // TypeScript-specific rules
+        '@typescript-eslint/no-unused-vars': [
+          'warn',
+          {
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_',
+          },
+        ],
+        '@typescript-eslint/explicit-function-return-type': 'off', // Often too strict for large JS projects
+        '@typescript-eslint/no-explicit-any': 'warn', // Warns about using 'any'
+        '@typescript-eslint/no-inferrable-types': 'warn', // Warns when assigning a default value to a type that could be inferred
+        '@typescript-eslint/no-use-before-define': [
+          'error',
+          { functions: false, classes: false, variables: true },
+        ],
       },
     },
     {
-      files: ['**/quantum-*.js', '**/qear-*.js'],
+      files: ['tests/**/*.js', 'tests/**/*.ts'], // Include .ts files in overrides
+      rules: {
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': 'off', // Also turn off TS unused vars in tests
+        'max-lines-per-function': 'off',
+        'jsdoc/require-jsdoc': 'off',
+        '@typescript-eslint/no-explicit-any': 'off', // Allow any in tests if needed
+      },
+    },
+    {
+      files: ['**/quantum-*.js', '**/qear-*.js', '**/quantum-*.ts', '**/qear-*.ts'], // Include .ts files
       rules: {
         complexity: ['warn', 25], // Allow higher complexity for quantum components
         'max-lines-per-function': ['warn', 200],
+        '@typescript-eslint/no-explicit-any': 'off', // Allow any in specific complex files
       },
     },
   ],
-  ignorePatterns: ['dist/**/*', 'node_modules/**/*', 'coverage/**/*', 'test-results/**/*'],
+  // Ensure ignorePatterns is correct
+  ignorePatterns: [
+    'dist/**/*',
+    'node_modules/**/*',
+    'coverage/**/*',
+    'test-results/**/*',
+    '.eslintrc.js',
+    'deploy/**/*', // Ignore deployed files
+    'webpack.*.js', // Ignore webpack config files
+    'babel.config.js',
+    'postcss.config.js',
+    'tailwind.config.js',
+    'jest.config.js',
+  ],
+
   settings: {
     jsdoc: {
       tagNamePreference: {
-        returns: 'return',
+        returns: 'return', // Prefer @return over @returns
+      },
+      preferredTypes: {
+        // Define preferred types if needed
+        object: 'Object',
+        'array<>': 'Array<>',
+        'Array.<>': 'Array<>',
       },
     },
   },

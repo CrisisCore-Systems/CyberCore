@@ -3,11 +3,27 @@
  * This provides type safety while maintaining compatibility with the original JS code
  */
 
-// Import the original JavaScript HologramComponent
-// We need to use `require` here to bypass TypeScript's module system
-// This allows us to import a JavaScript module that doesn't have TypeScript types
-const HologramComponentJS =
-  require('./hologram-component.js').default || require('./hologram-component.js');
+// Import the original JavaScript HologramComponent using ES module syntax
+import { CartPreviewHologram } from './hologram-component.js';
+
+// Define configuration interface for initialization
+export interface HologramComponentConfig {
+  hologramType?: string;
+  intensity?: number;
+  traumaLevel?: number;
+  renderMode?: 'standard' | 'quantum' | 'hybrid';
+  [key: string]: unknown;
+}
+
+// Define update props interface
+export interface HologramComponentProps {
+  hologramType?: string;
+  intensity?: number;
+  traumaLevel?: number;
+  isActive?: boolean;
+  renderMode?: 'standard' | 'quantum' | 'hybrid';
+  [key: string]: unknown;
+}
 
 // Define the TypeScript interface for the HologramComponent
 export interface HologramComponentInterface {
@@ -19,9 +35,9 @@ export interface HologramComponentInterface {
   renderMode: 'standard' | 'quantum' | 'hybrid';
 
   // Methods
-  initialize(config?: any): Promise<void>;
+  initialize(config?: HologramComponentConfig): Promise<void>;
   render(): void;
-  update(props: any): void;
+  update(props: HologramComponentProps): void;
   applyGlitch(intensity?: number, duration?: number): void;
   dispose(): void;
 
@@ -32,5 +48,5 @@ export interface HologramComponentInterface {
 }
 
 // Export the JavaScript component with TypeScript types
-export const HologramComponent = HologramComponentJS as (new () => HologramComponentInterface) &
+export const HologramComponent = CartPreviewHologram as (new () => HologramComponentInterface) &
   typeof HTMLElement;

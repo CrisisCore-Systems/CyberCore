@@ -3,8 +3,8 @@
  * Provides type safety while maintaining compatibility with the original cart system
  */
 
-// Import the original JavaScript file
-const EnhancedCartJS = require('./enhanced-cart.js').default || require('./enhanced-cart.js');
+// Import the original JavaScript file using ES module syntax
+import * as EnhancedCartJS from './enhanced-cart.js';
 
 // Define TypeScript interfaces for the EnhancedCart
 export interface CartItem {
@@ -14,7 +14,7 @@ export interface CartItem {
   price: number;
   title: string;
   options?: Record<string, string>;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
   quantumProperties?: {
     glitchFactor?: number;
     traumaIndex?: number;
@@ -30,31 +30,28 @@ export interface CartState {
   lastModified: number;
 }
 
+export interface CartInitOptions {
+  useHolographicPreviews?: boolean;
+  useQuantumEffects?: boolean;
+  useWebGL?: boolean;
+  useWorkers?: boolean;
+  profile?: string;
+  intensity?: number;
+  debug?: boolean;
+  persistenceKey?: string;
+  autoSync?: boolean;
+  [key: string]: unknown;
+}
+
 export interface EnhancedCartInterface {
-  // Properties
-  state: CartState;
-  isReady: boolean;
-
   // Core Methods
-  initialize(options?: any): Promise<void>;
-  refresh(): Promise<CartState>;
+  initialize(options?: CartInitOptions): typeof EnhancedCartJS;
+  addToCart(product: any, options?: any): Promise<any>;
+  applyProfile(profile: string): typeof EnhancedCartJS;
+  setTraumaCodes(traumaCodes: string[]): typeof EnhancedCartJS;
 
-  // Cart Manipulation Methods
-  addItem(item: Partial<CartItem>): Promise<CartState>;
-  updateItem(id: string, updates: Partial<CartItem>): Promise<CartState>;
-  removeItem(id: string): Promise<CartState>;
-  clearCart(): Promise<CartState>;
-
-  // Additional Enhanced Methods
-  applyQuantumProperties(
-    itemId: string,
-    properties: CartItem['quantumProperties']
-  ): Promise<CartState>;
-  generateMutationProfile(): Promise<string>;
-
-  // Event Methods
-  onUpdate(callback: (state: CartState) => void): string;
-  offUpdate(callbackId: string): boolean;
+  // Additional properties (static in the original implementation)
+  // These would typically be accessed through the static class
 }
 
 // Export the JavaScript module with TypeScript types

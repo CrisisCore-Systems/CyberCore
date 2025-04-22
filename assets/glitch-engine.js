@@ -339,22 +339,22 @@ export class GlitchEngine {
       
       // Set mode-specific uniforms
       switch (this.config.glitchMode) {
-        case 'rgb-shift':
-          gl.uniform1f(context.rgbShiftLocation, this.config.intensity * 0.1);
-          break;
-        case 'noise':
-          gl.uniform1f(context.noiseLocation, this.config.intensity);
-          break;
-        case 'scanlines':
-          gl.uniform1f(context.scanlineLocation, this.config.intensity);
-          break;
-        case 'jitter':
-          gl.uniform2f(
-            context.jitterLocation, 
-            Math.random() * this.config.intensity * 0.1, 
-            Math.random() * this.config.intensity * 0.1
-          );
-          break;
+      case 'rgb-shift':
+        gl.uniform1f(context.rgbShiftLocation, this.config.intensity * 0.1);
+        break;
+      case 'noise':
+        gl.uniform1f(context.noiseLocation, this.config.intensity);
+        break;
+      case 'scanlines':
+        gl.uniform1f(context.scanlineLocation, this.config.intensity);
+        break;
+      case 'jitter':
+        gl.uniform2f(
+          context.jitterLocation, 
+          Math.random() * this.config.intensity * 0.1, 
+          Math.random() * this.config.intensity * 0.1
+        );
+        break;
       }
       
       // Draw the scene
@@ -427,23 +427,23 @@ export class GlitchEngine {
         
         // Mode-specific effects
         switch (this.config.glitchMode) {
-          case 'rgb-shift':
-            filter = `hue-rotate(${Math.random() * 360}deg) saturate(${1 + this.config.intensity * 5})`;
-            transform = `translate(${translateX}px, ${translateY}px)`;
-            break;
-          case 'noise':
-            // Noise is primarily handled by WebGL, so just add subtle transform
-            transform = `translate(${translateX}px, ${translateY}px)`;
-            break;
-          case 'scanlines':
-            // Scanlines effect is primarily handled by WebGL
-            transform = `translateY(${translateY}px)`;
-            break;
-          case 'jitter':
-            transform = `translate(${translateX}px, ${translateY}px) skew(${skewX}deg, 0deg)`;
-            break;
-          default:
-            transform = `translate(${translateX}px, ${translateY}px)`;
+        case 'rgb-shift':
+          filter = `hue-rotate(${Math.random() * 360}deg) saturate(${1 + this.config.intensity * 5})`;
+          transform = `translate(${translateX}px, ${translateY}px)`;
+          break;
+        case 'noise':
+          // Noise is primarily handled by WebGL, so just add subtle transform
+          transform = `translate(${translateX}px, ${translateY}px)`;
+          break;
+        case 'scanlines':
+          // Scanlines effect is primarily handled by WebGL
+          transform = `translateY(${translateY}px)`;
+          break;
+        case 'jitter':
+          transform = `translate(${translateX}px, ${translateY}px) skew(${skewX}deg, 0deg)`;
+          break;
+        default:
+          transform = `translate(${translateX}px, ${translateY}px)`;
         }
         
         // Apply effects
@@ -500,7 +500,7 @@ export class GlitchEngine {
     canvas.style.zIndex = '1';
     
     // Create a relative container if needed
-    let container = element;
+    const container = element;
     if (getComputedStyle(element).position === 'static') {
       element.style.position = 'relative';
     }
@@ -533,11 +533,11 @@ export class GlitchEngine {
     // Quad vertices (two triangles)
     const vertices = [
       -1.0, -1.0,
-       1.0, -1.0,
+      1.0, -1.0,
       -1.0,  1.0,
       -1.0,  1.0,
-       1.0, -1.0,
-       1.0,  1.0
+      1.0, -1.0,
+      1.0,  1.0
     ];
     
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -868,18 +868,18 @@ export class GlitchEngine {
     if (data && data.profile) {
       // Adjust glitch properties based on mutation profile
       switch (data.profile) {
-        case 'CyberLotus':
-          this.setMode('rgb-shift');
-          break;
-        case 'ObsidianBloom':
-          this.setMode('noise');
-          break;
-        case 'VoidBloom':
-          this.setMode('jitter');
-          break;
-        case 'NeonVortex':
-          this.setMode('scanlines');
-          break;
+      case 'CyberLotus':
+        this.setMode('rgb-shift');
+        break;
+      case 'ObsidianBloom':
+        this.setMode('noise');
+        break;
+      case 'VoidBloom':
+        this.setMode('jitter');
+        break;
+      case 'NeonVortex':
+        this.setMode('scanlines');
+        break;
       }
       
       // Apply a pulse effect to visualize the change

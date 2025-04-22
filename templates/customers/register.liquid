@@ -1,0 +1,166 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+<div class="template-customer-register">
+  <div class="container">
+    <div class="register-page">
+      <div class="register-form-container">
+        <div class="register-header">
+          <h1 class="register-title">Create Account</h1>
+        </div>
+
+        {% form 'create_customer', id: 'create_customer', class: 'register-form' %}
+          {%- if form.errors -%}
+            <div class="form-error-message" data-quantum-effect="glitch" data-intensity="0.6">
+              <h2 class="form-error-title">Error</h2>
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="form-field">
+            <label for="FirstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              name="customer[first_name]"
+              id="FirstName"
+              autocomplete="given-name"
+              autocorrect="off"
+              autocapitalize="words"
+              class="form-input"
+              value="{{ form.first_name }}"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="LastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              name="customer[last_name]"
+              id="LastName"
+              autocomplete="family-name"
+              autocorrect="off"
+              autocapitalize="words"
+              class="form-input"
+              value="{{ form.last_name }}"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="CustomerEmail" class="form-label">Email</label>
+            <input
+              type="email"
+              name="customer[email]"
+              id="CustomerEmail"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              class="form-input"
+              spellcheck="false"
+              value="{{ form.email }}"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="CustomerPassword" class="form-label">Password</label>
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                name="customer[password]"
+                id="CustomerPassword"
+                autocomplete="new-password"
+                class="form-input password-input"
+              >
+              <button type="button" class="password-toggle-button" aria-label="Toggle password visibility">
+                <span class="password-toggle-icon"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-field trauma-profile">
+            <label class="form-label trauma-profile-label">Memory Encoding Preferences</label>
+            <div class="trauma-profile-grid">
+              <div class="trauma-type-option">
+                <input type="radio" id="trauma-abandonment" name="customer[note][primary_trauma]" value="abandonment" class="trauma-type-radio">
+                <label for="trauma-abandonment" class="trauma-type-label">Abandonment</label>
+              </div>
+              <div class="trauma-type-option">
+                <input type="radio" id="trauma-fragmentation" name="customer[note][primary_trauma]" value="fragmentation" class="trauma-type-radio">
+                <label for="trauma-fragmentation" class="trauma-type-label">Fragmentation</label>
+              </div>
+              <div class="trauma-type-option">
+                <input type="radio" id="trauma-surveillance" name="customer[note][primary_trauma]" value="surveillance" class="trauma-type-radio">
+                <label for="trauma-surveillance" class="trauma-type-label">Surveillance</label>
+              </div>
+              <div class="trauma-type-option">
+                <input type="radio" id="trauma-recursion" name="customer[note][primary_trauma]" value="recursion" class="trauma-type-radio" checked>
+                <label for="trauma-recursion" class="trauma-type-label">Recursion</label>
+              </div>
+              <div class="trauma-type-option">
+                <input type="radio" id="trauma-displacement" name="customer[note][primary_trauma]" value="displacement" class="trauma-type-radio">
+                <label for="trauma-displacement" class="trauma-type-label">Displacement</label>
+              </div>
+              <div class="trauma-type-option">
+                <input type="radio" id="trauma-dissolution" name="customer[note][primary_trauma]" value="dissolution" class="trauma-type-radio">
+                <label for="trauma-dissolution" class="trauma-type-label">Dissolution</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <input type="hidden" name="return_to" value="/account">
+            <button type="submit" class="form-submit">
+              Create Account
+              <div class="quantum-button-effect"></div>
+            </button>
+          </div>
+        {% endform %}
+
+        <div class="login-link-container">
+          <p>Already have an account? <a href="{{ routes.account_login_url }}" class="login-link">Log in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    const passwordToggleButtons = document.querySelectorAll('.password-toggle-button');
+    passwordToggleButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const passwordInput = this.previousElementSibling;
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('visible');
+      });
+    });
+
+    // Initialize trauma type selection visuals
+    const traumaOptions = document.querySelectorAll('.trauma-type-option');
+    traumaOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const radio = this.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+
+          // Trigger resonance effect if available
+          if (window.voidBloom && window.voidBloom.ritualEngine) {
+            window.voidBloom.ritualEngine.triggerResonanceEffect(radio.value, 0.6);
+          }
+        }
+      });
+    });
+
+    // Apply quantum effects if available
+    if (window.voidBloom && window.voidBloom.glitchEngine) {
+      const glitchElements = document.querySelectorAll('[data-quantum-effect="glitch"]');
+      glitchElements.forEach(element => {
+        window.voidBloom.glitchEngine.applyEffect(element, 'glitch');
+      });
+    }
+  });
+</script>

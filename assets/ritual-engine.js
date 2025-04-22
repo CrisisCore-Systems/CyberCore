@@ -6,22 +6,101 @@
  * calibrated experience mapping and coherence anchoring
  */
 
+/**
+ * @typedef {Object} ShopifyData
+ * @property {Object} [shop] - Information about the Shopify shop
+ * @property {string} [shop.name] - Name of the shop
+ * @property {string} [shop.description] - Shop description
+ * @property {string} [shop.domain] - Shop domain
+ * @property {Object} [customer] - Information about the customer, if logged in
+ * @property {number} [customer.id] - Customer ID
+ * @property {string} [customer.firstName] - Customer first name
+ * @property {CustomerMetafields} [customer.metafields] - Customer metafields
+ * @property {Object} [cart] - Current cart data
+ */
+
+/**
+ * @typedef {Object} CustomerMetafields
+ * @property {Object} [voidbloom_memory_protected] - Voidbloom memory protected metafield
+ * @property {string} [voidbloom_memory_protected.state] - State of the voidbloom memory
+ */
+
+/**
+ * @typedef {Object} ShopifyCustomer
+ * @property {number} [id] - Customer ID
+ * @property {string} [firstName] - Customer first name
+ * @property {CustomerMetafields} [metafields] - Customer metafields
+ */
+
+/**
+ * @typedef {Object} ShopifyShop
+ * @property {string} [name] - Name of the shop
+ * @property {string} [description] - Shop description
+ * @property {string} [domain] - Shop domain
+ */
+
+/**
+ * @typedef {Object} TraumaResponse
+ * @property {string} traumaType - Type of trauma
+ * @property {number} value - Value or intensity of the trauma response
+ */
+
+/**
+ * @typedef {Object} AssessmentVector
+ * @property {number} weight - Weight of this vector
+ * @property {TraumaResponse[]} responses - Responses for this vector
+ */
+
+/**
+ * @typedef {HTMLElement} ContainerElement - Container element for ritual phases
+ */
+
+// Declare global Window extensions for TypeScript compatibility
+/**
+ * @typedef {Object} ShopifyWindow
+ * @property {Object} shopifyData - Data from Shopify
+ * @property {Object} voidBloom - VoidBloom namespace
+ * @property {RitualEngine} voidBloom.ritualEngine - Ritual engine instance
+ */
+
+/**
+ * Extend Window interface for TypeScript
+ * @typedef {Window & ShopifyWindow} ExtendedWindow
+ */
+
+// Declare global window to use custom properties
+/** @type {ExtendedWindow} */
+const globalWindow = window;
+
+// Declare NeuralBus for TypeScript compatibility
+/** @type {any} */
+let NeuralBus;
+
+/**
+ *
+ */
 class RitualEngine {
+  /**
+   *
+   */
   constructor() {
     this.initiationPhases = ['recognition', 'resonance', 'recursion', 'integration'];
     this.currentPhase = 0;
     this.traumaResponses = new Map();
     this.coherenceBaseline = 0.5;
     this.narrativeSeeds = [];
+    /** @type {Record<string, number>} */
+    this.traumaAffinities = {};
 
-    // Shopify-specific properties
+    // Shopify-specific properties with proper types
     this.shopify = {
-      customer: null,
-      cart: null,
-      shop: null,
+      customer: /** @type {ShopifyCustomer|null} */ ({}),
+      cart: /** @type {Object|null} */ ({}),
+      shop: /** @type {ShopifyShop|null} */ ({}),
     };
 
     // Trauma assessment vectors - calibrate user's inherent affinities
+    /** @type {Record<string, AssessmentVector>} */
     this.assessmentVectors = {
       visual: { weight: 0.4, responses: [] },
       interactive: { weight: 0.3, responses: [] },
@@ -36,6 +115,10 @@ class RitualEngine {
   }
 
   // Initialize with Shopify context
+  /**
+   * Initialize the ritual engine with Shopify context
+   * @param {ShopifyData} shopifyData - Data from Shopify including shop, customer, and cart information
+   */
   initializeShopify(shopifyData) {
     if (shopifyData.customer) {
       this.shopify.customer = shopifyData.customer;
@@ -82,6 +165,9 @@ class RitualEngine {
   }
 
   // Save ritual data to Shopify customer metafield
+  /**
+   *
+   */
   saveRitualDataToShopify() {
     if (!this.shopify.customer || !this.shopify.customer.id) {
       // Can't save if no customer
@@ -118,6 +204,9 @@ class RitualEngine {
     });
   }
 
+  /**
+   *
+   */
   bindEvents() {
     document.addEventListener('DOMContentLoaded', () => {
       if (this.shouldInitiateRitual()) {
@@ -126,6 +215,9 @@ class RitualEngine {
     });
   }
 
+  /**
+   *
+   */
   shouldInitiateRitual() {
     // Check if user has completed ritual or needs initiation
     return (
@@ -134,6 +226,9 @@ class RitualEngine {
     );
   }
 
+  /**
+   *
+   */
   beginInitiationSequence() {
     console.log('🧿 Ritual Initiation Sequence: Beginning');
     sessionStorage.setItem('voidbloom_ritual_in_progress', 'true');
@@ -151,6 +246,9 @@ class RitualEngine {
     }, 1000);
   }
 
+  /**
+   *
+   */
   buildRitualInterface() {
     return `
       <div class="ritual-interface">
@@ -161,14 +259,14 @@ class RitualEngine {
 
         <div class="ritual-phases">
           ${this.initiationPhases
-            .map(
-              (phase, index) =>
-                `<div class="ritual-phase ${index === 0 ? 'current' : ''}" data-phase="${phase}">
+    .map(
+      (phase, index) =>
+        `<div class="ritual-phase ${index === 0 ? 'current' : ''}" data-phase="${phase}">
               <div class="phase-indicator"></div>
               <div class="phase-name">${phase}</div>
             </div>`
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
 
         <div class="ritual-content">
@@ -182,6 +280,10 @@ class RitualEngine {
     `;
   }
 
+  /**
+   * Progress to the specified ritual phase
+   * @param {number} phaseIndex - Index of the phase to progress to
+   */
   progressToPhase(phaseIndex) {
     if (phaseIndex >= this.initiationPhases.length) {
       this.completeRitual();
@@ -191,6 +293,12 @@ class RitualEngine {
     this.currentPhase = phaseIndex;
     const phaseName = this.initiationPhases[phaseIndex];
     const container = document.querySelector('.voidbloom-ritual-container');
+
+    // Ensure container exists before operating on it
+    if (!container) {
+      console.error('Ritual container not found');
+      return;
+    }
 
     // Update phase UI
     container.className = `voidbloom-ritual-container phase-${phaseName}`;
@@ -203,32 +311,44 @@ class RitualEngine {
     const contentContainer = document.querySelector('.ritual-content');
 
     switch (phaseName) {
-      case 'recognition':
-        this.loadRecognitionPhase(contentContainer);
-        break;
-      case 'resonance':
-        this.loadResonancePhase(contentContainer);
-        break;
-      case 'recursion':
-        this.loadRecursionPhase(contentContainer);
-        break;
-      case 'integration':
-        this.loadIntegrationPhase(contentContainer);
-        break;
+    case 'recognition':
+      this.loadRecognitionPhase(contentContainer);
+      break;
+    case 'resonance':
+      this.loadResonancePhase(contentContainer);
+      break;
+    case 'recursion':
+      this.loadRecursionPhase(contentContainer);
+      break;
+    case 'integration':
+      this.loadIntegrationPhase(contentContainer);
+      break;
     }
 
     // Update button
     const nextButton = document.querySelector('.next-button');
+    if (!nextButton) {
+      console.error('Next button not found');
+      return;
+    }
+
     nextButton.textContent =
       phaseIndex === this.initiationPhases.length - 1 ? 'Complete' : 'Continue';
 
-    // Bind next button
-    nextButton.onclick = () => {
-      this.collectPhaseData(phaseName);
-      this.progressToPhase(phaseIndex + 1);
-    };
+    // Bind next button - use addEventListener instead of onclick
+    nextButton.addEventListener(
+      'click',
+      () => {
+        this.collectPhaseData(phaseName);
+        this.progressToPhase(phaseIndex + 1);
+      },
+      { once: true }
+    ); // Use once: true to avoid memory leaks from multiple handlers
   }
 
+  /**
+   *
+   */
   loadRecognitionPhase(container) {
     container.innerHTML = `
       <div class="phase-content recognition-phase">
@@ -274,6 +394,9 @@ class RitualEngine {
     });
   }
 
+  /**
+   *
+   */
   loadResonancePhase(container) {
     container.innerHTML = `
       <div class="phase-content resonance-phase">
@@ -321,6 +444,9 @@ class RitualEngine {
     });
   }
 
+  /**
+   *
+   */
   loadRecursionPhase(container) {
     container.innerHTML = `
       <div class="phase-content recursion-phase">
@@ -369,16 +495,21 @@ class RitualEngine {
     });
   }
 
+  /**
+   * Initialize interaction demos with proper event handlers
+   * @param {HTMLElement} container - Container element for the interaction demos
+   */
   initializeInteractionDemos(container) {
     // Basic interaction demos - these would be more sophisticated in production
-    const demos = container.querySelectorAll('.interaction-demo');
 
     // Abandonment - fading element that responds to hover by moving away
     const abandonmentDemo = container.querySelector('.interaction-demo.abandonment');
     if (abandonmentDemo) {
       abandonmentDemo.addEventListener('mouseover', function () {
-        this.classList.add('avoiding');
-        setTimeout(() => this.classList.remove('avoiding'), 1000);
+        /** @type {HTMLElement} */
+        const self = this;
+        self.classList.add('avoiding');
+        setTimeout(() => self.classList.remove('avoiding'), 1000);
       });
     }
 
@@ -386,14 +517,20 @@ class RitualEngine {
     const fragmentationDemo = container.querySelector('.interaction-demo.fragmentation');
     if (fragmentationDemo) {
       fragmentationDemo.addEventListener('click', function () {
-        this.classList.add('fragmenting');
-        setTimeout(() => this.classList.remove('fragmenting'), 1500);
+        /** @type {HTMLElement} */
+        const self = this;
+        self.classList.add('fragmenting');
+        setTimeout(() => self.classList.remove('fragmenting'), 1500);
       });
     }
 
     // More interaction patterns would be implemented here
   }
 
+  /**
+   * Load the integration phase with temporal slider
+   * @param {HTMLElement} container - Container element for integration phase content
+   */
   loadIntegrationPhase(container) {
     container.innerHTML = `
       <div class="phase-content integration-phase">
@@ -468,12 +605,17 @@ class RitualEngine {
     this.generateCalibrationSummary(container.querySelector('.trauma-summary-container'));
   }
 
+  /**
+   * Generate calibration summary based on user selections
+   * @param {HTMLElement|null} container - Container element to insert the summary
+   */
   generateCalibrationSummary(container) {
     // Calculate trauma affinities based on selections
+    /** @type {Record<string, number>} */
     const affinities = {};
 
     // Process all vectors
-    Object.entries(this.assessmentVectors).forEach(([vectorName, vector]) => {
+    Object.entries(this.assessmentVectors).forEach(([_vectorName, vector]) => {
       vector.responses.forEach((response) => {
         if (!response.traumaType) return;
 
@@ -489,7 +631,10 @@ class RitualEngine {
     document.querySelectorAll('.trauma-selection.selected').forEach((selection) => {
       const traumaType = selection.getAttribute('data-trauma');
       const vector = selection.getAttribute('data-vector');
-      const vectorWeight = this.assessmentVectors[vector]?.weight || 0.25;
+
+      if (!traumaType) return;
+
+      const vectorWeight = vector ? this.assessmentVectors[vector]?.weight || 0.25 : 0.25;
 
       if (!affinities[traumaType]) {
         affinities[traumaType] = 0;
@@ -502,6 +647,7 @@ class RitualEngine {
     let total = 0;
     Object.values(affinities).forEach((v) => (total += v));
 
+    /** @type {Record<string, number>} */
     const normalizedAffinities = {};
     Object.entries(affinities).forEach(([trauma, value]) => {
       normalizedAffinities[trauma] = value / total;
@@ -536,6 +682,11 @@ class RitualEngine {
     }
   }
 
+  /**
+   * Get a human-readable label for a trauma type
+   * @param {string} traumaType - The trauma type identifier
+   * @returns {string} Human-readable label
+   */
   getTraumaLabel(traumaType) {
     const labels = {
       abandonment: 'Abandonment Encoding',
@@ -549,21 +700,24 @@ class RitualEngine {
     return labels[traumaType] || traumaType;
   }
 
+  /**
+   *
+   */
   collectPhaseData(phaseName) {
     // Collect data from the current phase
     switch (phaseName) {
-      case 'recognition':
-        this.collectRecognitionData();
-        break;
-      case 'resonance':
-        this.collectResonanceData();
-        break;
-      case 'recursion':
-        this.collectRecursionData();
-        break;
-      case 'integration':
-        this.collectIntegrationData();
-        break;
+    case 'recognition':
+      this.collectRecognitionData();
+      break;
+    case 'resonance':
+      this.collectResonanceData();
+      break;
+    case 'recursion':
+      this.collectRecursionData();
+      break;
+    case 'integration':
+      this.collectIntegrationData();
+      break;
     }
 
     // Transmit phase completion to Neural Bus
@@ -576,43 +730,67 @@ class RitualEngine {
     }
   }
 
+  /**
+   *
+   */
   collectRecognitionData() {
     // Collect visual trauma selections
     const visualSelections = document.querySelectorAll(
       '.trauma-selection[data-vector="visual"].selected'
     );
-    this.assessmentVectors.visual.responses = Array.from(visualSelections).map((el) => ({
-      traumaType: el.getAttribute('data-trauma'),
+
+    /** @type {TraumaResponse[]} */
+    const responses = Array.from(visualSelections).map((el) => ({
+      traumaType: el.getAttribute('data-trauma') || '',
       value: 1,
     }));
+
+    this.assessmentVectors.visual.responses = responses;
   }
 
+  /**
+   *
+   */
   collectResonanceData() {
     // Collect narrative trauma selection (only one should be selected)
     const narrativeSelection = document.querySelector(
       '.trauma-selection[data-vector="narrative"].selected'
     );
+
     if (narrativeSelection) {
-      this.assessmentVectors.narrative.responses = [
+      /** @type {TraumaResponse[]} */
+      const responses = [
         {
-          traumaType: narrativeSelection.getAttribute('data-trauma'),
+          traumaType: narrativeSelection.getAttribute('data-trauma') || '',
           value: 1,
         },
       ];
+
+      this.assessmentVectors.narrative.responses = responses;
     }
   }
 
+  /**
+   *
+   */
   collectRecursionData() {
     // Collect interactive trauma selections
     const interactiveSelections = document.querySelectorAll(
       '.trauma-selection[data-vector="interactive"].selected'
     );
-    this.assessmentVectors.interactive.responses = Array.from(interactiveSelections).map((el) => ({
-      traumaType: el.getAttribute('data-trauma'),
+
+    /** @type {TraumaResponse[]} */
+    const responses = Array.from(interactiveSelections).map((el) => ({
+      traumaType: el.getAttribute('data-trauma') || '',
       value: 1,
     }));
+
+    this.assessmentVectors.interactive.responses = responses;
   }
 
+  /**
+   *
+   */
   collectIntegrationData() {
     // Temporal data already collected via slider
     // Final calculations for trauma affinities are done
@@ -621,6 +799,9 @@ class RitualEngine {
     this.calculateCoherenceBaseline();
   }
 
+  /**
+   *
+   */
   calculateCoherenceBaseline() {
     // Calculate coherence based on consistency of selections
     // Higher consistency = higher baseline coherence
@@ -650,6 +831,9 @@ class RitualEngine {
     this.coherenceBaseline = 0.4 + focusFactor * 0.4 + randomFactor;
   }
 
+  /**
+   *
+   */
   completeRitual() {
     // Find primary trauma type
     let primaryTrauma = null;
@@ -695,6 +879,9 @@ class RitualEngine {
     }, 2000);
   }
 
+  /**
+   *
+   */
   triggerWelcomeNarrative(traumaType) {
     // Generate narrative based on trauma type
     const narrative = this.generateNarrative(traumaType);
@@ -736,6 +923,9 @@ class RitualEngine {
     });
   }
 
+  /**
+   *
+   */
   generateNarrative(traumaType) {
     // Simple narratives based on trauma type
     const narratives = {
@@ -782,6 +972,9 @@ class RitualEngine {
   }
 
   // Connect to Neural Bus for event handling
+  /**
+   *
+   */
   connectToNeuralBus() {
     if (typeof NeuralBus === 'undefined') return;
 
@@ -805,6 +998,9 @@ class RitualEngine {
     console.log('🧿 Ritual Engine connected to Neural Bus');
   }
 
+  /**
+   *
+   */
   handleNewUser(data) {
     // Check if we should auto-start the ritual for new users
     if (data.autoInitiate && this.shouldInitiateRitual()) {
@@ -812,12 +1008,18 @@ class RitualEngine {
     }
   }
 
+  /**
+   *
+   */
   handleRitualStart() {
     if (this.shouldInitiateRitual()) {
       this.beginInitiationSequence();
     }
   }
 
+  /**
+   *
+   */
   handleRitualSkip(data) {
     // For development/testing - skip ritual with predefined trauma profile
     localStorage.setItem('voidbloom_initiated', 'true');
@@ -858,20 +1060,23 @@ class RitualEngine {
 
 // Initialize with Shopify data
 document.addEventListener('DOMContentLoaded', () => {
-  window.voidBloom = window.voidBloom || {};
-  window.voidBloom.ritualEngine = new RitualEngine();
+  // Define voidBloom on window if it doesn't exist
+  /** @type {ExtendedWindow} */
+  const win = window;
+  win.voidBloom = win.voidBloom || {};
+  win.voidBloom.ritualEngine = new RitualEngine();
 
   // Get Shopify data from the window object (set by the theme)
-  const shopifyData = window.shopifyData || {};
-  window.voidBloom.ritualEngine.initializeShopify(shopifyData);
+  const shopifyData = win.shopifyData || {};
+  win.voidBloom.ritualEngine.initializeShopify(shopifyData);
 
   // Connect to Neural Bus if available
   if (typeof NeuralBus !== 'undefined') {
-    window.voidBloom.ritualEngine.connectToNeuralBus();
+    win.voidBloom.ritualEngine.connectToNeuralBus();
   } else {
     // Try again when Neural Bus might be loaded
     window.addEventListener('neuralbus:initialized', () => {
-      window.voidBloom.ritualEngine.connectToNeuralBus();
+      win.voidBloom.ritualEngine.connectToNeuralBus();
     });
   }
 });

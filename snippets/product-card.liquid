@@ -7,8 +7,8 @@
 {% assign product_url = product.url %}
 {% assign featured_image = product.featured_media.preview_image %}
 
-<div class="product-card" 
-  data-product-id="{{ product.id }}" 
+<div class="product-card"
+  data-product-id="{{ product.id }}"
   data-trauma-type="{{ product.metafields.voidbloom.trauma_type | default: 'recursion' }}"
   data-product-url="{{ product_url }}"
 >
@@ -33,15 +33,15 @@
               height="{{ featured_image.height }}"
               class="product-card-image"
             >
-            
+
             {% if product.metafields.voidbloom.trauma_type != blank and show_trauma_indicator %}
               <div class="trauma-overlay trauma-{{ product.metafields.voidbloom.trauma_type }}"></div>
             {% endif %}
-            
+
             {% if product.compare_at_price > product.price and show_price %}
               <span class="product-card-badge sale">{{ 'products.product.on_sale' | t }}</span>
             {% endif %}
-            
+
             {% unless product.available %}
               <span class="product-card-badge sold-out">{{ 'products.product.sold_out' | t }}</span>
             {% endunless %}
@@ -50,14 +50,14 @@
           {{ 'product-1' | placeholder_svg_tag: 'product-card-image placeholder' }}
         {% endif %}
       </a>
-      
+
       {% if show_quick_add and product.available %}
         <div class="product-card-buttons">
           <button class="quick-add-button" data-product-id="{{ product.id }}" aria-label="{{ 'products.product.quick_add' | t }}">
             <span class="quick-add-text">{{ 'products.product.quick_add' | t }}</span>
             <span class="quick-add-icon"></span>
           </button>
-          
+
           <a href="{{ product_url }}" class="view-details-button">
             <span class="view-details-text">{{ 'products.product.view_details' | t }}</span>
             <span class="view-details-icon"></span>
@@ -65,17 +65,17 @@
         </div>
       {% endif %}
     </div>
-    
+
     <!-- Card content -->
     <div class="product-card-content">
       {% if show_vendor and product.vendor %}
         <div class="product-card-vendor">{{ product.vendor }}</div>
       {% endif %}
-      
+
       <h3 class="product-card-title">
         <a href="{{ product_url }}">{{ product.title }}</a>
       </h3>
-      
+
       {% if show_rating and product.metafields.reviews.rating %}
         <div class="product-card-rating">
           <div class="rating-stars" style="--rating: {{ product.metafields.reviews.rating.value }};" aria-label="{{ 'products.product.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
@@ -83,19 +83,19 @@
           <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
         </div>
       {% endif %}
-      
+
       {% if show_price %}
         <div class="product-card-price">
           <div class="price {% if product.compare_at_price > product.price %}on-sale{% endif %}">
             <span class="regular-price">{{ product.price | money }}</span>
-            
+
             {% if product.compare_at_price > product.price %}
               <span class="compare-at-price">{{ product.compare_at_price | money }}</span>
             {% endif %}
           </div>
         </div>
       {% endif %}
-      
+
       {% if show_trauma_indicator and product.metafields.voidbloom.trauma_type != blank %}
         <div class="product-card-trauma-indicator">
           <span class="trauma-label">{{ product.metafields.voidbloom.trauma_type | capitalize }}</span>
@@ -103,7 +103,7 @@
         </div>
       {% endif %}
     </div>
-    
+
     <!-- Quantum resonance indicators (only shown when user has completed the ritual) -->
     <div class="quantum-resonance-indicators">
       <div class="resonance-measure" data-resonance-value="{{ product.metafields.voidbloom.resonance | default: 0.5 }}">
@@ -117,14 +117,14 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const productCard = document.querySelector('.product-card[data-product-id="{{ product.id }}"]');
-    
+
     if (productCard) {
       // Quick add functionality
       const quickAddButton = productCard.querySelector('.quick-add-button');
       if (quickAddButton) {
         quickAddButton.addEventListener('click', function() {
           this.classList.add('loading');
-          
+
           // Add the product to cart
           fetch('/cart/add.js', {
             method: 'POST',
@@ -139,17 +139,17 @@
           .then(response => response.json())
           .then(data => {
             this.classList.remove('loading');
-            
+
             if (data.status) {
               console.error('Error adding to cart:', data.description);
               return;
             }
-            
+
             // Update cart
             if (window.CartSystem && window.CartSystem.updateCart) {
               window.CartSystem.updateCart();
             }
-            
+
             // Send event to Neural Bus
             if (window.NeuralBus) {
               window.NeuralBus.publish('product:added_to_cart', {
@@ -158,13 +158,13 @@
                 timestamp: Date.now()
               });
             }
-            
+
             // Show success feedback
             const successIndicator = document.createElement('div');
             successIndicator.className = 'quick-add-success';
             successIndicator.textContent = '{{ "products.product.added_to_cart" | t }}';
             productCard.appendChild(successIndicator);
-            
+
             setTimeout(() => {
               successIndicator.remove();
             }, 3000);
@@ -175,24 +175,24 @@
           });
         });
       }
-      
+
       // Quantum resonance indicators
       const userTrauma = localStorage.getItem('voidbloom_primary_trauma');
       const traumaAffinities = JSON.parse(localStorage.getItem('voidbloom_trauma_affinities') || '{}');
-      
+
       if (userTrauma && Object.keys(traumaAffinities).length > 0) {
         const productTrauma = productCard.getAttribute('data-trauma-type');
         const resonanceIndicator = productCard.querySelector('.quantum-resonance-indicators');
         const resonanceMeasure = productCard.querySelector('.resonance-measure');
         const traumaConnection = productCard.querySelector('.trauma-connection-indicator');
-        
+
         if (resonanceIndicator && resonanceMeasure && traumaConnection) {
           // Show the resonance indicators
           resonanceIndicator.classList.add('active');
-          
+
           // Calculate resonance based on user's trauma affinities
           let resonance = 0.2; // Base resonance
-          
+
           if (productTrauma === userTrauma) {
             // Primary match gets high resonance
             resonance = 0.8;
@@ -202,11 +202,11 @@
             resonance = 0.3 + (traumaAffinities[productTrauma] * 0.5);
             productCard.classList.add('secondary-resonance');
           }
-          
+
           // Update visual indicators
           resonanceMeasure.style.setProperty('--resonance', resonance);
           resonanceMeasure.querySelector('.resonance-fill').style.width = `${resonance * 100}%`;
-          
+
           // Add connection line classes based on resonance level
           if (resonance > 0.7) {
             traumaConnection.classList.add('strong-connection');

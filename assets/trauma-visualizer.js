@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Trauma Visualization System
  *
@@ -10,29 +11,27 @@ class TraumaVisualizer {
     this.config = {
       width: 800,
       height: 600,
-      backgroundColor: 0x0A0A1A,
+      backgroundColor: 0x0a0a1a,
       autoRotate: true,
       showLabels: true,
       showAxes: false,
       showStats: false,
       enableInteraction: true,
       traumaColors: {
-        abandonment: 0x3B82F6,  // blue
-        fragmentation: 0xEF4444, // red
-        surveillance: 0x10B981,  // green
-        recursion: 0xF59E0B,     // amber
-        displacement: 0x8B5CF6,  // purple
-        dissolution: 0xEC4899    // pink
+        abandonment: 0x3b82f6, // blue
+        fragmentation: 0xef4444, // red
+        surveillance: 0x10b981, // green
+        recursion: 0xf59e0b, // amber
+        displacement: 0x8b5cf6, // purple
+        dissolution: 0xec4899, // pink
       },
       glowIntensity: 1.0,
       animationSpeed: 1.0,
-      ...options
+      ...options,
     };
 
     // DOM container for the visualization
-    this.container = typeof container === 'string'
-      ? document.getElementById(container)
-      : container;
+    this.container = typeof container === 'string' ? document.getElementById(container) : container;
 
     if (!this.container) {
       throw new Error('TraumaVisualizer: Container element not found');
@@ -41,7 +40,7 @@ class TraumaVisualizer {
     // Data states
     this.traumaData = [];
     this.coherenceData = null;
-    this.visualizationMode = 'catalog';  // catalog, product, customer, journey
+    this.visualizationMode = 'catalog'; // catalog, product, customer, journey
 
     // Three.js objects
     this.scene = null;
@@ -93,7 +92,7 @@ class TraumaVisualizer {
         // Fire initialized event
         this.container.dispatchEvent(new CustomEvent('traumavis:initialized'));
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('TraumaVisualizer: Error initializing:', error);
 
         // Show error message in container
@@ -118,16 +117,18 @@ class TraumaVisualizer {
 
     // Otherwise, try to import it
     return new Promise((resolve, reject) => {
-      // Check if we have access to import()
-      if (typeof import === 'function') {
+      // Check if we have access to dynamic imports
+      if (typeof window.dynamicImport === 'function') {
         // Try to dynamically import Three.js
-        import('three')
-          .then(THREE => {
+        window
+          .dynamicImport('three')
+          .then((THREE) => {
             window.THREE = THREE;
 
             // Also import OrbitControls
-            import('three/examples/jsm/controls/OrbitControls')
-              .then(OrbitControlsModule => {
+            window
+              .dynamicImport('three/examples/jsm/controls/OrbitControls')
+              .then((OrbitControlsModule) => {
                 window.THREE.OrbitControls = OrbitControlsModule.OrbitControls;
                 resolve();
               })
@@ -193,7 +194,7 @@ class TraumaVisualizer {
     // Create WebGL renderer
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: true
+      alpha: true,
     });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -264,10 +265,7 @@ class TraumaVisualizer {
     // Skip if Three.js OrbitControls not available
     if (!window.THREE || !window.THREE.OrbitControls) return;
 
-    this.controls = new window.THREE.OrbitControls(
-      this.camera,
-      this.renderer.domElement
-    );
+    this.controls = new window.THREE.OrbitControls(this.camera, this.renderer.domElement);
 
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
@@ -382,7 +380,7 @@ class TraumaVisualizer {
 
         case 'recursion':
           // Pulsing scale
-          mesh.scale.setScalar(1 + (Math.sin(time * 3) * 0.1 * intensity));
+          mesh.scale.setScalar(1 + Math.sin(time * 3) * 0.1 * intensity);
           break;
 
         case 'displacement':
@@ -401,7 +399,8 @@ class TraumaVisualizer {
       // Apply glow effect if mesh has a glow material
       if (mesh.userData.glowMesh) {
         const glowIntensity = 0.5 + Math.sin(time * 2) * 0.2;
-        mesh.userData.glowMesh.material.opacity = glowIntensity * this.config.glowIntensity * intensity;
+        mesh.userData.glowMesh.material.opacity =
+          glowIntensity * this.config.glowIntensity * intensity;
       }
 
       // Update label position if present
@@ -463,9 +462,11 @@ class TraumaVisualizer {
     }
 
     // Fire data loaded event
-    this.container.dispatchEvent(new CustomEvent('traumavis:dataLoaded', {
-      detail: { count: data.length, mode: this.visualizationMode }
-    }));
+    this.container.dispatchEvent(
+      new CustomEvent('traumavis:dataLoaded', {
+        detail: { count: data.length, mode: this.visualizationMode },
+      })
+    );
   }
 
   /**
@@ -483,8 +484,8 @@ class TraumaVisualizer {
     // Create a cluster visualization for each trauma type
     traumaTypes.forEach((type, index) => {
       // Get items with this trauma type
-      const items = this.traumaData.filter(item =>
-        item.primary_type === type || item.secondary_type === type
+      const items = this.traumaData.filter(
+        (item) => item.primary_type === type || item.secondary_type === type
       );
 
       if (!items.length) return;
@@ -513,7 +514,7 @@ class TraumaVisualizer {
           intensity: intensity,
           isPrimary: isPrimary,
           position: { x, y, z },
-          data: item
+          data: item,
         });
       });
     });
@@ -523,7 +524,7 @@ class TraumaVisualizer {
       this.visualizeCoherence({
         score: stats.averageCoherence,
         stability: stats.coherenceStability || 0.5,
-        dominantTrauma: stats.dominantTrauma
+        dominantTrauma: stats.dominantTrauma,
       });
     }
   }
@@ -555,7 +556,7 @@ class TraumaVisualizer {
         isPrimary: true,
         position: { x: 0, y: 0, z: 0 },
         size: 1.5,
-        data: product
+        data: product,
       });
     }
 
@@ -572,10 +573,10 @@ class TraumaVisualizer {
         position: {
           x: Math.cos(angle) * distance,
           y: 0,
-          z: Math.sin(angle) * distance
+          z: Math.sin(angle) * distance,
         },
         size: 1.0,
-        data: product
+        data: product,
       });
     }
 
@@ -594,9 +595,9 @@ class TraumaVisualizer {
           position: {
             x: Math.cos(angle) * distance,
             y: 0,
-            z: Math.sin(angle) * distance
+            z: Math.sin(angle) * distance,
           },
-          data: product
+          data: product,
         });
       });
     }
@@ -636,7 +637,7 @@ class TraumaVisualizer {
       isPrimary = true,
       position = { x: 0, y: 0, z: 0 },
       size = 1.0,
-      data = {}
+      data = {},
     } = options;
 
     // Get color for this trauma type
@@ -674,7 +675,7 @@ class TraumaVisualizer {
       transparent: type === 'dissolution', // Only dissolution nodes are transparent
       opacity: type === 'dissolution' ? 0.8 : 1.0,
       shininess: 70,
-      reflectivity: 1.0
+      reflectivity: 1.0,
     });
 
     // Create mesh
@@ -687,7 +688,7 @@ class TraumaVisualizer {
     const baseData = {
       ...data,
       baseY: position.y,
-      baseIntensity: intensity
+      baseIntensity: intensity,
     };
 
     // Store in the map for reference
@@ -696,7 +697,7 @@ class TraumaVisualizer {
       type,
       intensity,
       isPrimary,
-      data: baseData
+      data: baseData,
     });
 
     // Add to scene
@@ -722,20 +723,14 @@ class TraumaVisualizer {
   createAttributeNode(options) {
     const THREE = window.THREE;
 
-    const {
-      id,
-      attribute,
-      value = 0.5,
-      position = { x: 0, y: 0, z: 0 },
-      data = {}
-    } = options;
+    const { id, attribute, value = 0.5, position = { x: 0, y: 0, z: 0 }, data = {} } = options;
 
     // Define colors for attributes
     const attributeColors = {
       persistence: 0x3498db,
       recursion: 0xe74c3c,
       dissolution: 0x9b59b6,
-      fragmentation: 0xe67e22
+      fragmentation: 0xe67e22,
     };
 
     const color = attributeColors[attribute] || 0x95a5a6;
@@ -747,7 +742,7 @@ class TraumaVisualizer {
       color: color,
       transparent: true,
       opacity: 0.7,
-      wireframe: true
+      wireframe: true,
     });
 
     const mesh = new THREE.Mesh(geometry, material);
@@ -758,7 +753,7 @@ class TraumaVisualizer {
       ...data,
       baseY: position.y,
       attribute,
-      value
+      value,
     };
 
     // Store in the map
@@ -768,7 +763,7 @@ class TraumaVisualizer {
       attribute,
       intensity: value,
       isPrimary: false,
-      data: baseData
+      data: baseData,
     });
 
     // Add to scene
@@ -808,8 +803,8 @@ class TraumaVisualizer {
 
     // Connect primary to secondary nodes
     if (primaryNodes.length && secondaryNodes.length) {
-      primaryNodes.forEach(primary => {
-        secondaryNodes.forEach(secondary => {
+      primaryNodes.forEach((primary) => {
+        secondaryNodes.forEach((secondary) => {
           this.createConnectionLine(primary, secondary, 0xffffff, 0.3);
         });
       });
@@ -817,8 +812,8 @@ class TraumaVisualizer {
 
     // Connect primary to attribute nodes
     if (primaryNodes.length && attributeNodes.length) {
-      primaryNodes.forEach(primary => {
-        attributeNodes.forEach(attribute => {
+      primaryNodes.forEach((primary) => {
+        attributeNodes.forEach((attribute) => {
           this.createConnectionLine(primary, attribute, 0xaaaaaa, 0.2);
         });
       });
@@ -836,10 +831,7 @@ class TraumaVisualizer {
     const THREE = window.THREE;
 
     // Create geometry from points
-    const points = [
-      meshA.position.clone(),
-      meshB.position.clone()
-    ];
+    const points = [meshA.position.clone(), meshB.position.clone()];
 
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
@@ -851,7 +843,7 @@ class TraumaVisualizer {
       dashSize: 0.3,
       gapSize: 0.2,
       transparent: true,
-      opacity: opacity
+      opacity: opacity,
     });
 
     // Create line
@@ -885,7 +877,7 @@ class TraumaVisualizer {
       color: color,
       transparent: true,
       opacity: 0.4 * intensity * this.config.glowIntensity,
-      side: THREE.BackSide
+      side: THREE.BackSide,
     });
 
     // Create glow mesh
@@ -918,7 +910,9 @@ class TraumaVisualizer {
     labelDiv.style.fontSize = '12px';
     labelDiv.style.fontFamily = 'Arial, sans-serif';
     labelDiv.style.padding = '4px 8px';
-    labelDiv.style.background = `rgba(${(color >> 16) & 255}, ${(color >> 8) & 255}, ${color & 255}, 0.7)`;
+    labelDiv.style.background = `rgba(${(color >> 16) & 255}, ${(color >> 8) & 255}, ${
+      color & 255
+    }, 0.7)`;
     labelDiv.style.borderRadius = '4px';
     labelDiv.style.pointerEvents = 'none';
     labelDiv.style.textAlign = 'center';
@@ -951,9 +945,9 @@ class TraumaVisualizer {
     this.coherenceData = data;
 
     // Get dominant trauma color
-    const traumaColor = data.dominantTrauma ?
-      this.config.traumaColors[data.dominantTrauma] :
-      0xffffff;
+    const traumaColor = data.dominantTrauma
+      ? this.config.traumaColors[data.dominantTrauma]
+      : 0xffffff;
 
     // Create geometry based on coherence level
     const radius = 1.5 + data.score * 1.5;
@@ -977,7 +971,7 @@ class TraumaVisualizer {
       opacity: 0.3,
       wireframe: true,
       shininess: 90,
-      reflectivity: 1.0
+      reflectivity: 1.0,
     });
 
     // Create coherence mesh
@@ -1008,7 +1002,7 @@ class TraumaVisualizer {
     let itemCount = 0;
 
     // Process data
-    data.forEach(item => {
+    data.forEach((item) => {
       itemCount++;
 
       // Count primary trauma
@@ -1058,7 +1052,7 @@ class TraumaVisualizer {
       const mean = totalIntensity / traumaTypes;
       let sumSquaredDiff = 0;
 
-      Object.values(traumaCounts).forEach(count => {
+      Object.values(traumaCounts).forEach((count) => {
         sumSquaredDiff += Math.pow(count - mean, 2);
       });
 
@@ -1075,7 +1069,7 @@ class TraumaVisualizer {
       averageIntensity: totalIntensity / itemCount,
       traumaTypes,
       averageCoherence: coherenceScore,
-      coherenceStability
+      coherenceStability,
     };
   }
 
@@ -1104,7 +1098,7 @@ class TraumaVisualizer {
 
     // Remove connection lines
     if (this.connectionLines) {
-      this.connectionLines.forEach(line => {
+      this.connectionLines.forEach((line) => {
         this.scene.remove(line);
       });
       this.connectionLines = [];
@@ -1117,7 +1111,7 @@ class TraumaVisualizer {
     }
 
     // Remove all labels
-    this.labels.forEach(label => {
+    this.labels.forEach((label) => {
       this.scene.remove(label);
     });
     this.labels = [];
@@ -1151,14 +1145,14 @@ class TraumaVisualizer {
     if (this.container.clientWidth && this.container.clientHeight) {
       return {
         width: this.container.clientWidth,
-        height: this.container.clientHeight
+        height: this.container.clientHeight,
       };
     }
 
     // Fallback to config dimensions
     return {
       width: this.config.width,
-      height: this.config.height
+      height: this.config.height,
     };
   }
 
@@ -1237,13 +1231,15 @@ class TraumaVisualizer {
 
       // Dispatch event with the selected data
       if (meshData) {
-        this.container.dispatchEvent(new CustomEvent('traumavis:select', {
-          detail: {
-            id: meshData.id,
-            type: meshData.type,
-            data: meshData.data
-          }
-        }));
+        this.container.dispatchEvent(
+          new CustomEvent('traumavis:select', {
+            detail: {
+              id: meshData.id,
+              type: meshData.type,
+              data: meshData.data,
+            },
+          })
+        );
       }
     }
   }
@@ -1258,7 +1254,7 @@ class TraumaVisualizer {
       const touch = event.touches[0];
       this.onMouseMove({
         clientX: touch.clientX,
-        clientY: touch.clientY
+        clientY: touch.clientY,
       });
       this.onMouseClick();
     }

@@ -80,7 +80,7 @@ $spacing-units: (
   // Layout spacing
   mega: 55px,
   // Major layout divisions
-  ultra: 89px // Page-level spacing,
+  ultra: 89px // Page-level spacing,,
 );
 
 // 3. TYPOGRAPHY SCALE SYSTEM
@@ -96,7 +96,7 @@ $font-ratios: (
   // Golden ratio
   displacement: 1.4,
   // Dislocated scaling
-  dissolution: 1.5 // Rapid expansion,
+  dissolution: 1.5 // Rapid expansion,,
 );
 
 $base-font-size: 16px;
@@ -120,7 +120,7 @@ $timing-functions: (
   // Pendulum swing
   displacement: cubic-bezier(0.22, 0.68, 0, 1),
   // Shifted acceleration
-  dissolution: cubic-bezier(0.65, 0, 0.35, 1) // Dissolving edges,
+  dissolution: cubic-bezier(0.65, 0, 0.35, 1) // Dissolving edges,,
 );
 
 // 5. COHERENCE-RESPONSIVE VARIABLES
@@ -973,6 +973,7 @@ $timing-functions: (
       .temporal-slider {
         width: 100%;
         -webkit-appearance: none;
+        appearance: none;
         height: 4px;
         background: rgba(255, 255, 255, 0.2);
         outline: none;

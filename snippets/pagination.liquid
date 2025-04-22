@@ -1,0 +1,63 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+{%- if paginate.pages > 1 -%}
+  <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+    <ul class="pagination-list">
+      {%- if paginate.previous -%}
+        <li>
+          <a href="{{ paginate.previous.url }}" class="pagination-link pagination-previous" aria-label="{{ 'general.pagination.previous' | t }}">
+            <span class="pagination-arrow left-arrow"></span>
+          </a>
+        </li>
+      {%- else -%}
+        <li>
+          <span class="pagination-link pagination-previous disabled" aria-disabled="true">
+            <span class="pagination-arrow left-arrow"></span>
+          </span>
+        </li>
+      {%- endif -%}
+
+      {%- for part in paginate.parts -%}
+        {%- if part.is_link -%}
+          <li>
+            <a href="{{ part.url }}" class="pagination-link" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+              {{ part.title }}
+            </a>
+          </li>
+        {%- else -%}
+          {%- if part.title == paginate.current_page -%}
+            <li>
+              <span class="pagination-link pagination-current" aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                {{ part.title }}
+              </span>
+            </li>
+          {%- else -%}
+            <li>
+              <span class="pagination-link" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                {{ part.title }}
+              </span>
+            </li>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if paginate.next -%}
+        <li>
+          <a href="{{ paginate.next.url }}" class="pagination-link pagination-next" aria-label="{{ 'general.pagination.next' | t }}">
+            <span class="pagination-arrow right-arrow"></span>
+          </a>
+        </li>
+      {%- else -%}
+        <li>
+          <span class="pagination-link pagination-next disabled" aria-disabled="true">
+            <span class="pagination-arrow right-arrow"></span>
+          </span>
+        </li>
+      {%- endif -%}
+    </ul>
+  </nav>
+{%- endif -%}

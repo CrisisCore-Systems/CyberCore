@@ -19,7 +19,7 @@
                 <path d="M2 4H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </button>
-            
+
             <div id="CollectionFilters" class="collection-filters">
               <div class="filter-group trauma-type">
                 <h3 class="filter-heading">Memory Encoding</h3>
@@ -36,7 +36,7 @@
                   {% endfor %}
                 </ul>
               </div>
-              
+
               <div class="filter-group price">
                 <h3 class="filter-heading">Price Range</h3>
                 <div class="price-range">
@@ -48,7 +48,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="filter-group availability">
                 <h3 class="filter-heading">Availability</h3>
                 <ul class="filter-options">
@@ -68,7 +68,7 @@
                   </li>
                 </ul>
               </div>
-              
+
               <div class="filter-actions">
                 <button type="button" class="clear-filters-button">Clear all</button>
                 <button type="button" class="apply-filters-button">Apply filters</button>
@@ -76,7 +76,7 @@
             </div>
           </div>
         {% endif %}
-        
+
         {% if section.settings.enable_sorting %}
           <div class="sort-container">
             <label for="SortBy">Sort by</label>
@@ -94,14 +94,14 @@
         {% endif %}
       </div>
     {% endif %}
-    
+
     <div class="collection-products">
       {% paginate collection.products by section.settings.products_per_page %}
         <div class="product-grid">
           {% for product in collection.products %}
             <div class="product-card-wrapper">
-              {% render 'product-card', 
-                product: product, 
+              {% render 'product-card',
+                product: product,
                 show_trauma_indicator: section.settings.show_trauma_indicators
               %}
             </div>
@@ -114,7 +114,7 @@
             </div>
           {% endfor %}
         </div>
-        
+
         {% if paginate.pages > 1 %}
           {% render 'pagination', paginate: paginate %}
         {% endif %}
@@ -128,7 +128,7 @@
     // Filter toggle
     const filterToggle = document.querySelector('.filter-toggle');
     const collectionFilters = document.getElementById('CollectionFilters');
-    
+
     if (filterToggle && collectionFilters) {
       filterToggle.addEventListener('click', function() {
         const expanded = this.getAttribute('aria-expanded') === 'true';
@@ -136,63 +136,63 @@
         collectionFilters.classList.toggle('active');
       });
     }
-    
+
     // Price range inputs
     const priceMin = document.getElementById('PriceMin');
     const priceMax = document.getElementById('PriceMax');
     const priceMinInput = document.getElementById('PriceMinInput');
     const priceMaxInput = document.getElementById('PriceMaxInput');
-    
+
     if (priceMin && priceMinInput) {
       priceMin.addEventListener('input', function() {
         priceMinInput.value = this.value;
       });
-      
+
       priceMinInput.addEventListener('change', function() {
         priceMin.value = this.value;
       });
     }
-    
+
     if (priceMax && priceMaxInput) {
       priceMax.addEventListener('input', function() {
         priceMaxInput.value = this.value;
       });
-      
+
       priceMaxInput.addEventListener('change', function() {
         priceMax.value = this.value;
       });
     }
-    
+
     // Sort by
     const sortBy = document.getElementById('SortBy');
-    
+
     if (sortBy) {
       // Get the URL parameter for sort_by
       const urlParams = new URLSearchParams(window.location.search);
       const sortParam = urlParams.get('sort_by');
-      
+
       if (sortParam) {
         sortBy.value = sortParam;
       }
-      
+
       sortBy.addEventListener('change', function() {
         const url = new URL(window.location.href);
         url.searchParams.set('sort_by', this.value);
         window.location.href = url.toString();
       });
     }
-    
+
     // Filter actions
     const clearFiltersButton = document.querySelector('.clear-filters-button');
     const applyFiltersButton = document.querySelector('.apply-filters-button');
-    
+
     if (clearFiltersButton) {
       clearFiltersButton.addEventListener('click', function() {
         // Reset all filter checkboxes
         document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(checkbox => {
           checkbox.checked = false;
         });
-        
+
         // Reset price range
         if (priceMin) priceMin.value = priceMin.min;
         if (priceMinInput) priceMinInput.value = priceMin.min;
@@ -200,19 +200,19 @@
         if (priceMaxInput) priceMaxInput.value = priceMax.max;
       });
     }
-    
+
     if (applyFiltersButton) {
       applyFiltersButton.addEventListener('click', function() {
         // Initialize filter parameters
         const url = new URL(window.location.href);
-        
+
         // Clear existing filter parameters
         for (const key of [...url.searchParams.keys()]) {
           if (key.startsWith('filter.')) {
             url.searchParams.delete(key);
           }
         }
-        
+
         // Add trauma type filters
         const traumaTypeFilters = document.querySelectorAll('input[name="filter.trauma-type"]:checked');
         if (traumaTypeFilters.length > 0) {
@@ -220,13 +220,13 @@
             url.searchParams.append('filter.trauma-type', filter.value);
           });
         }
-        
+
         // Add price range filter
         if (priceMinInput && priceMaxInput) {
           url.searchParams.set('filter.price.min', priceMinInput.value);
           url.searchParams.set('filter.price.max', priceMaxInput.value);
         }
-        
+
         // Add inventory filter
         const inventoryFilters = document.querySelectorAll('input[name="filter.inventory"]:checked');
         if (inventoryFilters.length > 0) {
@@ -234,7 +234,7 @@
             url.searchParams.append('filter.inventory', filter.value);
           });
         }
-        
+
         // Navigate to filtered URL
         window.location.href = url.toString();
       });
@@ -246,13 +246,13 @@
   .main-collection-section {
     padding: 60px 0;
   }
-  
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
   }
-  
+
   /* Collection Controls */
   .collection-controls {
     display: flex;
@@ -262,12 +262,12 @@
     margin-bottom: 30px;
     gap: 20px;
   }
-  
+
   /* Filter Styles */
   .filter-container {
     position: relative;
   }
-  
+
   .filter-toggle {
     display: flex;
     align-items: center;
@@ -280,11 +280,11 @@
     cursor: pointer;
     transition: all 0.3s ease;
   }
-  
+
   .filter-toggle:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  
+
   .collection-filters {
     position: absolute;
     top: calc(100% + 10px);
@@ -298,44 +298,44 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     display: none;
   }
-  
+
   .collection-filters.active {
     display: block;
   }
-  
+
   .filter-group {
     margin-bottom: 25px;
   }
-  
+
   .filter-heading {
     font-size: 1rem;
     margin-bottom: 10px;
     font-weight: 600;
   }
-  
+
   .filter-options {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  
+
   .filter-option {
     margin-bottom: 8px;
   }
-  
+
   .filter-label {
     display: flex;
     align-items: center;
     cursor: pointer;
   }
-  
+
   .filter-label input {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
   }
-  
+
   .checkmark {
     width: 18px;
     height: 18px;
@@ -344,7 +344,7 @@
     margin-right: 10px;
     position: relative;
   }
-  
+
   .filter-label input:checked ~ .checkmark:after {
     content: "";
     position: absolute;
@@ -356,26 +356,26 @@
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
   }
-  
+
   .label-text {
     font-size: 0.9rem;
   }
-  
+
   /* Price Range */
   .price-range {
     margin-top: 10px;
   }
-  
+
   .price-range input[type="range"] {
     width: 100%;
     margin-bottom: 10px;
   }
-  
+
   .price-inputs {
     display: flex;
     justify-content: space-between;
   }
-  
+
   .price-inputs input[type="number"] {
     width: 60px;
     padding: 5px;
@@ -384,14 +384,14 @@
     border-radius: 4px;
     color: var(--phase-text-color);
   }
-  
+
   /* Filter Actions */
   .filter-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
   }
-  
+
   .clear-filters-button,
   .apply-filters-button {
     padding: 8px 15px;
@@ -400,38 +400,38 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
   }
-  
+
   .clear-filters-button {
     background-color: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--phase-text-color);
   }
-  
+
   .clear-filters-button:hover {
     background-color: rgba(255, 255, 255, 0.05);
   }
-  
+
   .apply-filters-button {
     background-color: var(--phase-accent-color);
     border: none;
     color: var(--phase-background);
   }
-  
+
   .apply-filters-button:hover {
     opacity: 0.9;
   }
-  
+
   /* Sort By */
   .sort-container {
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  
+
   .sort-container label {
     font-size: 0.9rem;
   }
-  
+
   .sort-by {
     padding: 8px 15px;
     background-color: rgba(255, 255, 255, 0.05);
@@ -441,7 +441,7 @@
     cursor: pointer;
     font-size: 0.9rem;
   }
-  
+
   /* Product Grid */
   .product-grid {
     display: grid;
@@ -449,39 +449,39 @@
     gap: 30px;
     margin-bottom: 40px;
   }
-  
+
   /* Empty Collection */
   .empty-collection {
     grid-column: 1 / -1;
     text-align: center;
     padding: 60px 0;
   }
-  
+
   .empty-message h2 {
     font-size: 1.8rem;
     margin-bottom: 15px;
   }
-  
+
   .empty-message p {
     font-size: 1rem;
     opacity: 0.8;
   }
-  
+
   /* Responsive */
   @media (max-width: 768px) {
     .collection-controls {
       flex-direction: column;
       align-items: flex-start;
     }
-    
+
     .filter-container, .sort-container {
       width: 100%;
     }
-    
+
     .collection-filters {
       width: 100%;
     }
-    
+
     .product-grid {
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }

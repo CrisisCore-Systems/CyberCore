@@ -1,0 +1,273 @@
+{% comment %}
+@MutationCompatible: All Variants
+@StrategyProfile: quantum-entangled
+@Version: 2.0.0
+{% endcomment %}
+
+<div class="cart-template" data-section-id="{{ section.id }}" data-section-type="cart">
+  <div class="container">
+    <div class="cart-header">
+      <h1 class="cart-title">{{ 'cart.general.title' | t }}</h1>
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
+        <div class="cart-items">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th class="cart-table-heading-product">{{ 'cart.label.product' | t }}</th>
+                <th class="cart-table-heading-price">{{ 'cart.label.price' | t }}</th>
+                <th class="cart-table-heading-quantity">{{ 'cart.label.quantity' | t }}</th>
+                <th class="cart-table-heading-total">{{ 'cart.label.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart.items %}
+                <tr class="cart-item" data-cart-item data-product-id="{{ item.product_id }}" data-variant-id="{{ item.variant_id }}">
+                  <!-- Product info -->
+                  <td class="cart-item-info">
+                    <div class="cart-item-image-container">
+                      {% if item.image %}
+                        <a href="{{ item.url }}">
+                          <img
+                            class="cart-item-image"
+                            src="{{ item.image | img_url: '120x' }}"
+                            alt="{{ item.title | escape }}"
+                            loading="lazy"
+                            width="120"
+                            height="{{ 120 | divided_by: item.image.aspect_ratio | round }}"
+                          >
+                        </a>
+                      {% endif %}
+                    </div>
+
+                    <div class="cart-item-details">
+                      <h2 class="cart-item-title">
+                        <a href="{{ item.url }}">{{ item.product.title }}</a>
+                      </h2>
+
+                      {% unless item.product.has_only_default_variant %}
+                        <p class="cart-item-variant">{{ item.variant.title }}</p>
+                      {% endunless %}
+
+                      <!-- Trauma encoding info -->
+                      {% if item.product.metafields.voidbloom.trauma_type %}
+                        <div class="cart-item-trauma">
+                          <span class="trauma-type-label">{{ item.product.metafields.voidbloom.trauma_type | capitalize }}</span>
+                          <div class="trauma-intensity-bar">
+                            <div class="trauma-intensity-fill" style="width: {{ item.product.metafields.voidbloom.intensity | default: 0.7 | times: 100 }}%;"></div>
+                          </div>
+                        </div>
+                      {% endif %}
+
+                      <!-- Remove button -->
+                      <button
+                        type="button"
+                        class="cart-item-remove"
+                        data-remove-item
+                        data-product-id="{{ item.product_id }}"
+                        data-variant-id="{{ item.variant_id }}"
+                      >
+                        {{ 'cart.general.remove' | t }}
+                      </button>
+                    </div>
+                  </td>
+
+                  <!-- Price -->
+                  <td class="cart-item-price" data-cart-item-price>
+                    {% if item.original_price != item.final_price %}
+                      <span class="price-was">{{ item.original_price | money }}</span>
+                      <span class="price-now">{{ item.final_price | money }}</span>
+                    {% else %}
+                      {{ item.original_price | money }}
+                    {% endif %}
+                  </td>
+
+                  <!-- Quantity -->
+                  <td class="cart-item-quantity">
+                    <div class="quantity-input-group">
+                      <button type="button" class="quantity-button quantity-decrease" data-quantity-decrease>
+                        <span class="visually-hidden">{{ 'products.product.decrease_quantity' | t }}</span>
+                        <span class="quantity-button-icon">-</span>
+                      </button>
+
+                      <input
+                        type="number"
+                        name="updates[]"
+                        id="updates_{{ item.key }}"
+                        class="quantity-input"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        pattern="[0-9]*"
+                        data-quantity-input
+                      >
+
+                      <button type="button" class="quantity-button quantity-increase" data-quantity-increase>
+                        <span class="visually-hidden">{{ 'products.product.increase_quantity' | t }}</span>
+                        <span class="quantity-button-icon">+</span>
+                      </button>
+                    </div>
+                  </td>
+
+                  <!-- Total -->
+                  <td class="cart-item-total" data-cart-item-total>
+                    {{ item.final_line_price | money }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cart-footer">
+          <!-- Special instructions -->
+          {% if section.settings.show_note %}
+            <div class="cart-note">
+              <label for="CartNote">{{ 'cart.general.note' | t }}</label>
+              <textarea name="note" id="CartNote" class="cart-note-input">{{ cart.note }}</textarea>
+            </div>
+          {% endif %}
+
+          <!-- Memory resonance section -->
+          {% if section.settings.show_memory_resonance %}
+            <div class="cart-memory-resonance">
+              <h3 class="cart-section-title">{{ 'cart.memory_resonance.title' | t }}</h3>
+              <div class="resonance-meter">
+                <div class="resonance-meter-label">{{ 'cart.memory_resonance.coherence' | t }}</div>
+                <div class="resonance-meter-bar">
+                  <div class="resonance-meter-fill" data-coherence-level="0.75" style="width: 75%;"></div>
+                </div>
+                <div class="resonance-meter-value">75%</div>
+              </div>
+
+              <div class="trauma-distribution">
+                <h4 class="trauma-distribution-title">{{ 'cart.memory_resonance.trauma_distribution' | t }}</h4>
+                <div class="trauma-distribution-chart" data-trauma-chart></div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Cart totals -->
+          <div class="cart-totals">
+            <!-- Additional costs -->
+            {% if cart.cart_level_discount_applications.size > 0 %}
+              <div class="cart-discount">
+                <span class="cart-discount-title">{{ 'cart.general.discounts' | t }}</span>
+                <span class="cart-discount-amount">-{{ cart.total_discount | money }}</span>
+              </div>
+            {% endif %}
+
+            <!-- Subtotal -->
+            <div class="cart-subtotal">
+              <span class="cart-subtotal-title">{{ 'cart.general.subtotal' | t }}</span>
+              <span class="cart-subtotal-amount" data-cart-subtotal>{{ cart.total_price | money }}</span>
+            </div>
+
+            <!-- Taxes and shipping info -->
+            <div class="cart-taxes-shipping-text">
+              {% if cart.taxes_included and shop.shipping_policy.body != blank %}
+                {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+              {% elsif cart.taxes_included %}
+                {{ 'cart.general.taxes_included' | t }}
+              {% elsif shop.shipping_policy.body != blank %}
+                {{ 'cart.general.taxes_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+              {% else %}
+                {{ 'cart.general.taxes_and_shipping' | t }}
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Cart actions -->
+          <div class="cart-actions">
+            {% if section.settings.show_quantum_checkout and section.settings.quantum_checkout_text != blank %}
+              <button type="submit" name="checkout" class="cart-quantum-checkout">
+                {{ section.settings.quantum_checkout_text }}
+                <div class="quantum-checkout-effect"></div>
+              </button>
+            {% endif %}
+
+            <button type="submit" name="checkout" class="cart-checkout-button">
+              {{ 'cart.general.checkout' | t }}
+            </button>
+
+            <a href="{{ routes.all_products_collection_url }}" class="cart-continue-shopping">
+              {{ 'cart.general.continue_shopping' | t }}
+            </a>
+
+            <button type="submit" name="update" class="cart-update-button">
+              {{ 'cart.general.update' | t }}
+            </button>
+          </div>
+        </div>
+      </form>
+    {% else %}
+      <div class="cart-empty">
+        <p class="cart-empty-text">{{ 'cart.general.empty' | t }}</p>
+        <div class="cart-empty-button-container">
+          <a href="{{ routes.all_products_collection_url }}" class="button">
+            {{ 'cart.general.continue_shopping' | t }}
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Cart Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "Enable order notes",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_memory_resonance",
+      "label": "Show memory resonance",
+      "default": true,
+      "info": "Display trauma coherence metrics for cart contents"
+    },
+    {
+      "type": "header",
+      "content": "Quantum Checkout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantum_checkout",
+      "label": "Enable quantum checkout button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quantum_checkout_text",
+      "label": "Quantum checkout button text",
+      "default": "Quantum Checkout"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize cart AJAX functionality if available
+    if (window.voidBloom && window.voidBloom.CartSystem) {
+      window.voidBloom.CartSystem.initialize();
+    }
+
+    // Initialize trauma distribution chart if available
+    if (window.voidBloom && window.voidBloom.ritualEngine) {
+      const traumaChart = document.querySelector('[data-trauma-chart]');
+      if (traumaChart) {
+        window.voidBloom.ritualEngine.renderTraumaDistribution(traumaChart);
+      }
+    }
+  });
+</script>

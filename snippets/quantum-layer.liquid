@@ -57,7 +57,7 @@
             traumaPattern.setAttribute('data-trauma-type', userTrauma);
             traumaPattern.style.setProperty('--trauma-intensity', coherenceBaseline);
           }
-          
+
           // Update quantum layer
           document.querySelector('.quantum-layer').setAttribute('data-trauma', userTrauma);
         }
@@ -104,24 +104,24 @@
 
         // Update class on quantum layer
         const quantumLayer = document.querySelector('.quantum-layer');
-        
+
         // Remove previous trauma classes
         ["abandonment", "fragmentation", "recursion", "surveillance", "displacement", "dissolution"].forEach(trauma => {
           quantumLayer.classList.remove(`trauma-${trauma}`);
         });
-        
+
         // Add new trauma class
         quantumLayer.classList.add(`trauma-${data.type}`);
         quantumLayer.setAttribute('data-trauma', data.type);
-        
+
         // Trigger glitch effect for transition
         if (this.glitchEngine) {
-          this.glitchEngine.start({ 
-            duration: 1000, 
+          this.glitchEngine.start({
+            duration: 1000,
             intensity: data.intensity || 0.5
           });
         }
-        
+
         // Update WebGL effects
         if (this.qearBridge) {
           this.qearBridge.triggerTrauma(data.type, data.intensity || 0.5);
@@ -130,14 +130,14 @@
 
       handlePhaseChange: function(data) {
         if (!data || !data.phase) return;
-        
+
         // Update data attribute
         document.querySelector('.quantum-layer').setAttribute('data-phase', data.phase);
-        
+
         // Trigger phase-specific effects
         // In a real implementation, this would animate the transition
         document.body.classList.add('phase-transitioning');
-        
+
         setTimeout(() => {
           document.body.classList.remove('phase-transitioning');
         }, 2000);
@@ -146,11 +146,11 @@
       handleQuantumMutation: function(data) {
         // Handle quantum mutation events from QEAR
         if (!data) return;
-        
+
         // Trigger glitch effect for mutation
         if (this.glitchEngine) {
-          this.glitchEngine.start({ 
-            duration: 500, 
+          this.glitchEngine.start({
+            duration: 500,
             intensity: data.intensity || 0.3,
             profile: 'mutation'
           });
@@ -162,10 +162,10 @@
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrollPercent = scrollTop / scrollHeight;
-        
+
         // Adjust quantum effects based on scroll
         document.querySelector('.quantum-background').style.setProperty('--scroll-intensity', scrollPercent);
-        
+
         // Trigger subtle glitches on scroll breakpoints
         if (scrollPercent > 0.3 && scrollPercent < 0.32 && this.glitchEngine) {
           this.glitchEngine.triggerMicroGlitch();
@@ -179,7 +179,7 @@
         // Get mouse position
         const mouseX = e.clientX / window.innerWidth;
         const mouseY = e.clientY / window.innerHeight;
-        
+
         // Apply distortion to quantum field
         document.querySelector('.quantum-background').style.setProperty('--mouse-x', mouseX);
         document.querySelector('.quantum-background').style.setProperty('--mouse-y', mouseY);

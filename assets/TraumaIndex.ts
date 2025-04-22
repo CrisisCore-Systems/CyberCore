@@ -3,8 +3,8 @@
  * Provides type safety while maintaining compatibility with the original trauma system
  */
 
-// Import the original JavaScript file
-const TraumaIndexJS = require('./TraumaIndex.js').default || require('./TraumaIndex.js');
+// Import the original JavaScript file using ES module syntax
+import * as TraumaIndexJS from './TraumaIndex.js';
 
 // Define TypeScript interfaces for the TraumaIndex
 export interface TraumaProfile {
@@ -23,6 +23,14 @@ export interface TraumaModifier {
   source?: string;
 }
 
+export interface TraumaInitOptions {
+  baseLevel?: number;
+  initialProfiles?: Partial<TraumaProfile>[];
+  autoUpdate?: boolean;
+  updateInterval?: number;
+  [key: string]: unknown;
+}
+
 export interface TraumaIndexInterface {
   // Properties
   currentLevel: number;
@@ -32,14 +40,14 @@ export interface TraumaIndexInterface {
   lastUpdated: number;
 
   // Methods
-  initialize(options?: any): Promise<void>;
+  initialize(options?: TraumaInitOptions): Promise<void>;
   getCurrentLevel(): number;
   addTraumaProfile(profile: Partial<TraumaProfile>): TraumaProfile;
   addModifier(modifier: TraumaModifier): void;
   removeModifier(modifierId: string): boolean;
   clearAllModifiers(): void;
   update(timestamp?: number): number;
-  generateTraumaReport(): Record<string, any>;
+  generateTraumaReport(): Record<string, unknown>;
   dispose(): void;
 }
 

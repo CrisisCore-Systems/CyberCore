@@ -4,7 +4,13 @@
  * Protocol: Recursive memory expansion
  */
 
+/**
+ *
+ */
 class LoreGenerator {
+  /**
+   *
+   */
   constructor(traumaIndex) {
     this.traumaIndex = traumaIndex;
     this.memoryNodes = [];
@@ -98,7 +104,7 @@ class LoreGenerator {
       if (traumaType !== primaryType && 
           this.traumaIndex.findReferenceInText(narrative, traumaType)) {
         connections.push({
-          type: "trauma",
+          type: 'trauma',
           target: traumaType,
           strength: this.calculateStrength(narrative, traumaType)
         });

@@ -652,17 +652,17 @@ export class QEARCore {
    */
   #getProfileForPhase(phase) {
     switch (phase) {
-      case 'cyber-lotus':
-        return 'CyberLotus';
-      case 'obsidian-bloom':
-        return 'ObsidianBloom';
-      case 'void-bloom':
-        return 'VoidBloom';
-      case 'rolling-virus':
-      case 'neon-vortex':
-        return 'NeonVortex';
-      default:
-        return this.#currentState.activeProfile || this.#config.defaultProfile;
+    case 'cyber-lotus':
+      return 'CyberLotus';
+    case 'obsidian-bloom':
+      return 'ObsidianBloom';
+    case 'void-bloom':
+      return 'VoidBloom';
+    case 'rolling-virus':
+    case 'neon-vortex':
+      return 'NeonVortex';
+    default:
+      return this.#currentState.activeProfile || this.#config.defaultProfile;
     }
   }
   

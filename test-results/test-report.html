@@ -1,0 +1,690 @@
+<html><head><meta charset="utf-8"/><title>CyberCore Test Report</title><style type="text/css">:root {
+  --text-primary: #111;
+  --text-secondary: #4f4f4f;
+  --success: #006633;
+  --success-bright: #80ffbf;
+  --danger: #cc071e;
+  --danger-bright: #fbdfe0;
+  --warning: #995c00;
+  --warning-bright: #ffeea8;
+  --panel: #eee;
+  --border: #949494;
+  --disabled: #6b6b6b;
+}
+
+html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+}
+body {
+  padding: 2rem 1rem;
+}
+.jesthtml-content {
+  margin: 0 auto;
+  max-width: 70rem;
+}
+header {
+  display: flex;
+  align-items: center;
+}
+#title {
+  margin: 0;
+  flex-grow: 1;
+}
+#logo {
+  height: 4rem;
+}
+#timestamp {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+#metadata-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.additional-information-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+}
+
+/** SUMMARY */
+#summary {
+  color: var(--text-primary);
+  display: flex;
+  font-family: monospace;
+  font-size: 1rem;
+}
+#summary > div {
+  margin-right: 0.5rem;
+  background: var(--panel);
+  padding: 1rem;
+  min-width: 15rem;
+}
+#summary > div:last-child {
+  margin-right: 0;
+}
+@media only screen and (max-width: 720px) {
+  #summary {
+    flex-direction: column;
+  }
+  #summary > div {
+    margin-right: 0;
+    margin-top: 1rem;
+  }
+  #summary > div:first-child {
+    margin-top: 0;
+  }
+}
+
+.summary-total {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.summary-passed {
+  color: var(--success);
+  border-left: 0.4rem solid var(--success);
+  padding-left: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.summary-failed,
+.summary-obsolete-snapshots {
+  color: var(--danger);
+  border-left: 0.4rem solid var(--danger);
+  padding-left: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.summary-pending {
+  color: var(--warning);
+  border-left: 0.4rem solid var(--warning);
+  padding-left: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.summary-empty {
+  color: var(--disabled);
+  border-left: 0.4rem solid var(--disabled);
+  margin-bottom: 0.15rem;
+}
+
+.test-result {
+  padding: 1rem;
+  margin-bottom: 0.25rem;
+}
+.test-result:last-child {
+  border: 0;
+}
+.test-result.passed {
+  background-color: var(--success-bright);
+  color: var(--success);
+}
+.test-result.failed {
+  background-color: var(--danger-bright);
+  color: var(--danger);
+}
+.test-result.pending {
+  background-color: var(--warning-bright);
+  color: var(--warning);
+}
+
+.test-info {
+  display: flex;
+  justify-content: space-between;
+}
+.test-suitename {
+  width: 20%;
+  text-align: left;
+  font-weight: bold;
+  word-break: break-word;
+}
+.test-title {
+  width: 40%;
+  text-align: left;
+  font-style: italic;
+}
+.test-status {
+  width: 20%;
+  text-align: right;
+}
+.test-duration {
+  width: 10%;
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+.failureMessages {
+  padding: 0 1rem;
+  margin-top: 1rem;
+  border-top: 1px dashed var(--danger);
+}
+.failureMessages.suiteFailure {
+  border-top: none;
+}
+.failureMsg {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.suite-container {
+  margin-bottom: 1rem;
+}
+.suite-info {
+  padding: 1rem;
+  background-color: var(--panel);
+  color: var(--text-secondary);
+  border: 0.15rem solid;
+  border-color: var(--panel);
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.suite-info:hover {
+  border-color: var(--border);
+  cursor: pointer;
+}
+.suite-info .suite-path {
+  word-break: break-all;
+  flex-grow: 1;
+  font-family: monospace;
+  font-size: 1rem;
+}
+.suite-info .suite-time {
+  margin-left: 1rem;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.85rem;
+}
+.suite-info .suite-time.warn {
+  background-color: var(--danger);
+  color: #fff;
+}
+.suite-info:before {
+  content: "\2303";
+  display: inline-block;
+  margin-right: 1rem;
+  transform: rotate(180deg) translateY(0.15rem);
+}
+.suite-container[open] .suite-info:before {
+  transform: rotate(0deg) translateY(0.15rem);
+}
+
+/* CONSOLE LOGS */
+.suite-consolelog {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: var(--panel);
+}
+.suite-consolelog-header {
+  font-weight: bold;
+}
+.suite-consolelog-item {
+  padding: 0.5rem;
+}
+.suite-consolelog-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-consolelog-item-origin {
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+.suite-consolelog-item-message {
+  color: var(--text-primary);
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+
+/* OBSOLETE SNAPSHOTS */
+.suite-obsolete-snapshots {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: var(--danger-bright);
+  color: var(--danger);
+}
+.suite-obsolete-snapshots-header {
+  font-weight: bold;
+}
+.suite-obsolete-snapshots-item {
+  padding: 0.5rem;
+}
+.suite-obsolete-snapshots-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-obsolete-snapshots-item-message {
+  color: var(--text-primary);
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+</style></head><body><main class="jesthtml-content"><header><h1 id="title">CyberCore Test Report</h1></header><section id="metadata-container"><div id="timestamp">Started: 2025-04-20 07:08:47</div><div id="summary"><div id="suite-summary"><div class="summary-total">Suites (7)</div><div class="summary-passed  summary-empty">0 passed</div><div class="summary-failed ">7 failed</div><div class="summary-pending  summary-empty">0 pending</div></div><div id="test-summary"><div class="summary-total">Tests (24)</div><div class="summary-passed ">1 passed</div><div class="summary-failed ">23 failed</div><div class="summary-pending  summary-empty">0 pending</div></div></div></section><details id="suite-1" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js</div><div class="suite-time">4.575s</div></summary><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">HologramRenderer</div><div class="test-title">should initialize with default options</div><div class="test-status">failed</div><div class="test-duration">0.036s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: this.camera.position.set is not a function
+    at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
+    at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
+    at Object.initialize (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js:77:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">HologramRenderer</div><div class="test-title">should load 3D model</div><div class="test-status">failed</div><div class="test-duration">0.008s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: this.camera.position.set is not a function
+    at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
+    at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
+    at Object.initialize (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js:88:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">HologramRenderer</div><div class="test-title">should apply quantum effects</div><div class="test-status">failed</div><div class="test-duration">0.008s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: this.camera.position.set is not a function
+    at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
+    at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
+    at Object.initialize (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js:106:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">HologramRenderer</div><div class="test-title">should apply glitch effect</div><div class="test-status">failed</div><div class="test-duration">0.021s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: this.camera.position.set is not a function
+    at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
+    at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
+    at Object.initialize (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js:132:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">HologramRenderer</div><div class="test-title">should update size of renderer</div><div class="test-status">failed</div><div class="test-duration">0.012s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: this.camera.position.set is not a function
+    at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
+    at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
+    at Object.initialize (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js:153:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">HologramRenderer</div><div class="test-title">should clean up resources when disposed</div><div class="test-status">failed</div><div class="test-duration">0.004s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: this.camera.position.set is not a function
+    at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
+    at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
+    at Object.initialize (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-renderer.test.js:167:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div></div></details><details id="suite-2" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js</div><div class="suite-time">0.733s</div></summary><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">Hologram Component &gt; Initialization</div><div class="test-title">should initialize with default settings</div><div class="test-status">failed</div><div class="test-duration"> </div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:8:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Hologram Component &gt; Initialization</div><div class="test-title">should accept custom configuration options</div><div class="test-status">failed</div><div class="test-duration">0.001s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:23:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Hologram Component &gt; Rendering</div><div class="test-title">should render hologram elements</div><div class="test-status">failed</div><div class="test-duration">0.001s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:33:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Hologram Component &gt; Rendering</div><div class="test-title">should apply quantum effects when in quantum mode</div><div class="test-status">failed</div><div class="test-duration">0.001s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:44:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Hologram Component &gt; Event Handling</div><div class="test-title">should trigger onInteraction callback when interacted with</div><div class="test-status">failed</div><div class="test-duration">0.001s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:56:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div></div></details><details id="suite-3" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js</div><div class="suite-time warn">5.508s</div></summary><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Initialization</div><div class="test-title">should initialize with correct defaults</div><div class="test-status">failed</div><div class="test-duration">0.018s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "3d"
+Received: undefined
+    at Object.toBe (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:11:37)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Initialization</div><div class="test-title">should accept custom configuration</div><div class="test-status">failed</div><div class="test-duration">0.002s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "4d"
+Received: undefined
+    at Object.toBe (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:25:37)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Visualization Methods</div><div class="test-title">should correctly visualize quantum data</div><div class="test-status">failed</div><div class="test-duration">0.003s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.toHaveBeenCalled (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:52:25)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Visualization Methods</div><div class="test-title">should apply fractal patterns when fractalMode is enabled</div><div class="test-status">failed</div><div class="test-duration">0.003s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.toHaveBeenCalled (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:62:39)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Event Handling</div><div class="test-title">should handle data updates correctly</div><div class="test-status">failed</div><div class="test-duration">0.005s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: [{"id": "q3", "probability": 1, "state": "collapsed"}]
+
+Number of calls: 0
+    at Object.toHaveBeenCalledWith (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:83:25)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Event Handling</div><div class="test-title">should trigger onStateChange callback when state changes</div><div class="test-status">failed</div><div class="test-duration">0.003s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: [{"id": "q1", "state": "collapsed"}]
+
+Number of calls: 0
+    at Object.toHaveBeenCalledWith (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:96:35)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Neural Bus Integration</div><div class="test-title">should connect to Neural Bus when neuralSynced is true</div><div class="test-status">failed</div><div class="test-duration">0.002s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.toHaveBeenCalled (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:120:31)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Neural Bus Integration</div><div class="test-title">should handle quantum mutation events from Neural Bus</div><div class="test-status">failed</div><div class="test-duration">0.009s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.toHaveBeenCalled (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:135:27)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Neural Bus Integration</div><div class="test-title">should properly disconnect from Neural Bus</div><div class="test-status">passed</div><div class="test-duration">0.002s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Neural Bus Integration</div><div class="test-title">should handle hologram update events</div><div class="test-status">failed</div><div class="test-duration">0.002s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: [{"id": "h1", "probability": 0.8, "state": "superposition"}]
+
+Number of calls: 0
+    at Object.toHaveBeenCalledWith (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:165:25)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Neural Bus Integration</div><div class="test-title">should handle cart events</div><div class="test-status">failed</div><div class="test-duration">0.002s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.toHaveBeenCalled (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:177:25)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Hologram Integration</div><div class="test-title">should connect to a hologram component</div><div class="test-status">failed</div><div class="test-duration">0.002s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: {"applyFractalPatterns": [Function applyFractalPatterns], "connectHologram": [Function connectHologram], "connectToBus": [Function connectToBus], "disconnectFromNeuralBus": [Function disconnectFromNeuralBus], "handleCartEvent": [Function handleCartEvent], "handleHologramUpdate": [Function handleHologramUpdate], "handleQuantumMutation": [Function handleQuantumMutation], "render": [Function render], "update": [Function update], "updateData": [Function updateData], "visualizeQuantumState": [Function visualizeQuantumState]}
+Received: undefined
+    at Object.toBe (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:205:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Quantum Visualizer &gt; Hologram Integration</div><div class="test-title">should gracefully handle null/undefined hologram components</div><div class="test-status">failed</div><div class="test-duration">0.005s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: {"applyFractalPatterns": [Function applyFractalPatterns], "connectHologram": [Function connectHologram], "connectToBus": [Function connectToBus], "disconnectFromNeuralBus": [Function disconnectFromNeuralBus], "handleCartEvent": [Function handleCartEvent], "handleHologramUpdate": [Function handleHologramUpdate], "handleQuantumMutation": [Function handleQuantumMutation], "render": [Function render], "update": [Function update], "updateData": [Function updateData], "visualizeQuantumState": [Function visualizeQuantumState]}
+Received: undefined
+    at Object.toBe (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:212:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</pre></div></div></div></details><details id="suite-4" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js</div><div class="suite-time">0s</div></summary><div class="suite-tests"/></details><details id="suite-5" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\unit\enhanced-cart.test.js</div><div class="suite-time">0s</div></summary><div class="suite-tests"/></details><details id="suite-6" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\integration\quantum-hologram-integration.test.js</div><div class="suite-time">0s</div></summary><div class="suite-tests"/></details><details id="suite-7" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">C:\Users\user\Documents\Projects\CyberCore\tests\e2e\cybercore-system.test.js</div><div class="suite-time">0s</div></summary><div class="suite-tests"/></details></main></body></html>

@@ -140,24 +140,24 @@ export class HologramComponent extends HTMLElement {
     if (oldValue === newValue) return;
 
     switch (name) {
-      case 'intensity':
-        this.intensity = parseFloat(newValue) || 1.0;
-        this.#config.intensity = this.intensity;
-        this.#updateIntensity();
-        break;
-      case 'render-mode':
-        this.renderMode = newValue || 'standard';
-        this.#config.renderMode = this.renderMode;
-        this.render();
-        break;
-      case 'enable-glitch':
-        this.glitchEnabled = newValue !== null;
-        this.#config.enableGlitch = this.glitchEnabled;
-        break;
-      case 'profile':
-        this.#mutationProfile = newValue || 'CyberLotus';
-        this.#applyProfileEffects(this.#mutationProfile);
-        break;
+    case 'intensity':
+      this.intensity = parseFloat(newValue) || 1.0;
+      this.#config.intensity = this.intensity;
+      this.#updateIntensity();
+      break;
+    case 'render-mode':
+      this.renderMode = newValue || 'standard';
+      this.#config.renderMode = this.renderMode;
+      this.render();
+      break;
+    case 'enable-glitch':
+      this.glitchEnabled = newValue !== null;
+      this.#config.enableGlitch = this.glitchEnabled;
+      break;
+    case 'profile':
+      this.#mutationProfile = newValue || 'CyberLotus';
+      this.#applyProfileEffects(this.#mutationProfile);
+      break;
     }
   }
 
@@ -331,6 +331,9 @@ export class HologramComponent extends HTMLElement {
   }
 
   // Allow external configuration for non-attribute settings
+  /**
+   *
+   */
   configure(config = {}) {
     this.#config = {
       ...this.#config,

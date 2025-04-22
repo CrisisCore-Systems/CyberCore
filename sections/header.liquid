@@ -28,7 +28,7 @@
               <a href="{{ link.url }}" class="menu-link {% if link.active %}active{% endif %}" data-trauma="{{ settings.default_trauma_type }}">{{ link.title }}</a>
             </li>
           {% endfor %}
-          
+
           {% if section.settings.show_trauma_selector %}
             <li class="menu-item trauma-selector">
               <span class="current-trauma">{{ settings.default_trauma_type | capitalize }}</span>
@@ -49,11 +49,11 @@
         <a href="/search" class="control-icon search-icon" aria-label="{{ 'general.search' | t }}">
           {% render 'icon-search' %}
         </a>
-        
+
         <a href="/account" class="control-icon account-icon" aria-label="{{ 'customer.account' | t }}">
           {% render 'icon-account' %}
         </a>
-        
+
         <button class="control-icon cart-icon" id="cart-toggle" aria-label="{{ 'general.cart' | t }}">
           {% render 'icon-cart' %}
           <span class="cart-count" data-cart-count>
@@ -63,7 +63,7 @@
       </div>
     </div>
   </div>
-  
+
   {% if section.settings.show_announcement %}
     <div class="announcement-bar trauma-{{ settings.default_trauma_type }}">
       <div class="container">
@@ -85,17 +85,17 @@
     if (logoText) {
       logoText.style.setProperty('--bloom-color', `var(--trauma-${logoText.getAttribute('data-trauma') || '{{ settings.default_trauma_type }}' }-color)`);
     }
-    
+
     // Trauma option selection
     const traumaOptions = document.querySelectorAll('.trauma-option');
     traumaOptions.forEach(option => {
       option.addEventListener('click', function(e) {
         e.preventDefault();
         const traumaType = this.getAttribute('data-trauma');
-        
+
         // Update UI
         document.querySelector('.current-trauma').textContent = traumaType.charAt(0).toUpperCase() + traumaType.slice(1);
-        
+
         // Update neural system
         if (window.NeuralBus) {
           NeuralBus.publish('trauma:activated', {
@@ -104,12 +104,12 @@
             source: 'user-selection'
           });
         }
-        
+
         // Close dropdown
         document.querySelector('.trauma-selector').classList.remove('active');
       });
     });
-    
+
     // Toggle trauma selector dropdown
     const traumaSelector = document.querySelector('.trauma-selector');
     if (traumaSelector) {
@@ -118,7 +118,7 @@
         traumaSelector.classList.toggle('active');
       });
     }
-    
+
     // Handle menu link hover effects
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
@@ -127,7 +127,7 @@
         this.style.setProperty('--bloom-color', `var(--trauma-${traumaType}-color)`);
         this.style.setProperty('--bloom-intensity', '0.8');
       });
-      
+
       link.addEventListener('mouseleave', function() {
         this.style.setProperty('--bloom-intensity', '0.3');
       });
@@ -144,33 +144,33 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
   }
-  
+
   .header-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 0;
   }
-  
+
   .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
   }
-  
+
   /* Logo Styles */
   .logo-container {
     position: relative;
   }
-  
+
   .site-logo {
     position: relative;
     z-index: 1;
     display: block;
     text-decoration: none;
   }
-  
+
   .logo-text {
     font-size: 1.5rem;
     font-weight: 600;
@@ -179,12 +179,12 @@
     color: var(--phase-text-color);
     --bloom-intensity: 0.7;
   }
-  
+
   .logo-image {
     max-height: 50px;
     width: auto;
   }
-  
+
   .logo-bloom {
     position: absolute;
     top: 0;
@@ -202,7 +202,7 @@
     filter: blur(10px);
     z-index: 0;
   }
-  
+
   /* Navigation Styles */
   .navigation-menu {
     display: flex;
@@ -210,12 +210,12 @@
     margin: 0;
     padding: 0;
   }
-  
+
   .menu-item {
     position: relative;
     margin: 0 1rem;
   }
-  
+
   .menu-link {
     display: block;
     padding: 0.5rem 0;
@@ -227,19 +227,19 @@
     transition: all 0.3s ease;
     --bloom-intensity: 0.3;
   }
-  
+
   .menu-link:hover,
   .menu-link.active {
     color: var(--phase-accent-color);
     text-shadow: 0 0 calc(var(--bloom-intensity) * 10px) var(--bloom-color);
   }
-  
+
   /* Header Controls */
   .header-controls {
     display: flex;
     align-items: center;
   }
-  
+
   .control-icon {
     position: relative;
     margin-left: 1.5rem;
@@ -253,7 +253,7 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .cart-count {
     position: absolute;
     top: -8px;
@@ -268,12 +268,12 @@
     align-items: center;
     justify-content: center.
   }
-  
+
   /* Trauma Selector */
   .trauma-selector {
     position: relative.
   }
-  
+
   .current-trauma {
     display: block;
     padding: 0.5rem 0;
@@ -283,7 +283,7 @@
     text-transform: uppercase;
     color: var(--phase-accent-color).
   }
-  
+
   .current-trauma::after {
     content: "";
     display: inline-block;
@@ -294,7 +294,7 @@
     border-right: 4px solid transparent;
     border-top: 4px solid currentColor.
   }
-  
+
   .trauma-options {
     position: absolute;
     top: 100%;
@@ -307,11 +307,11 @@
     display: none;
     z-index: 10.
   }
-  
+
   .trauma-selector.active .trauma-options {
     display: block.
   }
-  
+
   .trauma-option {
     display: block;
     padding: 0.5rem 1rem;
@@ -320,35 +320,35 @@
     font-size: 0.9rem;
     transition: all 0.3s ease.
   }
-  
+
   .trauma-option:hover {
     background-color: rgba(255, 255, 255, 0.05).
   }
-  
+
   .trauma-option[data-trauma="abandonment"]:hover {
     color: var(--trauma-abandonment-color).
   }
-  
+
   .trauma-option[data-trauma="fragmentation"]:hover {
     color: var(--trauma-fragmentation-color).
   }
-  
+
   .trauma-option[data-trauma="recursion"]:hover {
     color: var(--trauma-recursion-color).
   }
-  
+
   .trauma-option[data-trauma="surveillance"]:hover {
     color: var(--trauma-surveillance-color).
   }
-  
+
   .trauma-option[data-trauma="displacement"]:hover {
     color: var(--trauma-displacement-color).
   }
-  
+
   .trauma-option[data-trauma="dissolution"]:hover {
     color: var(--trauma-dissolution-color).
   }
-  
+
   /* Announcement Bar */
   .announcement-bar {
     background-color: var(--phase-tertiary-color);
@@ -356,48 +356,48 @@
     font-size: 0.8rem;
     text-align: center.
   }
-  
+
   .announcement-message {
     color: var(--phase-text-color).
   }
-  
+
   .announcement-link {
     color: var(--phase-accent-color);
     text-decoration: none;
     margin-left: 0.5rem.
   }
-  
+
   /* Trauma-specific effects */
   .trauma-abandonment .logo-bloom {
     animation: pulse-abandonment 4s ease-in-out infinite.
   }
-  
+
   .trauma-fragmentation .logo-bloom {
     animation: shift-fragmentation 2s linear infinite.
   }
-  
+
   .trauma-recursion .logo-bloom {
     animation: rotate-recursion 6s linear infinite.
   }
-  
+
   .trauma-surveillance .logo-bloom {
     animation: scan-surveillance 3s linear infinite.
   }
-  
+
   .trauma-displacement .logo-bloom {
     animation: shift-displacement 4s ease-in-out infinite.
   }
-  
+
   .trauma-dissolution .logo-bloom {
     animation: dissolve-dissolution 8s ease-in-out infinite.
   }
-  
+
   /* Animation Keyframes - imported from bloom.css */
   @keyframes pulse-abandonment {
     0%, 100% { transform: scale(1); opacity: 0.6; }
     50% { transform: scale(1.2); opacity: 0.8; }
   }
-  
+
   @keyframes shift-fragmentation {
     0% { transform: translate(0); }
     25% { transform: translate(-5px, 5px); }
@@ -405,42 +405,42 @@
     75% { transform: translate(-5px, -5px); }
     100% { transform: translate(0); }
   }
-  
+
   @keyframes rotate-recursion {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-  
+
   @keyframes scan-surveillance {
     0% { transform: translateY(-10px); opacity: 0.4; }
     50% { transform: translateY(10px); opacity: 0.8; }
     100% { transform: translateY(-10px); opacity: 0.4; }
   }
-  
+
   @keyframes shift-displacement {
     0%, 100% { transform: translateX(0); }
     50% { transform: translateX(10px); }
   }
-  
+
   @keyframes dissolve-dissolution {
     0%, 100% { opacity: 0.6; filter: blur(10px); }
     50% { opacity: 0.3; filter: blur(15px); }
   }
-  
+
   /* Mobile styles */
   @media (max-width: 768px) {
     .header-center {
       display: none.
     }
-    
+
     .header-wrapper {
       padding: 0.75rem 0.
     }
-    
+
     .logo-text {
       font-size: 1.2rem.
     }
-    
+
     .logo-image {
       max-height: 40px.
     }

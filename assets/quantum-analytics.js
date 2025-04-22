@@ -8,7 +8,13 @@
 
 import { NeuralBus } from './neural-bus.js';
 
+/**
+ *
+ */
 export class QuantumAnalytics {
+  /**
+   *
+   */
   constructor(options = {}) {
     // Configuration with defaults
     this.config = {
@@ -399,26 +405,26 @@ export class QuantumAnalytics {
 
     // Apply trauma-specific observation effects
     switch (traumaType) {
-      case 'abandonment':
-        node.style.setProperty('--observer-effect', 'inset 0 0 20px rgba(0, 0, 0, 0.5)');
-        break;
-      case 'fragmentation':
-        node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(167, 113, 227, 0.5)');
-        break;
-      case 'recursion':
-        node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(80, 198, 134, 0.5)');
-        break;
-      case 'surveillance':
-        node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(51, 214, 245, 0.5)');
-        break;
-      case 'displacement':
-        node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(255, 155, 34, 0.5)');
-        break;
-      case 'dissolution':
-        node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(255, 0, 255, 0.5)');
-        break;
-      default:
-        node.style.setProperty('--observer-effect', 'inset 0 0 10px rgba(255, 255, 255, 0.2)');
+    case 'abandonment':
+      node.style.setProperty('--observer-effect', 'inset 0 0 20px rgba(0, 0, 0, 0.5)');
+      break;
+    case 'fragmentation':
+      node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(167, 113, 227, 0.5)');
+      break;
+    case 'recursion':
+      node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(80, 198, 134, 0.5)');
+      break;
+    case 'surveillance':
+      node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(51, 214, 245, 0.5)');
+      break;
+    case 'displacement':
+      node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(255, 155, 34, 0.5)');
+      break;
+    case 'dissolution':
+      node.style.setProperty('--observer-effect', 'inset 0 0 0 1px rgba(255, 0, 255, 0.5)');
+      break;
+    default:
+      node.style.setProperty('--observer-effect', 'inset 0 0 10px rgba(255, 255, 255, 0.2)');
     }
 
     // Record observer effect

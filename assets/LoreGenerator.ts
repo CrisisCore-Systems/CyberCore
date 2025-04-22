@@ -3,8 +3,8 @@
  * Provides type safety while maintaining compatibility with the original lore system
  */
 
-// Import the original JavaScript file
-const LoreGeneratorJS = require('./LoreGenerator.js').default || require('./LoreGenerator.js');
+// Import the original JavaScript file using ES module syntax
+import * as LoreGeneratorJS from './LoreGenerator.js';
 
 // Define TypeScript interfaces for the LoreGenerator
 export interface LoreFragment {
@@ -15,7 +15,7 @@ export interface LoreFragment {
   tags: string[];
   traumaIndex: number;
   glitchFactor: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface LoreGeneratorOptions {

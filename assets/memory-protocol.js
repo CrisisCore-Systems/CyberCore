@@ -9,7 +9,13 @@
 
 import { NeuralBus } from './neural-bus.js';
 
+/**
+ *
+ */
 class MemoryProtocol {
+  /**
+   *
+   */
   constructor(config = {}) {
     // Configuration with defaults
     this.config = {

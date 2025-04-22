@@ -51,12 +51,11 @@
   },
 
   // Jest settings
-  "jest.autoRun": "off",
-  "jest.showCoverageOnLoad": true,
+  // Removed deprecated jest.autoRun setting
   "jest.jestCommandLine": "npm run test --",
   "jest.enableInlineErrorMessages": true,
   "jest.enableCodeLens": true,
-  "jest.runMode": "run",
+  "jest.runMode": "on-demand",
   "jest.showOutput": "terminal",
   "jest.showTerminalOutput": "both",
 
@@ -229,5 +228,6 @@
   },
   "telemetry.telemetryLevel": "off",
   "diffEditor.ignoreTrimWhitespace": false,
-  "terminal.integrated.defaultProfile.windows": "PowerShell"
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "git.ignoreLimitWarning": true
 }

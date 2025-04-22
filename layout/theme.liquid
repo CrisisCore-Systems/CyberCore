@@ -10,26 +10,26 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=initial-scale=1.0">
-  
+
   <title>{% if page_title %}{{ page_title }}{% else %}{{ shop.name }}{% endif %}</title>
-  
+
   {%- if page_description -%}
     <meta name="description" content="{{ page_description | escape }}">
   {%- endif -%}
-  
+
   {{ content_for_header }}
-  
+
   <!-- Base stylesheets -->
   {{ 'main.css' | asset_url | stylesheet_tag }}
   {{ 'bloom.css' | asset_url | stylesheet_tag }}
-  
+
   <!-- Inject phase-specific CSS variables -->
   <style>
     :root {
       /* Trauma colors from settings */
       --primary-trauma-color: {{ settings.primary_trauma_color }};
       --trauma-intensity: {{ settings.trauma_intensity }};
-      
+
       /* Trauma type-specific colors from bloom.css mapped through Liquid */
       --trauma-abandonment-color: rgba(157, 0, 255, 0.7);
       --trauma-fragmentation-color: rgba(255, 0, 102, 0.7);
@@ -37,7 +37,7 @@
       --trauma-surveillance-color: rgba(0, 202, 255, 0.7);
       --trauma-displacement-color: rgba(255, 179, 0, 0.7);
       --trauma-dissolution-color: rgba(255, 0, 214, 0.7);
-      
+
       /* Phase-specific overrides based on settings */
       {% if settings.default_memory_phase == 'cyber-lotus' %}
         --phase-primary-color: #50FF40;
@@ -62,7 +62,7 @@
         --phase-accent-color: rgba(255, 33, 80, 0.8);
       {% endif %}
     }
-    
+
     /* Core transition for phase changes */
     body {
       transition: background 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -70,7 +70,7 @@
       color: var(--phase-text-color);
     }
   </style>
-  
+
   <!-- Quantum Entanglement Script that coordinates Neural Bus and Memory Protocol -->
   <script>
     window.voidBloom = window.voidBloom || {};
@@ -87,26 +87,26 @@
 <body class="memory-phase-{{ settings.default_memory_phase }} trauma-{{ settings.default_trauma_type }}">
   <!-- Quantum layer with ambient effects -->
   {% render 'quantum-layer' %}
-  
+
   <!-- Header with navigation -->
   {% section 'header' %}
-  
+
   <!-- Trauma pattern overlay that evolves based on interaction -->
   <div class="trauma-pattern adaptive-overlay" data-trauma-type="{{ settings.default_trauma_type }}"></div>
-  
+
   <!-- Main content area -->
   <main role="main" id="MainContent">
     {{ content_for_layout }}
   </main>
-  
+
   <!-- Footer with social links and newsletter -->
   {% section 'footer' %}
-  
+
   <!-- Neural bus script that connects memory protocols -->
   {{ 'neural-bus.js' | asset_url | script_tag }}
   {{ 'memory-protocol.js' | asset_url | script_tag }}
   {{ 'qear-webgl-bridge.js' | asset_url | script_tag }}
-  
+
   <!-- Memory architecture initialization -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -117,7 +117,7 @@
           defaultTrauma: '{{ settings.default_trauma_type }}'
         });
       }
-      
+
       // Initialize Memory Protocol
       if (window.MemoryProtocol) {
         const memoryProtocol = new MemoryProtocol();
@@ -125,7 +125,7 @@
           memoryProtocol.scanForMemoryNodes();
         });
       }
-      
+
       // Initialize Trauma WebGL System
       if (window.QEARWebGLBridge) {
         const qearBridge = new QEARWebGLBridge({
@@ -135,16 +135,16 @@
         });
         qearBridge.initialize();
       }
-      
+
       // User ritual status check
       const userInitiated = localStorage.getItem('voidbloom_initiated') === 'true';
       const userTrauma = localStorage.getItem('voidbloom_primary_trauma');
-      
+
       if (userInitiated && userTrauma) {
         // Update active trauma type for initiated users
         document.body.classList.remove('trauma-{{ settings.default_trauma_type }}');
         document.body.classList.add(`trauma-${userTrauma}`);
-        
+
         if (window.NeuralBus) {
           NeuralBus.publish('trauma:activated', {
             type: userTrauma,

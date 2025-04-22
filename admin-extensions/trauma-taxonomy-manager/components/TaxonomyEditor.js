@@ -247,10 +247,10 @@ const TaxonomyEditor = ({ context }) => {
                 taxonomy.coherenceScore >= 0.75
                   ? 'success'
                   : taxonomy.coherenceScore >= 0.5
-                  ? 'info'
-                  : taxonomy.coherenceScore >= 0.25
-                  ? 'warning'
-                  : 'critical'
+                    ? 'info'
+                    : taxonomy.coherenceScore >= 0.25
+                      ? 'warning'
+                      : 'critical'
               }
             >
               <p>Current trauma coherence rating for this product</p>
@@ -261,10 +261,10 @@ const TaxonomyEditor = ({ context }) => {
                   taxonomy.coherenceScore >= 0.75
                     ? 'success'
                     : taxonomy.coherenceScore >= 0.5
-                    ? 'highlight'
-                    : taxonomy.coherenceScore >= 0.25
-                    ? 'warning'
-                    : 'critical'
+                      ? 'highlight'
+                      : taxonomy.coherenceScore >= 0.25
+                        ? 'warning'
+                        : 'critical'
                 }
               />
             </Banner>

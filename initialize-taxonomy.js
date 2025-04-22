@@ -54,29 +54,29 @@ console.log(`Trauma connections exported to: ${connectionsFile}`);
 // Generate blank phases file for mythological progression
 const phasesFile = path.join(loreDir, 'phases.json');
 const phases = {
-  "current": "CyberLotus",
-  "timestamp": new Date().toISOString(),
-  "sequence": [
+  'current': 'CyberLotus',
+  'timestamp': new Date().toISOString(),
+  'sequence': [
     {
-      "name": "CyberLotus",
-      "description": "Angular, electric, digital aesthetic phase",
-      "active": true,
-      "dominantTrauma": "surveillance",
-      "secondaryTrauma": "recursion"
+      'name': 'CyberLotus',
+      'description': 'Angular, electric, digital aesthetic phase',
+      'active': true,
+      'dominantTrauma': 'surveillance',
+      'secondaryTrauma': 'recursion'
     },
     {
-      "name": "AlienFlora",
-      "description": "Organic, growing, parasitic aesthetic phase",
-      "active": false,
-      "dominantTrauma": "displacement",
-      "secondaryTrauma": "fragmentation"
+      'name': 'AlienFlora',
+      'description': 'Organic, growing, parasitic aesthetic phase',
+      'active': false,
+      'dominantTrauma': 'displacement',
+      'secondaryTrauma': 'fragmentation'
     },
     {
-      "name": "RollingVirus",
-      "description": "Infectious, spreading, corrupting aesthetic phase",
-      "active": false,
-      "dominantTrauma": "dissolution",
-      "secondaryTrauma": "abandonment"
+      'name': 'RollingVirus',
+      'description': 'Infectious, spreading, corrupting aesthetic phase',
+      'active': false,
+      'dominantTrauma': 'dissolution',
+      'secondaryTrauma': 'abandonment'
     }
   ]
 };

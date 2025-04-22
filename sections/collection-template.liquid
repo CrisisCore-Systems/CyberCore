@@ -20,22 +20,22 @@
             height="{{ collection.image.height }}"
             class="collection-image"
           >
-          
+
           {% if section.settings.enable_trauma_overlay %}
             <div class="trauma-overlay trauma-{{ section.settings.trauma_overlay_type }} {% if section.settings.adapt_trauma_overlay %}adaptive-overlay{% endif %}"></div>
           {% endif %}
         </div>
       {% endif %}
-      
+
       <div class="collection-info">
         <h1 class="collection-title">{{ collection.title }}</h1>
-        
+
         {% if collection.description != blank and section.settings.show_collection_description %}
           <div class="collection-description rte">
             {{ collection.description }}
           </div>
         {% endif %}
-        
+
         {% if section.settings.show_collection_products_count %}
           <div class="collection-products-count">
             {% if collection.products_count == 1 %}
@@ -47,7 +47,7 @@
         {% endif %}
       </div>
     </div>
-    
+
     <div class="collection-content">
       <!-- Collection toolbar -->
       <div class="collection-toolbar">
@@ -59,15 +59,15 @@
               <span class="filter-icon"></span>
             </button>
           {% endif %}
-          
+
           {% if section.settings.enable_sorting %}
             <div class="sort-options">
               <label for="SortBy" class="sort-label">{{ 'collections.sorting.title' | t }}</label>
               <div class="select-wrapper">
                 <select id="SortBy" class="sort-by" aria-describedby="a11y-refresh-page-message">
                   {%- for option in collection.sort_options -%}
-                    <option 
-                      value="{{ option.value }}" 
+                    <option
+                      value="{{ option.value }}"
                       {% if option.value == collection.sort_by %}selected="selected"{% endif %}
                     >
                       {{ option.name }}
@@ -78,7 +78,7 @@
             </div>
           {% endif %}
         </div>
-        
+
         <!-- View options -->
         <div class="view-options">
           <button type="button" class="view-button grid-view active" aria-label="{{ 'collections.general.grid_view' | t }}" data-view="grid">
@@ -89,7 +89,7 @@
           </button>
         </div>
       </div>
-      
+
       <!-- Collection sidebar filters -->
       {% if section.settings.enable_filtering %}
         <div id="CollectionFilters" class="collection-filters-sidebar">
@@ -99,7 +99,7 @@
               <span class="close-icon"></span>
             </button>
           </div>
-          
+
           <form id="CollectionFiltersForm" class="collection-filters-form">
             {% for filter in collection.filters %}
               <div class="filter-group">
@@ -108,17 +108,17 @@
                     <span>{{ filter.label }}</span>
                     <span class="disclosure-icon"></span>
                   </summary>
-                  
+
                   <div class="filter-options">
                     {% case filter.type %}
                       {% when 'boolean' or 'list' %}
                         {% for filter_value in filter.values %}
                           <div class="filter-checkbox">
-                            <input 
-                              type="checkbox" 
-                              id="Filter-{{ filter.label | handleize }}-{{ filter_value.label | handleize }}" 
-                              name="{{ filter_value.param_name }}" 
-                              value="{{ filter_value.value }}" 
+                            <input
+                              type="checkbox"
+                              id="Filter-{{ filter.label | handleize }}-{{ filter_value.label | handleize }}"
+                              name="{{ filter_value.param_name }}"
+                              value="{{ filter_value.value }}"
                               {% if filter_value.active %}checked{% endif %}
                               {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
                             >
@@ -128,29 +128,29 @@
                             </label>
                           </div>
                         {% endfor %}
-                        
+
                       {% when 'price_range' %}
                         <div class="price-range-slider">
                           <div class="price-range-labels">
                             <span>{{ 'collections.filters.from' | t }}</span>
                             <span>{{ 'collections.filters.to' | t }}</span>
                           </div>
-                          
+
                           <div class="price-inputs">
-                            <input 
-                              type="number" 
-                              name="{{ filter.min_value.param_name }}" 
-                              id="Filter-{{ filter.label | handleize }}-GTE" 
-                              placeholder="{{ filter.min_value.value | default: 0 | money_without_currency }}" 
-                              min="0" 
+                            <input
+                              type="number"
+                              name="{{ filter.min_value.param_name }}"
+                              id="Filter-{{ filter.label | handleize }}-GTE"
+                              placeholder="{{ filter.min_value.value | default: 0 | money_without_currency }}"
+                              min="0"
                               value="{% if filter.min_value.value != 0 %}{{ filter.min_value.value | money_without_currency }}{% endif %}"
                             >
-                            <input 
-                              type="number" 
-                              name="{{ filter.max_value.param_name }}" 
-                              id="Filter-{{ filter.label | handleize }}-LTE" 
-                              placeholder="{{ filter.max_value.value | default: filter.range_max | money_without_currency }}" 
-                              max="{{ filter.range_max | money_without_currency }}" 
+                            <input
+                              type="number"
+                              name="{{ filter.max_value.param_name }}"
+                              id="Filter-{{ filter.label | handleize }}-LTE"
+                              placeholder="{{ filter.max_value.value | default: filter.range_max | money_without_currency }}"
+                              max="{{ filter.range_max | money_without_currency }}"
                               value="{% if filter.max_value.value != filter.range_max %}{{ filter.max_value.value | money_without_currency }}{% endif %}"
                             >
                           </div>
@@ -160,7 +160,7 @@
                 </details>
               </div>
             {% endfor %}
-            
+
             {% if section.settings.enable_trauma_filter %}
               <div class="filter-group trauma-filter">
                 <details class="filter-disclosure" open>
@@ -168,7 +168,7 @@
                     <span>{{ 'collections.filters.trauma_encoding' | t }}</span>
                     <span class="disclosure-icon"></span>
                   </summary>
-                  
+
                   <div class="filter-options">
                     <div class="trauma-encoding-options">
                       <div class="trauma-option">
@@ -196,17 +196,17 @@
                         <label for="trauma-dissolution">Dissolution</label>
                       </div>
                     </div>
-                    
+
                     {% if section.settings.enable_affinity_filter %}
                       <div class="affinity-filter">
                         <h4>{{ 'collections.filters.affinity' | t }}</h4>
                         <div class="affinity-slider">
-                          <input 
-                            type="range" 
-                            min="0" 
-                            max="100" 
-                            value="50" 
-                            class="affinity-range" 
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="50"
+                            class="affinity-range"
                             id="affinity-threshold"
                           >
                           <div class="affinity-labels">
@@ -220,7 +220,7 @@
                 </details>
               </div>
             {% endif %}
-            
+
             <!-- Filter actions -->
             <div class="filter-actions">
               {% if collection.filters.size > 0 %}
@@ -228,7 +228,7 @@
                   {{ 'collections.filters.clear' | t }}
                 </button>
               {% endif %}
-              
+
               <button type="submit" class="apply-filters">
                 {{ 'collections.filters.apply' | t }}
               </button>
@@ -236,15 +236,15 @@
           </form>
         </div>
       {% endif %}
-      
+
       <!-- Products grid -->
       <div class="collection-products-container">
         {% if collection.products.size > 0 %}
           <div class="collection-products grid-view" data-view-mode="grid">
             {% for product in collection.products %}
               <div class="product-card-wrapper">
-                {% render 'product-card', 
-                  product: product, 
+                {% render 'product-card',
+                  product: product,
                   show_vendor: section.settings.show_vendor,
                   show_price: section.settings.show_price,
                   show_rating: section.settings.show_rating,
@@ -264,7 +264,7 @@
             </div>
           </div>
         {% endif %}
-        
+
         <!-- Pagination -->
         {% if paginate.pages > 1 %}
           <div class="collection-pagination">
@@ -283,7 +283,7 @@
                     </span>
                   </li>
                 {% endif %}
-                
+
                 {% for part in paginate.parts %}
                   {% if part.is_link %}
                     <li>
@@ -299,7 +299,7 @@
                     </li>
                   {% endif %}
                 {% endfor %}
-                
+
                 {% if paginate.next %}
                   <li>
                     <a href="{{ paginate.next.url }}" class="pagination-link pagination-next" aria-label="{{ 'general.pagination.next' | t }}">
@@ -478,25 +478,25 @@
     // View toggling
     const viewButtons = document.querySelectorAll('.view-button');
     const productsContainer = document.querySelector('.collection-products');
-    
+
     if (viewButtons.length > 0 && productsContainer) {
       viewButtons.forEach(button => {
         button.addEventListener('click', function() {
           const viewMode = this.getAttribute('data-view');
-          
+
           // Update active button state
           viewButtons.forEach(btn => btn.classList.remove('active'));
           this.classList.add('active');
-          
+
           // Update products container class
           productsContainer.className = 'collection-products ' + viewMode + '-view';
           productsContainer.setAttribute('data-view-mode', viewMode);
-          
+
           // Store user preference in local storage
           localStorage.setItem('voidbloom_collection_view', viewMode);
         });
       });
-      
+
       // Load user preference if any
       const savedView = localStorage.getItem('voidbloom_collection_view');
       if (savedView) {
@@ -506,7 +506,7 @@
         }
       }
     }
-    
+
     // Sorting
     const sortSelect = document.getElementById('SortBy');
     if (sortSelect) {
@@ -516,12 +516,12 @@
         window.location.href = url.href;
       });
     }
-    
+
     // Filter sidebar toggling
     const filterButton = document.querySelector('.filter-button');
     const filterSidebar = document.getElementById('CollectionFilters');
     const closeFiltersButton = document.querySelector('.close-filters');
-    
+
     if (filterButton && filterSidebar) {
       filterButton.addEventListener('click', function() {
         const expanded = this.getAttribute('aria-expanded') === 'true';
@@ -529,7 +529,7 @@
         filterSidebar.classList.toggle('active');
         document.body.classList.toggle('filters-open');
       });
-      
+
       if (closeFiltersButton) {
         closeFiltersButton.addEventListener('click', function() {
           filterButton.setAttribute('aria-expanded', 'false');
@@ -537,7 +537,7 @@
           document.body.classList.remove('filters-open');
         });
       }
-      
+
       // Close when clicking outside
       document.addEventListener('click', function(event) {
         if (
@@ -551,20 +551,20 @@
         }
       });
     }
-    
+
     // Trauma filter integration with user profile
     if (document.querySelector('.trauma-filter')) {
       // Check if user has completed ritual and has a trauma profile
       const userTrauma = localStorage.getItem('voidbloom_primary_trauma');
       const traumaAffinities = JSON.parse(localStorage.getItem('voidbloom_trauma_affinities') || '{}');
-      
+
       if (userTrauma) {
         // Add visual indicator to user's primary trauma
         const primaryTraumaOption = document.getElementById(`trauma-${userTrauma}`);
         if (primaryTraumaOption) {
           primaryTraumaOption.parentElement.classList.add('primary-trauma');
         }
-        
+
         // Set initial affinities based on user profile
         if (Object.keys(traumaAffinities).length > 0) {
           Object.entries(traumaAffinities).forEach(([trauma, affinity]) => {
@@ -574,7 +574,7 @@
             }
           });
         }
-        
+
         // Connect to Neural Bus if available
         if (window.NeuralBus) {
           window.NeuralBus.publish('collection:viewed', {
@@ -584,25 +584,25 @@
           });
         }
       }
-      
+
       // Affinity slider
       const affinitySlider = document.getElementById('affinity-threshold');
       if (affinitySlider) {
         affinitySlider.addEventListener('input', function() {
           // Visual feedback
           affinitySlider.style.setProperty('--threshold', this.value + '%');
-          
+
           // In a real implementation, this would update product visibility
           // based on the trauma affinity threshold
         });
       }
     }
-    
+
     // Adapt trauma overlay if enabled
     if (document.querySelector('.trauma-overlay.adaptive-overlay')) {
       const overlay = document.querySelector('.trauma-overlay');
       const userTrauma = localStorage.getItem('voidbloom_primary_trauma');
-      
+
       if (userTrauma && overlay) {
         // Remove all trauma classes
         overlay.classList.remove(
@@ -613,7 +613,7 @@
           'trauma-displacement',
           'trauma-dissolution'
         );
-        
+
         // Add user's trauma class
         overlay.classList.add(`trauma-${userTrauma}`);
       }

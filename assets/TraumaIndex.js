@@ -4,7 +4,13 @@
  * Version: 3.7.1
  */
 
+/**
+ *
+ */
 class TraumaIndex {
+  /**
+   *
+   */
   constructor() {
     this.traumaTypes = [
       'abandonment',

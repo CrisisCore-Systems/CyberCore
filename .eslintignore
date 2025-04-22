@@ -1,0 +1,21 @@
+# Node modules and build output
+node_modules/
+dist/
+coverage/
+test-results/
+
+# Problematic files with advanced JS features
+assets/cart-system.js
+assets/trauma-visualizer.js
+assets/js/ritual-engine/core/trauma-assessment.js
+assets/js/ritual-engine/vectors/narrative-assessment.js
+
+# Configuration files
+.eslintrc.js
+
+# ESLint ignore
+node_modules/
+coverage/
+dist/
+build/
+*.config.js

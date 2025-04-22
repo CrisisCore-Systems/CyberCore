@@ -8,7 +8,7 @@
 <div class="main-cart-section trauma-{{ settings.default_trauma_type }}">
   <div class="container">
     <h1 class="cart-title">Memory Archive</h1>
-    
+
     {% if cart.item_count > 0 %}
       <form action="/cart" method="post" novalidate class="cart-form">
         <div class="cart-header">
@@ -17,7 +17,7 @@
           <div class="header-item quantity">Quantity</div>
           <div class="header-item total">Total</div>
         </div>
-        
+
         <div class="cart-items">
           {% for item in cart.items %}
             <div class="cart-item" data-trauma-type="{{ item.product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
@@ -36,12 +36,12 @@
                     {% endif %}
                   </a>
                 </div>
-                
+
                 <div class="item-title-options">
                   <h3 class="item-title">
                     <a href="{{ item.url }}">{{ item.product.title }}</a>
                   </h3>
-                  
+
                   {% if item.product.has_only_default_variant == false %}
                     <div class="item-variant">
                       {% for option in item.product.options %}
@@ -52,18 +52,18 @@
                       {% endfor %}
                     </div>
                   {% endif %}
-                  
+
                   {% if section.settings.show_memory_resonance %}
                     <div class="trauma-indicator">
                       <span class="indicator-label">Memory Encoding:</span>
                       <span class="indicator-value">{{ item.product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type | capitalize }}</span>
                     </div>
                   {% endif %}
-                  
+
                   <a href="/cart/change?line={{ forloop.index }}&quantity=0" class="remove-item">Remove</a>
                 </div>
               </div>
-              
+
               <div class="item-price">
                 {% if item.original_price != item.final_price %}
                   <span class="original-price">{{ item.original_price | money }}</span>
@@ -72,7 +72,7 @@
                   <span class="final-price">{{ item.price | money }}</span>
                 {% endif %}
               </div>
-              
+
               <div class="item-quantity">
                 <div class="quantity-adjust">
                   <button type="button" class="quantity-button decrease" data-line="{{ forloop.index }}">-</button>
@@ -80,14 +80,14 @@
                   <button type="button" class="quantity-button increase" data-line="{{ forloop.index }}">+</button>
                 </div>
               </div>
-              
+
               <div class="item-total">
                 <span>{{ item.final_line_price | money }}</span>
               </div>
             </div>
           {% endfor %}
         </div>
-        
+
         <div class="cart-footer">
           <div class="cart-note">
             {% if section.settings.show_note %}
@@ -95,20 +95,20 @@
               <textarea name="note" id="CartNote" placeholder="Add a note to your memory artifacts">{{ cart.note }}</textarea>
             {% endif %}
           </div>
-          
+
           <div class="cart-totals">
             <div class="subtotal">
               <span class="subtotal-label">Subtotal</span>
               <span class="subtotal-value">{{ cart.total_price | money }}</span>
             </div>
-            
+
             <div class="shipping-taxes">
               <p>Shipping and taxes calculated at checkout</p>
             </div>
-            
+
             <div class="cart-actions">
               <button type="submit" name="update" class="update-cart">Update Memory Archive</button>
-              
+
               {% if section.settings.show_quantum_checkout %}
                 <button type="submit" name="checkout" class="quantum-checkout">
                   {{ section.settings.quantum_checkout_text | default: "Quantum Checkout" }}
@@ -129,7 +129,7 @@
         </div>
       </div>
     {% endif %}
-    
+
     {% if section.settings.show_memory_resonance and cart.item_count > 0 %}
       <div class="resonance-analysis">
         <h2>Memory Resonance Analysis</h2>
@@ -152,13 +152,13 @@
     const decreaseButtons = document.querySelectorAll('.quantity-button.decrease');
     const increaseButtons = document.querySelectorAll('.quantity-button.increase');
     const quantityInputs = document.querySelectorAll('.item-quantity input');
-    
+
     decreaseButtons.forEach(button => {
       button.addEventListener('click', function() {
         const line = this.getAttribute('data-line');
         const input = document.querySelector(`.item-quantity input[data-line="${line}"]`);
         let quantity = parseInt(input.value);
-        
+
         if (quantity > 1) {
           quantity--;
           input.value = quantity;
@@ -166,24 +166,24 @@
         }
       });
     });
-    
+
     increaseButtons.forEach(button => {
       button.addEventListener('click', function() {
         const line = this.getAttribute('data-line');
         const input = document.querySelector(`.item-quantity input[data-line="${line}"]`);
         let quantity = parseInt(input.value);
-        
+
         quantity++;
         input.value = quantity;
         updateCart(line, quantity);
       });
     });
-    
+
     quantityInputs.forEach(input => {
       input.addEventListener('change', function() {
         const line = this.getAttribute('data-line');
         const quantity = parseInt(this.value);
-        
+
         if (quantity >= 1) {
           updateCart(line, quantity);
         } else {
@@ -191,7 +191,7 @@
         }
       });
     });
-    
+
     // Cart update function (using fetch API)
     function updateCart(line, quantity) {
       fetch('/cart/change.js', {
@@ -208,7 +208,7 @@
       .then(cart => {
         // Update cart totals
         document.querySelector('.subtotal-value').textContent = formatMoney(cart.total_price);
-        
+
         // Update line item total
         const lineItem = cart.items[parseInt(line) - 1];
         if (lineItem) {
@@ -217,7 +217,7 @@
             itemTotal.querySelector('span').textContent = formatMoney(lineItem.final_line_price);
           }
         }
-        
+
         // Trigger a custom event for other scripts that might need to know about the cart update
         document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
       })
@@ -225,21 +225,21 @@
         console.error('Error updating cart:', error);
       });
     }
-    
+
     // Money format helper
     function formatMoney(cents) {
       const value = (cents / 100).toFixed(2);
       return '$' + value;
     }
-    
+
     // Memory resonance visualization
     if (document.getElementById('ResonanceVisualization') && window.QEARWebGLBridge) {
       // Get all trauma types from cart items
       const cartItems = document.querySelectorAll('.cart-item');
-      const traumaTypes = Array.from(cartItems).map(item => 
+      const traumaTypes = Array.from(cartItems).map(item =>
         item.getAttribute('data-trauma-type') || '{{ settings.default_trauma_type }}'
       );
-      
+
       // Initialize visualization
       const qearBridge = new QEARWebGLBridge({
         targetSelector: '#ResonanceVisualization',
@@ -249,12 +249,12 @@
       });
       qearBridge.initialize();
     }
-    
+
     // Bloom effects for cart items
     document.querySelectorAll('.cart-item').forEach(item => {
       const traumaType = item.getAttribute('data-trauma-type');
       const bloomEffect = item.querySelector('.image-bloom-effect');
-      
+
       if (bloomEffect && traumaType) {
         bloomEffect.style.setProperty('--trauma-color', `var(--trauma-${traumaType}-color)`);
       }
@@ -266,19 +266,19 @@
   .main-cart-section {
     padding: 60px 0;
   }
-  
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
   }
-  
+
   .cart-title {
     font-size: 2.5rem;
     margin-bottom: 40px;
     text-align: center;
   }
-  
+
   /* Cart Header */
   .cart-header {
     display: grid;
@@ -290,16 +290,16 @@
     font-size: 0.9rem;
     letter-spacing: 0.05em;
   }
-  
+
   .header-item {
     padding: 0 10px;
   }
-  
+
   /* Cart Items */
   .cart-items {
     margin-bottom: 40px;
   }
-  
+
   .cart-item {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr;
@@ -307,18 +307,18 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     align-items: center;
   }
-  
+
   .item-image-title {
     display: flex;
     align-items: center;
     gap: 20px;
     padding: 0 10px;
   }
-  
+
   .item-image {
     flex-shrink: 0;
   }
-  
+
   .image-container {
     position: relative;
     width: 80px;
@@ -326,13 +326,13 @@
     border-radius: 4px;
     overflow: hidden;
   }
-  
+
   .image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
+
   .image-bloom-effect {
     position: absolute;
     top: 0;
@@ -349,47 +349,47 @@
     pointer-events: none;
     --trauma-color: var(--trauma-recursion-color);
   }
-  
+
   .image-placeholder {
     width: 80px;
     height: 80px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
   }
-  
+
   .item-title-options {
     flex-grow: 1;
   }
-  
+
   .item-title {
     font-size: 1.1rem;
     margin-bottom: 8px;
   }
-  
+
   .item-title a {
     color: var(--phase-text-color);
     text-decoration: none;
     transition: color 0.3s ease;
   }
-  
+
   .item-title a:hover {
     color: var(--phase-accent-color);
   }
-  
+
   .item-variant {
     margin-bottom: 8px;
     font-size: 0.9rem;
   }
-  
+
   .item-option {
     display: inline-block;
     margin-right: 15px;
   }
-  
+
   .option-name {
     font-weight: 600;
   }
-  
+
   .trauma-indicator {
     display: inline-flex;
     align-items: center;
@@ -397,49 +397,49 @@
     margin-bottom: 10px;
     font-size: 0.9rem;
   }
-  
+
   .indicator-label {
     font-weight: 600;
   }
-  
+
   .indicator-value {
     color: var(--phase-accent-color);
   }
-  
+
   .remove-item {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     transition: color 0.3s ease;
   }
-  
+
   .remove-item:hover {
     color: var(--phase-accent-color);
     text-decoration: underline;
   }
-  
+
   .item-price, .item-quantity, .item-total {
     padding: 0 10px;
   }
-  
+
   .original-price {
     display: block;
     text-decoration: line-through;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.6);
   }
-  
+
   .final-price {
     font-weight: 600;
   }
-  
+
   /* Quantity Adjustment */
   .quantity-adjust {
     display: flex;
     align-items: center;
     max-width: 120px;
   }
-  
+
   .quantity-button {
     width: 30px;
     height: 30px;
@@ -453,11 +453,11 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .quantity-button:hover {
     background-color: rgba(255, 255, 255, 0.2);
   }
-  
+
   .quantity-adjust input {
     width: 40px;
     height: 30px;
@@ -468,31 +468,31 @@
     font-size: 0.9rem;
     -moz-appearance: textfield;
   }
-  
+
   .quantity-adjust input::-webkit-outer-spin-button,
   .quantity-adjust input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  
+
   /* Cart Footer */
   .cart-footer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
   }
-  
+
   /* Cart Note */
   .cart-note {
     padding-right: 20px;
   }
-  
+
   .cart-note label {
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
   }
-  
+
   #CartNote {
     width: 100%;
     height: 120px;
@@ -504,36 +504,36 @@
     font-size: 0.9rem;
     resize: vertical;
   }
-  
+
   /* Cart Totals */
   .cart-totals {
     padding-left: 20px;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .subtotal {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
     font-size: 1.2rem;
   }
-  
+
   .subtotal-label {
     font-weight: 600;
   }
-  
+
   .shipping-taxes {
     margin-bottom: 20px;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
   }
-  
+
   .cart-actions {
     display: flex;
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .update-cart {
     padding: 10px 20px;
     background-color: transparent;
@@ -544,11 +544,11 @@
     cursor: pointer;
     transition: all 0.3s ease;
   }
-  
+
   .update-cart:hover {
     background-color: rgba(255, 255, 255, 0.05);
   }
-  
+
   .checkout, .quantum-checkout {
     padding: 15px 20px;
     border: none;
@@ -558,19 +558,19 @@
     cursor: pointer;
     transition: all 0.3s ease;
   }
-  
+
   .checkout {
     background-color: var(--phase-accent-color);
     color: var(--phase-background);
   }
-  
+
   .quantum-checkout {
     background-color: var(--phase-primary-color);
     color: var(--phase-background);
     position: relative;
     overflow: hidden;
   }
-  
+
   .quantum-checkout::before {
     content: "";
     position: absolute;
@@ -589,7 +589,7 @@
     transition: all 0.3s ease;
     --trauma-color: var(--trauma-{{ settings.default_trauma_type }}-color);
   }
-  
+
   .quantum-checkout::after {
     content: "";
     position: absolute;
@@ -608,33 +608,33 @@
     opacity: 0.3;
     animation: rotate-checkout 10s linear infinite;
   }
-  
+
   .quantum-checkout:hover::before {
     opacity: 0.8;
   }
-  
+
   .quantum-checkout span {
     position: relative;
     z-index: 2;
   }
-  
+
   /* Empty Cart */
   .empty-cart {
     text-align: center;
     padding: 60px 0;
   }
-  
+
   .empty-cart-message h2 {
     font-size: 1.8rem;
     margin-bottom: 15px;
   }
-  
+
   .empty-cart-message p {
     font-size: 1rem;
     margin-bottom: 30px;
     opacity: 0.8;
   }
-  
+
   .continue-shopping {
     display: inline-block;
     padding: 15px 30px;
@@ -646,36 +646,36 @@
     border-radius: 4px;
     transition: opacity 0.3s ease;
   }
-  
+
   .continue-shopping:hover {
     opacity: 0.9;
   }
-  
+
   /* Resonance Analysis */
   .resonance-analysis {
     margin-top: 60px;
     padding-top: 40px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .resonance-analysis h2 {
     font-size: 1.8rem;
     margin-bottom: 30px;
     text-align: center;
   }
-  
+
   .resonance-container {
     display: flex;
     flex-direction: column;
     gap: 30px;
   }
-  
+
   @media (min-width: 768px) {
     .resonance-container {
       flex-direction: row;
     }
   }
-  
+
   .resonance-visualization {
     flex: 1;
     height: 300px;
@@ -683,33 +683,33 @@
     border-radius: 8px;
     overflow: hidden;
   }
-  
+
   .resonance-description {
     flex: 1;
     display: flex;
     align-items: center;
   }
-  
+
   .resonance-description p {
     font-size: 1.1rem;
     line-height: 1.6;
   }
-  
+
   /* Responsive */
   @media (max-width: 768px) {
     .cart-header {
       display: none;
     }
-    
+
     .cart-item {
       grid-template-columns: 1fr;
       gap: 20px;
     }
-    
+
     .item-image-title {
       grid-column: 1 / -1;
     }
-    
+
     .item-price, .item-quantity, .item-total {
       grid-column: 1 / -1;
       display: flex;
@@ -717,26 +717,26 @@
       align-items: center;
       padding: 0;
     }
-    
+
     .item-price::before {
       content: "Price:";
       font-weight: 600;
     }
-    
+
     .item-quantity::before {
       content: "Quantity:";
       font-weight: 600;
     }
-    
+
     .item-total::before {
       content: "Total:";
       font-weight: 600;
     }
-    
+
     .cart-footer {
       grid-template-columns: 1fr;
     }
-    
+
     .cart-totals {
       padding-left: 0;
       border-left: none;
@@ -744,7 +744,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
   }
-  
+
   /* Animation Keyframes */
   @keyframes rotate-checkout {
     0% {
@@ -754,7 +754,7 @@
       transform: rotate(360deg);
     }
   }
-  
+
   /* Trauma-specific effects */
   .trauma-abandonment .image-bloom-effect {
     animation: pulse-abandonment 4s ease-in-out infinite;

@@ -1,19 +1,19 @@
 /**
- * TypeScript wrapper for neural-bus.js
- * Provides type safety while maintaining compatibility with the original event system
+ * Neural Bus TypeScript Implementation
+ * Manages neural network communication within the CyberCore system
  */
 
-// Import the original JavaScript file
-const NeuralBusJS = require('./neural-bus.js').default || require('./neural-bus.js');
+// Import the original JavaScript file using ES module syntax
+import * as NeuralBusJS from './neural-bus.js';
 
 // Define TypeScript interfaces for the NeuralBus
-export interface EventCallback {
-  (data: any): void;
+export interface EventCallback<T = unknown> {
+  (data: T): void;
 }
 
 export interface ComponentRegistration {
   version: string;
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 export interface NeuralBusInterface {
@@ -23,9 +23,9 @@ export interface NeuralBusInterface {
   unregister(componentName: string): void;
 
   // Event Methods
-  subscribe(eventName: string, callback: EventCallback): string;
+  subscribe<T = unknown>(eventName: string, callback: EventCallback<T>): string;
   unsubscribe(subscriptionId: string): boolean;
-  publish(eventName: string, data: any): void;
+  publish<T = unknown>(eventName: string, data: T): void;
 
   // Utility Methods
   getRegisteredComponents(): string[];
