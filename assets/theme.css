@@ -74,7 +74,7 @@ body.theme-transition {
     border-radius: 4px; /* Match theme aesthetic */
 }
 
-/* Reduce motion setting */
+/* Reduce motion setting - Ensure JS adds '.reduce-motion' class to body */
 body.reduce-motion * {
     transition: none !important;
     animation: none !important;
@@ -223,6 +223,7 @@ body.reduce-motion * {
 }
 
 /* Quantum Grid (Styled lines based on Liquid loop) */
+/* Audit Note: Infinite animations below can impact performance. Consider JS optimizations or user settings to disable. */
 .quantum-grid {
     position: absolute;
     top: 0;
@@ -267,6 +268,7 @@ body.reduce-motion * {
 
 
 /* Quantum Noise (Placeholder for noise/static effects, often done with background image or canvas) */
+/* Audit Note: Ensure 'noise-pattern.png' exists in theme assets. Mix-blend-mode can also affect performance. */
 .quantum-noise {
     position: absolute;
     top: 0;
@@ -282,6 +284,7 @@ body.reduce-motion * {
 
 
 /* Dimensional Ripples (Styled circles/elements for ripple effect) */
+/* Audit Note: Infinite animation below can impact performance. Consider JS optimizations or user settings to disable. */
 .dimensional-ripples {
     position: absolute;
     top: 0;
@@ -324,12 +327,14 @@ body.reduce-motion * {
 
 
 /* --- Quantum Notifications (Based on first quantum-layer.liquid embedded CSS) --- */
+/* Audit Note: Container and Item are both fixed positioned, potentially redundant if JS positions Item directly. Check behavior if multiple notifications are intended. */
 .quantum-notifications {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 9002; /* Above quantum layer, below drawers/modals */
     /* This container might be used for multiple notifications */
+    pointer-events: none; /* Container shouldn't block clicks, only items inside */
 }
 
 .quantum-notification {
@@ -347,7 +352,7 @@ body.reduce-motion * {
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); /* Default shadow */
     transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: auto; /* Allow interaction */
-    z-index: 9001; /* Specific z-index for the notification itself */
+    z-index: 9001; /* Specific z-index for the notification itself, ensure it's below container if stacking matters */
     /* Ensure it's relative to the viewport, not the container */
     /* The JS in quantum-layer.liquid directly targets this element's bottom property */
 }
@@ -474,3 +479,93 @@ textarea:focus {
     outline: none; /* Outline handled by global focus style */
 }
 
+
+/* ==========================================================================
+   Custom Header Adjustments for VoidBloom Theme (Added based on user request)
+   ========================================================================== */
+
+/* --- Header Logo Size Adjustment --- */
+/* Reduce the maximum size of the site logo */
+.site-logo {
+  max-width: 150px !important; /* Adjust 150px lower if needed. !important might be needed to override '200x' */
+  max-height: 75px; /* Optional: Add a max height */
+  width: auto; /* Maintain aspect ratio */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* --- Header Vertical Menu Spacing/Size Adjustments --- */
+/* Reduce spacing and font size for the main navigation menu (when vertical) */
+.nav-menu .nav-item {
+  margin-bottom: 4px; /* Decrease space between menu items */
+}
+
+.nav-menu .nav-link {
+  padding-top: 2px;    /* Decrease padding above link text */
+  padding-bottom: 2px; /* Decrease padding below link text */
+  font-size: 0.95em;   /* Slightly smaller font (adjust as needed, e.g., 15px) */
+  line-height: 1.3;    /* Adjust line spacing */
+}
+
+/* --- Overall Header Padding Adjustment --- */
+/* Reduce padding at the top and bottom of the entire header section */
+.voidbloom-header {
+  padding-top: 15px;    /* Decrease padding at the very top */
+  padding-bottom: 15px; /* Decrease padding at the very bottom */
+}
+
+/* Reduce padding for the inner container that holds logo, nav, actions */
+.header-container {
+  padding-top: 5px;    /* Adjust if needed */
+  padding-bottom: 5px; /* Adjust if needed */
+}
+
+
+/* --- Optional: Attempt Horizontal Menu Layout on Wider Screens --- */
+/* Apply these styles only for screens 768px wide or larger */
+@media (min-width: 768px) {
+
+  /* Arrange header elements (logo, nav, actions) in a row */
+  .header-container {
+    display: flex;
+    align-items: center; /* Vertically align items */
+    justify-content: space-between; /* Space them out */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+  }
+
+  /* Control the visual order if needed (optional) */
+  .header-navigation { order: 2; }
+  .header-actions { order: 3; }
+  .header-logo { order: 1; flex-shrink: 0; /* Prevent logo from shrinking too much */ }
+
+  /* Style the navigation menu for horizontal display */
+  .nav-menu {
+    display: flex; /* Make list items sit side-by-side */
+    list-style: none;
+    padding-left: 0; /* Remove default bullet padding */
+    margin: 0; /* Remove default list margin */
+  }
+
+  /* Adjust spacing for horizontal items */
+  .nav-menu .nav-item {
+    margin-bottom: 0; /* Remove vertical spacing */
+    margin-left: 10px; /* Add horizontal spacing (adjust) */
+    margin-right: 10px;/* Add horizontal spacing (adjust) */
+  }
+
+  /* Adjust link padding for horizontal layout */
+  .nav-menu .nav-link {
+     padding: 5px 8px; /* Adjust top/bottom and left/right padding */
+  }
+
+  /* Hide the mobile menu toggle button on desktop */
+  .header-action.menu-toggle {
+     display: none;
+  }
+} /* End of media query for wider screens */
+
+/* ==========================================================================
+   End of Custom Header Adjustments
+   ========================================================================== */
+
+
+EOF
