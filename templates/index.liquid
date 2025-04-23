@@ -3,11 +3,53 @@
 
   @MutationCompatible: VoidBloom
   @StrategyProfile: quantum-entangled
-  @Version: 1.0.0
+  @Version: 3.7.1
 {% endcomment %}
 
-{% render 'quantum-layer' %}
+<div class="template-index trauma-{{ settings.default_trauma_type }}" data-neural-node data-memory-coherence="{{ settings.coherence_baseline | default: 0.5 }}">
+  <!-- Quantum layer with ambient effects -->
+  {% render 'quantum-layer' %}
 
-<div class="template-index">
-  {% section 'voidbloom-homepage' %}
+  <!-- Main content area -->
+  <main role="main" id="MainContent" class="main-content">
+    {% section 'voidbloom-homepage' %}
+  </main>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize trauma visualizations
+    if (window.MemoryProtocol) {
+      document.querySelectorAll('.trauma-overlay').forEach(overlay => {
+        const traumaType = overlay.getAttribute('data-trauma');
+        if (traumaType) {
+          window.MemoryProtocol.visualizeTrauma(overlay, traumaType, 0.6);
+        }
+      });
+    }
+
+    // Enable bloom text effects
+    const bloomText = document.querySelector('.bloom-text');
+    if (bloomText) {
+      const traumaType = bloomText.getAttribute('data-trauma');
+      bloomText.style.setProperty('--bloom-color', `var(--trauma-${traumaType}-color)`);
+      bloomText.style.setProperty('--bloom-intensity', '0.8');
+    }
+
+    // Initialize quantum trigger
+    const quantumTrigger = document.querySelector('.quantum-trigger');
+    if (quantumTrigger && window.NeuralBus) {
+      quantumTrigger.addEventListener('click', function() {
+        const profile = this.getAttribute('data-mutation');
+        const intensity = parseFloat(this.getAttribute('data-intensity') || '0.5');
+        
+        window.NeuralBus.publish('quantum:mutation', {
+          profile: profile,
+          intensity: intensity,
+          source: 'user-interaction',
+          timestamp: Date.now()
+        });
+      });
+    }
+  });
+</script>
