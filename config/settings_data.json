@@ -22,6 +22,10 @@
         "type": "footer",
         "settings": {
           "footer_tagline": "Exploring the void between technology and imagination.",
+          "social_twitter_link": "",
+          "social_facebook_link": "",
+          "social_instagram_link": "",
+          "social_youtube_link": "",
           "footer_menu_heading": "Navigation",
           "footer_menu": "footer",
           "footer_secondary_menu_heading": "Information",
@@ -30,10 +34,6 @@
           "newsletter_text": "Subscribe to receive updates, access to exclusive deals, and more.",
           "newsletter_placeholder": "Your email",
           "newsletter_button": "Subscribe",
-          "social_twitter_link": "",
-          "social_facebook_link": "",
-          "social_instagram_link": "",
-          "social_youtube_link": "",
           "copyright_text": "All rights reserved.",
           "show_payment_icons": true
         }
