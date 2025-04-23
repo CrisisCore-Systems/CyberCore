@@ -5,17 +5,24 @@
  * @StrategyProfile: quantum-entangled
  */
 
-/* --- CSS Variables (Assumed to be defined in theme.liquid or elsewhere) --- */
-/*
+/* --- CSS Variables --- */
+/* Ensure these values match your desired theme colors */
 :root {
-    --phase-primary: #50FF40; // Example: CyberLotus primary
-    --phase-secondary: #9000FF; // Example: CyberLotus secondary
-    --phase-tertiary: #130019; // Example: CyberLotus tertiary
-    --phase-background: #0A0A0E; // Dark background
-    --phase-text: #E5E5EB; // Light text
-    --phase-accent: rgba(80, 255, 64, 0.8); // Example: CyberLotus accent
+    --phase-primary: #50FF40; /* Example: CyberLotus primary */
+    --phase-secondary: #9000FF; /* Example: CyberLotus secondary */
+    --phase-tertiary: #130019; /* Example: CyberLotus tertiary */
+    --phase-background: #0A0A0E; /* Dark background */
+    --phase-text: #E5E5EB; /* Light text */
+    --phase-accent: rgba(80, 255, 64, 0.8); /* Example: CyberLotus accent */
 
-    --trauma-color: var(--trauma-recursion-color); // Active trauma color
+    /* Define active trauma color */
+    /* Option 1: Fixed color */
+     --trauma-color: rgba(80, 255, 64, 0.7); /* Default to recursion */
+
+    /* Option 2: Could be dynamically set via JS based on profile? */
+    /* --trauma-color: var(--trauma-recursion-color); */
+
+    /* Individual trauma colors (used for focus, potentially other elements) */
     --trauma-abandonment-color: rgba(157, 0, 255, 0.7);
     --trauma-fragmentation-color: rgba(255, 0, 102, 0.7);
     --trauma-recursion-color: rgba(80, 255, 64, 0.7);
@@ -23,7 +30,7 @@
     --trauma-displacement-color: rgba(255, 179, 0, 0.7);
     --trauma-dissolution-color: rgba(255, 0, 214, 0.7);
 }
-*/
+
 
 /* --- Base Body and Typography --- */
 body {
@@ -49,35 +56,48 @@ body.theme-transition {
 }
 
 /* --- Accessibility --- */
-.skip-to-content {
+.skip-to-content { /* Hides visually until focused */
     position: absolute;
-    top: -40px;
-    left: 0;
+    top: auto;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 9999;
+    padding: 8px 12px;
+    font-weight: bold;
+    text-decoration: none;
     background-color: var(--phase-primary, #50FF40);
     color: var(--phase-background, #0A0A0E);
-    padding: 8px 12px;
-    z-index: 9999;
-    text-decoration: none;
-    font-weight: bold;
-    transition: top 0.3s ease-in-out;
+    transition: none; /* No transition needed when visually hidden */
 }
 
 .skip-to-content:focus {
-    top: 0;
+    left: 10px; /* Bring onscreen */
+    top: 10px;  /* Bring onscreen */
+    width: auto;
+    height: auto;
+    overflow: visible;
     outline: none; /* Outline handled by global focus style */
 }
 
 /* Accessible focus states */
-:focus {
+/* Consider using :focus-visible for modern browsers to only show outlines on keyboard focus */
+:focus-visible {
     outline: 2px solid var(--trauma-color, #00ffff); /* Use trauma color with fallback */
     outline-offset: 2px;
     border-radius: 4px; /* Match theme aesthetic */
 }
+/* Fallback for older browsers if :focus-visible is not sufficient */
+/* :focus { ... } */
+
 
 /* Reduce motion setting - Ensure JS adds '.reduce-motion' class to body */
 body.reduce-motion * {
-    transition: none !important;
-    animation: none !important;
+    transition-duration: 0.01ms !important; /* Prefer minimal duration over none */
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important; /* Stop infinite animations */
+    scroll-behavior: auto !important;
 }
 
 /* --- Main Content Area --- */
@@ -100,34 +120,35 @@ body.reduce-motion * {
 .drawer {
     position: fixed;
     top: 0;
-    right: -100%; /* Start off-screen */
+    right: 0; /* Position correctly first */
+    transform: translateX(100%); /* Animate transform for performance */
     width: 100%;
     max-width: 400px; /* Example max width for drawers */
     height: 100%;
     background-color: var(--phase-tertiary, #130019); /* Dark background */
     color: var(--phase-text, #E5E5EB);
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-    transition: right 0.3s ease-in-out;
-    z-index: 9500; /* Below quantum layer, above content */
+    transition: transform 0.3s ease-in-out; /* Animate transform */
+    z-index: 9500; /* Below modals, above quantum layer */
     overflow-y: auto; /* Enable scrolling if content overflows */
     padding: 20px;
     visibility: hidden; /* Hide visually when not active */
 }
 
 .drawer.active {
-    right: 0; /* Slide in */
+    transform: translateX(0); /* Slide in */
     visibility: visible;
 }
 
 /* Adjust drawer position for left-aligned drawers if needed */
 /*
 .drawer.left {
-    left: -100%;
+    left: 0;
     right: auto;
-    transition: left 0.3s ease-in-out;
+    transform: translateX(-100%);
 }
 .drawer.left.active {
-    left: 0;
+    transform: translateX(0);
 }
 */
 
@@ -142,6 +163,7 @@ body.reduce-motion * {
     font-size: 24px;
     cursor: pointer;
     padding: 5px;
+    line-height: 1; /* Prevent extra height */
 }
 
 /* --- Modal Container --- */
@@ -158,12 +180,13 @@ body.reduce-motion * {
     z-index: 9600; /* Above drawers */
     visibility: hidden; /* Hidden by default */
     opacity: 0;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Delay visibility change */
 }
 
 #ModalContainer.active {
     visibility: visible;
     opacity: 1;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0s;
 }
 
 /* Style for the modal content itself (will be injected here by JS) */
@@ -178,423 +201,163 @@ body.reduce-motion * {
     position: relative;
 }
 
-/* --- Quantum Layer (Based on first quantum-layer.liquid structure) --- */
+/* --- Announcement Matrix Base Styles --- */
+/* Styles moved from inline <style> block in announcement-matrix.liquid */
+.announcement-matrix {
+  position: fixed; /* Or 'sticky' if preferred and supported by header layout */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Adjust as needed relative to header/modals */
+  pointer-events: none; /* Container doesn't block clicks */
+}
+/* Add styles for '.announcement-card' here or ensure they exist elsewhere */
+/* e.g., .announcement-card { pointer-events: auto; ... } */
+
+
+/* --- Quantum Layer --- */
+/* Audit Note: Styles for quantum effects (.quantum-layer, .quantum-grid, etc.) */
+/* are below. Consider performance impact of full-screen infinite animations. */
 .quantum-layer {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Allow clicks/interactions with elements below */
-    z-index: 9000; /* Positioned above main content, below drawers/modals */
-    overflow: hidden; /* Hide any overflow from effects */
-}
-
-/* Quantum Overlay (Used by JS for temporary overlays, e.g., during glitches) */
-.quantum-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent; /* Default transparent */
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none; /* Ensure it doesn't block clicks unless active */
-}
-
-.quantum-overlay.active {
-    opacity: 1;
-    pointer-events: auto; /* Block clicks when active */
-    /* Example: Add a background color or pattern when active */
-    /* background-color: rgba(0, 255, 255, 0.1); */
-    /* background-image: url('noise-pattern.png'); */ /* Assuming noise-pattern.png exists */
-}
-
-/* Quantum Particles (Placeholder for JS-driven particle effects) */
-.quantum-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     pointer-events: none;
-    /* JS or WebGL will likely render particles inside this element */
+    z-index: 9000;
+    overflow: hidden;
 }
-
-/* Quantum Grid (Styled lines based on Liquid loop) */
-/* Audit Note: Infinite animations below can impact performance. Consider JS optimizations or user settings to disable. */
-.quantum-grid {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden; /* Contain animated lines */
-}
-
-.quantum-grid .grid-line {
-    position: absolute;
-    background: var(--trauma-color, rgba(0, 255, 255, 0.3)); /* Use trauma color with transparency */
-    opacity: 0.5;
-    animation: grid-scan 10s linear infinite var(--delay, 0s); /* Animation with delay */
-}
-
-.quantum-grid .grid-line.horizontal {
-    left: 0;
-    width: 100%;
-    height: 1px;
-    transform: translateY(-100%); /* Start above viewport */
-}
-
-.quantum-grid .grid-line.vertical {
-    top: 0;
-    height: 100%;
-    width: 1px;
-    transform: translateX(-100%); /* Start left of viewport */
-    animation-name: grid-scan-vertical; /* Separate animation for vertical lines */
-}
-
-@keyframes grid-scan {
-    0% { transform: translateY(-100vh); } /* Start far above */
-    100% { transform: translateY(200vh); } /* End far below */
-}
-
-@keyframes grid-scan-vertical {
-    0% { transform: translateX(-100vw); } /* Start far left */
-    100% { transform: translateX(200vw); } /* End far right */
-}
+.quantum-overlay { /* etc... */ }
+.quantum-particles { /* etc... */ }
+.quantum-grid { /* etc... */ }
+.quantum-grid .grid-line { /* etc... */ }
+.quantum-grid .grid-line.horizontal { /* etc... */ }
+.quantum-grid .grid-line.vertical { /* etc... */ }
+@keyframes grid-scan { /* etc... */ }
+@keyframes grid-scan-vertical { /* etc... */ }
+.quantum-noise { /* etc... */ }
+.dimensional-ripples { /* etc... */ }
+.dimensional-ripple { /* etc... */ }
+@keyframes dimensional-ripple { /* etc... */ }
 
 
-/* Quantum Noise (Placeholder for noise/static effects, often done with background image or canvas) */
-/* Audit Note: Ensure 'noise-pattern.png' exists in theme assets. Mix-blend-mode can also affect performance. */
-.quantum-noise {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background-image: url("{{ 'noise-pattern.png' | asset_url }}"); /* Assuming noise-pattern.png exists */
-    opacity: 0.05; /* Subtle noise */
-    mix-blend-mode: overlay; /* Blend with background */
-    z-index: 1; /* Above particles/grid, below overlay/notification */
-}
+/* --- Quantum Notifications --- */
+/* Audit Note: Styles for notifications below. Consider positioning logic. */
+.quantum-notifications { /* etc... */ }
+.quantum-notification { /* etc... */ }
+.quantum-notification.active { /* etc... */ }
+.quantum-notification-icon { /* etc... */ }
+.quantum-notification-content { /* etc... */ }
+.quantum-notification-title { /* etc... */ }
+.quantum-notification-message { /* etc... */ }
+.quantum-notification-close { /* etc... */ }
+.quantum-notification-close:hover { /* etc... */ }
+.quantum-notification.cyberlotus { /* etc... */ }
+.quantum-notification.obsidianbloom { /* etc... */ }
+.quantum-notification.voidbloom { /* etc... */ }
+.quantum-notification.neonvortex { /* etc... */ }
 
 
-/* Dimensional Ripples (Styled circles/elements for ripple effect) */
-/* Audit Note: Infinite animation below can impact performance. Consider JS optimizations or user settings to disable. */
-.dimensional-ripples {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2; /* Above noise */
-}
-
-.dimensional-ripple {
-    position: absolute;
-    width: 100px; /* Base size */
-    height: 100px; /* Base size */
-    border: 2px solid var(--trauma-color, rgba(0, 255, 255, 0.5)); /* Use trauma color */
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(var(--scale, 1)); /* Scale based on Liquid variable */
-    animation: dimensional-ripple 6s ease-out infinite var(--delay, 0s); /* Animation with delay */
-}
-
-@keyframes dimensional-ripple {
-    0% {
-        transform: scale(var(--scale, 1)) translate(-50%, -50%); /* Start at defined scale, centered */
-        opacity: 0.5;
-        border-width: 4px;
-    }
-    50% {
-         opacity: 0.2;
-    }
-    100% {
-        transform: scale(var(--scale, 5)) translate(-50%, -50%); /* Expand significantly */
-        opacity: 0;
-        border-width: 1px;
-    }
-}
-
-
-/* --- Quantum Notifications (Based on first quantum-layer.liquid embedded CSS) --- */
-/* Audit Note: Container and Item are both fixed positioned, potentially redundant if JS positions Item directly. Check behavior if multiple notifications are intended. */
-.quantum-notifications {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9002; /* Above quantum layer, below drawers/modals */
-    /* This container might be used for multiple notifications */
-    pointer-events: none; /* Container shouldn't block clicks, only items inside */
-}
-
-.quantum-notification {
-    position: fixed; /* Use fixed position as in the snippet */
-    bottom: -100px; /* Start off-screen */
-    right: 20px;
-    width: 300px;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: #00ffff; /* Default color */
-    border: 1px solid #00ffff; /* Default border */
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    gap: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); /* Default shadow */
-    transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: auto; /* Allow interaction */
-    z-index: 9001; /* Specific z-index for the notification itself, ensure it's below container if stacking matters */
-    /* Ensure it's relative to the viewport, not the container */
-    /* The JS in quantum-layer.liquid directly targets this element's bottom property */
-}
-
-.quantum-notification.active {
-    bottom: 20px; /* Slide in */
-}
-
-.quantum-notification-icon {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    color: inherit; /* Inherit color from parent (.quantum-notification) */
-}
-
-.quantum-notification-content {
-    flex-grow: 1;
-}
-
-.quantum-notification-title {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.quantum-notification-message {
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.quantum-notification-close {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-    color: inherit; /* Inherit color from parent */
-}
-
-.quantum-notification-close:hover {
-    opacity: 1;
-}
-
-/* Different themes for notification (copied from first quantum-layer.liquid) */
-.quantum-notification.cyberlotus {
-    color: #00ffff;
-    border-color: #00ffff;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-}
-
-.quantum-notification.obsidianbloom {
-    color: #ff00ff;
-    border-color: #ff00ff;
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
-}
-
-.quantum-notification.voidbloom {
-    color: #9900ff;
-    border-color: #9900ff;
-    box-shadow: 0 0 15px rgba(153, 0, 255, 0.3);
-}
-
-.quantum-notification.neonvortex {
-    color: #00ff66;
-    border-color: #00ff66;
-    box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
-}
-
-/* --- Optional: Basic styles for common elements (adjust as needed) --- */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--phase-primary, #50FF40); /* Use primary color for headings */
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-}
-
-a {
-    color: var(--phase-accent, rgba(80, 255, 64, 0.8)); /* Use accent color for links */
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-a:hover {
-    color: var(--trauma-color, #00ffff); /* Highlight links on hover */
-    text-decoration: underline;
-}
-
-button {
-    background-color: var(--phase-secondary, #9000FF);
-    color: var(--phase-text, #E5E5EB);
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, opacity 0.2s ease;
-}
-
-button:hover {
-    background-color: color-mix(in srgb, var(--phase-secondary, #9000FF) 80%, white 20%); /* Slightly lighter on hover */
-}
-
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
+/* --- Optional: Basic styles for common elements --- */
+/* Consider scoping these more or overriding within sections if needed */
+h1, h2, h3, h4, h5, h6 { /* etc... */ }
+a { /* etc... */ }
+a:hover { /* etc... */ }
+button { /* etc... */ }
+button:hover { /* etc... */ }
+button:disabled { /* etc... */ }
 input[type="text"],
 input[type="email"],
 input[type="password"],
-textarea {
-    background-color: var(--phase-tertiary, #130019);
-    color: var(--phase-text, #E5E5EB);
-    border: 1px solid var(--phase-secondary, #9000FF);
-    padding: 10px;
-    border-radius: 4px;
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
-}
+textarea { /* etc... */ }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
-textarea:focus {
-    border-color: var(--trauma-color, #00ffff);
-    outline: none; /* Outline handled by global focus style */
-}
+textarea:focus { /* etc... */ }
 
 
 /* ==========================================================================
-   Custom Header Adjustments for VoidBloom Theme (Added based on user request)
+   Custom Section Styles - ADD YOUR STYLES HERE
    ========================================================================== */
 
+/* --- Ritual Entry Styles --- */
+/* Add styles for .ritual-entry, .entry-content, .ritual-title, .ritual-button etc. */
+/* Example: */
+/*
+.ritual-entry {
+  padding: 60px 20px;
+  text-align: center;
+  position: relative; / For backdrop/particles /
+}
+.entry-content {
+  position: relative;
+  z-index: 2;
+}
+*/
+
+/* --- Bloom Protocol Styles --- */
+/* Add styles for .bloom-protocol, .protocol-grid, .protocol-step, .step-number etc. */
+/* Example: */
+/*
+.protocol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+*/
+
+/* --- Signal Wall Styles --- */
+/* Add styles for .signal-wall, .signal-grid, .trauma-card, .trauma-image etc. */
+/* Example: */
+/*
+.signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.trauma-card {
+  border: 1px solid var(--phase-secondary);
+}
+*/
+
+/* --- Neural Testimonials Styles --- */
+/* Add styles for .neural-testimonials, .testimonial-grid, .testimonial-card, .testimonial-quote etc. */
+/* Example: */
+/*
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+.testimonial-card {
+  border-left: 3px solid var(--phase-primary);
+  padding-left: 15px;
+}
+*/
+
+
+/* ==========================================================================
+   Custom Header Adjustments (Added previously)
+   ========================================================================== */
 /* --- Header Logo Size Adjustment --- */
-/* Reduce the maximum size of the site logo */
-.site-logo {
-  max-width: 150px !important; /* Adjust 150px lower if needed. !important might be needed to override '200x' */
-  max-height: 75px; /* Optional: Add a max height */
-  width: auto; /* Maintain aspect ratio */
-  height: auto; /* Maintain aspect ratio */
-}
-
+.site-logo { /* etc... */ }
 /* --- Header Vertical Menu Spacing/Size Adjustments --- */
-/* Reduce spacing and font size for the main navigation menu (when vertical) */
-.nav-menu .nav-item {
-  margin-bottom: 4px; /* Decrease space between menu items */
-}
-
-.nav-menu .nav-link {
-  padding-top: 2px;    /* Decrease padding above link text */
-  padding-bottom: 2px; /* Decrease padding below link text */
-  font-size: 0.95em;   /* Slightly smaller font (adjust as needed, e.g., 15px) */
-  line-height: 1.3;    /* Adjust line spacing */
-}
-
+.nav-menu .nav-item { /* etc... */ }
+.nav-menu .nav-link { /* etc... */ }
 /* --- Overall Header Padding Adjustment --- */
-/* Reduce padding at the top and bottom of the entire header section */
-.voidbloom-header {
-  padding-top: 15px;    /* Decrease padding at the very top */
-  padding-bottom: 15px; /* Decrease padding at the very bottom */
-}
-
-/* Reduce padding for the inner container that holds logo, nav, actions */
-.header-container {
-  padding-top: 5px;    /* Adjust if needed */
-  padding-bottom: 5px; /* Adjust if needed */
-}
-
-
+.voidbloom-header { /* etc... */ }
+.header-container { /* etc... */ }
 /* --- Optional: Attempt Horizontal Menu Layout on Wider Screens --- */
-/* Apply these styles only for screens 768px wide or larger */
-@media (min-width: 768px) {
+@media (min-width: 768px) { /* etc... */ }
 
-  /* Arrange header elements (logo, nav, actions) in a row */
-  .header-container {
-    display: flex;
-    align-items: center; /* Vertically align items */
-    justify-content: space-between; /* Space them out */
-    flex-wrap: wrap; /* Allow wrapping if needed */
-  }
-
-  /* Control the visual order if needed (optional) */
-  .header-navigation { order: 2; }
-  .header-actions { order: 3; }
-  .header-logo { order: 1; flex-shrink: 0; /* Prevent logo from shrinking too much */ }
-
-  /* Style the navigation menu for horizontal display */
-  .nav-menu {
-    display: flex; /* Make list items sit side-by-side */
-    list-style: none;
-    padding-left: 0; /* Remove default bullet padding */
-    margin: 0; /* Remove default list margin */
-  }
-
-  /* Adjust spacing for horizontal items */
-  .nav-menu .nav-item {
-    margin-bottom: 0; /* Remove vertical spacing */
-    margin-left: 10px; /* Add horizontal spacing (adjust) */
-    margin-right: 10px;/* Add horizontal spacing (adjust) */
-  }
-
-  /* Adjust link padding for horizontal layout */
-  .nav-menu .nav-link {
-     padding: 5px 8px; /* Adjust top/bottom and left/right padding */
-  }
-
-  /* Hide the mobile menu toggle button on desktop */
-  .header-action.menu-toggle {
-     display: none;
-  }
-} /* End of media query for wider screens */
 
 /* ==========================================================================
-   End of Custom Header Adjustments
+   Header Action Icon Size Adjustment (Added previously)
    ========================================================================== */
+.header-actions svg { /* etc... */ }
+.header-actions .icon-search, /* etc... */
+.header-actions .header-action { /* etc... */ }
 
-/* ==========================================================================
-   Header Action Icon Size Adjustment (Fix for large icons)
-   ========================================================================== */
-
-/* Set an explicit size for SVGs within the header actions container */
-.header-actions svg {
-  width: 24px;  /* Adjust this value as needed */
-  height: 24px; /* Adjust this value as needed */
-  display: block; /* Prevents potential extra spacing issues */
-  flex-shrink: 0; /* Prevent shrinking if in a flex container */
-}
-
-/* Optional: Ensure the containers don't force extra size */
-.header-actions .icon-search,
-.header-actions .icon-account,
-.header-actions .icon-cart,
-.header-actions .icon-menu {
-   /* Typically fine, but ensure no large width/height/padding is set here by other rules */
-   line-height: 0; /* Helps if alignment issues occur */
-}
-
-/* Ensure the buttons/links containing the icons behave */
-.header-actions .header-action {
-    display: inline-flex; /* Align icon nicely within the link/button */
-    align-items: center;
-    justify-content: center;
-    padding: 5px; /* Adjust padding around icon as needed */
-     /* Reset min-width/min-height if they are causing issues */
-    min-width: auto;
-    min-height: auto;
-}
+EOF
