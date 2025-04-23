@@ -1,0 +1,476 @@
+/*
+ * VoidBloom Theme Styles - theme.css
+ * Based on theme.liquid (v2.2.1) and quantum-layer.liquid (v1.0.0) structures.
+ *
+ * @StrategyProfile: quantum-entangled
+ */
+
+/* --- CSS Variables (Assumed to be defined in theme.liquid or elsewhere) --- */
+/*
+:root {
+    --phase-primary: #50FF40; // Example: CyberLotus primary
+    --phase-secondary: #9000FF; // Example: CyberLotus secondary
+    --phase-tertiary: #130019; // Example: CyberLotus tertiary
+    --phase-background: #0A0A0E; // Dark background
+    --phase-text: #E5E5EB; // Light text
+    --phase-accent: rgba(80, 255, 64, 0.8); // Example: CyberLotus accent
+
+    --trauma-color: var(--trauma-recursion-color); // Active trauma color
+    --trauma-abandonment-color: rgba(157, 0, 255, 0.7);
+    --trauma-fragmentation-color: rgba(255, 0, 102, 0.7);
+    --trauma-recursion-color: rgba(80, 255, 64, 0.7);
+    --trauma-surveillance-color: rgba(0, 202, 255, 0.7);
+    --trauma-displacement-color: rgba(255, 179, 0, 0.7);
+    --trauma-dissolution-color: rgba(255, 0, 214, 0.7);
+}
+*/
+
+/* --- Base Body and Typography --- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--phase-background, #0A0A0E); /* Use variable with fallback */
+    color: var(--phase-text, #E5E5EB); /* Use variable with fallback */
+    font-family: 'JetBrains Mono', 'Courier New', monospace; /* Preferred monospace font */
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scroll from quantum effects */
+    position: relative;
+    z-index: 0; /* Base layer */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Optional: Add a class to body for smooth transitions on theme change */
+body.theme-transition {
+    transition: background-color 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --- Accessibility --- */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background-color: var(--phase-primary, #50FF40);
+    color: var(--phase-background, #0A0A0E);
+    padding: 8px 12px;
+    z-index: 9999;
+    text-decoration: none;
+    font-weight: bold;
+    transition: top 0.3s ease-in-out;
+}
+
+.skip-to-content:focus {
+    top: 0;
+    outline: none; /* Outline handled by global focus style */
+}
+
+/* Accessible focus states */
+:focus {
+    outline: 2px solid var(--trauma-color, #00ffff); /* Use trauma color with fallback */
+    outline-offset: 2px;
+    border-radius: 4px; /* Match theme aesthetic */
+}
+
+/* Reduce motion setting */
+body.reduce-motion * {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* --- Main Content Area --- */
+.content-for-layout {
+    padding: 20px; /* Basic padding */
+    max-width: 1200px; /* Example max width */
+    margin: 0 auto; /* Center content */
+    position: relative;
+    z-index: 1; /* Ensure content is above quantum layer */
+}
+
+/* Adjust padding for different screen sizes */
+@media (min-width: 768px) {
+    .content-for-layout {
+        padding: 30px;
+    }
+}
+
+/* --- Drawer Components (Cart, Mobile Menu) --- */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Start off-screen */
+    width: 100%;
+    max-width: 400px; /* Example max width for drawers */
+    height: 100%;
+    background-color: var(--phase-tertiary, #130019); /* Dark background */
+    color: var(--phase-text, #E5E5EB);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease-in-out;
+    z-index: 9500; /* Below quantum layer, above content */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    padding: 20px;
+    visibility: hidden; /* Hide visually when not active */
+}
+
+.drawer.active {
+    right: 0; /* Slide in */
+    visibility: visible;
+}
+
+/* Adjust drawer position for left-aligned drawers if needed */
+/*
+.drawer.left {
+    left: -100%;
+    right: auto;
+    transition: left 0.3s ease-in-out;
+}
+.drawer.left.active {
+    left: 0;
+}
+*/
+
+/* Close button for drawers (example styling) */
+.drawer .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--phase-text, #E5E5EB);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* --- Modal Container --- */
+#ModalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9600; /* Above drawers */
+    visibility: hidden; /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#ModalContainer.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Style for the modal content itself (will be injected here by JS) */
+#ModalContainer .modal-content {
+    background-color: var(--phase-tertiary, #130019);
+    color: var(--phase-text, #E5E5EB);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    position: relative;
+}
+
+/* --- Quantum Layer (Based on first quantum-layer.liquid structure) --- */
+.quantum-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks/interactions with elements below */
+    z-index: 9000; /* Positioned above main content, below drawers/modals */
+    overflow: hidden; /* Hide any overflow from effects */
+}
+
+/* Quantum Overlay (Used by JS for temporary overlays, e.g., during glitches) */
+.quantum-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* Default transparent */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Ensure it doesn't block clicks unless active */
+}
+
+.quantum-overlay.active {
+    opacity: 1;
+    pointer-events: auto; /* Block clicks when active */
+    /* Example: Add a background color or pattern when active */
+    /* background-color: rgba(0, 255, 255, 0.1); */
+    /* background-image: url('noise-pattern.png'); */ /* Assuming noise-pattern.png exists */
+}
+
+/* Quantum Particles (Placeholder for JS-driven particle effects) */
+.quantum-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* JS or WebGL will likely render particles inside this element */
+}
+
+/* Quantum Grid (Styled lines based on Liquid loop) */
+.quantum-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden; /* Contain animated lines */
+}
+
+.quantum-grid .grid-line {
+    position: absolute;
+    background: var(--trauma-color, rgba(0, 255, 255, 0.3)); /* Use trauma color with transparency */
+    opacity: 0.5;
+    animation: grid-scan 10s linear infinite var(--delay, 0s); /* Animation with delay */
+}
+
+.quantum-grid .grid-line.horizontal {
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: translateY(-100%); /* Start above viewport */
+}
+
+.quantum-grid .grid-line.vertical {
+    top: 0;
+    height: 100%;
+    width: 1px;
+    transform: translateX(-100%); /* Start left of viewport */
+    animation-name: grid-scan-vertical; /* Separate animation for vertical lines */
+}
+
+@keyframes grid-scan {
+    0% { transform: translateY(-100vh); } /* Start far above */
+    100% { transform: translateY(200vh); } /* End far below */
+}
+
+@keyframes grid-scan-vertical {
+    0% { transform: translateX(-100vw); } /* Start far left */
+    100% { transform: translateX(200vw); } /* End far right */
+}
+
+
+/* Quantum Noise (Placeholder for noise/static effects, often done with background image or canvas) */
+.quantum-noise {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: url("{{ 'noise-pattern.png' | asset_url }}"); /* Assuming noise-pattern.png exists */
+    opacity: 0.05; /* Subtle noise */
+    mix-blend-mode: overlay; /* Blend with background */
+    z-index: 1; /* Above particles/grid, below overlay/notification */
+}
+
+
+/* Dimensional Ripples (Styled circles/elements for ripple effect) */
+.dimensional-ripples {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; /* Above noise */
+}
+
+.dimensional-ripple {
+    position: absolute;
+    width: 100px; /* Base size */
+    height: 100px; /* Base size */
+    border: 2px solid var(--trauma-color, rgba(0, 255, 255, 0.5)); /* Use trauma color */
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(var(--scale, 1)); /* Scale based on Liquid variable */
+    animation: dimensional-ripple 6s ease-out infinite var(--delay, 0s); /* Animation with delay */
+}
+
+@keyframes dimensional-ripple {
+    0% {
+        transform: scale(var(--scale, 1)) translate(-50%, -50%); /* Start at defined scale, centered */
+        opacity: 0.5;
+        border-width: 4px;
+    }
+    50% {
+         opacity: 0.2;
+    }
+    100% {
+        transform: scale(var(--scale, 5)) translate(-50%, -50%); /* Expand significantly */
+        opacity: 0;
+        border-width: 1px;
+    }
+}
+
+
+/* --- Quantum Notifications (Based on first quantum-layer.liquid embedded CSS) --- */
+.quantum-notifications {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9002; /* Above quantum layer, below drawers/modals */
+    /* This container might be used for multiple notifications */
+}
+
+.quantum-notification {
+    position: fixed; /* Use fixed position as in the snippet */
+    bottom: -100px; /* Start off-screen */
+    right: 20px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #00ffff; /* Default color */
+    border: 1px solid #00ffff; /* Default border */
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); /* Default shadow */
+    transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto; /* Allow interaction */
+    z-index: 9001; /* Specific z-index for the notification itself */
+    /* Ensure it's relative to the viewport, not the container */
+    /* The JS in quantum-layer.liquid directly targets this element's bottom property */
+}
+
+.quantum-notification.active {
+    bottom: 20px; /* Slide in */
+}
+
+.quantum-notification-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: inherit; /* Inherit color from parent (.quantum-notification) */
+}
+
+.quantum-notification-content {
+    flex-grow: 1;
+}
+
+.quantum-notification-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.quantum-notification-message {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.quantum-notification-close {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    color: inherit; /* Inherit color from parent */
+}
+
+.quantum-notification-close:hover {
+    opacity: 1;
+}
+
+/* Different themes for notification (copied from first quantum-layer.liquid) */
+.quantum-notification.cyberlotus {
+    color: #00ffff;
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.quantum-notification.obsidianbloom {
+    color: #ff00ff;
+    border-color: #ff00ff;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+}
+
+.quantum-notification.voidbloom {
+    color: #9900ff;
+    border-color: #9900ff;
+    box-shadow: 0 0 15px rgba(153, 0, 255, 0.3);
+}
+
+.quantum-notification.neonvortex {
+    color: #00ff66;
+    border-color: #00ff66;
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+}
+
+/* --- Optional: Basic styles for common elements (adjust as needed) --- */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--phase-primary, #50FF40); /* Use primary color for headings */
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+a {
+    color: var(--phase-accent, rgba(80, 255, 64, 0.8)); /* Use accent color for links */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--trauma-color, #00ffff); /* Highlight links on hover */
+    text-decoration: underline;
+}
+
+button {
+    background-color: var(--phase-secondary, #9000FF);
+    color: var(--phase-text, #E5E5EB);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+button:hover {
+    background-color: color-mix(in srgb, var(--phase-secondary, #9000FF) 80%, white 20%); /* Slightly lighter on hover */
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    background-color: var(--phase-tertiary, #130019);
+    color: var(--phase-text, #E5E5EB);
+    border: 1px solid var(--phase-secondary, #9000FF);
+    padding: 10px;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    border-color: var(--trauma-color, #00ffff);
+    outline: none; /* Outline handled by global focus style */
+}
+
