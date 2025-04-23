@@ -58,19 +58,24 @@
       data-template="{{ template.name }}{% if template.suffix %}-{{ template.suffix }}{% endif %}"
       data-mutation-profile="{{ settings.mutation_profile | default: 'CyberLotus' }}">
   <!-- Skip to content -->
-<a class="skip-to-content" href="#MainContent">Skip to content</a>  <!-- Header -->
+  <a class="skip-to-content" href="#MainContent">Skip to content</a>
+  
+  <!-- Header -->
   {% section 'header' %}
+  
   <!-- Main content area -->
   <main id="MainContent" class="content-for-layout" role="main">
     {{ content_for_layout }}
   </main>
+  
   <!-- Footer -->
   {% section 'footer' %}
+  
   <!-- Cart Drawer - Loaded via AJAX -->
-  <div id<div id="CartDrawer" class="drawer cart-drawer" aria-modal="true" aria-label="Your Cart" data-quantum-drawer="cart"></div>CartDrawer" class="drawer cart-drawer" aria-modal="true" aria-label="{{ 'general.cart.title' | t }}" data-quantum-drawer="cart"></div>
+  <div id="CartDrawer" class="drawer cart-drawer" aria-modal="true" aria-label="Your Cart" data-quantum-drawer="cart"></div>
   
   <!-- Mobile Menu Drawer -->
-  <div id="MobileMenuDrawer" class="drawer mobile-menu-drawer" aria-modal="true" aria-label="{{ 'general.navigation.title' | t }}" data-quantum-drawer="menu"></div>
+  <div id="MobileMenuDrawer" class="drawer mobile-menu-drawer" aria-modal="true" aria-label="Navigation" data-quantum-drawer="menu"></div>
   
   <!-- Quantum Notifications -->
   <div id="QuantumNotifications" class="quantum-notifications" aria-live="polite"></div>
@@ -78,4 +83,3 @@
   <!-- Modal Container -->
   <div id="ModalContainer" class="modal-container" aria-hidden="true"></div>
 </body>
-</html>
