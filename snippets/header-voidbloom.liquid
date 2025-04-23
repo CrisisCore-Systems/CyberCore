@@ -1,0 +1,70 @@
+<header class="voidbloom-header" data-neural-node="header" data-glitch-level="{{ section.settings.glitch_level }}" data-mutation-profile="{{ section.settings.mutation_profile }}">
+  <div class="header-container">
+    <div class="header-logo">
+      <a href="/" class="logo-link">
+        {% if settings.logo != blank %}
+          <img src="{{ settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" class="site-logo">
+        {% else %}
+          <span class="site-name glitch-text" data-text="{{ shop.name }}">{{ shop.name }}</span>
+        {% endif %}
+      </a>
+    </div>
+    
+    <nav class="header-navigation" role="navigation">
+      <ul class="nav-menu">
+        {% for link in linklists.main-menu.links %}
+          <li class="nav-item{% if link.active %} active{% endif %}">
+            <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <a href="/search" class="header-action search-action" aria-label="{{ 'general.search.search' | t }}">
+        <div class="icon-search">
+          <span class="sr-only">{{ 'general.search.search' | t }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+      </a>
+      
+      <a href="/account" class="header-action account-action" aria-label="{{ 'customer.account.title' | t }}">
+        <div class="icon-account">
+          <span class="sr-only">{{ 'customer.account.title' | t }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="5"></circle>
+            <path d="M20 21v-2a7 7 0 0 0-14 0v2"></path>
+          </svg>
+        </div>
+      </a>
+      
+      <button class="header-action cart-action" aria-label="{{ 'cart.general.title' | t | default: 'Cart' }}" data-quantum-trigger="cart">
+        <div class="icon-cart">
+          <span class="sr-only">{{ 'cart.general.title' | t | default: 'Cart' }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-count">{{ cart.item_count }}</span>
+        </div>
+      </button>
+      
+      <button class="header-action menu-toggle" aria-label="{{ 'general.navigation.menu' | t | default: 'Menu' }}" data-quantum-trigger="mobile-menu">
+        <div class="icon-menu">
+          <span class="sr-only">{{ 'general.navigation.menu' | t | default: 'Menu' }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+    </div>
+  </div>
+  
+  <div class="neural-interface-lines"></div>
+</header>
