@@ -58,8 +58,7 @@
       data-template="{{ template.name }}{% if template.suffix %}-{{ template.suffix }}{% endif %}"
       data-mutation-profile="{{ settings.mutation_profile | default: 'CyberLotus' }}">
   <!-- Skip to content -->
-  <a class="skip-to-content" href="#MainContent">{{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}</a>
-  <!-- Header -->
+<a class="skip-to-content" href="#MainContent">Skip to content</a>  <!-- Header -->
   {% section 'header' %}
   <!-- Main content area -->
   <main id="MainContent" class="content-for-layout" role="main">
