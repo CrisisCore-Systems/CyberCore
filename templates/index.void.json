@@ -1,0 +1,45 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {}
+    },
+    "ritual_entry": {
+      "type": "ritual-entry",
+      "settings": {}
+    },
+    "bloom_protocol": {
+      "type": "bloom-protocol",
+      "settings": {}
+    },
+    "signal_wall": {
+      "type": "signal-wall",
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "neural-testimonials",
+      "settings": {}
+    },
+    "footer": {
+      "type": "footer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "header",
+    "ritual_entry",
+    "bloom_protocol",
+    "signal_wall",
+    "testimonials",
+    "footer"
+  ]
+}
