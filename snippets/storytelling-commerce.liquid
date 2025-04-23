@@ -1,0 +1,231 @@
+{% comment %}
+  Storytelling Commerce Integration
+
+  Transforms commercial objects into mythic vessels.
+  Products become narrative fragments in an evolving
+  consciousness architecture.
+
+  Usage:
+  {% render 'storytelling-commerce' %}
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'narrative-commerce-styles.css' | asset_url }}">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if neural bus is available
+    if (!window.NeuralBus) {
+      console.warn('[VOID://COMMERCE] Neural bus not available. Narrative commerce will initialize when neural bus is ready.');
+
+      // Wait for neural bus to be ready
+      document.addEventListener('neural:loaded', function() {
+        initializeNarrativeCommerce();
+      });
+
+      return;
+    }
+
+    // Initialize narrative commerce
+    initializeNarrativeCommerce();
+  });
+
+  /**
+   * Initialize narrative commerce
+   */
+  function initializeNarrativeCommerce() {
+    console.log('[VOID://COMMERCE] Initializing narrative commerce...');
+
+    // Load narrative commerce engine
+    loadScript('{{ "narrative-commerce-engine.js" | asset_url }}', 'narrative-commerce-script', function() {
+      if (typeof NarrativeCommerceEngine === 'undefined') {
+        console.error('[VOID://COMMERCE] NarrativeCommerceEngine not available after loading script.');
+        return;
+      }
+
+      // Create commerce engine
+      window.NarrativeCommerceEngine = new NarrativeCommerceEngine();
+
+      // Set up commerce events
+      setupCommerceEvents();
+
+      console.log('[VOID://COMMERCE] Narrative commerce initialized.');
+    });
+  }
+
+  /**
+   * Set up commerce events
+   */
+  function setupCommerceEvents() {
+    // Skip if neural bus not available
+    if (!window.NeuralBus) return;
+
+    // Set up cart update events
+    document.body.addEventListener('cart:updated', function(event) {
+      // Publish cart update event
+      window.NeuralBus.publish('commerce:cart-updated', {
+        cart: event.detail.cart,
+        timestamp: Date.now(),
+        source: 'cart-api'
+      });
+    });
+
+    // Set up checkout events
+    document.addEventListener('click', function(event) {
+      // Check for checkout button clicks
+      if (event.target.matches('button[name="checkout"], .checkout-button')) {
+        // Publish checkout event
+        window.NeuralBus.publish('commerce:checkout-initiated', {
+          timestamp: Date.now(),
+          source: 'checkout-button'
+        });
+
+        // Create checkout fragment
+        const fragmentId = `checkout_initiation_${Date.now()}`;
+        const fragment = {
+          id: fragmentId,
+          type: 'checkout_initiation',
+          createdAt: Date.now(),
+          traumaLevel: window.NeuralBus.getTraumaIndex(),
+          memoryPhase: window.NeuralBus.getMemoryPhase()
+        };
+
+        window.NeuralBus.publish('memory:fragment-generated', {
+          fragment,
+          source: 'narrative-commerce-engine'
+        });
+      }
+    });
+
+    // Monitor ajax product form submissions
+    document.addEventListener('submit', function(event) {
+      if (event.target.matches('form[action*="/cart/add"]')) {
+        // This will be handled by the commerce engine's own observers
+        // but we add this as a fallback for certain themes
+        console.log('[VOID://COMMERCE] Product form submitted');
+      }
+    });
+  }
+
+  /**
+   * Load script dynamically
+   * @param {string} src - Script URL
+   * @param {string} id - Script ID
+   * @param {Function} callback - Callback function
+   */
+  function loadScript(src, id, callback) {
+    // Skip if already loaded
+    if (document.getElementById(id)) {
+      if (callback) callback();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.id = id;
+    script.async = true;
+
+    if (callback) {
+      script.onload = callback;
+    }
+
+    document.head.appendChild(script);
+  }
+</script>
+
+{% comment %}
+  Add metafield schema support
+{% endcomment %}
+{% if product %}
+  {% assign narrative_fragment = product.metafields.voidbloom.narrative_fragment %}
+  {% assign memory_phase = product.metafields.voidbloom.memory_phase %}
+  {% assign trauma_weight = product.metafields.voidbloom.trauma_weight %}
+  {% assign ritual_binding = product.metafields.voidbloom.ritual_binding %}
+  {% assign dimensional_locus = product.metafields.voidbloom.dimensional_locus %}
+  {% assign threshold_vector = product.metafields.voidbloom.threshold_vector %}
+  {% assign consciousness_type = product.metafields.voidbloom.consciousness_type %}
+
+  {% if narrative_fragment or memory_phase or trauma_weight or ritual_binding or dimensional_locus or threshold_vector or consciousness_type %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Create metafield elements for the commerce engine to detect
+        const createMetafieldElement = function(name, value) {
+          if (!value) return;
+
+          const el = document.createElement('div');
+          el.setAttribute('data-metafield', name);
+          el.style.display = 'none';
+          el.textContent = value;
+          document.body.appendChild(el);
+        };
+
+        {% if narrative_fragment %}
+          createMetafieldElement('product.metafields.voidbloom.narrative_fragment', {{ narrative_fragment | json }});
+        {% endif %}
+
+        {% if memory_phase %}
+          createMetafieldElement('product.metafields.voidbloom.memory_phase', {{ memory_phase | json }});
+        {% endif %}
+
+        {% if trauma_weight %}
+          createMetafieldElement('product.metafields.voidbloom.trauma_weight', {{ trauma_weight | json }});
+        {% endif %}
+
+        {% if ritual_binding %}
+          createMetafieldElement('product.metafields.voidbloom.ritual_binding', {{ ritual_binding | json }});
+        {% endif %}
+
+        {% if dimensional_locus %}
+          createMetafieldElement('product.metafields.voidbloom.dimensional_locus', {{ dimensional_locus | json }});
+        {% endif %}
+
+        {% if threshold_vector %}
+          createMetafieldElement('product.metafields.voidbloom.threshold_vector', {{ threshold_vector | json }});
+        {% endif %}
+
+        {% if consciousness_type %}
+          createMetafieldElement('product.metafields.voidbloom.consciousness_type', {{ consciousness_type | json }});
+        {% endif %}
+      });
+    </script>
+  {% endif %}
+{% endif %}
+
+{% if collection %}
+  {% assign narrative_arc = collection.metafields.voidbloom.narrative_arc %}
+  {% assign memory_phase = collection.metafields.voidbloom.memory_phase %}
+  {% assign dimensional_locus = collection.metafields.voidbloom.dimensional_locus %}
+  {% assign trauma_threshold = collection.metafields.voidbloom.trauma_threshold %}
+
+  {% if narrative_arc or memory_phase or dimensional_locus or trauma_threshold %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Create metafield elements for the commerce engine to detect
+        const createMetafieldElement = function(name, value) {
+          if (!value) return;
+
+          const el = document.createElement('div');
+          el.setAttribute('data-collection-metafield', name);
+          el.style.display = 'none';
+          el.textContent = value;
+          document.body.appendChild(el);
+        };
+
+        {% if narrative_arc %}
+          createMetafieldElement('collection.metafields.voidbloom.narrative_arc', {{ narrative_arc | json }});
+        {% endif %}
+
+        {% if memory_phase %}
+          createMetafieldElement('collection.metafields.voidbloom.memory_phase', {{ memory_phase | json }});
+        {% endif %}
+
+        {% if dimensional_locus %}
+          createMetafieldElement('collection.metafields.voidbloom.dimensional_locus', {{ dimensional_locus | json }});
+        {% endif %}
+
+        {% if trauma_threshold %}
+          createMetafieldElement('collection.metafields.voidbloom.trauma_threshold', {{ trauma_threshold | json }});
+        {% endif %}
+      });
+    </script>
+  {% endif %}
+{% endif %}

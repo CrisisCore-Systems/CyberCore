@@ -1,0 +1,168 @@
+{% comment %}
+  Admin Metafield Editor for Narrative Architecture
+
+  Add to your product-template.liquid or collection-template.liquid
+  templates, wrapped in an {% if admin_logged_in %} check.
+
+  Usage:
+  {% if admin_logged_in %}
+    {% render 'admin-metafield-editor', object: product, namespace: 'voidbloom' %}
+  {% endif %}
+{% endcomment %}
+
+{% if admin_logged_in %}
+  <div class="voidbloom-metafield-editor">
+    <details class="voidbloom-metafield-toggle">
+      <summary>🧠 Narrative Architecture Editor</summary>
+
+      <div class="voidbloom-metafield-container">
+        <form class="voidbloom-metafield-form" method="post" action="/admin/metafields">
+          {% if object.object_type == 'product' %}
+            <h3 class="voidbloom-editor-heading">Product Narrative Architecture</h3>
+
+            <div class="voidbloom-field-group">
+              <label for="narrative_fragment">Narrative Fragment</label>
+              <textarea id="narrative_fragment" name="product[metafields][{{ namespace }}][narrative_fragment]">{{ object.metafields[namespace].narrative_fragment }}</textarea>
+            </div>
+
+            <div class="voidbloom-field-group">
+              <label for="memory_phase">Memory Phase</label>
+              <select id="memory_phase" name="product[metafields][{{ namespace }}][memory_phase]">
+                <option value="" {% if object.metafields[namespace].memory_phase == blank %}selected{% endif %}>Select Phase</option>
+                <option value="cyber-lotus" {% if object.metafields[namespace].memory_phase == 'cyber-lotus' %}selected{% endif %}>Cyber Lotus</option>
+                <option value="alien-flora" {% if object.metafields[namespace].memory_phase == 'alien-flora' %}selected{% endif %}>Alien Flora</option>
+                <option value="rolling-virus" {% if object.metafields[namespace].memory_phase == 'rolling-virus' %}selected{% endif %}>Rolling Virus</option>
+                <option value="trauma-core" {% if object.metafields[namespace].memory_phase == 'trauma-core' %}selected{% endif %}>Trauma Core</option>
+              </select>
+            </div>
+
+            <div class="voidbloom-field-group">
+              <label for="trauma_weight">Trauma Weight (0.0-1.0)</label>
+              <input type="number" id="trauma_weight" name="product[metafields][{{ namespace }}][trauma_weight]" min="0" max="1" step="0.1" value="{{ object.metafields[namespace].trauma_weight | default: 0.5 }}">
+            </div>
+          {% elsif object.object_type == 'collection' %}
+            <h3 class="voidbloom-editor-heading">Collection Narrative Architecture</h3>
+
+            <div class="voidbloom-field-group">
+              <label for="narrative_arc">Narrative Arc</label>
+              <textarea id="narrative_arc" name="collection[metafields][{{ namespace }}][narrative_arc]">{{ object.metafields[namespace].narrative_arc }}</textarea>
+            </div>
+          {% endif %}
+
+          <div class="voidbloom-form-actions">
+            <button type="submit" class="voidbloom-save-button">Save Narrative Architecture</button>
+            <span class="voidbloom-form-status"></span>
+          </div>
+        </form>
+
+        <div class="voidbloom-narrative-generator">
+          <h4>Narrative Generator</h4>
+          <button type="button" class="voidbloom-generate-button">Generate Narrative</button>
+          <div class="voidbloom-generation-result"></div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <style>
+    .voidbloom-metafield-editor {
+      margin: 2rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Form submission
+      const form = document.querySelector('.voidbloom-metafield-form');
+      const status = document.querySelector('.voidbloom-form-status');
+
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          status.textContent = 'Saving architecture...';
+
+          const formData = new FormData(form);
+          const url = '/admin/metafields';
+
+          fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              status.textContent = 'Architecture saved successfully.';
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              status.textContent = 'Error saving architecture.';
+            }
+          })
+          .catch(error => {
+            status.textContent = 'Error: ' + error.message;
+          });
+        });
+      }
+
+      // Narrative generator
+      const generateButton = document.querySelector('.voidbloom-generate-button');
+      const resultContainer = document.querySelector('.voidbloom-generation-result');
+
+      if (generateButton && resultContainer) {
+        generateButton.addEventListener('click', function() {
+          resultContainer.style.display = 'block';
+          resultContainer.textContent = 'Generating narrative architecture...';
+
+          // Get object type
+          const isProduct = document.querySelector('input[name="product[metafields][voidbloom][narrative_fragment]"]') !== null;
+
+          // Get memory phase
+          const memoryPhaseSelect = document.getElementById('memory_phase');
+          const memoryPhase = memoryPhaseSelect ? memoryPhaseSelect.value : 'cyber-lotus';
+
+          // Generate narrative
+          generateNarrativeArchitecture(isProduct, memoryPhase)
+            .then(narrative => {
+              if (isProduct) {
+                document.getElementById('narrative_fragment').value = narrative.fragment;
+                document.getElementById('ritual_binding').value = narrative.ritual;
+                document.getElementById('dimensional_locus').value = narrative.locus;
+                document.getElementById('consciousness_type').value = narrative.consciousness;
+              } else {
+                document.getElementById('narrative_arc').value = narrative.arc;
+                document.getElementById('dimensional_locus').value = narrative.locus;
+              }
+
+              resultContainer.textContent = isProduct ? narrative.fragment : narrative.arc;
+            });
+        });
+      }
+
+      /**
+       * Generate narrative architecture
+       * @param {boolean} isProduct - Whether generating for product or collection
+       * @param {string} phase - Memory phase
+       * @returns {Promise<object>} Narrative data
+       */
+      function generateNarrativeArchitecture(isProduct, phase) {
+        // Placeholder for narrative generation logic
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              fragment: 'Generated narrative fragment',
+              ritual: 'Generated ritual binding',
+              locus: 'Generated dimensional locus',
+              consciousness: 'Generated consciousness type',
+              arc: 'Generated narrative arc'
+            });
+          }, 1000);
+        });
+      }
+    });
+  </script>
+{% endif %}

@@ -1,0 +1,231 @@
+{% comment %}
+  Phase Boundary Protection
+
+  Places quantum barriers between phase states,
+  preventing uncontrolled collapse during transition.
+  Particularly vital for Rolling Virus → Trauma Core vectors.
+
+  Parameters:
+  - from_phase: Source memory phase
+  - to_phase: Target memory phase
+  - trauma_threshold: Minimum trauma level required (optional)
+  - label: Text label (optional)
+  - icon: Icon class (optional)
+
+  Usage:
+  {% render 'phase-boundary-protection',
+    from_phase: 'rolling-virus',
+    to_phase: 'trauma-core',
+    trauma_threshold: 7,
+    label: 'Enter the Void'
+  %}
+{% endcomment %}
+
+{%- assign from_phase = from_phase | default: 'cyber-lotus' -%}
+{%- assign to_phase = to_phase | default: 'alien-flora' -%}
+{%- assign trauma_threshold = trauma_threshold | default: 5 -%}
+{%- assign label = label | default: to_phase | replace: '-', ' ' | capitalize -%}
+{%- assign icon = icon | default: 'phase-icon-' | append: to_phase -%}
+
+<div class="phase-boundary"
+     data-from-phase="{{ from_phase }}"
+     data-to-phase="{{ to_phase }}"
+     data-trauma-threshold="{{ trauma_threshold }}"
+     data-neural-component="phase-boundary">
+  <div class="boundary-membrane"></div>
+  <div class="phase-stabilizer"></div>
+
+  <button type="button" class="phase-transition-trigger">
+    {% if icon != blank %}
+      <span class="phase-icon {{ icon }}"></span>
+    {% endif %}
+    <span class="phase-label">{{ label }}</span>
+    <span class="phase-threshold">Trauma Threshold: {{ trauma_threshold }}</span>
+  </button>
+</div>
+
+<style>
+  .phase-boundary {
+    position: relative;
+    margin: 1.5rem 0;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+
+  /* Phase-specific styling */
+  .phase-boundary[data-to-phase="cyber-lotus"] {
+    --to-phase-color: rgba(15, 230, 255, 0.7);
+    --to-phase-color-rgb: 15, 230, 255;
+    --to-phase-accent: rgba(9, 114, 232, 0.8);
+  }
+
+  .phase-boundary[data-to-phase="alien-flora"] {
+    --to-phase-color: rgba(4, 255, 89, 0.7);
+    --to-phase-color-rgb: 4, 255, 89;
+    --to-phase-accent: rgba(12, 184, 64, 0.8);
+  }
+
+  .phase-boundary[data-to-phase="rolling-virus"] {
+    --to-phase-color: rgba(255, 187, 56, 0.7);
+    --to-phase-color-rgb: 255, 187, 56;
+    --to-phase-accent: rgba(226, 123, 15, 0.8);
+  }
+
+  .phase-boundary[data-to-phase="trauma-core"] {
+    --to-phase-color: rgba(215, 33, 184, 0.7);
+    --to-phase-color-rgb: 215, 33, 184;
+    --to-phase-accent: rgba(147, 20, 126, 0.8);
+  }
+
+  /* Boundary membrane */
+  .boundary-membrane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        circle at center,
+        transparent 0%,
+        transparent 70%,
+        var(--to-phase-color) 100%
+      );
+    opacity: 0.2;
+    mix-blend-mode: screen;
+  }
+
+  /* Phase stabilizer */
+  .phase-stabilizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      transparent 40%,
+      var(--to-phase-color) 50%,
+      transparent 60%,
+      transparent 100%
+    );
+    background-size: 300% 300%;
+    animation: phase-stabilizer-pulse 8s ease infinite;
+    opacity: 0.15;
+    mix-blend-mode: screen;
+  }
+
+  @keyframes phase-stabilizer-pulse {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+
+  /* Transition trigger button */
+  .phase-transition-trigger {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--to-phase-color);
+    border-radius: 0.25rem;
+    color: #fff;
+    font-family: var(--voidbloom-font-sans, sans-serif);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  /* Disabled state for insufficient trauma */
+  .phase-boundary.trauma-insufficient .phase-transition-trigger {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: rgba(var(--to-phase-color-rgb), 0.3);
+  }
+
+  .phase-boundary.trauma-insufficient .phase-threshold {
+    color: rgba(255, 100, 100, 0.8);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get this boundary element
+    const boundary = document.currentScript.parentNode;
+
+    // Skip if not a phase boundary
+    if (!boundary.classList.contains('phase-boundary')) return;
+
+    // Get phase information
+    const fromPhase = boundary.getAttribute('data-from-phase');
+    const toPhase = boundary.getAttribute('data-to-phase');
+    const traumaThreshold = parseFloat(boundary.getAttribute('data-trauma-threshold') || '0');
+
+    // Get trigger button
+    const trigger = boundary.querySelector('.phase-transition-trigger');
+
+    // Update trauma sufficiency
+    function updateTraumaSufficiency() {
+      if (!window.NeuralBus) return;
+
+      // Get current trauma level
+      const traumaLevel = window.NeuralBus.getTraumaIndex();
+
+      // Check if trauma level is sufficient
+      const isTraumaSufficient = (toPhase === 'cyber-lotus')
+        ? traumaLevel <= traumaThreshold
+        : traumaLevel >= traumaThreshold;
+
+      // Update boundary class
+      if (isTraumaSufficient) {
+        boundary.classList.remove('trauma-insufficient');
+      } else {
+        boundary.classList.add('trauma-insufficient');
+      }
+    }
+
+    // Add click handler
+    if (trigger) {
+      trigger.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        // Skip if no phase transition controller
+        if (!window.PhaseTransitionController) {
+          // Fallback to direct neural bus
+          if (window.NeuralBus) {
+            window.NeuralBus.setMemoryPhase(toPhase);
+          }
+          return;
+        }
+
+        // Request phase transition
+        window.PhaseTransitionController.requestPhaseTransition(toPhase);
+      });
+    }
+
+    // Subscribe to trauma level changes if neural bus is available
+    if (window.NeuralBus) {
+      window.NeuralBus.subscribe('system:trauma', function() {
+        updateTraumaSufficiency();
+      });
+
+      // Initial update
+      updateTraumaSufficiency();
+    }
+
+    // Initialize transition controller if needed
+    document.addEventListener('neural:loaded', function() {
+      updateTraumaSufficiency();
+    });
+  });
+</script>

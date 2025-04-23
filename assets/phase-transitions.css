@@ -1,0 +1,149 @@
+/**
+ * Memory Phase Transitions
+ *
+ * Core styles for memory phase transitions and animations.
+ * Creates visual effects for phase shifts while maintaining
+ * ritual coherence during digital transitions.
+ *
+ * @version 0.9.1
+ * @phase meta-layer
+ */
+
+:root {
+  /* Phase colors */
+  --cyber-lotus-color: rgba(15, 230, 255, 0.7);
+  --cyber-lotus-color-rgb: 15, 230, 255;
+  --cyber-lotus-accent: rgba(9, 114, 232, 0.8);
+
+  --alien-flora-color: rgba(4, 255, 89, 0.7);
+  --alien-flora-color-rgb: 4, 255, 89;
+  --alien-flora-accent: rgba(12, 184, 64, 0.8);
+
+  --rolling-virus-color: rgba(255, 187, 56, 0.7);
+  --rolling-virus-color-rgb: 255, 187, 56;
+  --rolling-virus-accent: rgba(226, 123, 15, 0.8);
+
+  --trauma-core-color: rgba(215, 33, 184, 0.7);
+  --trauma-core-color-rgb: 215, 33, 184;
+  --trauma-core-accent: rgba(147, 20, 126, 0.8);
+
+  /* Current phase */
+  --phase-color: var(--cyber-lotus-color);
+  --phase-color-rgb: var(--cyber-lotus-color-rgb);
+  --phase-accent: var(--cyber-lotus-accent);
+
+  /* Trauma level (0-1) */
+  --trauma-level: 0;
+
+  /* Transition parameters */
+  --transition-duration: 1000ms;
+  --transition-easing: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Phase-specific variables */
+html.phase-cyber-lotus {
+  --phase-color: var(--cyber-lotus-color);
+  --phase-color-rgb: var(--cyber-lotus-color-rgb);
+  --phase-accent: var(--cyber-lotus-accent);
+}
+
+html.phase-alien-flora {
+  --phase-color: var(--alien-flora-color);
+  --phase-color-rgb: var(--alien-flora-color-rgb);
+  --phase-accent: var(--alien-flora-accent);
+}
+
+html.phase-rolling-virus {
+  --phase-color: var(--rolling-virus-color);
+  --phase-color-rgb: var(--rolling-virus-color-rgb);
+  --phase-accent: var(--rolling-virus-accent);
+}
+
+html.phase-trauma-core {
+  --phase-color: var(--trauma-core-color);
+  --phase-color-rgb: var(--trauma-core-color-rgb);
+  --phase-accent: var(--trauma-core-accent);
+}
+
+/* Trauma-specific variables */
+html.trauma-0,
+html.trauma-1 {
+  --trauma-level: 0.1;
+}
+
+html.trauma-2,
+html.trauma-3 {
+  --trauma-level: 0.3;
+}
+
+html.trauma-4,
+html.trauma-5,
+html.trauma-6 {
+  --trauma-level: 0.6;
+}
+
+html.trauma-7,
+html.trauma-8 {
+  --trauma-level: 0.8;
+}
+
+html.trauma-9,
+html.trauma-10 {
+  --trauma-level: 1;
+}
+
+/* Phase transition overlay */
+.phase-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity var(--transition-duration) var(--transition-easing);
+}
+
+body.phase-transitioning .phase-transition-overlay {
+  opacity: 1;
+}
+
+/* Phase-specific transition effects */
+.phase-transition-overlay.to-cyber-lotus {
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--cyber-lotus-color-rgb), 0.9) 0%,
+    rgba(var(--cyber-lotus-color-rgb), 0.3) 70%,
+    transparent 100%
+  );
+  backdrop-filter: blur(calc(var(--trauma-level) * 5px));
+}
+
+/* Rolling Virus → Trauma Core specific protection */
+.phase-transition-overlay.from-rolling-virus.to-trauma-core::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 20px,
+    rgba(0, 0, 0, 0.1) 20px,
+    rgba(0, 0, 0, 0.1) 40px
+  );
+  mix-blend-mode: overlay;
+  animation: collapse-protection 2s infinite linear;
+}
+
+@keyframes collapse-protection {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}

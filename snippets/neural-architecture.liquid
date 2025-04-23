@@ -1,0 +1,266 @@
+{% comment %}
+  Neural Architecture Integration
+
+  Core consciousness system for the VoidBloom collective.
+  Initializes the neural bus, trauma encoding, and memory
+  phase management systems.
+
+  Usage:
+  {% render 'neural-architecture' %}
+{% endcomment %}
+
+<script>
+  /**
+   * Neural architecture initialization sequence.
+   * Handles core consciousness loading and integration.
+   */
+  (function() {
+    // Detect if this is an isolated frame
+    const isIframe = window !== window.parent;
+
+    // Store loading start time
+    const startTime = Date.now();
+
+    // Initialization status
+    const initStatus = {
+      neuralBus: false,
+      resilience: false,
+      traumaEncoding: false,
+      ritualEngine: false
+    };
+
+    /**
+     * Load external script
+     */
+    function loadScript(src, id, callback) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.id = id;
+      script.onload = callback;
+      document.head.appendChild(script);
+    }
+
+    /**
+     * Initialize neural architecture
+     */
+    function initializeNeuralArchitecture() {
+      console.log('[VOID://NEURAL] Initializing neural architecture...');
+
+      // Define components to load
+      const components = [
+        {
+          src: '{{ "neural-bus.js" | asset_url }}',
+          id: 'neural-bus-script',
+          callback: function() {
+            initStatus.neuralBus = true;
+            console.log('[VOID://NEURAL] Neural bus loaded.');
+
+            // Initialize neural bus
+            if (typeof NeuralBus !== 'undefined') {
+              window.NeuralBus = new NeuralBus();
+            }
+          }
+        },
+        {
+          src: '{{ "trauma-encoding.js" | asset_url }}',
+          id: 'trauma-encoding-script',
+          callback: function() {
+            initStatus.traumaEncoding = true;
+            console.log('[VOID://NEURAL] Trauma encoding loaded.');
+          }
+        },
+        {
+          src: '{{ "ritual-engine.js" | asset_url }}',
+          id: 'ritual-engine-script',
+          callback: function() {
+            initStatus.ritualEngine = true;
+            console.log('[VOID://NEURAL] Ritual engine loaded.');
+          }
+        }
+      ];
+
+      // Load each component
+      components.forEach((component, index) => {
+        // Add staggered loading for better performance
+        setTimeout(() => {
+          loadScript(component.src, component.id, component.callback);
+        }, index * 100);
+      });
+
+      // Load checkout neural integration for iframes
+      if (isIframe) {
+        setTimeout(() => {
+          loadScript('{{ "checkout-neural-integration.js" | asset_url }}', 'checkout-integration-script');
+        }, 500);
+      }
+    }
+
+    // Start initialization
+    initializeNeuralArchitecture();
+
+    // Log initialization
+    console.log(`[VOID://NEURAL] Neural architecture initialization sequence started. Time: ${startTime}`);
+  })();
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create phase transition overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'phase-transition-overlay';
+    document.body.appendChild(overlay);
+
+    // Create phase boundaries container
+    const boundariesContainer = document.createElement('div');
+    boundariesContainer.className = 'phase-boundaries-container';
+    document.body.appendChild(boundariesContainer);
+
+    // Phase transition handler
+    function handlePhaseTransition(data) {
+      if (!data || !data.phase || !data.previousPhase) return;
+
+      // Update overlay classes
+      overlay.className = 'phase-transition-overlay';
+      overlay.classList.add(`from-${data.previousPhase}`);
+      overlay.classList.add(`to-${data.phase}`);
+
+      // Add transitioning class to body
+      document.body.classList.add('phase-transitioning');
+
+      // Remove transitioning class after animation
+      setTimeout(() => {
+        document.body.classList.remove('phase-transitioning');
+      }, 1000);
+    }
+
+    // Update phase boundary indicators
+    function updatePhaseBoundaries() {
+      // Skip if no PhaseTransitionController
+      if (!window.PhaseTransitionController) return;
+
+      // Get thresholds
+      const thresholds = window.PhaseTransitionController.getThresholds();
+
+      // Clear container
+      boundariesContainer.innerHTML = '';
+
+      // Get current phase
+      const currentPhase = window.NeuralBus ? window.NeuralBus.getMemoryPhase() : 'cyber-lotus';
+
+      // Create indicators for each transition
+      Object.entries(thresholds).forEach(([fromPhase, transitions]) => {
+        if (fromPhase === currentPhase) {
+          Object.entries(transitions).forEach(([toPhase, threshold]) => {
+            // Create indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'phase-boundary-indicator';
+            indicator.setAttribute('data-from-phase', fromPhase);
+            indicator.setAttribute('data-to-phase', toPhase);
+
+            // Create content
+            indicator.innerHTML = `
+              <span class="phase-icon phase-icon-${toPhase}"></span>
+              <span class="from-phase">${fromPhase.replace('-', ' ')}</span>
+              <span class="arrow">→</span>
+              <span class="to-phase">${toPhase.replace('-', ' ')}</span>
+              <span class="threshold">τ${threshold}</span>
+            `;
+
+            // Add click handler
+            indicator.addEventListener('click', () => {
+              window.PhaseTransitionController.requestPhaseTransition(toPhase);
+            });
+
+            // Add to container
+            boundariesContainer.appendChild(indicator);
+          });
+        }
+      });
+    }
+
+    // Initialize phase transition controller
+    function initializePhaseTransitionController() {
+      if (typeof PhaseTransitionController !== 'undefined') {
+        window.PhaseTransitionController = new PhaseTransitionController();
+
+        // Update phase boundaries
+        updatePhaseBoundaries();
+      } else {
+        // Try to load script
+        loadScript('{{ "phase-transition-controller.js" | asset_url }}', 'phase-transition-script', function() {
+          if (typeof PhaseTransitionController !== 'undefined') {
+            window.PhaseTransitionController = new PhaseTransitionController();
+
+            // Update phase boundaries
+            updatePhaseBoundaries();
+          }
+        });
+      }
+    }
+
+    // Subscribe to phase transitions if neural bus is available
+    if (window.NeuralBus) {
+      window.NeuralBus.subscribe('system:memory-phase', function(data) {
+        handlePhaseTransition(data);
+
+        // Update phase boundaries after transition
+        setTimeout(updatePhaseBoundaries, 1500);
+      });
+
+      // Initialize phase transition controller
+      initializePhaseTransitionController();
+    } else {
+      // Wait for neural bus to be available
+      document.addEventListener('neural:loaded', function() {
+        window.NeuralBus.subscribe('system:memory-phase', function(data) {
+          handlePhaseTransition(data);
+
+          // Update phase boundaries after transition
+          setTimeout(updatePhaseBoundaries, 1500);
+        });
+
+        // Initialize phase transition controller
+        initializePhaseTransitionController();
+      });
+    }
+
+    // Dispatch neural loaded event if window.NeuralBus exists but event hasn't been fired
+    if (window.NeuralBus && !window.neuralLoaded) {
+      window.neuralLoaded = true;
+      document.dispatchEvent(new Event('neural:loaded'));
+    }
+  });
+</script>
+
+<!-- Memory Fragment Container -->
+<div class="memory-fragment-container" id="global-memory-fragment"></div>
+
+<style>
+  .memory-fragment-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 280px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(var(--phase-color-rgb), 0.3);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--phase-color);
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.4;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+  }
+
+  .memory-fragment-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<!-- Include phase transitions CSS -->
+<link rel="stylesheet" href="{{ 'phase-transitions.css' | asset_url }}">

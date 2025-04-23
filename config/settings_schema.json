@@ -500,5 +500,54 @@
         "content": "This theme uses the following metafields. No action required from the merchant."
       }
     ]
+  },
+  {
+    "name": "VoidBloom Narrative Schema",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Narrative Commerce Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_narrative_commerce",
+        "label": "Enable Narrative Commerce",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "default_memory_phase",
+        "label": "Default Memory Phase",
+        "options": [
+          {
+            "value": "cyber-lotus",
+            "label": "Cyber Lotus"
+          },
+          {
+            "value": "alien-flora",
+            "label": "Alien Flora"
+          },
+          {
+            "value": "rolling-virus",
+            "label": "Rolling Virus"
+          },
+          {
+            "value": "trauma-core",
+            "label": "Trauma Core"
+          }
+        ],
+        "default": "cyber-lotus"
+      },
+      {
+        "type": "range",
+        "id": "default_trauma_weight",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "unit": "",
+        "label": "Default Trauma Weight",
+        "default": 5
+      }
+    ]
   }
 ]

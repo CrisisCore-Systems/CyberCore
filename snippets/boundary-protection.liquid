@@ -1,0 +1,115 @@
+{% comment %}
+  Boundary Protection
+
+  Ritual protection ceremony for digital transitions.
+  Ensures consciousness persistence across domain boundaries,
+  particularly for checkout flows where identity fragmentation
+  is most likely to occur.
+
+  Usage:
+  {% render 'boundary-protection' %}
+{% endcomment %}
+
+<div class="boundary-protection" data-neural-component="boundary-protection">
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize boundary protection
+      const boundaryProtection = {
+        initialized: false,
+        neuralBusNonce: null,
+        checkoutInitialized: false,
+
+        /**
+         * Initialize boundary protection
+         */
+        initialize: function() {
+          if (this.initialized) return;
+
+          // Connect to neural bus
+          this.connectToNeuralBus();
+
+          // Watch for checkout links
+          this.watchCheckoutLinks();
+
+          // Watch for cart form submissions
+          this.watchCartForms();
+
+          // Initialize checkout recovery
+          this.initializeCheckoutRecovery();
+
+          this.initialized = true;
+          console.log('[VOID://BOUNDARY] Boundary protection initialized.');
+        },
+
+        /**
+         * Connect to neural bus
+         */
+        connectToNeuralBus: function() {
+          if (!window.NeuralBus) return;
+
+          this.neuralBusNonce = window.NeuralBus.generateNonce();
+          console.log('[VOID://BOUNDARY] Connected to Neural Bus with nonce:', this.neuralBusNonce);
+        },
+
+        /**
+         * Watch for checkout links
+         */
+        watchCheckoutLinks: function() {
+          const checkoutLinks = document.querySelectorAll('a[href*="checkout"]');
+          checkoutLinks.forEach(link => {
+            link.addEventListener('click', () => {
+              console.log('[VOID://BOUNDARY] Checkout link clicked:', link.href);
+            });
+          });
+        },
+
+        /**
+         * Watch for cart form submissions
+         */
+        watchCartForms: function() {
+          const cartForms = document.querySelectorAll('form[action*="cart"]');
+          cartForms.forEach(form => {
+            form.addEventListener('submit', () => {
+              console.log('[VOID://BOUNDARY] Cart form submitted:', form.action);
+            });
+          });
+        },
+
+        /**
+         * Initialize checkout recovery
+         */
+        initializeCheckoutRecovery: function() {
+          if (!window.NeuralBus) return;
+
+          window.NeuralBus.subscribe('checkout:recovery', (data) => {
+            console.log('[VOID://BOUNDARY] Checkout recovery data received:', data);
+          });
+        },
+
+        /**
+         * Show post-checkout memory fragment
+         */
+        showPostCheckoutFragment: function() {
+          if (!window.NeuralBus) return;
+
+          window.NeuralBus.publish('memory:fragment-generated', {
+            fragment: {
+              id: `post_checkout_${Date.now()}`,
+              type: 'post_checkout',
+              content: 'Memory coherence restored. Ritual completion acknowledged.',
+              traumaLevel: window.NeuralBus.getTraumaIndex(),
+              memoryPhase: window.NeuralBus.getMemoryPhase(),
+              timestamp: Date.now()
+            }
+          });
+        }
+      };
+
+      // Initialize boundary protection
+      boundaryProtection.initialize();
+
+      // Expose globally
+      window.BoundaryProtection = boundaryProtection;
+    });
+  </script>
+</div>

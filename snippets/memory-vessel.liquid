@@ -1,0 +1,123 @@
+{% comment %}
+  Memory Vessel Integration
+
+  Initializes the customer memory vessel and decay engine.
+  Manages memory fragment generation, persistence, decay,
+  and crystallization.
+
+  Usage:
+  {% render 'memory-vessel' %}
+{% endcomment %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if neural bus is available
+    if (!window.NeuralBus) {
+      console.warn('[VOID://VESSEL] Neural bus not available. Memory vessel will initialize when neural bus is ready.');
+
+      // Wait for neural bus to be ready
+      document.addEventListener('neural:loaded', function() {
+        initializeMemoryVessel();
+      });
+
+      return;
+    }
+
+    // Initialize memory vessel
+    initializeMemoryVessel();
+  });
+
+  /**
+   * Initialize memory vessel
+   */
+  function initializeMemoryVessel() {
+    console.log('[VOID://VESSEL] Initializing memory vessel...');
+
+    // Load customer vessel
+    loadScript('{{ "customer-vessel.js" | asset_url }}', 'customer-vessel-script', function() {
+      if (typeof CustomerVessel === 'undefined') {
+        console.error('[VOID://VESSEL] CustomerVessel not available after loading script.');
+        return;
+      }
+
+      // Create customer vessel
+      window.CustomerVessel = new CustomerVessel();
+
+      // Initialize decay engine
+      loadScript('{{ "decay-engine.js" | asset_url }}', 'decay-engine-script', function() {
+        if (typeof MemoryDecayEngine === 'undefined') {
+          console.error('[VOID://VESSEL] MemoryDecayEngine not available after loading script.');
+          return;
+        }
+
+        // Decay engine is automatically initialized by CustomerVessel
+
+        // Load visualization in debug mode
+        {% if settings.debug_mode %}
+          loadScript('{{ "vessel-visualization.js" | asset_url }}', 'vessel-visualization-script', function() {
+            if (typeof VesselVisualization === 'undefined') {
+              console.error('[VOID://VESSEL] VesselVisualization not available after loading script.');
+              return;
+            }
+
+            // Create visualization
+            window.VesselVisualization = new VesselVisualization(window.CustomerVessel);
+
+            // Create toggle button
+            const button = document.createElement('button');
+            button.id = 'toggle-vessel-visualization';
+            button.className = 'toggle-visualization';
+            button.innerHTML = '⚠';
+            button.title = 'Toggle Memory Vessel Visualization';
+
+            // Add click handler
+            button.addEventListener('click', function() {
+              window.VesselVisualization.toggleVisibility();
+            });
+
+            // Add to document
+            document.body.appendChild(button);
+          });
+        {% endif %}
+
+        // Generate product view fragments
+        initializeProductFragmentGeneration();
+
+        console.log('[VOID://VESSEL] Memory vessel initialization complete.');
+      });
+    });
+  }
+
+  /**
+   * Initialize product fragment generation
+   */
+  function initializeProductFragmentGeneration() {
+    // Watch for product cards
+    const productCards = document.querySelectorAll('.product-card, .product, [data-product-id]');
+
+    // Add fragment generation to product cards
+    productCards.forEach(card => {
+      // Skip if already processed
+      if (card.hasAttribute('data-fragment-generated')) return;
+
+      // Mark as processed
+      card.setAttribute('data-fragment-generated', 'true');
+
+      // Get product ID
+      const productId = card.getAttribute('data-product-id') ||
+                       card.getAttribute('data-product') ||
+                       card.getAttribute('id');
+
+      if (!productId) return;
+
+      // Add interaction handlers
+      card.addEventListener('mouseenter', function() {
+        generateProductViewFragment(productId, 'hover');
+      });
+
+      card.addEventListener('click', function() {
+        generateProductViewFragment(productId, 'click');
+      });
+    });
+  }
+</script>

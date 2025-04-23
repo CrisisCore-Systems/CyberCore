@@ -1,0 +1,180 @@
+{% comment %}
+  Cybersecurity Trauma Vectors
+
+  Converts digital vulnerability into emotional resonance.
+  Implements security-as-narrative across the site.
+
+  Usage:
+  {% render 'cybersecurity-trauma-vectors' %}
+{% endcomment %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if neural bus is available
+    if (!window.NeuralBus) {
+      console.warn('[VOID://SECURITY] Neural bus not available. Security trauma vectors will initialize when neural bus is ready.');
+
+      // Wait for neural bus to be ready
+      document.addEventListener('neural:loaded', function() {
+        initializeSecurityTrauma();
+      });
+
+      return;
+    }
+
+    // Initialize security trauma vectors
+    initializeSecurityTrauma();
+  });
+
+  /**
+   * Initialize security trauma vectors
+   */
+  function initializeSecurityTrauma() {
+    console.log('[VOID://SECURITY] Initializing security trauma vectors...');
+
+    // Load security trauma encoder
+    loadScript('{{ "security-trauma-encoder.js" | asset_url }}', 'security-trauma-script', function() {
+      if (typeof SecurityTraumaEncoder === 'undefined') {
+        console.error('[VOID://SECURITY] SecurityTraumaEncoder not available after loading script.');
+        return;
+      }
+
+      // Create security trauma encoder
+      window.SecurityTraumaEncoder = new SecurityTraumaEncoder();
+
+      // Load OSINT shadow collector
+      loadScript('{{ "osint-shadow-collector.js" | asset_url }}', 'osint-collector-script', function() {
+        if (typeof OsintShadowCollector === 'undefined') {
+          console.error('[VOID://SECURITY] OsintShadowCollector not available after loading script.');
+          return;
+        }
+
+        // Create OSINT shadow collector
+        window.SecurityTraumaEncoder.osintCollector = new OsintShadowCollector(window.SecurityTraumaEncoder);
+
+        // Load security notification ritual
+        loadScript('{{ "security-notification-ritual.js" | asset_url }}', 'security-notification-script', function() {
+          if (typeof SecurityNotificationRitual === 'undefined') {
+            console.error('[VOID://SECURITY] SecurityNotificationRitual not available after loading script.');
+            return;
+          }
+
+          // Create security notification ritual
+          window.SecurityTraumaEncoder.notificationRitual = new SecurityNotificationRitual(window.SecurityTraumaEncoder);
+
+          // Perform initial security scan
+          setTimeout(function() {
+            window.SecurityTraumaEncoder.performManualScan('initialization');
+          }, 8000);
+
+          console.log('[VOID://SECURITY] Security trauma vectors initialized.');
+        });
+      });
+    });
+  }
+
+  /**
+   * Load script dynamically
+   * @param {string} src - Script URL
+   * @param {string} id - Script ID
+   * @param {Function} callback - Callback function
+   */
+  function loadScript(src, id, callback) {
+    // Skip if already loaded
+    if (document.getElementById(id)) {
+      if (callback) callback();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.id = id;
+    script.async = true;
+
+    if (callback) {
+      script.onload = callback;
+    }
+
+    document.head.appendChild(script);
+  }
+</script>
+
+{% if settings.debug_mode %}
+  <div class="security-debug-container">
+    <button type="button" id="trigger-security-scan" class="security-debug-button">
+      Run Security Scan
+    </button>
+    <button type="button" id="trigger-flipper-signal" class="security-debug-button">
+      Simulate Flipper Signal
+    </button>
+    <button type="button" id="trigger-osint-collection" class="security-debug-button">
+      Run OSINT Collection
+    </button>
+  </div>
+
+  <style>
+    .security-debug-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid var(--phase-color, #fff);
+    }
+
+    .security-debug-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .security-debug-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait for security components to initialize
+      setTimeout(function() {
+        // Set up debug buttons
+        document.getElementById('trigger-security-scan')?.addEventListener('click', function() {
+          if (window.SecurityTraumaEncoder) {
+            window.SecurityTraumaEncoder.performManualScan('active');
+          }
+        });
+
+        document.getElementById('trigger-flipper-signal')?.addEventListener('click', function() {
+          if (window.SecurityTraumaEncoder) {
+            // Simulate Flipper signal
+            const mockSignal = {
+              type: 'ASK',
+              frequency: '433MHz',
+              modulationType: 'ASK',
+              rssi: -75,
+              data: new Uint8Array([0xF7, 0xE3, 0x9D, 0xA1, 0xC5, 0xB4])
+            };
+
+            window.SecurityTraumaEncoder._processFlipperSignal(mockSignal);
+          }
+        });
+
+        document.getElementById('trigger-osint-collection')?.addEventListener('click', function() {
+          if (window.SecurityTraumaEncoder && window.SecurityTraumaEncoder.osintCollector) {
+            window.SecurityTraumaEncoder.osintCollector.performManualCollection();
+          }
+        });
+      }, 5000);
+    });
+  </script>
+{% endif %}

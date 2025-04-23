@@ -1,0 +1,194 @@
+/**
+ * Narrative Commerce Styles
+ *
+ * Transforms commercial objects into mythic vessels.
+ * Products become narrative fragments in an evolving
+ * consciousness architecture.
+ *
+ * @version 1.0.2
+ * @phase cyber-lotus
+ */
+
+/*
+ * Core commerce mythic variables
+ */
+:root {
+  /* Phase colors for commerce elements */
+  --commerce-cyber-lotus: rgba(15, 230, 255, 0.7);
+  --commerce-alien-flora: rgba(4, 255, 89, 0.7);
+  --commerce-rolling-virus: rgba(255, 187, 56, 0.7);
+  --commerce-trauma-core: rgba(215, 33, 184, 0.7);
+
+  /* Current commerce phase color */
+  --commerce-phase-color: var(--commerce-cyber-lotus);
+
+  /* Narrative archetype colors */
+  --archetype-void-seeker: rgba(215, 33, 184, 0.7);
+  --archetype-bloom-weaver: rgba(4, 255, 89, 0.7);
+  --archetype-cipher-architect: rgba(15, 230, 255, 0.7);
+  --archetype-virus-vector: rgba(255, 187, 56, 0.7);
+
+  /* Trauma level variables */
+  --commerce-trauma-low: 0.2;
+  --commerce-trauma-medium: 0.5;
+  --commerce-trauma-high: 0.8;
+  --commerce-trauma-current: var(--commerce-trauma-low);
+
+  /* Animation timings */
+  --commerce-transition-speed: 450ms;
+  --commerce-hover-speed: 200ms;
+}
+
+/* Phase-specific variables */
+body.phase-cyber-lotus,
+.phase-cyber-lotus {
+  --commerce-phase-color: var(--commerce-cyber-lotus);
+}
+
+body.phase-alien-flora,
+.phase-alien-flora {
+  --commerce-phase-color: var(--commerce-alien-flora);
+}
+
+body.phase-rolling-virus,
+.phase-rolling-virus {
+  --commerce-phase-color: var(--commerce-rolling-virus);
+}
+
+body.phase-trauma-core,
+.phase-trauma-core {
+  --commerce-phase-color: var(--commerce-trauma-core);
+}
+
+/* Trauma-level variables */
+body.low-trauma,
+.low-trauma {
+  --commerce-trauma-current: var(--commerce-trauma-low);
+}
+
+body.medium-trauma,
+.medium-trauma {
+  --commerce-trauma-current: var(--commerce-trauma-medium);
+}
+
+body.high-trauma,
+.high-trauma {
+  --commerce-trauma-current: var(--commerce-trauma-high);
+}
+
+/*
+ * General commerce components
+ */
+
+/* Product cards */
+.product-card,
+.product-item,
+[data-product-id] {
+  position: relative;
+  transition: transform var(--commerce-transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow var(--commerce-transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Phase-specific card effects */
+.product-card.phase-cyber-lotus,
+.product-item.phase-cyber-lotus,
+[data-product-id][data-memory-phase='cyber-lotus'] {
+  box-shadow: 0 0 0 1px var(--commerce-cyber-lotus);
+}
+
+.product-card.phase-alien-flora,
+.product-item.phase-alien-flora,
+[data-product-id][data-memory-phase='alien-flora'] {
+  box-shadow: 0 0 0 1px var(--commerce-alien-flora);
+}
+
+.product-card.phase-rolling-virus,
+.product-item.phase-rolling-virus,
+[data-product-id][data-memory-phase='rolling-virus'] {
+  box-shadow: 0 0 0 1px var(--commerce-rolling-virus);
+}
+
+.product-card.phase-trauma-core,
+.product-item.phase-trauma-core,
+[data-product-id][data-memory-phase='trauma-core'] {
+  box-shadow: 0 0 0 1px var(--commerce-trauma-core);
+}
+
+/* Hover effects */
+.product-card:hover,
+.product-item:hover,
+[data-product-id]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.3);
+}
+
+/* Trauma level effects */
+.product-card.high-trauma,
+.product-item.high-trauma,
+[data-product-id][data-trauma-weight^='0.8'],
+[data-product-id][data-trauma-weight^='0.9'] {
+  box-shadow: 0 0 0 1px var(--commerce-phase-color), 0 0 10px rgba(var(--commerce-phase-color), 0.3);
+}
+
+/* Narrative fragment tooltip */
+.narrative-fragment-tooltip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Product page effects */
+.product-template .phase-cyber-lotus .product-single__title,
+.template-product .phase-cyber-lotus h1 {
+  color: var(--commerce-cyber-lotus);
+  text-shadow: 0 0 5px rgba(var(--commerce-cyber-lotus), 0.3);
+}
+
+/* Adaptive animations based on trauma level */
+@media (prefers-reduced-motion: no-preference) {
+  .high-trauma .product-card:hover,
+  .high-trauma .product-item:hover {
+    animation: trauma-high-pulse 1.5s infinite;
+  }
+
+  .medium-trauma .product-card:hover,
+  .medium-trauma .product-item:hover {
+    animation: trauma-medium-pulse 2s infinite;
+  }
+
+  @keyframes trauma-high-pulse {
+    0% {
+      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.3);
+    }
+    50% {
+      box-shadow: 0 5px 25px rgba(var(--commerce-phase-color), 0.5);
+    }
+    100% {
+      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.3);
+    }
+  }
+
+  @keyframes trauma-medium-pulse {
+    0% {
+      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.2);
+    }
+    50% {
+      box-shadow: 0 5px 20px rgba(var(--commerce-phase-color), 0.4);
+    }
+    100% {
+      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.2);
+    }
+  }
+}
