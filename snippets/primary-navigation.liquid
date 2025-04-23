@@ -1,0 +1,23 @@
+<nav class="site-nav" role="navigation" aria-label="Primary navigation">
+  <ul class="site-nav__list">
+    {% for link in linklists[settings.main_menu].links %}
+      <li class="site-nav__item{% if link.active %} site-nav__item--active{% endif %}">
+        <a href="{{ link.url }}" class="site-nav__link glitch-effect">
+          {{ link.title }}
+        </a>
+
+        {% if link.links.size > 0 %}
+          <ul class="site-nav__dropdown">
+            {% for childlink in link.links %}
+              <li class="site-nav__dropdown-item">
+                <a href="{{ childlink.url }}" class="site-nav__dropdown-link">
+                  {{ childlink.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

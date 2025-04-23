@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
   "general": {
     "accessibility": {
       "skip_to_content": "Skip to content"
@@ -54,7 +57,9 @@
         "other": "{{ count }} results for \"{{ terms }}\""
       },
       "no_results": "No results found for \"{{ terms }}\".",
-      "no_results_html": "Please try a different search term or go back to the <a href=\"/\">home page</a>."
+      "no_results_html": "Please try a different search term or go back to the <a href=\"/\">home page</a>.",
+      "toggle_search": "Toggle search",
+      "close_search": "Close search"
     },
     "newsletter_form": {
       "newsletter_email": "Join our mailing list",
@@ -82,6 +87,9 @@
       "with_count": {
         "one": "{{ count }} item",
         "other": "{{ count }} items"
+      },
+      "general": {
+        "title": "Cart"
       }
     },
     "memory_resonance": {
@@ -188,7 +196,7 @@
   },
   "customer": {
     "account": {
-      "title": "Memory Profile",
+      "title": "Account",
       "details": "Account Details",
       "view_addresses": "View Addresses",
       "return": "Return to Account Details"
@@ -211,5 +219,12 @@
     "404": "Memory Fragment Not Found",
     "page_not_found": "The memory fragment you're seeking has been lost or corrupted.",
     "login_required": "Archive access required"
+  },
+  "footer": {
+    "quick_links": "Quick Links",
+    "contact_us": "Contact Us",
+    "follow_us": "Follow Us",
+    "copyright": "All rights reserved.",
+    "powered_by_html": "Powered by <a href=\"https://www.shopify.com\" target=\"_blank\">Shopify</a>"
   }
 }

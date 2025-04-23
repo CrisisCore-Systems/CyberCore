@@ -1,0 +1,13 @@
+<div class="site-header__container">
+  <div class="site-header__logo-container">
+    <a href="/" class="site-header__logo-link" aria-label="{{ shop.name }}">
+      {% if settings.logo %}
+        <img src="{{ settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" loading="eager">
+      {% else %}
+        <span class="site-header__logo-text">{{ shop.name }}</span>
+      {% endif %}
+    </a>
+  </div>
+  {% render 'primary-navigation' %}
+  {% render 'header-actions' %}
+</div>

@@ -1,0 +1,25 @@
+<div class="site-footer__container">
+  <div class="site-footer__grid">
+    {% if settings.footer_menu_enable %}
+      <div class="site-footer__nav">
+        {% for link in linklists[settings.footer_menu].links %}
+          <a href="{{ link.url }}" class="site-footer__link">{{ link.title }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="site-footer__bottom">
+      <div class="site-footer__copyright">
+        &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}
+      </div>
+
+      {% if settings.show_payment_icons %}
+        <div class="site-footer__payment-icons">
+          {% for type in shop.enabled_payment_types %}
+            {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

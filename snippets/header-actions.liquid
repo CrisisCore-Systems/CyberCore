@@ -1,0 +1,18 @@
+<div class="site-header__actions">
+  <button type="button" class="site-header__search-toggle" aria-label="Toggle search" data-action="toggle-search">
+    {% render 'icon-search' %}
+  </button>
+
+  <a href="{{ routes.cart_url }}" class="site-header__cart" aria-label="View cart">
+    {% render 'icon-cart' %}
+    <span class="site-header__cart-count" data-cart-count>
+      {{ cart.item_count }}
+    </span>
+  </a>
+
+  {% if shop.customer_accounts_enabled %}
+    <a href="{{ routes.account_url }}" class="site-header__account" aria-label="Account">
+      {% render 'icon-account' %}
+    </a>
+  {% endif %}
+</div>

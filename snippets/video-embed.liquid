@@ -1,0 +1,33 @@
+{% comment %}
+  Renders a video embed with proper iframe attributes
+
+  Accepts:
+  - video_url: {Object} Video URL object from Shopify (required)
+  - class: {String} Additional classes for the container
+
+  Usage:
+  {% render 'video-embed', video_url: block.settings.video_url, class: "section-video" %}
+{% endcomment %}
+
+{%- if video_url != blank -%}
+  <div class="video-container {{ class }}">
+    {%- case video_url.type -%}
+      {%- when 'youtube' -%}
+        <iframe
+          src="https://www.youtube.com/embed/{{ video_url.id }}?rel=0"
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      {%- when 'vimeo' -%}
+        <iframe
+          src="https://player.vimeo.com/video/{{ video_url.id }}"
+          frameborder="0"
+          allow="autoplay; fullscreen"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+    {%- endcase -%}
+  </div>
+{%- endif -%}

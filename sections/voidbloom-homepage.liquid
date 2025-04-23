@@ -12,6 +12,12 @@
   data-section-id="{{ section.id }}"
   data-section-type="voidbloom-homepage">
 
+  <div class="quantum-layer" data-quantum-layer data-trauma-pattern="{{ section.settings.default_trauma_pattern | default: 'recursion' }}" data-intensity="{{ section.settings.default_intensity | default: '50' }}">
+    <div class="quantum-layer__grid"></div>
+    <div class="quantum-layer__particles"></div>
+    <div class="quantum-layer__glitch"></div>
+  </div>
+
   {% if section.settings.show_hero %}
     <div class="voidbloom-homepage__hero">
       <div class="voidbloom-homepage__hero-background">
@@ -942,34 +948,251 @@
       opacity: 0.5;
     }
   }
+
+  /* Quantum Layer Styles */
+  .quantum-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .quantum-layer__grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    transform: perspective(500px) rotateX(60deg) scale(1.5);
+    transform-origin: center top;
+    opacity: 0.2;
+    transition: transform 0.5s ease;
+  }
+
+  .quantum-layer__particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 2px);
+    background-size: 30px 30px;
+    opacity: 0.2;
+    transition: opacity 0.5s ease;
+  }
+
+  .quantum-layer__glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .quantum-layer--transitioning .quantum-layer__glitch {
+    opacity: 0.3;
+    animation: glitch-animation 0.5s linear 1;
+  }
+
+  @keyframes glitch-animation {
+    0% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-5px, 5px);
+    }
+    40% {
+      transform: translate(5px, -5px);
+    }
+    60% {
+      transform: translate(-3px, -2px);
+    }
+    80% {
+      transform: translate(3px, 2px);
+    }
+    100% {
+      transform: translate(0);
+    }
+  }
+
+  /* Trauma pattern modifiers */
+  [data-trauma-pattern="recursion"] .quantum-layer__grid {
+    background-size: 40px 40px;
+    animation: grid-pulse 10s infinite alternate;
+  }
+
+  [data-trauma-pattern="fragmentation"] .quantum-layer__grid {
+    background-size: 20px 20px;
+    background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(45deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(135deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  [data-trauma-pattern="abandonment"] .quantum-layer__particles {
+    background-size: 50px 50px;
+    animation: fade-pulse 8s infinite alternate;
+  }
+
+  [data-trauma-pattern="surveillance"] .quantum-layer__grid {
+    background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 10px);
+    background-size: 100px 40px;
+  }
+
+  [data-trauma-pattern="dissolution"] .quantum-layer__particles {
+    background-image: radial-gradient(rgba(0, 255, 255, 0.15) 1px, transparent 6px);
+    background-size: 60px 60px;
+    animation: dissolve-animation 15s infinite linear;
+  }
+
+  [data-trauma-pattern="displacement"] .quantum-layer__grid {
+    transform: perspective(500px) rotateX(70deg) rotateZ(15deg) scale(1.5);
+  }
+
+  @keyframes grid-pulse {
+    0% {
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes fade-pulse {
+    0% {
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes dissolve-animation {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
 </style>
 
 {% javascript %}
-  // Initialize any JavaScript specific to this section
+  // QUANTUM LAYER JavaScript
   document.addEventListener('DOMContentLoaded', function() {
-    // Handle trauma-specific effects
-    if (window.NeuralBus) {
-      NeuralBus.subscribe('trauma:activated', function(data) {
-        const section = document.querySelector('.voidbloom-homepage');
-        if (section) {
-          section.setAttribute('data-trauma', data.type);
-          section.setAttribute('data-intensity', data.intensity);
+    const quantumLayer = document.querySelector('[data-quantum-layer]');
+    if (quantumLayer) {
+      // Initialize trauma pattern
+      const initialTraumaPattern = quantumLayer.getAttribute('data-trauma-pattern');
+      const initialIntensity = quantumLayer.getAttribute('data-intensity');
+
+      // Initialize Neural Bus connection if available
+      if (window.NeuralBus) {
+        // Publish initial state
+        NeuralBus.publish('trauma:initialized', {
+          type: initialTraumaPattern,
+          intensity: initialIntensity
+        });
+
+        // Subscribe to trauma pattern changes
+        NeuralBus.subscribe('trauma:change', function(data) {
+          if (data.type) {
+            quantumLayer.setAttribute('data-trauma-pattern', data.type);
+          }
+          if (data.intensity) {
+            quantumLayer.setAttribute('data-intensity', data.intensity);
+          }
+
+          // Add a temporary class to trigger animations
+          quantumLayer.classList.add('quantum-layer--transitioning');
+          setTimeout(function() {
+            quantumLayer.classList.remove('quantum-layer--transitioning');
+          }, 1000);
+        });
+      }
+
+      // Respond to scroll events
+      window.addEventListener('scroll', function() {
+        const scrollPercentage = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+
+        // Adjust grid perspective based on scroll
+        const gridElement = quantumLayer.querySelector('.quantum-layer__grid');
+        if (gridElement) {
+          gridElement.style.transform = `perspective(500px) rotateX(${60 + (scrollPercentage * 0.1)}deg) scale(${1.5 + (scrollPercentage * 0.005)})`;
+        }
+
+        // Adjust particle opacity based on scroll
+        const particlesElement = quantumLayer.querySelector('.quantum-layer__particles');
+        if (particlesElement) {
+          particlesElement.style.opacity = 0.2 + (scrollPercentage * 0.002);
         }
       });
-    }
 
-    // Apply parallax effect to hero image if available
-    const heroSection = document.querySelector('.voidbloom-homepage__hero');
-    if (heroSection) {
-      window.addEventListener('scroll', function() {
-        const scrollPosition = window.scrollY;
-        const heroImage = heroSection.querySelector('.voidbloom-homepage__hero-image-element');
-        if (heroImage) {
-          heroImage.style.transform = `translateY(${scrollPosition * 0.2}px)`;
+      // Mouse movement effect
+      document.addEventListener('mousemove', function(event) {
+        const mouseX = event.clientX / window.innerWidth;
+        const mouseY = event.clientY / window.innerHeight;
+
+        // Slight grid movement based on mouse position
+        const gridElement = quantumLayer.querySelector('.quantum-layer__grid');
+        if (gridElement) {
+          gridElement.style.backgroundPosition = `${mouseX * 10}px ${mouseY * 10}px`;
+        }
+
+        // Particles follow mouse slightly
+        const particlesElement = quantumLayer.querySelector('.quantum-layer__particles');
+        if (particlesElement) {
+          particlesElement.style.backgroundPosition = `${mouseX * 20}px ${mouseY * 20}px`;
+        }
+      });
+
+      // Glitch effect on click
+      document.addEventListener('click', function() {
+        const glitchElement = quantumLayer.querySelector('.quantum-layer__glitch');
+        if (glitchElement) {
+          glitchElement.style.opacity = '0.3';
+          setTimeout(function() {
+            glitchElement.style.opacity = '';
+          }, 300);
         }
       });
     }
   });
+
+  // Original section JavaScript
+  // Handle trauma-specific effects
+  if (window.NeuralBus) {
+    NeuralBus.subscribe('trauma:activated', function(data) {
+      const section = document.querySelector('.voidbloom-homepage');
+      if (section) {
+        section.setAttribute('data-trauma', data.type);
+        section.setAttribute('data-intensity', data.intensity);
+      }
+    });
+  }
+
+  // Apply parallax effect to hero image if available
+  const heroSection = document.querySelector('.voidbloom-homepage__hero');
+  if (heroSection) {
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.scrollY;
+      const heroImage = heroSection.querySelector('.voidbloom-homepage__hero-image-element');
+      if (heroImage) {
+        heroImage.style.transform = `translateY(${scrollPosition * 0.2}px)`;
+      }
+    });
+  }
 {% endjavascript %}
 
 {% schema %}
@@ -978,6 +1201,51 @@
   "tag": "section",
   "class": "voidbloom-section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Quantum Layer Settings"
+    },
+    {
+      "type": "select",
+      "id": "default_trauma_pattern",
+      "label": "Default trauma pattern",
+      "options": [
+        {
+          "value": "recursion",
+          "label": "Recursion"
+        },
+        {
+          "value": "fragmentation",
+          "label": "Fragmentation"
+        },
+        {
+          "value": "abandonment",
+          "label": "Abandonment"
+        },
+        {
+          "value": "surveillance",
+          "label": "Surveillance"
+        },
+        {
+          "value": "displacement",
+          "label": "Displacement"
+        },
+        {
+          "value": "dissolution",
+          "label": "Dissolution"
+        }
+      ],
+      "default": "recursion"
+    },
+    {
+      "type": "range",
+      "id": "default_intensity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "label": "Default intensity",
+      "default": 50
+    },
     {
       "type": "header",
       "content": "Hero Section"

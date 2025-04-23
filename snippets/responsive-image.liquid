@@ -1,0 +1,38 @@
+{% comment %}
+  Renders a responsive image using srcset for multiple screen sizes
+
+  Accepts:
+  - image: {Object} Image object from Shopify (required)
+  - sizes: {String} Sizes attribute for the img tag (default: "100vw")
+  - alt: {String} Alt text for the image (default: image.alt or empty string)
+  - class: {String} Additional classes for the img tag
+  - widths: {Array} Array of widths to use for srcset (default: [180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048])
+
+  Usage:
+  {% render 'responsive-image', image: section.settings.hero_image, sizes: "(min-width: 768px) 50vw, 100vw", class: "hero-image" %}
+{% endcomment %}
+
+{%- if image != blank -%}
+  {%- if widths == blank -%}
+    {%- assign widths = '180,360,540,720,900,1080,1296,1512,1728,2048' | split: ',' -%}
+  {%- endif -%}
+
+  {%- if sizes == blank -%}
+    {%- assign sizes = '100vw' -%}
+  {%- endif -%}
+
+  <img
+    src="{{ image | image_url: width: 720 }}"
+    srcset="{%- for width in widths -%}
+      {{ image | image_url: width: width }} {{ width }}w{%- unless forloop.last -%}, {%- endunless -%}
+    {%- endfor -%}"
+    sizes="{{ sizes }}"
+    alt="{{ alt | default: image.alt | escape }}"
+    loading="lazy"
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    class="{{ class }}"
+  >
+{%- else -%}
+  {{ 'image' | placeholder_svg_tag: 'placeholder-svg ' | append: class }}
+{%- endif -%}

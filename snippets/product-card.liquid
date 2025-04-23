@@ -9,81 +9,29 @@
 {% assign trauma_level = product.metafields.voidbloom.trauma_level | default: 0 %}
 {% assign memory_phase = product.metafields.voidbloom.memory_phase | default: "cyber-lotus" %}
 
-<div class="product-card group relative"
-     data-product-id="{{ product.id }}"
-     data-trauma-level="{{ trauma_level }}"
-     data-memory-phase="{{ memory_phase }}">
+<div class="product-card">
+  <a href="{{ product.url | within: collection }}" class="product-card__link">
+    <div class="product-card__image-container">
+      {%- if product.featured_media != blank -%}
+        {% render 'responsive-image',
+          image: product.featured_media.preview_image,
+          sizes: "(min-width: 768px) 50vw, 100vw",
+          class: "product-card__image"
+        %}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-card__image' }}
+      {%- endif -%}
 
-  <a href="{{ product.url }}" class="block overflow-hidden rounded-lg relative h-0 pb-[125%]">
-    <!-- Quantum Field Overlay -->
-    <div class="absolute inset-0 pointer-events-none quantum-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-         :class="{ 'opacity-75': $store.trauma.level >= 3 }">
-      <div class="quantum-field absolute inset-0"></div>
-      <div class="quantum-lines"></div>
+      {%- if product.compare_at_price > product.price -%}
+        <span class="product-card__badge">{{ 'products.product.on_sale' | t }}</span>
+      {%- endif -%}
     </div>
 
-    <!-- Product Image -->
-    <div class="absolute inset-0 w-full h-full transform transition-transform duration-500 group-hover:scale-105">
-      {% if product.featured_media %}
-        <img
-          srcset="{% for width in '180,360,540,720,900,1080' | split: ',' %}
-            {{ product.featured_media | img_url: width: width }} {{ width }}w,
-          {% endfor %}"
-          sizes="(min-width: 1540px) 348px, (min-width: 1280px) 284px, (min-width: 1040px) 242px, (min-width: 768px) 348px, (min-width: 640px) 284px, calc(100vw - 30px)"
-          src="{{ product.featured_media | img_url: '540x' }}"
-          alt="{{ product.featured_media.alt | escape }}"
-          width="{{ product.featured_media.width }}"
-          height="{{ product.featured_media.height }}"
-          loading="lazy"
-          class="w-full h-full object-cover"
-        >
-      {% else %}
-        {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover text-void-800' }}
-      {% endif %}
-    </div>
-
-    <!-- Trauma Indicator -->
-    {% if trauma_level > 0 %}
-      <div class="absolute top-2 right-2 flex">
-        {% for i in (1..trauma_level) limit: 5 %}
-          <span class="h-1.5 w-3 rounded-sm mr-0.5 bg-trauma-500"></span>
-        {% endfor %}
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+      <div class="product-card__price">
+        {%- render 'price', product: product -%}
       </div>
-    {% endif %}
-
-    <!-- Memory Phase Tag -->
-    <div class="absolute bottom-2 left-2">
-      {% render 'memory-phase-tag', phase: memory_phase, size: 'sm' %}
-    </div>
-
-    <!-- Quick Add Button (appears on hover) -->
-    <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-void-950/80 to-void-950/0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-      <button type="button"
-              class="w-full py-2 bg-trauma-600 hover:bg-trauma-700 text-white rounded flex items-center justify-center transition-colors group-quantum"
-              @click.prevent="quickAdd('{{ product.variants.first.id }}')">
-        <span class="text-sm">Encode to Memory</span>
-        <span class="ml-1.5 quantum-pulse opacity-0 group-quantum-hover:opacity-100 transition-opacity">
-          {% render 'icon-quantum-pulse', class: 'h-4 w-4' %}
-        </span>
-      </button>
     </div>
   </a>
-
-  <!-- Product Info -->
-  <div class="mt-3 px-1">
-    <!-- Title -->
-    <h3 class="text-void-200 font-trauma leading-tight group-hover:text-trauma-300 transition-colors">
-      <a href="{{ product.url }}">{{ product.title }}</a>
-    </h3>
-
-    <!-- Price -->
-    <div class="mt-1 flex items-baseline">
-      {% if product.compare_at_price_max > product.price %}
-        <span class="text-trauma-500">{{ product.price | money }}</span>
-        <span class="text-void-500 text-sm line-through ml-2">{{ product.compare_at_price_max | money }}</span>
-      {% else %}
-        <span class="text-void-400">{{ product.price | money }}</span>
-      {% endif %}
-    </div>
-  </div>
 </div>
