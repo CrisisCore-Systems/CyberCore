@@ -1,6 +1,101 @@
+{% comment %}
+  Section: Neural Testimonials
+  Displays customer testimonials in a grid layout.
+  Uses blocks for individual testimonials, allowing easy management via the Theme Editor.
+{% endcomment %}
+
+<section class="neural-testimonials"
+         id="neural-testimonials-{{ section.id }}"
+         data-section-id="{{ section.id }}"
+         data-section-type="neural-testimonials"
+         data-neural-node
+         data-depth="2">
+
+  <div class="section-header">
+    {%- if section.settings.title != blank -%}
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    <div class="section-line"></div>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="testimonial-grid">
+      {%- for block in section.blocks -%}
+        <div class="testimonial-card" {{ block.shopify_attributes }} data-neural-node>
+          <div class="testimonial-content">
+            {%- if block.settings.quote != blank -%}
+              <blockquote class="testimonial-quote">{{ block.settings.quote }}</blockquote>
+            {%- endif -%}
+            {%- if block.settings.author != blank -%}
+              <cite class="testimonial-author">{{ block.settings.author | escape }}</cite>
+            {%- endif -%}
+            {%- if block.settings.verified_text != blank -%}
+               <div class="testimonial-verified">{{ block.settings.verified_text | escape }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- else -%}
+    {%- comment %} Optional: Add onboarding message if no blocks exist {%- endcomment %}
+    <div class="testimonial-grid--empty">
+      <p>{{ 'sections.testimonials.no_blocks' | t: section_label: section.settings.title }}</p>
+    </div>
+  {%- endif -%}
+
+</section>
+
 {% schema %}
-  {
-    "name": "Section name",
-    "settings": []
-  }
+{
+  "name": "Neural Testimonials",
+  "tag": "section",
+  "class": "neural-testimonials-section",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Neural Imprints"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Quote",
+          "default": "<p>Share a customer quote here.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Customer Name"
+        },
+        {
+          "type": "text",
+          "id": "verified_text",
+          "label": "Verified Status Text",
+          "default": "Verified Purchase",
+          "info": "Optional text shown below the author (e.g., 'Verified Purchase', 'Location')."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Neural Testimonials",
+      "category": "Social Proof",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
 {% endschema %}
