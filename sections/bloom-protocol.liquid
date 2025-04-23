@@ -1,6 +1,119 @@
+{% comment %}
+  Section: Bloom Protocol
+  Displays protocol steps. Titles and descriptions are editable via schema settings.
+{% endcomment %}
+
+<section class="bloom-protocol" id="bloom-protocol-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="bloom-protocol" data-neural-node data-depth="2">
+  <div class="section-header">
+    {%- if section.settings.title != blank -%}
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    <div class="section-line"></div>
+  </div>
+
+  <div class="protocol-grid">
+    {%- comment %} Step 1 {%- endcomment %}
+    <div class="protocol-step" data-step="1" data-neural-node>
+      <div class="step-number">1</div>
+      {%- if section.settings.step1_title != blank -%}
+        <h3 class="step-title">{{ section.settings.step1_title | escape }}</h3>
+      {%- endif -%}
+      {%- if section.settings.step1_desc != blank -%}
+        <div class="step-description">{{ section.settings.step1_desc | newline_to_br }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- comment %} Step 2 {%- endcomment %}
+    <div class="protocol-step" data-step="2" data-neural-node>
+      <div class="step-number">2</div>
+       {%- if section.settings.step2_title != blank -%}
+        <h3 class="step-title">{{ section.settings.step2_title | escape }}</h3>
+      {%- endif -%}
+      {%- if section.settings.step2_desc != blank -%}
+        <div class="step-description">{{ section.settings.step2_desc | newline_to_br }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- comment %} Step 3 {%- endcomment %}
+    <div class="protocol-step" data-step="3" data-neural-node>
+      <div class="step-number">3</div>
+       {%- if section.settings.step3_title != blank -%}
+        <h3 class="step-title">{{ section.settings.step3_title | escape }}</h3>
+      {%- endif -%}
+      {%- if section.settings.step3_desc != blank -%}
+        <div class="step-description">{{ section.settings.step3_desc | newline_to_br }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
 {% schema %}
   {
-    "name": "Section name",
-    "settings": []
+    "name": "Bloom Protocol",
+    "tag": "section",
+    "class": "bloom-protocol-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Section Title",
+        "default": "Bloom Protocol"
+      },
+      {
+        "type": "header",
+        "content": "Step 1 Content"
+      },
+      {
+        "type": "text",
+        "id": "step1_title",
+        "label": "Step 1 Title",
+        "default": "Memory Acquisition"
+      },
+      {
+        "type": "textarea",
+        "id": "step1_desc",
+        "label": "Step 1 Description",
+        "default": "Select memory artifacts that resonate with your trauma signature."
+      },
+      {
+        "type": "header",
+        "content": "Step 2 Content"
+      },
+      {
+        "type": "text",
+        "id": "step2_title",
+        "label": "Step 2 Title",
+        "default": "Deep Integration"
+      },
+      {
+        "type": "textarea",
+        "id": "step2_desc",
+        "label": "Step 2 Description",
+        "default": "Integrate memory fragments through the void network."
+      },
+      {
+        "type": "header",
+        "content": "Step 3 Content"
+      },
+      {
+        "type": "text",
+        "id": "step3_title",
+        "label": "Step 3 Title",
+        "default": "Dimensional Collapse"
+      },
+      {
+        "type": "textarea",
+        "id": "step3_desc",
+        "label": "Step 3 Description",
+        "default": "Witness the collapse of dimensional barriers as trauma materializes."
+      }
+    ],
+    "presets": [
+      {
+        "name": "Bloom Protocol",
+        "category": "Custom Content"
+      }
+    ]
   }
 {% endschema %}
+EOF
