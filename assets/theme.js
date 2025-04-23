@@ -600,7 +600,155 @@
       }
     }, { once: true });
   }
+// --- Announcement Matrix Logic --- //
+// Make sure this runs after the DOM is ready, e.g., inside
+// document.addEventListener('DOMContentLoaded', () => { ... });
+// or your theme's existing JS initialization structure.
 
+class AnnouncementMatrix {
+  constructor(container) {
+    // Accept the container element during instantiation
+    if (!container) return;
+    this.container = container;
+    this.alerts = []; // Keep track of active AnnouncementBar instances if needed
+    this.dynamicEndpoint = '/apps/voidbloom-alerts'; // Or get from data attribute
+    this.loadDynamic = this.container.dataset.loadDynamic === 'true';
+
+    // Assumes AnnouncementBar class is defined elsewhere and accessible
+    // This class would handle individual bar logic (expiration, dismiss, etc.)
+    // Example: import AnnouncementBar from './announcement-bar.js';
+
+    this.init();
+  }
+
+  init() {
+    // Register any alerts already rendered by Liquid server-side
+    this.container.querySelectorAll('[data-announcement-bar]').forEach(el => {
+      this.registerAlert(el);
+    });
+
+    // Only fetch dynamic alerts if the setting is enabled
+    if (this.loadDynamic) {
+      this.loadDynamicAlerts();
+    }
+
+    // Optional: Observe for future DOM additions if needed,
+    // but usually dynamic ones come from the fetch.
+    // this.observeMutations();
+  }
+
+  registerAlert(element) {
+     // Check if AnnouncementBar class exists before trying to use it
+     if (typeof AnnouncementBar !== 'undefined') {
+        try {
+            const alertInstance = new AnnouncementBar(element);
+            this.alerts.push(alertInstance);
+        } catch (e) {
+            console.error("Failed to initialize AnnouncementBar for element:", element, e);
+        }
+     } else {
+        console.warn("AnnouncementBar class not found. Cannot register alert:", element);
+     }
+  }
+
+  async loadDynamicAlerts() {
+    try {
+      const response = await fetch(this.dynamicEndpoint);
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      // Assuming the endpoint returns { alerts: [...] }
+      // If it returns just the array, adjust accordingly
+      const data = await response.json();
+      const alerts = data.alerts || data; // Handle both object or array response
+
+      if (Array.isArray(alerts)) {
+        this.renderDynamicAlerts(alerts);
+      } else {
+        console.error('Dynamic alerts data is not an array:', alerts);
+      }
+
+    } catch (error) {
+      console.error('Failed to load or parse dynamic alerts:', error);
+      // Optionally display a user-facing error in the UI
+    }
+  }
+
+  // --- CRITICAL FIX: Render HTML directly, DO NOT use Liquid render tag ---
+  renderDynamicAlerts(alerts) {
+    const fragment = document.createDocumentFragment(); // More efficient for multiple appends
+
+    alerts.forEach((alertData, index) => {
+      // We need to replicate the structure and content of 'announcement-card.liquid' here using JS
+      // This is a simplified example - **You MUST adapt this** to match your actual snippet's HTML structure and data attributes
+
+      const cardElement = document.createElement('div');
+      // --- >> ** IMPORTANT: Adapt this element creation to match your snippet ** << ---
+      cardElement.classList.add('announcement-card', 'dynamic-alert'); // Add appropriate classes
+      cardElement.dataset.announcementBar = ''; // Add necessary data attributes
+      cardElement.dataset.priority = alertData.priority || '0';
+      if (alertData.expires) {
+         cardElement.dataset.expires = alertData.expires;
+      }
+      // Add more data attributes as needed by AnnouncementBar class
+
+      // Inner structure (Example - adapt to your snippet)
+      const messageElement = document.createElement('p');
+      messageElement.classList.add('announcement-message'); // Use classes from your snippet
+      messageElement.textContent = alertData.message || ''; // Basic text content
+      // If your snippet uses complex HTML/Liquid inside, replicate that structure here
+
+      // Example: Apply pulse color if provided
+      if (alertData.color) {
+         cardElement.style.setProperty('--pulse-color', alertData.color); // Example CSS variable
+      }
+      // Add logic for glitch effect based on alertData.glitch if needed
+
+      cardElement.appendChild(messageElement);
+      // Append other elements (like close button if needed)
+
+      // --- >> ** End of adaptation section ** << ---
+
+      fragment.appendChild(cardElement);
+    });
+
+    this.container.appendChild(fragment);
+
+    // After appending, register the new elements with the AnnouncementBar class
+    this.container.querySelectorAll('.dynamic-alert:not([data-initialized])').forEach(newEl => {
+       this.registerAlert(newEl);
+       newEl.dataset.initialized = true; // Mark as initialized to avoid re-registering
+    });
+  }
+
+  // Optional: Mutation observer if needed for non-fetch additions
+  /*
+  observeMutations() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach(node => {
+          // Check if it's the correct element and not already initialized
+          if (node.nodeType === Node.ELEMENT_NODE && node.matches?.('[data-announcement-bar]:not([data-initialized])')) {
+             console.log('Registering mutated alert:', node);
+             this.registerAlert(node);
+             node.dataset.initialized = true;
+          }
+        });
+      });
+    });
+    observer.observe(this.container, { childList: true });
+  }
+  */
+}
+
+// --- Initialization ---
+// Find all matrix containers on the page (in case section is added multiple times)
+// and initialize each one.
+document.querySelectorAll('[data-announcement-matrix]').forEach(container => {
+  new AnnouncementMatrix(container);
+});
+
+// --- End Announcement Matrix Logic --- //
   // --- Initialization ---
 
   // Wait for the DOM to be ready
