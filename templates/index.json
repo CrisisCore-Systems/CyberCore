@@ -9,10 +9,6 @@
  */
 {
   "sections": {
-    "header": {
-      "type": "header",
-      "settings": {}
-    },
     "ritual_entry": {
       "type": "ritual-entry",
       "settings": {}
@@ -28,18 +24,12 @@
     "testimonials": {
       "type": "neural-testimonials",
       "settings": {}
-    },
-    "footer": {
-      "type": "footer",
-      "settings": {}
     }
   },
   "order": [
-    "header",
     "ritual_entry",
     "bloom_protocol",
     "signal_wall",
-    "testimonials",
-    "footer"
+    "testimonials"
   ]
 }
