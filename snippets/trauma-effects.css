@@ -1,0 +1,234 @@
+/* TRAUMA-EFFECTS.CSS
+ * Centralized animation effects for VoidBloom theme
+ * @Version: 1.0.0
+ * @Optimized: April 2025
+ */
+
+/* Base animations */
+@keyframes vb-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vb-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vb-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes vb-glitch-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(var(--glitch-offset, 5px));
+  }
+  50% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(calc(var(--glitch-offset, 5px) * -1));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes vb-glitch-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(var(--glitch-offset, 5px));
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(calc(var(--glitch-offset, 5px) * -1));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes vb-glitch-text {
+  0% {
+    text-shadow: none;
+  }
+  25% {
+    text-shadow: -1px 0 var(--vb-color-accent), 0 1px var(--vb-color-tertiary);
+  }
+  50% {
+    text-shadow: none;
+  }
+  75% {
+    text-shadow: 1px 0 var(--vb-color-tertiary), 0 -1px var(--vb-color-accent);
+  }
+  100% {
+    text-shadow: none;
+  }
+}
+
+@keyframes vb-trauma-flicker {
+  0% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  20% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  40% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  60% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes vb-quantum-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes vb-quantum-wave {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Animation utility classes */
+.vb-animate-fade-in {
+  animation: vb-fade-in var(--vb-animation-speed-medium) ease-in-out forwards;
+}
+
+.vb-animate-fade-out {
+  animation: vb-fade-out var(--vb-animation-speed-medium) ease-in-out forwards;
+}
+
+.vb-animate-pulse {
+  animation: vb-pulse var(--vb-animation-speed-slow) ease-in-out infinite;
+}
+
+.vb-animate-glitch-text {
+  animation: vb-glitch-text calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 1))
+    steps(1) infinite;
+}
+
+.vb-animate-glitch-horizontal {
+  animation: vb-glitch-horizontal
+    calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 1)) steps(1) infinite;
+}
+
+.vb-animate-glitch-vertical {
+  animation: vb-glitch-vertical
+    calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 1)) steps(1) infinite;
+}
+
+.vb-animate-trauma-flicker {
+  animation: vb-trauma-flicker
+    calc(var(--vb-animation-speed-slow) * var(--vb-trauma-intensity, 0.7)) steps(1) infinite;
+}
+
+.vb-animate-quantum-rotation {
+  animation: vb-quantum-rotation calc(var(--vb-animation-speed-very-slow) * 2) linear infinite;
+}
+
+.vb-animate-quantum-wave {
+  animation: vb-quantum-wave var(--vb-animation-speed-very-slow) ease-in-out infinite;
+}
+
+/* Animation duration modifiers */
+.vb-animation-duration-fast {
+  animation-duration: var(--vb-animation-speed-fast);
+}
+
+.vb-animation-duration-medium {
+  animation-duration: var(--vb-animation-speed-medium);
+}
+
+.vb-animation-duration-slow {
+  animation-duration: var(--vb-animation-speed-slow);
+}
+
+.vb-animation-duration-very-slow {
+  animation-duration: var(--vb-animation-speed-very-slow);
+}
+
+/* Animation delay modifiers */
+.vb-animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.vb-animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.vb-animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.vb-animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+/* User preference respecting animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

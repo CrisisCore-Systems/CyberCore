@@ -193,5 +193,136 @@
       "admin": "read_write",
       "storefront": "read_only"
     }
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "quantum_config",
+    "name": "Quantum Configuration",
+    "description": "Configuration settings for quantum effects rendering",
+    "type": "json",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "trauma_pattern",
+    "name": "Trauma Pattern",
+    "description": "Pattern type for trauma encoding visualization",
+    "type": "single_line_text_field",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "memory_phase",
+    "name": "Memory Phase",
+    "description": "Current phase of the memory artifact",
+    "type": "single_line_text_field",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "experience_type",
+    "name": "Experience Type",
+    "description": "The type of experience for this collection",
+    "type": "single_line_text_field",
+    "owner_type": "collection"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "webgl_model",
+    "name": "WebGL Model",
+    "description": "3D model for product visualization",
+    "type": "file_reference",
+    "validations": {
+      "file_types": "model"
+    },
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "glitch_intensity",
+    "name": "Glitch Intensity",
+    "description": "Intensity level for glitch effects",
+    "type": "number_decimal",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "trauma_scale",
+    "name": "Trauma Scale",
+    "description": "Trauma intensity scale from 0.0 to 1.0",
+    "type": "number_decimal",
+    "validations": {
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "quantum_state",
+    "name": "Quantum State",
+    "description": "Current quantum state of the product",
+    "type": "list.single_line_text_field",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "hologram_config",
+    "name": "Hologram Configuration",
+    "description": "Configuration for hologram rendering",
+    "type": "json",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "ambient_sound",
+    "name": "Ambient Sound",
+    "description": "URL to ambient sound file for product experience",
+    "type": "url",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom_settings",
+    "key": "intensity_scale",
+    "name": "Global Intensity Scale",
+    "description": "Global scale factor for all visual effects",
+    "type": "number_decimal",
+    "validations": {
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "owner_type": "shop"
+  },
+  {
+    "namespace": "voidbloom_settings",
+    "key": "global_trauma_type",
+    "name": "Global Trauma Type",
+    "description": "Default trauma type for the entire store",
+    "type": "single_line_text_field",
+    "owner_type": "shop"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "ritual_fragments",
+    "name": "Ritual Fragments",
+    "description": "Fragment IDs for ritual visualization",
+    "type": "list.single_line_text_field",
+    "owner_type": "collection"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "product_lore",
+    "name": "Product Lore",
+    "description": "Narrative lore associated with this product",
+    "type": "multi_line_text_field",
+    "owner_type": "product"
+  },
+  {
+    "namespace": "voidbloom",
+    "key": "memory_timeline",
+    "name": "Memory Timeline",
+    "description": "Timeline data for memory visualization",
+    "type": "json",
+    "owner_type": "product"
   }
 ]

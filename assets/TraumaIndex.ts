@@ -3,32 +3,13 @@
  * Provides type safety while maintaining compatibility with the original trauma system
  */
 
-// Import the original JavaScript file using ES module syntax
-import * as TraumaIndexJS from './TraumaIndex.js';
+// TraumaIndex: System-wide trauma quantification and mapping
+// Encodes emotional states into computable structures
 
-// Define TypeScript interfaces for the TraumaIndex
 export interface TraumaProfile {
-  id: string;
-  baseLevel: number;
-  modifiers: TraumaModifier[];
-  timestamp: number;
-  source: string;
-}
-
-export interface TraumaModifier {
-  type: string;
-  value: number;
-  duration?: number; // in milliseconds
-  expiresAt?: number; // timestamp
-  source?: string;
-}
-
-export interface TraumaInitOptions {
-  baseLevel?: number;
-  initialProfiles?: Partial<TraumaProfile>[];
-  autoUpdate?: boolean;
-  updateInterval?: number;
-  [key: string]: unknown;
+  name: string;
+  intensity: number;
+  attributes: Record<string, any>;
 }
 
 export interface TraumaIndexInterface {
@@ -37,19 +18,59 @@ export interface TraumaIndexInterface {
   baseLevel: number;
   profiles: TraumaProfile[];
   isActive: boolean;
-  lastUpdated: number;
 
   // Methods
-  initialize(options?: TraumaInitOptions): Promise<void>;
-  getCurrentLevel(): number;
-  addTraumaProfile(profile: Partial<TraumaProfile>): TraumaProfile;
-  addModifier(modifier: TraumaModifier): void;
-  removeModifier(modifierId: string): boolean;
-  clearAllModifiers(): void;
-  update(timestamp?: number): number;
-  generateTraumaReport(): Record<string, unknown>;
-  dispose(): void;
+  initialize(): TraumaIndexInterface;
+  activate(): void;
+  deactivate(): void;
+  setLevel(level: number): void;
+  getLevel(): number;
+  createProfile(name: string, intensity: number): TraumaProfile;
+  applyProfile(profileName: string): void;
+  mapTrauma(source: any): Record<string, number>;
 }
 
-// Export the JavaScript module with TypeScript types
-export const TraumaIndex: TraumaIndexInterface = TraumaIndexJS;
+class TraumaIndexImplementation implements TraumaIndexInterface {
+  currentLevel = 0;
+  baseLevel = 0;
+  profiles: TraumaProfile[] = [];
+  isActive = false;
+
+  initialize(): TraumaIndexInterface {
+    // Implementation...
+    return this;
+  }
+
+  activate(): void {
+    this.isActive = true;
+  }
+
+  deactivate(): void {
+    this.isActive = false;
+  }
+
+  setLevel(level: number): void {
+    this.currentLevel = level;
+  }
+
+  getLevel(): number {
+    return this.currentLevel;
+  }
+
+  createProfile(name: string, intensity: number): TraumaProfile {
+    const profile = { name, intensity, attributes: {} };
+    this.profiles.push(profile);
+    return profile;
+  }
+
+  applyProfile(profileName: string): void {
+    // Implementation...
+  }
+
+  mapTrauma(source: any): Record<string, number> {
+    // Implementation...
+    return {};
+  }
+}
+
+export const TraumaIndex: TraumaIndexInterface = new TraumaIndexImplementation();

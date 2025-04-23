@@ -1,0 +1,95 @@
+{% comment %}
+  SOCIAL-META.LIQUID
+  Optimized social media meta tags for improved sharing
+
+  Usage:
+  {% render 'social-meta' %}
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% assign og_title = page_title | default: shop.name %}
+{% assign og_url = canonical_url | default: request.origin | append: request.path %}
+{% assign og_type = 'website' %}
+{% assign og_description = page_description | default: shop.description | default: shop.name %}
+
+{% if request.page_type == 'product' %}
+  {% assign og_type = 'product' %}
+  {% assign og_title = product.title %}
+  {% assign og_description = product.description | strip_html | truncatewords: 120 %}
+  {% if product.featured_media %}
+    {% assign og_image = product.featured_media | img_url: '1200x630', crop: 'center' %}
+  {% endif %}
+  {% assign product_price = product.price | money_without_currency | strip_html %}
+  {% assign product_currency = cart.currency.iso_code %}
+{% elsif request.page_type == 'collection' %}
+  {% assign og_type = 'product.group' %}
+  {% assign og_title = collection.title %}
+  {% assign og_description = collection.description | strip_html | truncatewords: 120 %}
+  {% if collection.image %}
+    {% assign og_image = collection.image | img_url: '1200x630', crop: 'center' %}
+  {% endif %}
+{% elsif request.page_type == 'article' %}
+  {% assign og_type = 'article' %}
+  {% assign og_title = article.title %}
+  {% assign og_description = article.excerpt_or_content | strip_html | truncatewords: 120 %}
+  {% if article.image %}
+    {% assign og_image = article.image | img_url: '1200x630', crop: 'center' %}
+  {% endif %}
+  {% assign article_published_time = article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' %}
+  {% assign article_modified_time = article.updated_at | date: '%Y-%m-%dT%H:%M:%SZ' %}
+  {% assign article_author = article.author %}
+{% elsif request.page_type == 'blog' %}
+  {% assign og_type = 'blog' %}
+  {% assign og_title = blog.title %}
+  {% assign og_description = blog.title %}
+{% elsif request.page_type == 'page' %}
+  {% assign og_title = page.title %}
+  {% assign og_description = page.content | strip_html | truncatewords: 120 %}
+{% endif %}
+
+{% unless og_image %}
+  {% if settings.share_image %}
+    {% assign og_image = settings.share_image | img_url: '1200x630', crop: 'center' %}
+  {% elsif shop.logo %}
+    {% assign og_image = shop.logo | img_url: '1200x630', crop: 'center' %}
+  {% endif %}
+{% endunless %}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title }}">
+<meta property="og:description" content="{{ og_description }}">
+<meta property="og:type" content="{{ og_type }}">
+{% if og_image %}
+  <meta property="og:image" content="{{ og_image | replace: 'http://', 'https://' }}">
+  <meta property="og:image:secure_url" content="{{ og_image | replace: 'http://', 'https://' }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+{% endif %}
+
+{% if og_type == 'product' %}
+  <meta property="product:price:amount" content="{{ product_price }}">
+  <meta property="product:price:currency" content="{{ product_currency }}">
+{% endif %}
+
+{% if og_type == 'article' %}
+  <meta property="article:published_time" content="{{ article_published_time }}">
+  <meta property="article:modified_time" content="{{ article_modified_time }}">
+  <meta property="article:author" content="{{ article_author }}">
+{% endif %}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title }}">
+<meta name="twitter:description" content="{{ og_description }}">
+{% if og_image %}
+  <meta name="twitter:image" content="{{ og_image | replace: 'http://', 'https://' }}">
+{% endif %}
+{% if settings.social_twitter_link != blank %}
+  {% assign twitter_handle = settings.social_twitter_link | split: 'twitter.com/' | last %}
+  <meta name="twitter:site" content="@{{ twitter_handle }}">
+{% endif %}

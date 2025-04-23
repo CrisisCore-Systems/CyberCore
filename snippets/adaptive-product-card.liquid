@@ -1,0 +1,27 @@
+        {% if trauma_level > 9 %}
+          {% render 'adaptive-product-card', product: product, trauma_override: trauma_level | minus: 3, phase_override: memory_phase, recursion: 1 %}
+        {% elsif trauma_level > 7 %}
+          {% render 'adaptive-product-card', product: product, trauma_override: trauma_level | minus: 2, phase_override: memory_phase, recursion: 1 %}
+        {% else %}
+          {% render 'adaptive-product-card', product: product, trauma_override: trauma_level | minus: 1, phase_override: memory_phase, recursion: 1 %}
+        {% endif %}
+    </div>
+  {% endif %}
+
+  <!-- Memory Phase Transition Animation -->
+  <div class="memory-phase-transition absolute inset-0 pointer-events-none opacity-0 z-30"
+       :class="{
+         'phase-transition-active': $store.trauma.phaseTransition,
+         'from-cyber': $store.trauma.previousPhase === 'cyber-lotus',
+         'from-alien': $store.trauma.previousPhase === 'alien-flora',
+         'from-virus': $store.trauma.previousPhase === 'rolling-virus',
+         'from-trauma': $store.trauma.previousPhase === 'trauma-core',
+         'to-cyber': $store.trauma.currentPhase === 'cyber-lotus',
+         'to-alien': $store.trauma.currentPhase === 'alien-flora',
+         'to-virus': $store.trauma.currentPhase === 'rolling-virus',
+         'to-trauma': $store.trauma.currentPhase === 'trauma-core'
+       }">
+    <div class="transition-ripple"></div>
+    <div class="transition-particles"></div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+{% comment %}
+  DEFER-LOADING.LIQUID
+  Optimizes loading of heavy JavaScript components
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<script>
+  // Defer loading of non-critical components
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if we should load heavy components now or later
+    const shouldDeferLoading = {{ settings.defer_quantum_initialization | default: true }};
+
+    if (shouldDeferLoading) {
+      // Use requestIdleCallback or setTimeout as fallback
+      const scheduleLoad = window.requestIdleCallback || window.setTimeout;
+
+      scheduleLoad(function() {
+        // Load heavy script components when browser is idle
+        loadQuantumComponents();
+      }, { timeout: 2000 });
+    } else {
+      // Load immediately
+      loadQuantumComponents();
+    }
+  });
+
+  // Load quantum components based on page needs
+  function loadQuantumComponents() {
+    // Check if element exists before loading related scripts
+    if (document.querySelector('[data-quantum-visualizer]')) {
+      loadScript('{{ "quantum-visualizer.js" | asset_url }}');
+    }
+
+    if (document.querySelector('[data-trauma-pattern]')) {
+      loadScript('{{ "quantum-webgl.js" | asset_url }}');
+    }
+
+    // Always load these after idle for core functionality
+    if (typeof window.NeuralBus === 'undefined') {
+      loadScript('{{ "neural-bus.js" | asset_url }}');
+    }
+
+    if (typeof window.GlitchEngine === 'undefined' && {{ settings.enable_quantum_effects | default: true }}) {
+      loadScript('{{ "glitch-engine.js" | asset_url }}');
+    }
+  }
+
+  // Helper to load scripts dynamically
+  function loadScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    document.head.appendChild(script);
+  }
+</script>

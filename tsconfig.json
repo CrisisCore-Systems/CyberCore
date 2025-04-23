@@ -1,51 +1,39 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2020", 
     "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "strict": false,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "strictFunctionTypes": false,
-    "strictBindCallApply": false,
-    "strictPropertyInitialization": false,
-    "noImplicitThis": false,
-    "alwaysStrict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitReturns": false,
-    "noFallthroughCasesInSwitch": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "./dist",
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["assets/*"],
-      "@core/*": ["Core/*"],
-      "@config/*": ["config/*"]
-    },
-    "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
-    "allowJs": true,
-    "checkJs": false,
-    "skipLibCheck": true,
-    "jsx": "react",
-    "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./types"]
+      "@core/*": ["assets/core/*"],
+      "@quantum/*": ["assets/quantum/*"],
+      "@trauma/*": ["assets/trauma/*"],
+      "@interfaces/*": ["interfaces/*"]
+    }
   },
   "include": [
     "assets/**/*.ts",
-    "assets/**/*.js",
-    "assets/**/*.d.ts",
-    "Core/**/*.ts",
-    "Core/**/*.js",
-    "types/**/*.d.ts"
+    "assets/**/*.tsx",
+    "interfaces/**/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
   ],
-  "exclude": ["node_modules", "dist", "coverage", "tests"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

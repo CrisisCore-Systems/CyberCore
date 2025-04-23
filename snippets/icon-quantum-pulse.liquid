@@ -1,0 +1,9 @@
+<svg {% if class %}class="{{ class }}"{% else %}class="w-5 h-5"{% endif %} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+  <circle cx="22" cy="12" r="1" stroke="none" fill="currentColor">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="2" cy="12" r="1" stroke="none" fill="currentColor">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0.3s" />
+  </circle>
+</svg>

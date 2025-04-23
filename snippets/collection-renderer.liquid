@@ -1,0 +1,84 @@
+{% comment %}
+  COLLECTION-RENDERER.LIQUID
+  Modular collection template that handles both grid and list views
+
+  Usage:
+  {% render 'collection-renderer', collection: collection, view_mode: view_mode %}
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% assign view_mode = view_mode | default: 'grid' %}
+{% assign columns_desktop = columns_desktop | default: 3 %}
+{% assign columns_mobile = columns_mobile | default: 2 %}
+
+<div class="collection-renderer collection-renderer--{{ view_mode }}" data-collection-renderer>
+  {% if collection.products.size > 0 %}
+    <ul class="collection-renderer__list collection-renderer__list--{{ view_mode }}"
+        aria-label="{{ collection.title | escape }} products"
+        style="--columns-desktop: {{ columns_desktop }}; --columns-mobile: {{ columns_mobile }}">
+
+      {% for product in collection.products %}
+        <li class="collection-renderer__item collection-renderer__item--{{ view_mode }}">
+          {% if view_mode == 'grid' %}
+            {% render 'product-card', product: product, show_rating: true %}
+          {% else %}
+            {% render 'product-card-list', product: product, show_description: true, show_rating: true %}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if paginate.pages > 1 %}
+      {% render 'pagination', paginate: paginate %}
+    {% endif %}
+
+  {% else %}
+    <div class="collection-renderer__empty" data-empty-collection>
+      <div class="collection-renderer__empty-icon">
+        {% render 'icon-empty-collection' %}
+      </div>
+      <h2 class="collection-renderer__empty-title">{{ 'collections.general.no_products' | t }}</h2>
+      <p class="collection-renderer__empty-text">{{ 'collections.general.no_products_text' | t }}</p>
+
+      {% if collection.filters.size > 0 %}
+        <div class="collection-renderer__empty-actions">
+          <button class="button button--secondary" onclick="window.location.search = ''">
+            {{ 'collections.general.clear_filters' | t }}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% if view_mode == 'grid' %}
+<style>
+  .collection-renderer__list--grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns-mobile), 1fr);
+    gap: var(--vb-space-md);
+  }
+
+  @media screen and (min-width: 768px) {
+    .collection-renderer__list--grid {
+      grid-template-columns: repeat(var(--columns-desktop), 1fr);
+    }
+  }
+</style>
+{% else %}
+<style>
+  .collection-renderer__list--list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vb-space-md);
+  }
+
+  .collection-renderer__item--list {
+    border-bottom: 1px solid rgba(var(--vb-color-border-rgb), 0.1);
+    padding-bottom: var(--vb-space-md);
+  }
+</style>
+{% endif %}

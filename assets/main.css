@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 /* Import existing quantum styles */
-@import 'quantum-featured.css';
+@import './quantum-featured.css';
 
 /* Custom Tailwind Components */
 @layer components {

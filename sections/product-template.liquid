@@ -1,580 +1,277 @@
-{% comment %}
-  Product Template - Core memory encoding template for VoidBloom artifacts
-  @MutationCompatible: All Profiles
-  @StrategyProfile: quantum-entangled
-  @Version: 3.7.1
-{% endcomment %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8 product-container">
+  {%- comment -%} Quantum Media Gallery {%- endcomment -%}
+  <div class="product-gallery relative overflow-hidden rounded-lg"
+       x-data="{ activeIndex: 0 }"
+       :class="{ 'trauma-resonance': $store.trauma.level >= 5 }">
 
-<div class="product-template phase-{{ product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase }}"
-     data-product-id="{{ product.id }}">
+    <div class="absolute inset-0 pointer-events-none quantum-overlay opacity-75"
+         :class="{
+           'quantum-active': $store.trauma.level >= 3,
+           'quantum-extreme': $store.trauma.level >= 7
+         }">
+      <!-- Quantum field overlay -->
+      <div class="quantum-field absolute inset-0 mix-blend-screen"></div>
+      <div class="quantum-lines"></div>
+    </div>
 
-  <div class="memory-artifact-container trauma-{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
-    <div class="artifact-gallery">
-      <div class="gallery-container" data-trauma="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
-        {% for media in product.media %}
-          <div class="gallery-item{% if forloop.first %} active{% endif %}"
-               data-media-id="{{ media.id }}"
-               data-trauma-intensity="{{ product.metafields.voidbloom.intensity | default: settings.trauma_intensity }}">
-            {% case media.media_type %}
-              {% when 'image' %}
-                <div class="image-container">
-                  <img src="{{ media.preview_image | img_url: 'large' }}"
-                       alt="{{ media.alt | escape }}"
-                       class="artifact-image"
-                       loading="lazy"
-                       width="{{ media.width }}"
-                       height="{{ media.height }}">
-                  <div class="trauma-overlay" data-trauma="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}"></div>
-                </div>
-              {% when 'video' %}
-                <div class="video-container">
-                  {{ media | media_tag: autoplay: section.settings.loop_videos, loop: section.settings.loop_videos, controls: true, preload: "auto" }}
-                  <div class="trauma-overlay" data-trauma="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}"></div>
-                </div>
-              {% when 'external_video' %}
-                <div class="video-container">
-                  {{ media | media_tag: autoplay: section.settings.loop_videos, loop: section.settings.loop_videos }}
-                  <div class="trauma-overlay" data-trauma="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}"></div>
-                </div>
-              {% when 'model' %}
-                <div class="model-container">
-                  {{ media | media_tag }}
-                  <div class="trauma-overlay" data-trauma="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}"></div>
-                </div>
-            {% endcase %}
-          </div>
-        {% endfor %}
-
-        <div class="gallery-controls">
-          <button class="gallery-prev" aria-label="Previous image">{% render 'icon-chevron-left' %}</button>
-          <button class="gallery-next" aria-label="Next image">{% render 'icon-chevron-right' %}</button>
+    <!-- Main image -->
+    <div class="relative aspect-w-1 aspect-h-1 w-full">
+      {% for media in product.media %}
+        <div x-show="activeIndex === {{ forloop.index0 }}"
+             x-transition:enter="transition ease-quantum duration-500 transform"
+             x-transition:enter-start="opacity-0 scale-105"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-quantum duration-300 transform"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="product-media w-full h-full">
+          {% if media.media_type == 'model' %}
+            <product-model class="product-media--model h-full w-full" data-model-id="{{ media.id }}">
+              {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true, data-model-id: media.id }}
+            </product-model>
+          {% elsif media.media_type == 'video' %}
+            {{ media | video_tag: class: 'w-full h-full object-cover', controls: true, preload: 'metadata' }}
+          {% elsif media.media_type == 'external_video' %}
+            {{ media | external_video_tag: class: 'w-full h-full object-cover' }}
+          {% else %}
+            <img srcset="{% for width in '360,540,720,900,1080,1296,1512,1728,1944,2160,2376,2592,2808,3024' | split: ',' %}{{ media | image_url: width: width }} {{ width }}w,{% endfor %}"
+                 sizes="(min-width: 1024px) 50vw, 100vw"
+                 loading="lazy"
+                 src="{{ media | image_url: width: 1080 }}"
+                 width="{{ media.width }}"
+                 height="{{ media.height }}"
+                 alt="{{ media.alt | escape }}"
+                 class="w-full h-full object-cover">
+          {% endif %}
         </div>
-      </div>
+      {% endfor %}
 
-      {% if product.media.size > 1 %}
-        <div class="gallery-thumbnails">
-          {% for media in product.media %}
-            <div class="gallery-thumbnail{% if forloop.first %} active{% endif %}"
-                 data-media-id="{{ media.id }}">
-              <img src="{{ media.preview_image | img_url: 'small' }}"
-                   alt="{{ media.alt | escape }}"
+      <!-- Hologram overlay for trauma level > 2 -->
+      <div x-show="$store.trauma.level > 2" class="absolute inset-0 pointer-events-none">
+        <quantum-hologram class="w-full h-full" trauma-level="3"></quantum-hologram>
+      </div>
+    </div>
+
+    <!-- Thumbnail navigation -->
+    {% if product.media.size > 1 %}
+      <div class="flex flex-wrap gap-2 mt-4">
+        {% for media in product.media %}
+          <button type="button"
+                  @click="activeIndex = {{ forloop.index0 }}"
+                  class="media-thumbnail flex-grow-0 w-16 h-16 border-2 rounded-md overflow-hidden transition-all duration-300"
+                  :class="{ 'border-trauma-500 ring-1 ring-trauma-300': activeIndex === {{ forloop.index0 }}, 'border-void-800 hover:border-void-600': activeIndex !== {{ forloop.index0 }} }">
+            {% if media.media_type == 'model' %}
+              <span class="flex items-center justify-center h-full bg-void-900 text-void-300">
+                {% render 'icon-3d-model' %}
+              </span>
+            {% elsif media.media_type == 'video' or media.media_type == 'external_video' %}
+              <span class="flex items-center justify-center h-full bg-void-900 text-void-300">
+                {% render 'icon-video' %}
+              </span>
+            {% else %}
+              <img src="{{ media | image_url: width: 160 }}"
                    loading="lazy"
-                   width="{{ media.preview_image.width }}"
-                   height="{{ media.preview_image.height }}">
-            </div>
+                   alt="{{ media.alt | escape }}"
+                   class="w-full h-full object-cover">
+            {% endif %}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {%- comment -%} Product Information {%- endcomment -%}
+  <div class="product-info flex flex-col">
+    <h1 class="text-2xl md:text-3xl font-trauma mb-2 glitch-text"
+        data-text="{{ product.title | escape }}">
+      {{ product.title | escape }}
+    </h1>
+
+    <div class="flex items-center gap-2 mb-4">
+      <!-- Memory Fragment Indicator -->
+      <div class="trauma-indicator flex items-center">
+        <span class="text-void-400 text-sm">Memory Encoding:</span>
+        <div class="ml-2 flex items-center">
+          {% for i in (1..10) %}
+            <span class="h-1.5 w-3 rounded-sm mr-0.5 transition-colors duration-300"
+                  :class="{
+                    'bg-trauma-500': $store.trauma.level >= {{ i }},
+                    'bg-void-700': $store.trauma.level < {{ i }}
+                  }"></span>
           {% endfor %}
         </div>
+      </div>
+    </div>
+
+    <div class="flex gap-2 items-center mb-4">
+      {% render 'memory-phase-tag', phase: product.metafields.voidbloom.memory_phase | default: 'cyber-lotus' %}
+
+      <!-- Vendor -->
+      {% if product.vendor %}
+        <span class="text-sm text-void-500">{{ product.vendor }}</span>
       {% endif %}
     </div>
 
-    <div class="artifact-details">
-      <div class="artifact-meta">
-        {% if section.settings.show_vendor %}
-          <span class="artifact-vendor">{{ product.vendor }}</span>
-        {% endif %}
-        <div class="trauma-indicators">
-          <div class="trauma-badge {{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
-            {{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type | capitalize }}
-          </div>
-          <div class="phase-badge {{ product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase }}">
-            {{ product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase | replace: '-', ' ' | capitalize }}
-          </div>
-        </div>
-      </div>
+    <!-- Product description with memory fragments -->
+    <div class="prose prose-void max-w-none mb-6 memory-fragment">
+      {{ product.description }}
+    </div>
 
-      <h1 class="artifact-title bloom-text" data-trauma="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
-        {{ product.title }}
-      </h1>
-
-      <div class="artifact-price">
-        {% if product.compare_at_price > product.price %}
-          <span class="price-item price-item--regular" data-regular-price>
-            {{ product.compare_at_price | money }}
-          </span>
-          <span class="price-item price-item--sale" data-sale-price>
-            {{ product.price | money }}
+    <!-- Price -->
+    <div class="mb-6">
+      <div class="memory-price text-xl flex items-baseline">
+        {% if product.compare_at_price_max > product.price %}
+          <span class="text-trauma-500 font-medium">{{ product.price | money }}</span>
+          <span class="text-void-400 line-through ml-2 text-base">{{ product.compare_at_price_max | money }}</span>
+          <span class="ml-2 px-2 py-0.5 text-xs rounded bg-trauma-500/20 text-trauma-500">
+            {{ product.compare_at_price_max | minus: product.price | times: 100 | divided_by: product.compare_at_price_max | round }}% off
           </span>
         {% else %}
-          <span class="price-item" data-regular-price>
-            {{ product.price | money }}
-          </span>
+          <span class="text-void-200 font-medium">{{ product.price | money }}</span>
         {% endif %}
       </div>
+    </div>
 
-      <div class="memory-encoding-details">
-        <div class="encoding-metrics">
-          <div class="encoding-metric trauma-intensity">
-            <div class="metric-label">Trauma Intensity</div>
-            <div class="metric-bar">
-              <div class="metric-fill" style="width: {{ product.metafields.voidbloom.intensity | default: settings.trauma_intensity | times: 100 }}%"></div>
-            </div>
-            <div class="metric-value">{{ product.metafields.voidbloom.intensity | default: settings.trauma_intensity | times: 100 | round }}%</div>
-          </div>
-
-          <div class="encoding-metric resonance-level">
-            <div class="metric-label">Resonance</div>
-            <div class="metric-bar">
-              <div class="metric-fill" style="width: {{ product.metafields.voidbloom.resonance | default: 0.5 | times: 100 }}%"></div>
-            </div>
-            <div class="metric-value">{{ product.metafields.voidbloom.resonance | default: 0.5 | times: 100 | round }}%</div>
-          </div>
-        </div>
-
-        {% if product.metafields.voidbloom.encoding_description != blank %}
-          <div class="encoding-description">
-            {{ product.metafields.voidbloom.encoding_description }}
-          </div>
-        {% else %}
-          <div class="encoding-description">
-            {{ section.settings.default_memory_description }}
-          </div>
-        {% endif %}
-      </div>
-
-      <form method="post" action="/cart/add" class="product-form" id="product-form-{{ product.id }}">
+    <!-- Product form -->
+    {% form 'product', product, id: 'product-form', class: "product-form" %}
+      <div class="mb-4">
         {% unless product.has_only_default_variant %}
-          <div class="variant-selectors">
-            {% for option in product.options_with_values %}
-              <div class="selector-wrapper">
-                <label for="Option-{{ section.id }}-{{ option.position }}">
-                  {{ option.name }}
-                </label>
-                <select id="Option-{{ section.id }}-{{ option.position }}"
-                        class="variant-selector"
-                        name="options[{{ option.name | escape }}]">
-                  {% for value in option.values %}
-                    <option value="{{ value | escape }}"
-                            {% if option.selected_value == value %}selected="selected"{% endif %}>
-                      {{ value }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </div>
-            {% endfor %}
-          </div>
+          {% for option in product.options_with_values %}
+            <div class="mb-4">
+              <label for="Option{{ option.position }}" class="text-void-300 text-sm mb-1 block">
+                {{ option.name }}
+              </label>
+
+              <select
+                id="Option{{ option.position }}"
+                name="options[{{ option.name | escape }}]"
+                class="w-full px-4 py-2 bg-void-800 border border-void-700 rounded-md text-void-200 focus:border-trauma-500 focus:ring-1 focus:ring-trauma-500"
+              >
+                {% for value in option.values %}
+                  <option
+                    value="{{ value | escape }}"
+                    {% if option.selected_value == value %}selected="selected"{% endif %}
+                  >
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endfor %}
         {% endunless %}
 
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-
-        <div class="product-form-buttons">
-          <button type="submit"
-                  class="button memory-archive-button trauma-{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}"
-                  {% unless product.available %}disabled{% endunless %}>
-            {% if product.available %}
-              {{ 'products.product.add_to_cart' | t }}
-            {% else %}
-              {{ 'products.product.sold_out' | t }}
-            {% endif %}
-          </button>
-
-          {% if section.settings.show_dynamic_checkout %}
-            {{ form | payment_button }}
-          {% endif %}
-        </div>
-      </form>
-
-      <div class="artifact-description">
-        {{ product.description }}
       </div>
 
-      {% if section.settings.show_trauma_indicator %}
-        <div class="trauma-compatibility">
-          <h3>Memory Compatibility</h3>
-          <div class="compatibility-grid">
-            {% assign trauma_types = "abandonment,fragmentation,recursion,surveillance,displacement,dissolution" | split: "," %}
-            {% for trauma in trauma_types %}
-              {% assign compatibility_key = "compatibility_" | append: trauma %}
-              {% assign compatibility_value = product.metafields.voidbloom[compatibility_key] | default: 0.5 %}
-              <div class="compatibility-item trauma-{{ trauma }}" data-value="{{ compatibility_value }}">
-                <div class="compatibility-label">{{ trauma | capitalize }}</div>
-                <div class="compatibility-indicator">
-                  <div class="indicator-fill" style="width: {{ compatibility_value | times: 100 }}%"></div>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
+      <!-- Quantity selector -->
+      <div class="mb-6">
+        <label for="Quantity" class="text-void-300 text-sm block mb-1">Quantity</label>
+        <div class="quantity-selector flex rounded-md w-32">
+          <button type="button"
+                  class="quantity-btn h-10 w-10 flex items-center justify-center border border-r-0 border-void-700 bg-void-800 text-void-300 rounded-l-md hover:bg-void-700"
+                  data-action="decrement">
+            -
+          </button>
+          <input type="number"
+                name="quantity"
+                id="Quantity"
+                value="1"
+                min="1"
+                class="h-10 w-12 text-center border-t border-b border-void-700 bg-void-900 text-void-200 focus:ring-0 focus:outline-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+          <button type="button"
+                  class="quantity-btn h-10 w-10 flex items-center justify-center border border-l-0 border-void-700 bg-void-800 text-void-300 rounded-r-md hover:bg-void-700"
+                  data-action="increment">
+            +
+          </button>
         </div>
-      {% endif %}
+      </div>
 
-      {% if section.settings.show_memory_tab %}
-        <div class="memory-tabs">
-          <div class="tabs-navigation">
-            <button class="tab-button active" data-tab="description">Description</button>
-            <button class="tab-button" data-tab="memory">Memory Encoding</button>
-            <button class="tab-button" data-tab="shipping">Shipping</button>
-          </div>
+      <!-- Error message placeholder -->
+      <div id="error-container" class="mb-4 text-trauma-500 hidden"></div>
 
-          <div class="tab-content">
-            <div class="tab-panel active" data-panel="description">
-              {{ product.description }}
-            </div>
+      <!-- Add to cart button -->
+      <button type="submit"
+              name="add"
+              class="w-full py-4 mb-4 bg-trauma-600 hover:bg-trauma-700 text-white rounded-md flex items-center justify-center transition-all group">
+        <span id="add-to-cart-text">{{ 'products.product.add_to_cart' | t }}</span>
+        <span class="ml-2 quantum-pulse group-hover:opacity-100 opacity-0 transition-opacity">
+          {% render 'icon-quantum-pulse' %}
+        </span>
+      </button>
+    {% endform %}
 
-            <div class="tab-panel" data-panel="memory">
-              <div class="memory-narrative">
-                <h3>Memory Narrative</h3>
-                {% if product.metafields.voidbloom.narrative != blank %}
-                  <div class="narrative-content">
-                    {{ product.metafields.voidbloom.narrative }}
-                  </div>
-                {% else %}
-                  <div class="narrative-content generated">
-                    <p class="trauma-{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
-                      This memory artifact embodies {{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }} trauma at
-                      {{ product.metafields.voidbloom.intensity | default: settings.trauma_intensity | times: 100 | round }}% intensity, creating a
-                      {% case product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type %}
-                        {% when 'abandonment' %}
-                          sense of isolation and vast emptiness that resonates with experiences of being left behind.
-                        {% when 'fragmentation' %}
-                          fractured sense of self, with elements that never quite form a coherent whole.
-                        {% when 'recursion' %}
-                          looping pattern of thought that cycles back through the same emotional states.
-                        {% when 'surveillance' %}
-                          feeling of being continuously observed and evaluated by systems beyond your control.
-                        {% when 'displacement' %}
-                          sense of dislocation and environmental estrangement, as if transplanted from your original context.
-                        {% when 'dissolution' %}
-                          progressive erosion of boundaries between self and other, creating a troubling loss of identity.
-                        {% else %}
-                          complex emotional resonance that defies simple categorization.
-                      {% endcase %}
-                    </p>
-
-                    {% if product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase == 'cyber-lotus' %}
-                      <p>This artifact belongs to the Cyber Lotus phase, characterized by angular, electric, digital aesthetics that embody the crystalline geometry of traumatic memory structures.</p>
-                    {% elsif product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase == 'alien-flora' %}
-                      <p>This artifact belongs to the Alien Flora phase, characterized by organic, growing, parasitic aesthetics that embody the invasive qualities of trauma as it takes root.</p>
-                    {% elsif product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase == 'rolling-virus' %}
-                      <p>This artifact belongs to the Rolling Virus phase, characterized by infectious, spreading, corrupting aesthetics that embody trauma's tendency to propagate through memory systems.</p>
-                    {% endif %}
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-
-            <div class="tab-panel" data-panel="shipping">
-              <h3>Shipping Information</h3>
-              <p>Memory artifacts are shipped through secure quantum channels to prevent trauma degradation during transit. All items ship within 2-3 business days.</p>
-              <p>For more information on how we preserve memory integrity during shipping, please see our <a href="/pages/memory-preservation">Memory Preservation Guide</a>.</p>
-            </div>
-          </div>
+    <!-- Memory Encoding Schema -->
+    {% if product.metafields.voidbloom.memory_schema %}
+      <div class="memory-schema p-4 bg-void-900/60 rounded-md border border-void-700 mt-4 text-sm">
+        <h3 class="text-void-300 mb-2 flex items-center">
+          {% render 'icon-memory-schema' %}
+          Memory Schema
+        </h3>
+        <div class="memory-schema-content text-void-400">
+          {{ product.metafields.voidbloom.memory_schema }}
         </div>
+      </div>
+    {% endif %}
+
+    <!-- Social sharing -->
+    <div class="mt-6">
+      <h3 class="text-sm text-void-400 mb-2">Share Memory Fragment</h3>
+      <div class="flex space-x-3">
+        <a href="https://twitter.com/share?text={{ product.title | url_encode }}&url={{ shop.url | append: product.url | url_encode }}"
+           target="_blank"
+           rel="noopener"
+           class="text-void-500 hover:text-trauma-500">
+          {% render 'icon-twitter' %}
+        </a>
+        <a href="https://www.facebook.com/sharer.php?u={{ shop.url | append: product.url | url_encode }}"
+           target="_blank"
+           rel="noopener"
+           class="text-void-500 hover:text-trauma-500">
+          {% render 'icon-facebook' %}
+        </a>
+        <a href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url | url_encode }}&media={{ product.featured_image | img_url: '1024x1024' | prepend: 'https:' | url_encode }}&description={{ product.description | strip_html | truncatewords: 15 | url_encode }}"
+           target="_blank"
+           rel="noopener"
+           class="text-void-500 hover:text-trauma-500">
+          {% render 'icon-pinterest' %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related products: Memory Resonances -->
+{% if section.settings.show_related_products %}
+  <div class="mt-16">
+    <h2 class="text-xl font-trauma mb-6 text-center">Related Memory Artifacts</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% assign related_limit = section.settings.related_count | default: 4 %}
+
+      {% if recommendations.performed %}
+        {% for product in recommendations.products limit: related_limit %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
       {% endif %}
     </div>
   </div>
-
-  {% if section.settings.show_related_products %}
-    <div class="related-memories-section">
-      <h2>{{ section.settings.related_products_title }}</h2>
-      <div class="related-memories" data-trauma-type="{{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type }}">
-        <div class="loading-indicator">Loading memory echoes...</div>
-      </div>
-    </div>
-  {% endif %}
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize gallery functionality
-    const productGallery = {
-      container: document.querySelector('.gallery-container'),
-      items: document.querySelectorAll('.gallery-item'),
-      thumbnails: document.querySelectorAll('.gallery-thumbnail'),
-      prevButton: document.querySelector('.gallery-prev'),
-      nextButton: document.querySelector('.gallery-next'),
-      currentIndex: 0,
-
-      init: function() {
-        // Skip if no gallery
-        if (!this.container) return;
-
-        // Set up event listeners
-        if (this.prevButton) {
-          this.prevButton.addEventListener('click', this.showPrev.bind(this));
-        }
-
-        if (this.nextButton) {
-          this.nextButton.addEventListener('click', this.showNext.bind(this));
-        }
-
-        // Thumbnail clicks
-        this.thumbnails.forEach((thumbnail, index) => {
-          thumbnail.addEventListener('click', () => this.showItem(index));
-        });
-
-        // Apply trauma effects
-        this.applyTraumaEffects();
-      },
-
-      showItem: function(index) {
-        if (index < 0) index = this.items.length - 1;
-        if (index >= this.items.length) index = 0;
-
-        this.items.forEach(item => item.classList.remove('active'));
-        this.thumbnails.forEach(thumb => thumb.classList.remove('active'));
-
-        this.items[index].classList.add('active');
-        if (this.thumbnails[index]) {
-          this.thumbnails[index].classList.add('active');
-        }
-
-        this.currentIndex = index;
-      },
-
-      showNext: function() {
-        this.showItem(this.currentIndex + 1);
-      },
-
-      showPrev: function() {
-        this.showItem(this.currentIndex - 1);
-      },
-
-      applyTraumaEffects: function() {
-        // Apply trauma-specific effects to gallery
-        if (window.MemoryProtocol) {
-          const traumaOverlays = document.querySelectorAll('.trauma-overlay');
-          traumaOverlays.forEach(overlay => {
-            const traumaType = overlay.getAttribute('data-trauma');
-            if (traumaType) {
-              MemoryProtocol.visualizeTrauma(overlay, traumaType, 0.4);
-            }
-          });
-        }
-      }
-    };
-
-    // Tab functionality
-    const memoryTabs = {
-      buttons: document.querySelectorAll('.tab-button'),
-      panels: document.querySelectorAll('.tab-panel'),
-
-      init: function() {
-        if (!this.buttons.length) return;
-
-        this.buttons.forEach(button => {
-          button.addEventListener('click', this.showTab.bind(this));
-        });
-      },
-
-      showTab: function(e) {
-        const tabId = e.target.getAttribute('data-tab');
-
-        this.buttons.forEach(btn => btn.classList.remove('active'));
-        this.panels.forEach(panel => panel.classList.remove('active'));
-
-        e.target.classList.add('active');
-        document.querySelector(`.tab-panel[data-panel="${tabId}"]`).classList.add('active');
-      }
-    };
-
-    // Fetch related products
-    const relatedMemories = {
-      container: document.querySelector('.related-memories'),
-
-      init: function() {
-        if (!this.container) return;
-
-        const traumaType = this.container.getAttribute('data-trauma-type');
-        const productId = document.querySelector('.product-template').getAttribute('data-product-id');
-
-        if (traumaType && productId) {
-          this.fetchRelatedProducts(traumaType, productId);
-        }
-      },
-
-      fetchRelatedProducts: function(traumaType, productId) {
-        fetch(`/recommendations/products.json?product_id=${productId}&limit=4&intent=related`)
-          .then(response => response.json())
-          .then(data => {
-            this.renderProducts(data.products, traumaType);
-          })
-          .catch(err => {
-            console.error('Error fetching related products:', err);
-            this.container.innerHTML = '<p class="error-message">Memory echoes could not be retrieved</p>';
-          });
-      },
-
-      renderProducts: function(products, traumaType) {
-        if (!products || !products.length) {
-          this.container.innerHTML = '<p>No related memory artifacts found</p>';
-          return;
-        }
-
-        let html = '<div class="product-grid">';
-
-        products.forEach(product => {
-          html += `
-            <div class="related-product trauma-${traumaType}">
-              <a href="${product.url}" class="product-link">
-                <div class="product-image-container">
-                  <img src="${product.featured_image}" alt="${product.title}" class="product-image">
-                  <div class="trauma-overlay" data-trauma="${traumaType}"></div>
-                </div>
-                <h3 class="product-title">${product.title}</h3>
-                <div class="product-price">${product.price_min}</div>
-              </a>
-            </div>
-          `;
-        });
-
-        html += '</div>';
-        this.container.innerHTML = html;
-
-        // Apply trauma effects to the related products
-        if (window.MemoryProtocol) {
-          const traumaOverlays = this.container.querySelectorAll('.trauma-overlay');
-          traumaOverlays.forEach(overlay => {
-            MemoryProtocol.visualizeTrauma(overlay, traumaType, 0.3);
-          });
-        }
-      }
-    };
-
-    // Variant selector functionality
-    const variantSelector = {
-      selectors: document.querySelectorAll('.variant-selector'),
-      productForm: document.getElementById(`product-form-{{ product.id }}`),
-      variantIdInput: document.querySelector('input[name="id"]'),
-
-      init: function() {
-        if (!this.selectors.length) return;
-
-        // Set up event listeners for variant selectors
-        this.selectors.forEach(selector => {
-          selector.addEventListener('change', this.updateVariant.bind(this));
-        });
-      },
-
-      updateVariant: function() {
-        // Get selected options
-        const selectedOptions = [];
-        this.selectors.forEach(selector => {
-          selectedOptions.push(selector.value);
-        });
-
-        // Find matching variant
-        const variants = {{ product.variants | json }};
-        const matchingVariant = variants.find(variant => {
-          return variant.options.every((option, index) => option === selectedOptions[index]);
-        });
-
-        if (matchingVariant) {
-          // Update variant ID
-          this.variantIdInput.value = matchingVariant.id;
-
-          // Update price
-          const priceElements = document.querySelectorAll('[data-regular-price]');
-          priceElements.forEach(el => {
-            el.textContent = Shopify.formatMoney(matchingVariant.price);
-          });
-
-          // Update availability
-          const addToCartButton = this.productForm.querySelector('.memory-archive-button');
-          if (matchingVariant.available) {
-            addToCartButton.disabled = false;
-            addToCartButton.textContent = {{ 'products.product.add_to_cart' | t | json }};
-          } else {
-            addToCartButton.disabled = true;
-            addToCartButton.textContent = {{ 'products.product.sold_out' | t | json }};
-          }
-        }
-      }
-    };
-
-    // Initialize components
-    productGallery.init();
-    memoryTabs.init();
-    relatedMemories.init();
-    variantSelector.init();
-
-    // Apply bloom text effect to title
-    const titleElement = document.querySelector('.artifact-title');
-    if (titleElement) {
-      const traumaType = titleElement.getAttribute('data-trauma');
-      titleElement.style.setProperty('--bloom-color', `var(--trauma-${traumaType}-color)`);
-      titleElement.style.setProperty('--bloom-intensity', '0.6');
-    }
-
-    // Publish product view event to Neural Bus
-    if (window.NeuralBus) {
-      NeuralBus.publish('memory:artifact:viewed', {
-        id: {{ product.id }},
-        title: {{ product.title | json }},
-        traumaType: {{ product.metafields.voidbloom.trauma_type | default: settings.default_trauma_type | json }},
-        intensity: {{ product.metafields.voidbloom.intensity | default: settings.trauma_intensity | json }},
-        memoryPhase: {{ product.metafields.voidbloom.memory_phase | default: settings.default_memory_phase | json }},
-        timestamp: Date.now()
-      });
-    }
-  });
-</script>
+{% endif %}
 
 {% schema %}
 {
-  "name": "Product Template",
+  "name": "Product",
   "settings": [
     {
       "type": "checkbox",
-      "id": "enable_trauma_coding",
-      "label": "Enable trauma coding",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_dimensional_depth",
-      "label": "Enable dimensional depth",
-      "info": "Adds 3D depth to product images based on trauma intensity",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "loop_videos",
-      "label": "Loop product videos",
+      "id": "show_quantity_selector",
+      "label": "Show quantity selector",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_vendor",
-      "label": "Show product vendor",
+      "label": "Show vendor",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_dynamic_checkout",
-      "label": "Show dynamic checkout button",
-      "info": "Lets customers check out directly from the product page.",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_trauma_indicator",
-      "label": "Show trauma compatibility",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_memory_tab",
-      "label": "Show memory encoding tab",
-      "default": true
-    },
-    {
-      "type": "select",
-      "id": "default_trauma_encoding",
-      "label": "Default trauma encoding",
-      "options": [
-        { "value": "abandonment", "label": "Abandonment" },
-        { "value": "fragmentation", "label": "Fragmentation" },
-        { "value": "recursion", "label": "Recursion" },
-        { "value": "surveillance", "label": "Surveillance" },
-        { "value": "displacement", "label": "Displacement" },
-        { "value": "dissolution", "label": "Dissolution" }
-      ],
-      "default": "recursion"
-    },
-    {
-      "type": "textarea",
-      "id": "default_memory_description",
-      "label": "Default memory description",
-      "default": "This product carries a trauma encoding pattern, creating pathways through traumatic memory structures. It may resonate especially with those who experience similar patterns in their cognitive and emotional responses."
     },
     {
       "type": "checkbox",
@@ -583,10 +280,69 @@
       "default": true
     },
     {
-      "type": "text",
-      "id": "related_products_title",
-      "label": "Related products title",
-      "default": "Memory Echoes"
+      "type": "range",
+      "id": "related_count",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Number of related products",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quantum_effects",
+      "label": "Enable quantum visual effects",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "memory_phase",
+      "name": "Memory Phase Tags",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_memory_phase",
+          "label": "Show memory phase",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "trauma_level",
+      "name": "Trauma Level Indicator",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_trauma_level",
+          "label": "Show trauma level",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "hologram",
+      "name": "Quantum Hologram",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_hologram",
+          "label": "Show quantum hologram",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "hologram_intensity",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "label": "Hologram intensity",
+          "default": 5
+        }
+      ]
     }
   ]
 }

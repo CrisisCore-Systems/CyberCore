@@ -1,0 +1,45 @@
+{% comment %}
+  ARIA-LANDMARKS.LIQUID
+  Accessibility improvements through proper ARIA landmarks
+
+  Usage:
+  Include in theme.liquid or specific templates
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% if landmark_type == 'header' %}
+  <header role="banner" class="{{ classes }}">
+    {{ content }}
+  </header>
+{% elsif landmark_type == 'main' %}
+  <main role="main" id="MainContent" class="{{ classes }}" tabindex="-1">
+    {{ content }}
+  </main>
+{% elsif landmark_type == 'navigation' %}
+  <nav role="navigation" aria-label="{{ aria_label | default: 'Main navigation' }}" class="{{ classes }}">
+    {{ content }}
+  </nav>
+{% elsif landmark_type == 'footer' %}
+  <footer role="contentinfo" class="{{ classes }}">
+    {{ content }}
+  </footer>
+{% elsif landmark_type == 'search' %}
+  <div role="search" aria-label="{{ aria_label | default: 'Search' }}" class="{{ classes }}">
+    {{ content }}
+  </div>
+{% elsif landmark_type == 'complementary' %}
+  <aside role="complementary" aria-label="{{ aria_label | default: 'Complementary content' }}" class="{{ classes }}">
+    {{ content }}
+  </aside>
+{% elsif landmark_type == 'form' %}
+  <form role="form" aria-labelledby="{{ aria_labelledby }}" class="{{ classes }}">
+    {{ content }}
+  </form>
+{% else %}
+  <div class="{{ classes }}">
+    {{ content }}
+  </div>
+{% endif %}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="24" failures="23" errors="0" time="18.316">
-  <testsuite name="HologramRenderer" errors="0" failures="6" skipped="0" timestamp="2025-04-20T14:08:50" time="4.575" tests="6">
-    <testcase classname="HologramRenderer should initialize with default options" name="HologramRenderer should initialize with default options" time="0.036">
+<testsuites name="jest tests" tests="39" failures="38" errors="0" time="18.67">
+  <testsuite name="HologramRenderer" errors="0" failures="6" skipped="0" timestamp="2025-04-22T21:24:58" time="5.347" tests="6">
+    <testcase classname="HologramRenderer should initialize with default options" name="HologramRenderer should initialize with default options" time="0.033">
       <failure>TypeError: this.camera.position.set is not a function
     at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
     at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
@@ -41,7 +41,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="HologramRenderer should apply quantum effects" name="HologramRenderer should apply quantum effects" time="0.008">
+    <testcase classname="HologramRenderer should apply quantum effects" name="HologramRenderer should apply quantum effects" time="0.005">
       <failure>TypeError: this.camera.position.set is not a function
     at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
     at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
@@ -61,7 +61,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="HologramRenderer should apply glitch effect" name="HologramRenderer should apply glitch effect" time="0.021">
+    <testcase classname="HologramRenderer should apply glitch effect" name="HologramRenderer should apply glitch effect" time="0.005">
       <failure>TypeError: this.camera.position.set is not a function
     at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
     at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
@@ -81,7 +81,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="HologramRenderer should update size of renderer" name="HologramRenderer should update size of renderer" time="0.012">
+    <testcase classname="HologramRenderer should update size of renderer" name="HologramRenderer should update size of renderer" time="0.004">
       <failure>TypeError: this.camera.position.set is not a function
     at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
     at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
@@ -101,7 +101,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="HologramRenderer should clean up resources when disposed" name="HologramRenderer should clean up resources when disposed" time="0.004">
+    <testcase classname="HologramRenderer should clean up resources when disposed" name="HologramRenderer should clean up resources when disposed" time="0.006">
       <failure>TypeError: this.camera.position.set is not a function
     at Function.set [as _initWebGL] (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:310:26)
     at Function._initWebGL (C:\Users\user\Documents\Projects\CyberCore\assets\hologram-renderer.js:70:10)
@@ -122,8 +122,8 @@
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
   </testsuite>
-  <testsuite name="Hologram Component" errors="0" failures="5" skipped="0" timestamp="2025-04-20T14:08:54" time="0.733" tests="5">
-    <testcase classname="Hologram Component Initialization should initialize with default settings" name="Hologram Component Initialization should initialize with default settings" time="0">
+  <testsuite name="Hologram Component" errors="0" failures="5" skipped="0" timestamp="2025-04-22T21:25:04" time="0.6" tests="5">
+    <testcase classname="Hologram Component Initialization should initialize with default settings" name="Hologram Component Initialization should initialize with default settings" time="0.001">
       <failure>TypeError: HologramComponent is not a constructor
     at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:8:24)
     at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
@@ -142,7 +142,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Hologram Component Initialization should accept custom configuration options" name="Hologram Component Initialization should accept custom configuration options" time="0.001">
+    <testcase classname="Hologram Component Initialization should accept custom configuration options" name="Hologram Component Initialization should accept custom configuration options" time="0">
       <failure>TypeError: HologramComponent is not a constructor
     at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:23:24)
     at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
@@ -161,7 +161,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Hologram Component Rendering should render hologram elements" name="Hologram Component Rendering should render hologram elements" time="0.001">
+    <testcase classname="Hologram Component Rendering should render hologram elements" name="Hologram Component Rendering should render hologram elements" time="0.002">
       <failure>TypeError: HologramComponent is not a constructor
     at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:33:24)
     at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
@@ -180,7 +180,7 @@
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Hologram Component Rendering should apply quantum effects when in quantum mode" name="Hologram Component Rendering should apply quantum effects when in quantum mode" time="0.001">
+    <testcase classname="Hologram Component Rendering should apply quantum effects when in quantum mode" name="Hologram Component Rendering should apply quantum effects when in quantum mode" time="0">
       <failure>TypeError: HologramComponent is not a constructor
     at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\hologram-component.test.js:44:24)
     at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
@@ -219,8 +219,8 @@
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
   </testsuite>
-  <testsuite name="Quantum Visualizer" errors="0" failures="12" skipped="0" timestamp="2025-04-20T14:08:50" time="5.508" tests="13">
-    <testcase classname="Quantum Visualizer Initialization should initialize with correct defaults" name="Quantum Visualizer Initialization should initialize with correct defaults" time="0.018">
+  <testsuite name="Quantum Visualizer" errors="0" failures="12" skipped="0" timestamp="2025-04-22T21:24:58" time="6.089" tests="13">
+    <testcase classname="Quantum Visualizer Initialization should initialize with correct defaults" name="Quantum Visualizer Initialization should initialize with correct defaults" time="0.012">
       <failure>Error: expect(received).toBe(expected) // Object.is equality
 
 Expected: &quot;3d&quot;
@@ -242,7 +242,7 @@ Received: undefined
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Quantum Visualizer Initialization should accept custom configuration" name="Quantum Visualizer Initialization should accept custom configuration" time="0.002">
+    <testcase classname="Quantum Visualizer Initialization should accept custom configuration" name="Quantum Visualizer Initialization should accept custom configuration" time="0.004">
       <failure>Error: expect(received).toBe(expected) // Object.is equality
 
 Expected: &quot;4d&quot;
@@ -308,7 +308,7 @@ Received number of calls:    0
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Quantum Visualizer Event Handling should handle data updates correctly" name="Quantum Visualizer Event Handling should handle data updates correctly" time="0.005">
+    <testcase classname="Quantum Visualizer Event Handling should handle data updates correctly" name="Quantum Visualizer Event Handling should handle data updates correctly" time="0.003">
       <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
 Expected: [{&quot;id&quot;: &quot;q3&quot;, &quot;probability&quot;: 1, &quot;state&quot;: &quot;collapsed&quot;}]
@@ -331,7 +331,7 @@ Number of calls: 0
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Quantum Visualizer Event Handling should trigger onStateChange callback when state changes" name="Quantum Visualizer Event Handling should trigger onStateChange callback when state changes" time="0.003">
+    <testcase classname="Quantum Visualizer Event Handling should trigger onStateChange callback when state changes" name="Quantum Visualizer Event Handling should trigger onStateChange callback when state changes" time="0.004">
       <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
 Expected: [{&quot;id&quot;: &quot;q1&quot;, &quot;state&quot;: &quot;collapsed&quot;}]
@@ -376,7 +376,7 @@ Received number of calls:    0
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Quantum Visualizer Neural Bus Integration should handle quantum mutation events from Neural Bus" name="Quantum Visualizer Neural Bus Integration should handle quantum mutation events from Neural Bus" time="0.009">
+    <testcase classname="Quantum Visualizer Neural Bus Integration should handle quantum mutation events from Neural Bus" name="Quantum Visualizer Neural Bus Integration should handle quantum mutation events from Neural Bus" time="0.002">
       <failure>Error: expect(jest.fn()).toHaveBeenCalled()
 
 Expected number of calls: &gt;= 1
@@ -400,7 +400,7 @@ Received number of calls:    0
     </testcase>
     <testcase classname="Quantum Visualizer Neural Bus Integration should properly disconnect from Neural Bus" name="Quantum Visualizer Neural Bus Integration should properly disconnect from Neural Bus" time="0.002">
     </testcase>
-    <testcase classname="Quantum Visualizer Neural Bus Integration should handle hologram update events" name="Quantum Visualizer Neural Bus Integration should handle hologram update events" time="0.002">
+    <testcase classname="Quantum Visualizer Neural Bus Integration should handle hologram update events" name="Quantum Visualizer Neural Bus Integration should handle hologram update events" time="0.001">
       <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
 Expected: [{&quot;id&quot;: &quot;h1&quot;, &quot;probability&quot;: 0.8, &quot;state&quot;: &quot;superposition&quot;}]
@@ -423,7 +423,7 @@ Number of calls: 0
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Quantum Visualizer Neural Bus Integration should handle cart events" name="Quantum Visualizer Neural Bus Integration should handle cart events" time="0.002">
+    <testcase classname="Quantum Visualizer Neural Bus Integration should handle cart events" name="Quantum Visualizer Neural Bus Integration should handle cart events" time="0.001">
       <failure>Error: expect(jest.fn()).toHaveBeenCalled()
 
 Expected number of calls: &gt;= 1
@@ -448,7 +448,7 @@ Received number of calls:    0
     <testcase classname="Quantum Visualizer Hologram Integration should connect to a hologram component" name="Quantum Visualizer Hologram Integration should connect to a hologram component" time="0.002">
       <failure>Error: expect(received).toBe(expected) // Object.is equality
 
-Expected: {&quot;applyFractalPatterns&quot;: [Function applyFractalPatterns], &quot;connectHologram&quot;: [Function connectHologram], &quot;connectToBus&quot;: [Function connectToBus], &quot;disconnectFromNeuralBus&quot;: [Function disconnectFromNeuralBus], &quot;handleCartEvent&quot;: [Function handleCartEvent], &quot;handleHologramUpdate&quot;: [Function handleHologramUpdate], &quot;handleQuantumMutation&quot;: [Function handleQuantumMutation], &quot;render&quot;: [Function render], &quot;update&quot;: [Function update], &quot;updateData&quot;: [Function updateData], &quot;visualizeQuantumState&quot;: [Function visualizeQuantumState]}
+Expected: {&quot;applyFractalPatterns&quot;: [Function applyFractalPatterns], &quot;connectHologram&quot;: [Function connectHologram], &quot;connectToBus&quot;: [Function connectToBus], &quot;disconnectFromNeuralBus&quot;: [Function disconnectFromNeuralBus], &quot;dispose&quot;: [Function dispose], &quot;handleCartEvent&quot;: [Function handleCartEvent], &quot;handleHologramUpdate&quot;: [Function handleHologramUpdate], &quot;handleQuantumMutation&quot;: [Function handleQuantumMutation], &quot;render&quot;: [Function render], &quot;update&quot;: [Function update], &quot;updateData&quot;: [Function updateData], &quot;visualizeQuantumState&quot;: [Function visualizeQuantumState]}
 Received: undefined
     at Object.toBe (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:205:22)
     at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
@@ -467,12 +467,317 @@ Received: undefined
     at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Quantum Visualizer Hologram Integration should gracefully handle null/undefined hologram components" name="Quantum Visualizer Hologram Integration should gracefully handle null/undefined hologram components" time="0.005">
+    <testcase classname="Quantum Visualizer Hologram Integration should gracefully handle null/undefined hologram components" name="Quantum Visualizer Hologram Integration should gracefully handle null/undefined hologram components" time="0.001">
       <failure>Error: expect(received).toBe(expected) // Object.is equality
 
-Expected: {&quot;applyFractalPatterns&quot;: [Function applyFractalPatterns], &quot;connectHologram&quot;: [Function connectHologram], &quot;connectToBus&quot;: [Function connectToBus], &quot;disconnectFromNeuralBus&quot;: [Function disconnectFromNeuralBus], &quot;handleCartEvent&quot;: [Function handleCartEvent], &quot;handleHologramUpdate&quot;: [Function handleHologramUpdate], &quot;handleQuantumMutation&quot;: [Function handleQuantumMutation], &quot;render&quot;: [Function render], &quot;update&quot;: [Function update], &quot;updateData&quot;: [Function updateData], &quot;visualizeQuantumState&quot;: [Function visualizeQuantumState]}
+Expected: {&quot;applyFractalPatterns&quot;: [Function applyFractalPatterns], &quot;connectHologram&quot;: [Function connectHologram], &quot;connectToBus&quot;: [Function connectToBus], &quot;disconnectFromNeuralBus&quot;: [Function disconnectFromNeuralBus], &quot;dispose&quot;: [Function dispose], &quot;handleCartEvent&quot;: [Function handleCartEvent], &quot;handleHologramUpdate&quot;: [Function handleHologramUpdate], &quot;handleQuantumMutation&quot;: [Function handleQuantumMutation], &quot;render&quot;: [Function render], &quot;update&quot;: [Function update], &quot;updateData&quot;: [Function updateData], &quot;visualizeQuantumState&quot;: [Function visualizeQuantumState]}
 Received: undefined
     at Object.toBe (C:\Users\user\Documents\Projects\CyberCore\tests\unit\quantum-visualizer.test.js:212:22)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="EnhancedCart" errors="0" failures="4" skipped="0" timestamp="2025-04-22T21:25:05" time="8.173" tests="4">
+    <testcase classname="EnhancedCart should initialize with default configuration" name="EnhancedCart should initialize with default configuration" time="0.012">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.toHaveBeenCalled (C:\Users\user\Documents\Projects\CyberCore\tests\unit\enhanced-cart.test.js:61:35)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="EnhancedCart should apply profile to document and components" name="EnhancedCart should apply profile to document and components" time="0.008">
+      <failure>Error: expect(received).toHaveBeenCalledWith(...expected)
+
+Matcher error: received value must be a mock or spy function
+
+Received has type:  function
+Received has value: [Function remove]
+    at Object.toHaveBeenCalledWith (C:\Users\user\Documents\Projects\CyberCore\tests\unit\enhanced-cart.test.js:78:55)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="EnhancedCart should set trauma codes and apply them to the document" name="EnhancedCart should set trauma codes and apply them to the document" time="0.013">
+      <failure>Error: expect(received).toHaveBeenCalledWith(...expected)
+
+Matcher error: received value must be a mock or spy function
+
+Received has type:  function
+Received has value: [Function remove]
+    at Object.toHaveBeenCalledWith (C:\Users\user\Documents\Projects\CyberCore\tests\unit\enhanced-cart.test.js:108:55)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="EnhancedCart should add product to cart with quantum effects" name="EnhancedCart should add product to cart with quantum effects" time="0.015">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: {&quot;id&quot;: &quot;test-123&quot;, &quot;properties&quot;: {}, &quot;quantity&quot;: 1}
+
+Number of calls: 0
+    at Object.toHaveBeenCalledWith (C:\Users\user\Documents\Projects\CyberCore\tests\unit\enhanced-cart.test.js:132:32)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="HologramComponent" errors="0" failures="7" skipped="0" timestamp="2025-04-22T21:25:05" time="8.406" tests="7">
+    <testcase classname="HologramComponent should create shadow DOM when instantiated" name="HologramComponent should create shadow DOM when instantiated" time="0.001">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="HologramComponent should have default configuration values" name="HologramComponent should have default configuration values" time="0.001">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="HologramComponent should apply profile when attribute is set" name="HologramComponent should apply profile when attribute is set" time="0.001">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="HologramComponent should respond to intensity attribute changes" name="HologramComponent should respond to intensity attribute changes" time="0">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="HologramComponent should update render mode when attribute changes" name="HologramComponent should update render mode when attribute changes" time="0.001">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="HologramComponent should toggle glitch when enable-glitch attribute is set" name="HologramComponent should toggle glitch when enable-glitch attribute is set" time="0.001">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="HologramComponent should apply configuration via configure method" name="HologramComponent should apply configuration via configure method" time="0.001">
+      <failure>TypeError: Invalid constructor, the constructor is not part of the custom element registry
+    at HTMLConstructor (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\helpers\html-constructor.js:20:11)
+    at new HTMLElement (C:\Users\user\Documents\Projects\CyberCore\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:99:14)
+    at new CartPreviewHologramImplementation (C:\Users\user\Documents\Projects\CyberCore\assets\HologramComponent.ts:98:5)
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\unit\HologramComponent.test.js:17:23)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Quantum Hologram System Integration" errors="0" failures="4" skipped="0" timestamp="2025-04-22T21:25:13" time="0.791" tests="4">
+    <testcase classname="Quantum Hologram System Integration Component Integration should connect hologram with quantum visualizer" name="Quantum Hologram System Integration Component Integration should connect hologram with quantum visualizer" time="0">
+      <failure>TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\integration\quantum-hologram-integration.test.js:16:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Quantum Hologram System Integration Component Integration should apply glitch effects via the glitch engine" name="Quantum Hologram System Integration Component Integration should apply glitch effects via the glitch engine" time="0.001">
+      <failure>TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\integration\quantum-hologram-integration.test.js:37:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Quantum Hologram System Integration Component Integration should communicate via neural bus" name="Quantum Hologram System Integration Component Integration should communicate via neural bus" time="0.001">
+      <failure>TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\integration\quantum-hologram-integration.test.js:57:24)
+    at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Quantum Hologram System Integration End-to-End Workflow should process quantum mutations through the entire system" name="Quantum Hologram System Integration End-to-End Workflow should process quantum mutations through the entire system" time="0.001">
+      <failure>TypeError: HologramComponent is not a constructor
+    at Object.&lt;anonymous&gt; (C:\Users\user\Documents\Projects\CyberCore\tests\integration\quantum-hologram-integration.test.js:84:24)
     at Promise.then.completed (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:298:28)
     at new Promise (&lt;anonymous&gt;)
     at callAsyncCircusFn (C:\Users\user\Documents\Projects\CyberCore\node_modules\jest-circus\build\utils.js:231:10)

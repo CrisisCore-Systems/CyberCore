@@ -4,7 +4,6 @@
  */
 
 // Import the original JavaScript file using ES module syntax
-import * as MemoryProtocolJS from './memory-protocol.js';
 
 // Define TypeScript interfaces for the MemoryProtocol
 export interface MemoryFragment {
@@ -36,6 +35,9 @@ export interface MemoryProtocolOptions {
   [key: string]: unknown;
 }
 
+// MemoryProtocol: Persistent memory state management system
+// Encodes trauma patterns into storage structures
+
 export interface MemoryProtocolInterface {
   // Properties
   isInitialized: boolean;
@@ -43,16 +45,56 @@ export interface MemoryProtocolInterface {
   lastSyncTimestamp: number;
 
   // Methods
-  initialize(options?: MemoryProtocolOptions): Promise<void>;
-  storeFragment(fragment: Partial<MemoryFragment>): MemoryFragment;
-  retrieveFragment(fragmentId: string): MemoryFragment | null;
-  queryFragments(query: MemoryQuery): MemoryFragment[];
-  removeFragment(fragmentId: string): boolean;
-  clearAllFragments(): void;
-  exportMemory(): Record<string, unknown>;
-  importMemory(data: Record<string, unknown>): boolean;
+  initialize(options?: any): MemoryProtocolInterface;
+  store(key: string, data: any): Promise<boolean>;
+  retrieve(key: string): Promise<any>;
+  connect(): boolean;
+  disconnect(): boolean;
   sync(): Promise<boolean>;
 }
 
-// Export the JavaScript module with TypeScript types
-export const MemoryProtocol: MemoryProtocolInterface = MemoryProtocolJS;
+class MemoryProtocolImplementation implements MemoryProtocolInterface {
+  isInitialized = false;
+  fragmentCount = 0;
+  lastSyncTimestamp = 0;
+  private storage: Map<string, any> = new Map();
+
+  initialize(options?: any): MemoryProtocolInterface {
+    this.isInitialized = true;
+    // Implementation...
+    return this;
+  }
+
+  async store(key: string, data: any): Promise<boolean> {
+    try {
+      this.storage.set(key, data);
+      this.fragmentCount++;
+      return true;
+    } catch (error) {
+      console.error('MemoryProtocol storage error:', error);
+      return false;
+    }
+  }
+
+  async retrieve(key: string): Promise<any> {
+    return this.storage.get(key);
+  }
+
+  connect(): boolean {
+    // Implementation...
+    return true;
+  }
+
+  disconnect(): boolean {
+    // Implementation...
+    return true;
+  }
+
+  async sync(): Promise<boolean> {
+    this.lastSyncTimestamp = Date.now();
+    // Implementation...
+    return true;
+  }
+}
+
+export const MemoryProtocol: MemoryProtocolInterface = new MemoryProtocolImplementation();

@@ -1,0 +1,140 @@
+{% comment %}
+  PRODUCT-VARIANT-SELECTOR.LIQUID
+  Optimized variant selector with performance and accessibility improvements
+
+  Usage:
+  {% render 'product-variant-selector', product: product %}
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% if product.has_only_default_variant %}
+  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+{% else %}
+  <div class="product-variant-selector" data-variant-selector>
+    {% for option in product.options_with_values %}
+      <div class="variant-selector__option" data-option-index="{{ forloop.index0 }}">
+        <h3 class="variant-selector__label">{{ option.name }}</h3>
+
+        <fieldset class="variant-selector__values">
+          <legend class="visually-hidden">{{ option.name }}</legend>
+
+          {% for value in option.values %}
+            {% assign option_available = true %}
+            {% assign selected = false %}
+
+            {% if product.selected_variant %}
+              {% assign selected = product.selected_variant.options[forloop.parent.index0] == value %}
+            {% endif %}
+
+            <div class="variant-selector__value{% if selected %} variant-selector__value--selected{% endif %}">
+              <input
+                type="radio"
+                name="options[{{ option.name | escape }}]"
+                value="{{ value | escape }}"
+                id="{{ section.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                {% if selected %}checked{% endif %}
+                data-variant-option
+              >
+              <label for="{{ section.id }}-{{ option.name | handleize }}-{{ value | handleize }}">
+                {{ value }}
+              </label>
+            </div>
+          {% endfor %}
+        </fieldset>
+      </div>
+    {% endfor %}
+
+    <div class="variant-selector__variant-availability">
+      <span class="variant-selector__availability" data-variant-availability>
+        {% if product.selected_or_first_available_variant.available %}
+          {{ 'products.product.in_stock' | t }}
+        {% else %}
+          {{ 'products.product.sold_out' | t }}
+        {% endif %}
+      </span>
+    </div>
+
+    <select name="id" class="variant-selector__variant-select visually-hidden" data-variant-select>
+      {% for variant in product.variants %}
+        <option
+          value="{{ variant.id }}"
+          {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+          {% unless variant.available %}disabled{% endunless %}
+          data-sku="{{ variant.sku }}"
+        >
+          {{ variant.title }} - {% if variant.available %}{{ variant.price | money }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize variant selector - defer to avoid blocking critical rendering
+      setTimeout(function() {
+        var selectors = document.querySelectorAll('[data-variant-selector]');
+        selectors.forEach(initVariantSelector);
+      }, 0);
+
+      function initVariantSelector(selector) {
+        var productOptions = {{ product.options_with_values | json }};
+        var variants = {{ product.variants | json }};
+        var variantSelect = selector.querySelector('[data-variant-select]');
+        var optionInputs = selector.querySelectorAll('[data-variant-option]');
+        var availabilityElement = selector.querySelector('[data-variant-availability]');
+
+        // Initialize current selection
+        updateVariantSelection();
+
+        // Add event listeners
+        optionInputs.forEach(function(input) {
+          input.addEventListener('change', updateVariantSelection);
+        });
+
+        function updateVariantSelection() {
+          // Get selected values
+          var selectedValues = [];
+          productOptions.forEach(function(option, index) {
+            var selected = selector.querySelector('input[name="options[' + option.name + ']"]:checked');
+            if (selected) {
+              selectedValues.push(selected.value);
+            }
+          });
+
+          // Find matching variant
+          var matchingVariant = findVariantByOptions(selectedValues);
+
+          // Update UI
+          if (matchingVariant) {
+            variantSelect.value = matchingVariant.id;
+
+            // Update availability
+            if (availabilityElement) {
+              if (matchingVariant.available) {
+                availabilityElement.textContent = {{ 'products.product.in_stock' | t | json }};
+                availabilityElement.classList.remove('unavailable');
+              } else {
+                availabilityElement.textContent = {{ 'products.product.sold_out' | t | json }};
+                availabilityElement.classList.add('unavailable');
+              }
+            }
+
+            // Trigger change event for other components that might be listening
+            variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }
+
+        function findVariantByOptions(selectedValues) {
+          return variants.find(function(variant) {
+            return selectedValues.every(function(value, index) {
+              return variant.options[index] === value;
+            });
+          });
+        }
+      }
+    });
+  </script>
+{% endif %}

@@ -1,0 +1,67 @@
+/**
+ * VoidBloom Focus States
+ * Enhanced focus styles for accessibility
+ * @version 1.0.0
+ */
+
+/* Global focus styles */
+:focus-visible {
+  outline: 2px solid var(--vb-color-accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 246, 255, 0.25);
+  border-radius: var(--vb-border-radius-sm);
+  transition: outline-offset var(--vb-animation-speed-fast) ease;
+}
+
+/* Button focus states */
+button:focus-visible,
+.button:focus-visible,
+[role='button']:focus-visible,
+input[type='submit']:focus-visible,
+input[type='button']:focus-visible {
+  outline: 2px solid var(--vb-color-accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 246, 255, 0.3);
+}
+
+/* Form field focus */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--vb-color-accent);
+  border-color: var(--vb-color-accent);
+  box-shadow: 0 0 0 4px rgba(0, 246, 255, 0.2);
+}
+
+/* Links focus */
+a:focus-visible {
+  outline: 2px solid var(--vb-color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+/* Skip to content link - visible on focus */
+.skip-to-content {
+  position: absolute;
+  top: -9999px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--vb-color-surface);
+  color: var(--vb-color-text);
+  padding: var(--vb-space-sm) var(--vb-space-md);
+  z-index: 9999;
+  text-decoration: none;
+  border-radius: 0 0 var(--vb-border-radius-md) var(--vb-border-radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: top var(--vb-animation-speed-medium) ease;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Remove focus for mouse users while keeping it for keyboard */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}

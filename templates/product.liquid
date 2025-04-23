@@ -11,3 +11,252 @@
   <!-- Recommended Products -->
   {% section 'product-recommendations' %}
 </div>
+
+{% comment %}
+VOIDBLOOM PRODUCT TEMPLATE
+Core e-commerce product display with trauma-responsive memory encoding
+{% endcomment %}
+
+<div class="product-singularity"
+     data-trauma-level="{{ product.metafields.voidbloom.trauma_level | default: 0 }}"
+     data-memory-phase="{{ product.metafields.voidbloom.memory_phase | default: 'cyber-lotus' }}">
+
+  {% section 'product-template' %}
+
+  <script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": "{{ product.title | escape }}",
+    "url": "{{ shop.url }}{{ product.url }}",
+    {% if product.featured_media %}
+      "image": [
+        "https:{{ product.featured_media | img_url: '1024x1024' }}"
+      ],
+    {% endif %}
+    "description": "{{ product.description | strip_html | escape }}",
+    "brand": {
+      "@type": "Brand",
+      "name": "VoidBloom Designs"
+    },
+    "offers": [
+      {% for variant in product.variants %}
+        {
+          "@type": "Offer",
+          "priceCurrency": "{{ shop.currency }}",
+          "price": "{{ variant.price | divided_by: 100.00 }}",
+          "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "sku": "{{ variant.sku | escape }}"
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  }
+  </script>
+</div>
+
+{% comment %}
+VOIDBLOOM PRODUCT SINGULARITY
+Trauma-encoded product manifestation point
+{% endcomment %}
+
+<div class="product-singularity"
+     data-trauma-level="{{ product.metafields.voidbloom.trauma_level | default: 0 }}"
+     data-memory-phase="{{ product.metafields.voidbloom.memory_phase | default: 'cyber-lotus' }}"
+     x-data="{
+       traumaLevel: {{ product.metafields.voidbloom.trauma_level | default: 0 }},
+       memoryPhase: '{{ product.metafields.voidbloom.memory_phase | default: 'cyber-lotus' }}',
+       currentVariant: {{ product.selected_or_first_available_variant.id | json }},
+       cartLoading: false,
+       memory: {
+         fragments: {{ product.metafields.voidbloom.memory_fragments | default: '[]' }},
+         resonance: {{ product.metafields.voidbloom.resonance_factor | default: 1.0 }}
+       },
+       initialize() {
+         // Establish neural connection on page load
+         if (window.NeuralBus) {
+           window.NeuralBus.publish('product:view', {
+             id: {{ product.id }},
+             title: {{ product.title | json }},
+             traumaLevel: this.traumaLevel,
+             memoryPhase: this.memoryPhase
+           });
+         }
+
+         // Initialize quantum effects based on trauma level
+         this.$nextTick(() => {
+           this.applyQuantumEffects();
+           this.initializeHologram();
+         });
+       },
+       // ...existing code...
+     }"
+     x-init="initialize()"
+     :class="`memory-phase-${memoryPhase}`">
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    {%- comment -%} Quantum Media Gallery {%- endcomment -%}
+    <div class="product-gallery relative overflow-hidden rounded-lg"
+         x-data="{ activeIndex: 0 }"
+         :class="{ 'trauma-resonance': traumaLevel >= 5 }">
+
+      <div class="absolute inset-0 pointer-events-none quantum-overlay opacity-75"
+           :class="{
+             'quantum-active': traumaLevel >= 3,
+             'quantum-extreme': traumaLevel >= 7
+           }">
+        <!-- Quantum field overlay -->
+        <div class="quantum-field absolute inset-0 mix-blend-screen"></div>
+        <div class="quantum-lines"></div>
+      </div>
+
+      <!-- Main image -->
+      <div class="relative aspect-w-1 aspect-h-1 w-full">
+        {% for media in product.media %}
+          <div x-show="activeIndex === {{ forloop.index0 }}"
+               x-transition:enter="transition ease-quantum duration-500 transform"
+               x-transition:enter-start="opacity-0 scale-105"
+               x-transition:enter-end="opacity-100 scale-100"
+               x-transition:leave="transition ease-quantum duration-300 transform"
+               x-transition:leave-start="opacity-100 scale-100"
+               x-transition:leave-end="opacity-0 scale-95"
+               class="product-media w-full h-full">
+            {% if media.media_type == 'model' %}
+              <product-model class="product-media--model h-full w-full" data-model-id="{{ media.id }}">
+                {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true, data-model-id: media.id }}
+              </product-model>
+            {% elsif media.media_type == 'video' %}
+              {{ media | video_tag: class: 'w-full h-full object-cover', controls: true, preload: 'metadata' }}
+            {% elsif media.media_type == 'external_video' %}
+              {{ media | external_video_tag: class: 'w-full h-full object-cover' }}
+            {% else %}
+              <img srcset="{% for width in '360,540,720,900,1080,1296,1512,1728,1944,2160,2376,2592,2808,3024' | split: ',' %}{{ media | image_url: width: width }} {{ width }}w,{% endfor %}"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  loading="lazy"
+                  src="{{ media | image_url: width: 1080 }}"
+                  width="{{ media.width }}"
+                  height="{{ media.height }}"
+                  alt="{{ media.alt | escape }}"
+                  class="w-full h-full object-cover">
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <!-- Hologram overlay for trauma level > 2 -->
+        <div x-show="traumaLevel > 2" class="absolute inset-0 pointer-events-none">
+          <quantum-hologram x-ref="hologram"
+                          class="w-full h-full"
+                          trauma-level="3"></quantum-hologram>
+        </div>
+      </div>
+
+      <!-- Thumbnail navigation -->
+      {% if product.media.size > 1 %}
+        <div class="flex flex-wrap gap-2 mt-4">
+          {% for media in product.media %}
+            <button type="button"
+                    @click="activeIndex = {{ forloop.index0 }}"
+                    class="media-thumbnail flex-grow-0 w-16 h-16 border-2 rounded-md overflow-hidden transition-all duration-300"
+                    :class="{ 'border-trauma-500 ring-1 ring-trauma-300': activeIndex === {{ forloop.index0 }}, 'border-void-800 hover:border-void-600': activeIndex !== {{ forloop.index0 }} }">
+              {% if media.media_type == 'model' %}
+                <span class="flex items-center justify-center h-full bg-void-900 text-void-300">
+                  {% render 'icon-3d-model' %}
+                </span>
+              {% elsif media.media_type == 'video' or media.media_type == 'external_video' %}
+                <span class="flex items-center justify-center h-full bg-void-900 text-void-300">
+                  {% render 'icon-video' %}
+                </span>
+              {% else %}
+                <img src="{{ media | image_url: width: 160 }}"
+                     loading="lazy"
+                     alt="{{ media.alt | escape }}"
+                     class="w-full h-full object-cover">
+              {% endif %}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Product Information {%- endcomment -%}
+    <div class="product-info flex flex-col">
+      <!-- ...existing code... -->
+    </div>
+  </div>
+
+  <!-- Related memory artifacts -->
+  <section class="memory-artifacts mt-16">
+    <h2 class="text-xl font-trauma mb-6 text-center">Related Memory Artifacts</h2>
+
+    {% if recommendations.performed %}
+      <div x-data="{}" x-init="$nextTick(() => window.initializeMemoryCarousel())">
+        <div class="memory-carousel relative">
+          <div class="swiper-container overflow-hidden">
+            <div class="swiper-wrapper">
+              {% for product in recommendations.products %}
+                <div class="swiper-slide">
+                  {% render 'product-card', product: product %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Navigation -->
+          <button class="memory-carousel-prev absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-void-900/80 border border-void-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-void-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button class="memory-carousel-next absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-void-900/80 border border-void-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-void-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</div>
+
+<script>
+  // Memory Carousel Initialization
+  window.initializeMemoryCarousel = function() {
+    if (typeof Swiper !== 'undefined') {
+      new Swiper('.memory-carousel .swiper-container', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        navigation: {
+          nextEl: '.memory-carousel-next',
+          prevEl: '.memory-carousel-prev',
+        },
+        breakpoints: {
+          640: {
+            slidesPerView: 2,
+          },
+          768: {
+            slidesPerView: 3,
+          },
+          1024: {
+            slidesPerView: 4,
+          },
+        }
+      });
+    }
+  };
+
+  // Register trauma-response listeners
+  document.addEventListener('DOMContentLoaded', function() {
+    const productContainer = document.querySelector('.product-singularity');
+    if (productContainer) {
+      const traumaLevel = parseInt(productContainer.dataset.traumaLevel || '0', 10);
+
+      // Apply quantum field effects for high trauma levels
+      if (traumaLevel > 5 && window.GlitchEngine) {
+        window.GlitchEngine.addTarget(document.body, {
+          intensity: traumaLevel / 20,
+          pulseInterval: 5000,
+          traumaResponsive: true
+        });
+      }
+    }
+  });
+</script>

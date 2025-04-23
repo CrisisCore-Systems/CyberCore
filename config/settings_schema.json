@@ -179,6 +179,38 @@
     ]
   },
   {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 250,
+        "step": 10,
+        "unit": "px",
+        "label": "Logo width",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "show_announcement",
+        "label": "Show announcement",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "announcement_text",
+        "label": "Announcement text",
+        "default": "Announce something important here"
+      }
+    ]
+  },
+  {
     "name": "Social Media",
     "settings": [
       {
@@ -196,6 +228,12 @@
         "id": "social_instagram_link",
         "label": "Instagram",
         "info": "https://instagram.com/youraccount"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook",
+        "info": "https://facebook.com/youraccount"
       }
     ]
   },
@@ -213,6 +251,253 @@
         "id": "cart_enable_quantum_previews",
         "label": "Enable 3D previews in cart",
         "default": true
+      }
+    ]
+  },
+  {
+    "name": "Contact Information",
+    "settings": [
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Contact Email",
+        "default": "contact@yourstore.com"
+      },
+      {
+        "type": "text",
+        "id": "contact_phone",
+        "label": "Contact Phone",
+        "default": "+1 (555) 123-4567"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Will be scaled down to 32 x 32px"
+      }
+    ]
+  },
+  {
+    "name": "SEO Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Default Meta Tags"
+      },
+      {
+        "type": "text",
+        "id": "seo_default_title",
+        "label": "Default Title Tag",
+        "default": "VoidBloom - Digital Memory Archive"
+      },
+      {
+        "type": "textarea",
+        "id": "seo_default_description",
+        "label": "Default Meta Description",
+        "default": "VoidBloom digital memory archive collection, featuring trauma-encoded artifacts and quantum memory visualizations."
+      },
+      {
+        "type": "image_picker",
+        "id": "seo_og_image",
+        "label": "Default Open Graph Image",
+        "info": "Shown when sharing your site on social media. Recommended size: 1200 x 630px"
+      }
+    ]
+  },
+  {
+    "name": "SEO & Structured Data",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Structured Data Settings"
+      },
+      {
+        "type": "paragraph",
+        "content": "These settings control how search engines and social media platforms understand your site content."
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_structured_data",
+        "label": "Enable Structured Data",
+        "default": true,
+        "info": "Outputs JSON-LD schema for products, collections, articles, and pages"
+      },
+      {
+        "type": "select",
+        "id": "search_type",
+        "label": "Search Result Types",
+        "options": [
+          {
+            "value": "product",
+            "label": "Products only"
+          },
+          {
+            "value": "product,page",
+            "label": "Products and pages"
+          },
+          {
+            "value": "product,article",
+            "label": "Products and articles"
+          },
+          {
+            "value": "product,page,article",
+            "label": "Products, pages, and articles"
+          }
+        ],
+        "default": "product,page,article"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default Social Sharing Image",
+        "info": "Shown when sharing a link if no specific image is available"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_canonical_urls",
+        "label": "Enable Canonical URLs",
+        "default": true,
+        "info": "Helps prevent duplicate content issues for SEO"
+      }
+    ]
+  },
+  {
+    "name": "Metafields Registration",
+    "settings": [
+      {
+        "type": "header",
+        "content": "VoidBloom Metafield Configuration"
+      },
+      {
+        "type": "paragraph",
+        "content": "These settings register the metafields required for VoidBloom's quantum features, trauma profiling, and structured data."
+      },
+      {
+        "type": "checkbox",
+        "id": "register_quantum_metafields",
+        "label": "Register Quantum Metafields",
+        "default": true,
+        "info": "Required for quantum visualization features"
+      },
+      {
+        "type": "checkbox",
+        "id": "register_trauma_metafields",
+        "label": "Register Trauma Metafields",
+        "default": true,
+        "info": "Required for trauma profiling and personalization"
+      }
+    ]
+  },
+  {
+    "name": "Performance Optimization",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Resource Loading"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_lazy_loading",
+        "label": "Enable Lazy Loading",
+        "default": true,
+        "info": "Load images and videos only when they enter the viewport"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_image_optimization",
+        "label": "Enable Image Optimization",
+        "default": true,
+        "info": "Automatically optimize and compress images"
+      },
+      {
+        "type": "checkbox",
+        "id": "defer_non_critical_css",
+        "label": "Defer Non-Critical CSS",
+        "default": true,
+        "info": "Improves initial page load performance"
+      },
+      {
+        "type": "checkbox",
+        "id": "defer_quantum_initialization",
+        "label": "Defer Quantum Initialization",
+        "default": true,
+        "info": "Initialize quantum features after critical content loads"
+      },
+      {
+        "type": "range",
+        "id": "image_loading_threshold",
+        "min": 0,
+        "max": 500,
+        "step": 50,
+        "unit": "px",
+        "label": "Image Loading Threshold",
+        "default": 200,
+        "info": "Distance in pixels from viewport to begin loading images"
+      }
+    ]
+  },
+  {
+    "name": "Accessibility",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Accessibility Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_focus_outline",
+        "label": "Enable Enhanced Focus Outlines",
+        "default": true,
+        "info": "Improves keyboard navigation visibility"
+      },
+      {
+        "type": "checkbox",
+        "id": "reduce_motion",
+        "label": "Respect Reduce Motion Preferences",
+        "default": true,
+        "info": "Reduces animation when user has requested reduced motion"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_alt_texts",
+        "label": "Enable Dynamic Alt Texts",
+        "default": true,
+        "info": "Generate image descriptions if missing"
+      },
+      {
+        "type": "checkbox",
+        "id": "high_contrast_mode",
+        "label": "Support High Contrast Mode",
+        "default": true,
+        "info": "Improves visibility for users with contrast sensitivity"
+      },
+      {
+        "type": "range",
+        "id": "animation_duration_factor",
+        "min": 0.1,
+        "max": 1.0,
+        "step": 0.1,
+        "label": "Animation Duration Factor",
+        "default": 0.7,
+        "info": "Lower values create shorter animations for reduced motion"
+      }
+    ]
+  },
+  {
+    "name": "Metafield Registrations",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Metafield Namespace: voidbloom"
+      },
+      {
+        "type": "paragraph",
+        "content": "This theme uses the following metafields. No action required from the merchant."
       }
     ]
   }

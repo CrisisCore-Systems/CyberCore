@@ -1,222 +1,89 @@
 {% comment %}
-@MutationCompatible: All Variants
-@StrategyProfile: quantum-entangled
-@Version: 2.0.0
+  VOIDBLOOM PRODUCT CARD
+  Memory artifact display component with trauma-responsive encoding
+
+  Usage:
+  {% render 'product-card', product: product %}
 {% endcomment %}
 
-{% assign product_url = product.url %}
-{% assign featured_image = product.featured_media.preview_image %}
+{% assign trauma_level = product.metafields.voidbloom.trauma_level | default: 0 %}
+{% assign memory_phase = product.metafields.voidbloom.memory_phase | default: "cyber-lotus" %}
 
-<div class="product-card"
-  data-product-id="{{ product.id }}"
-  data-trauma-type="{{ product.metafields.voidbloom.trauma_type | default: 'recursion' }}"
-  data-product-url="{{ product_url }}"
->
-  <div class="product-card-inner">
-    <!-- Card media -->
-    <div class="product-card-media">
-      <a href="{{ product_url }}" class="product-card-image-link">
-        {% if featured_image != blank %}
-          <div class="product-card-image-container">
-            <img
-              srcset="{% if featured_image.width >= 300 %}{{ featured_image | img_url: '300x' }} 300w,{% endif %}
-                      {% if featured_image.width >= 400 %}{{ featured_image | img_url: '400x' }} 400w,{% endif %}
-                      {% if featured_image.width >= 500 %}{{ featured_image | img_url: '500x' }} 500w,{% endif %}
-                      {% if featured_image.width >= 600 %}{{ featured_image | img_url: '600x' }} 600w,{% endif %}
-                      {% if featured_image.width >= 700 %}{{ featured_image | img_url: '700x' }} 700w,{% endif %}
-                      {% if featured_image.width >= 800 %}{{ featured_image | img_url: '800x' }} 800w{% endif %}"
-              sizes="(min-width: 1400px) 317px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
-              src="{{ featured_image | img_url: '500x' }}"
-              alt="{{ featured_image.alt | escape }}"
-              loading="lazy"
-              width="{{ featured_image.width }}"
-              height="{{ featured_image.height }}"
-              class="product-card-image"
-            >
+<div class="product-card group relative"
+     data-product-id="{{ product.id }}"
+     data-trauma-level="{{ trauma_level }}"
+     data-memory-phase="{{ memory_phase }}">
 
-            {% if product.metafields.voidbloom.trauma_type != blank and show_trauma_indicator %}
-              <div class="trauma-overlay trauma-{{ product.metafields.voidbloom.trauma_type }}"></div>
-            {% endif %}
+  <a href="{{ product.url }}" class="block overflow-hidden rounded-lg relative h-0 pb-[125%]">
+    <!-- Quantum Field Overlay -->
+    <div class="absolute inset-0 pointer-events-none quantum-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+         :class="{ 'opacity-75': $store.trauma.level >= 3 }">
+      <div class="quantum-field absolute inset-0"></div>
+      <div class="quantum-lines"></div>
+    </div>
 
-            {% if product.compare_at_price > product.price and show_price %}
-              <span class="product-card-badge sale">{{ 'products.product.on_sale' | t }}</span>
-            {% endif %}
-
-            {% unless product.available %}
-              <span class="product-card-badge sold-out">{{ 'products.product.sold_out' | t }}</span>
-            {% endunless %}
-          </div>
-        {% else %}
-          {{ 'product-1' | placeholder_svg_tag: 'product-card-image placeholder' }}
-        {% endif %}
-      </a>
-
-      {% if show_quick_add and product.available %}
-        <div class="product-card-buttons">
-          <button class="quick-add-button" data-product-id="{{ product.id }}" aria-label="{{ 'products.product.quick_add' | t }}">
-            <span class="quick-add-text">{{ 'products.product.quick_add' | t }}</span>
-            <span class="quick-add-icon"></span>
-          </button>
-
-          <a href="{{ product_url }}" class="view-details-button">
-            <span class="view-details-text">{{ 'products.product.view_details' | t }}</span>
-            <span class="view-details-icon"></span>
-          </a>
-        </div>
+    <!-- Product Image -->
+    <div class="absolute inset-0 w-full h-full transform transition-transform duration-500 group-hover:scale-105">
+      {% if product.featured_media %}
+        <img
+          srcset="{% for width in '180,360,540,720,900,1080' | split: ',' %}
+            {{ product.featured_media | img_url: width: width }} {{ width }}w,
+          {% endfor %}"
+          sizes="(min-width: 1540px) 348px, (min-width: 1280px) 284px, (min-width: 1040px) 242px, (min-width: 768px) 348px, (min-width: 640px) 284px, calc(100vw - 30px)"
+          src="{{ product.featured_media | img_url: '540x' }}"
+          alt="{{ product.featured_media.alt | escape }}"
+          width="{{ product.featured_media.width }}"
+          height="{{ product.featured_media.height }}"
+          loading="lazy"
+          class="w-full h-full object-cover"
+        >
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover text-void-800' }}
       {% endif %}
     </div>
 
-    <!-- Card content -->
-    <div class="product-card-content">
-      {% if show_vendor and product.vendor %}
-        <div class="product-card-vendor">{{ product.vendor }}</div>
-      {% endif %}
-
-      <h3 class="product-card-title">
-        <a href="{{ product_url }}">{{ product.title }}</a>
-      </h3>
-
-      {% if show_rating and product.metafields.reviews.rating %}
-        <div class="product-card-rating">
-          <div class="rating-stars" style="--rating: {{ product.metafields.reviews.rating.value }};" aria-label="{{ 'products.product.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
-          </div>
-          <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
-        </div>
-      {% endif %}
-
-      {% if show_price %}
-        <div class="product-card-price">
-          <div class="price {% if product.compare_at_price > product.price %}on-sale{% endif %}">
-            <span class="regular-price">{{ product.price | money }}</span>
-
-            {% if product.compare_at_price > product.price %}
-              <span class="compare-at-price">{{ product.compare_at_price | money }}</span>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-
-      {% if show_trauma_indicator and product.metafields.voidbloom.trauma_type != blank %}
-        <div class="product-card-trauma-indicator">
-          <span class="trauma-label">{{ product.metafields.voidbloom.trauma_type | capitalize }}</span>
-          <div class="trauma-icon trauma-{{ product.metafields.voidbloom.trauma_type }}"></div>
-        </div>
-      {% endif %}
-    </div>
-
-    <!-- Quantum resonance indicators (only shown when user has completed the ritual) -->
-    <div class="quantum-resonance-indicators">
-      <div class="resonance-measure" data-resonance-value="{{ product.metafields.voidbloom.resonance | default: 0.5 }}">
-        <div class="resonance-fill"></div>
+    <!-- Trauma Indicator -->
+    {% if trauma_level > 0 %}
+      <div class="absolute top-2 right-2 flex">
+        {% for i in (1..trauma_level) limit: 5 %}
+          <span class="h-1.5 w-3 rounded-sm mr-0.5 bg-trauma-500"></span>
+        {% endfor %}
       </div>
-      <div class="trauma-connection-indicator"></div>
+    {% endif %}
+
+    <!-- Memory Phase Tag -->
+    <div class="absolute bottom-2 left-2">
+      {% render 'memory-phase-tag', phase: memory_phase, size: 'sm' %}
+    </div>
+
+    <!-- Quick Add Button (appears on hover) -->
+    <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-void-950/80 to-void-950/0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+      <button type="button"
+              class="w-full py-2 bg-trauma-600 hover:bg-trauma-700 text-white rounded flex items-center justify-center transition-colors group-quantum"
+              @click.prevent="quickAdd('{{ product.variants.first.id }}')">
+        <span class="text-sm">Encode to Memory</span>
+        <span class="ml-1.5 quantum-pulse opacity-0 group-quantum-hover:opacity-100 transition-opacity">
+          {% render 'icon-quantum-pulse', class: 'h-4 w-4' %}
+        </span>
+      </button>
+    </div>
+  </a>
+
+  <!-- Product Info -->
+  <div class="mt-3 px-1">
+    <!-- Title -->
+    <h3 class="text-void-200 font-trauma leading-tight group-hover:text-trauma-300 transition-colors">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    <!-- Price -->
+    <div class="mt-1 flex items-baseline">
+      {% if product.compare_at_price_max > product.price %}
+        <span class="text-trauma-500">{{ product.price | money }}</span>
+        <span class="text-void-500 text-sm line-through ml-2">{{ product.compare_at_price_max | money }}</span>
+      {% else %}
+        <span class="text-void-400">{{ product.price | money }}</span>
+      {% endif %}
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const productCard = document.querySelector('.product-card[data-product-id="{{ product.id }}"]');
-
-    if (productCard) {
-      // Quick add functionality
-      const quickAddButton = productCard.querySelector('.quick-add-button');
-      if (quickAddButton) {
-        quickAddButton.addEventListener('click', function() {
-          this.classList.add('loading');
-
-          // Add the product to cart
-          fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              id: {{ product.selected_or_first_available_variant.id }},
-              quantity: 1
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            this.classList.remove('loading');
-
-            if (data.status) {
-              console.error('Error adding to cart:', data.description);
-              return;
-            }
-
-            // Update cart
-            if (window.CartSystem && window.CartSystem.updateCart) {
-              window.CartSystem.updateCart();
-            }
-
-            // Send event to Neural Bus
-            if (window.NeuralBus) {
-              window.NeuralBus.publish('product:added_to_cart', {
-                productId: '{{ product.id }}',
-                source: 'product-card',
-                timestamp: Date.now()
-              });
-            }
-
-            // Show success feedback
-            const successIndicator = document.createElement('div');
-            successIndicator.className = 'quick-add-success';
-            successIndicator.textContent = '{{ "products.product.added_to_cart" | t }}';
-            productCard.appendChild(successIndicator);
-
-            setTimeout(() => {
-              successIndicator.remove();
-            }, 3000);
-          })
-          .catch(error => {
-            console.error('Error adding product to cart:', error);
-            this.classList.remove('loading');
-          });
-        });
-      }
-
-      // Quantum resonance indicators
-      const userTrauma = localStorage.getItem('voidbloom_primary_trauma');
-      const traumaAffinities = JSON.parse(localStorage.getItem('voidbloom_trauma_affinities') || '{}');
-
-      if (userTrauma && Object.keys(traumaAffinities).length > 0) {
-        const productTrauma = productCard.getAttribute('data-trauma-type');
-        const resonanceIndicator = productCard.querySelector('.quantum-resonance-indicators');
-        const resonanceMeasure = productCard.querySelector('.resonance-measure');
-        const traumaConnection = productCard.querySelector('.trauma-connection-indicator');
-
-        if (resonanceIndicator && resonanceMeasure && traumaConnection) {
-          // Show the resonance indicators
-          resonanceIndicator.classList.add('active');
-
-          // Calculate resonance based on user's trauma affinities
-          let resonance = 0.2; // Base resonance
-
-          if (productTrauma === userTrauma) {
-            // Primary match gets high resonance
-            resonance = 0.8;
-            productCard.classList.add('primary-resonance');
-          } else if (traumaAffinities[productTrauma]) {
-            // Secondary match based on affinity strength
-            resonance = 0.3 + (traumaAffinities[productTrauma] * 0.5);
-            productCard.classList.add('secondary-resonance');
-          }
-
-          // Update visual indicators
-          resonanceMeasure.style.setProperty('--resonance', resonance);
-          resonanceMeasure.querySelector('.resonance-fill').style.width = `${resonance * 100}%`;
-
-          // Add connection line classes based on resonance level
-          if (resonance > 0.7) {
-            traumaConnection.classList.add('strong-connection');
-          } else if (resonance > 0.4) {
-            traumaConnection.classList.add('medium-connection');
-          } else {
-            traumaConnection.classList.add('weak-connection');
-          }
-        }
-      }
-    }
-  });
-</script>

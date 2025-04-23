@@ -1,0 +1,330 @@
+<div id="memory-archive-drawer"
+     class="fixed inset-0 z-50 pointer-events-none"
+     x-data="memoryArchive"
+     x-show="isOpen"
+     x-transition:enter="transition-opacity ease-quantum duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition-opacity ease-quantum duration-300"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     @cart:open.window="open()"
+     @cart:close.window="close()"
+     @keydown.escape.window="close()">
+
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-void-950/80 backdrop-blur-md pointer-events-auto"
+       x-show="isOpen"
+       @click="close()"></div>
+
+  <!-- Memory Archive Panel -->
+  <div class="absolute top-0 right-0 h-full w-full sm:max-w-lg transform transition-transform ease-quantum duration-300 pointer-events-auto flex flex-col bg-void-900 border-l border-void-800"
+       x-show="isOpen"
+       :class="isOpen ? 'translate-x-0' : 'translate-x-full'"
+       @click.away="close()">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-void-800">
+      <h2 class="text-lg font-trauma text-void-200">Memory Archive</h2>
+      <button type="button" @click="close()" class="text-void-400 hover:text-trauma-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cart Contents -->
+    <div class="flex-1 overflow-y-auto p-4">
+      <!-- Loading State -->
+      <div x-show="loading" class="flex flex-col items-center justify-center h-40">
+        <div class="quantum-spinner h-8 w-8 border-2 border-trauma-500 rounded-full border-t-transparent animate-spin"></div>
+        <p class="mt-2 text-void-400">Loading memory fragments...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div x-show="!loading && itemCount === 0" class="flex flex-col items-center justify-center h-64 text-center">
+        <div class="memory-void-icon h-16 w-16 mb-4 text-void-700">
+          {% render 'icon-memory-void' %}
+        </div>
+        <h3 class="text-void-300 font-trauma text-lg mb-2">Memory Archive Empty</h3>
+        <p class="text-void-500 max-w-xs">Your memory archive is currently void of artifacts. Explore the collection to encode new memories.</p>
+        <button type="button"
+                @click="close()"
+                class="mt-4 px-4 py-2 bg-trauma-600 hover:bg-trauma-700 text-white rounded-md transition-colors">
+          Explore Collection
+        </button>
+      </div>
+
+      <!-- Cart Items -->
+      <div x-show="!loading && itemCount > 0">
+        <ul class="memory-fragments divide-y divide-void-800">
+          <template x-for="(item, index) in items" :key="item.key">
+            <li class="memory-fragment py-4 first:pt-0 last:pb-0"
+                :class="{ 'trauma-encoded': item.properties?._trauma_level > 5 }"
+                :data-key="item.key">
+              <div class="flex">
+                <!-- Product Image -->
+                <div class="flex-shrink-0 w-20 h-20 mr-4 relative rounded overflow-hidden">
+                  <img :src="item.image ? item.image : '/assets/memory-placeholder.jpg'"
+                       :alt="item.title"
+                       class="w-full h-full object-cover">
+
+                  <!-- Memory Phase Marker -->
+                  <div class="absolute bottom-0 left-0 right-0 h-1"
+                       :class="{
+                         'bg-cyber-500': item.properties?._memory_phase === 'cyber-lotus',
+                         'bg-alien-500': item.properties?._memory_phase === 'alien-flora',
+                         'bg-virus-500': item.properties?._memory_phase === 'rolling-virus',
+                         'bg-trauma-500': item.properties?._memory_phase === 'trauma-core' || !item.properties?._memory_phase
+                       }"></div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-void-200 font-trauma text-sm truncate" x-text="item.title"></h3>
+
+                  <!-- Variant -->
+                  <p class="text-void-500 text-xs mt-0.5" x-text="item.variant_title"></p>
+
+                  <!-- Memory Phase & Trauma Level -->
+                  <div class="flex items-center mt-1" x-show="item.properties && (item.properties._memory_phase || item.properties._trauma_level)">
+                    <template x-if="item.properties && item.properties._memory_phase">
+                      <span class="text-xs px-1.5 py-0.5 rounded mr-2"
+                            :class="{
+                              'bg-cyber-900/20 text-cyber-500': item.properties._memory_phase === 'cyber-lotus',
+                              'bg-alien-900/20 text-alien-500': item.properties._memory_phase === 'alien-flora',
+                              'bg-virus-900/20 text-virus-500': item.properties._memory_phase === 'rolling-virus',
+                              'bg-trauma-900/20 text-trauma-500': item.properties._memory_phase === 'trauma-core'
+                            }"
+                            x-text="item.properties._memory_phase?.replace('-', ' ')"></span>
+                    </template>
+
+                    <template x-if="item.properties && item.properties._trauma_level">
+                      <span class="flex">
+                        <template x-for="i in parseInt(item.properties._trauma_level)" :key="i">
+                          <span class="h-1.5 w-2 mr-px bg-trauma-500 rounded-sm"></span>
+                        </template>
+                      </span>
+                    </template>
+                  </div>
+
+                  <!-- Price and Quantity Controls -->
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="text-void-300" x-text="formatMoney(item.final_line_price)"></div>
+
+                    <div class="flex items-center">
+                      <button type="button"
+                              @click="updateItemQuantity(item.key, Math.max(1, item.quantity - 1))"
+                              class="w-6 h-6 flex items-center justify-center text-void-400 hover:text-trauma-500 transition-colors">
+                        -
+                      </button>
+                      <span class="w-8 text-center text-void-300" x-text="item.quantity"></span>
+                      <button type="button"
+                              @click="updateItemQuantity(item.key, item.quantity + 1)"
+                              class="w-6 h-6 flex items-center justify-center text-void-400 hover:text-trauma-500 transition-colors">
+                        +
+                      </button>
+
+                      <button type="button"
+                              @click="removeItem(item.key)"
+                              class="ml-3 text-void-500 hover:text-trauma-500 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div x-show="!loading && itemCount > 0" class="p-4 border-t border-void-800 bg-void-950">
+      <!-- Subtotal -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-void-300">Subtotal</span>
+        <span class="text-void-200 font-medium" x-text="formatMoney(cartTotal)"></span>
+      </div>
+
+      <!-- Checkout Button -->
+      <a href="/checkout"
+         class="block w-full py-3 bg-trauma-600 hover:bg-trauma-700 text-center text-white rounded-md transition-colors">
+        Checkout
+      </a>
+
+      <!-- Continue Shopping -->
+      <button type="button"
+              @click="close()"
+              class="block w-full mt-2 py-2 text-void-400 hover:text-trauma-500 text-center transition-colors">
+        Continue Browsing
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('memoryArchive', () => ({
+      isOpen: false,
+      loading: true,
+      items: [],
+      itemCount: 0,
+      cartTotal: 0,
+
+      init() {
+        // Attach event listeners for cart changes
+        document.addEventListener('cart:updated', () => this.fetchCart());
+        document.addEventListener('product:added', () => {
+          this.fetchCart();
+          this.open();
+        });
+
+        // Initialize cart data
+        this.fetchCart();
+      },
+
+      open() {
+        this.isOpen = true;
+        document.body.classList.add('overflow-hidden');
+
+        // Apply quantum effect if available
+        if (window.GlitchEngine && window.GlitchEngine.pulse) {
+          window.GlitchEngine.pulse({
+            intensity: 0.5,
+            duration: 1000
+          });
+        }
+      },
+
+      close() {
+        this.isOpen = false;
+        document.body.classList.remove('overflow-hidden');
+      },
+
+      async fetchCart() {
+        this.loading = true;
+
+        try {
+          const response = await fetch('/cart.js');
+          const cart = await response.json();
+
+          this.items = cart.items;
+          this.itemCount = cart.item_count;
+          this.cartTotal = cart.total_price;
+
+          // Apply quantum effects based on trauma levels
+          this.applyQuantumEffects();
+        } catch (error) {
+          console.error('Error fetching cart:', error);
+        }
+
+        this.loading = false;
+      },
+
+      async updateItemQuantity(key, quantity) {
+        this.loading = true;
+
+        try {
+          const response = await fetch('/cart/change.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: key,
+              quantity: quantity
+            })
+          });
+
+          const cart = await response.json();
+
+          this.items = cart.items;
+          this.itemCount = cart.item_count;
+          this.cartTotal = cart.total_price;
+
+          // Apply quantum effects
+          this.applyQuantumEffects();
+        } catch (error) {
+          console.error('Error updating cart:', error);
+        }
+
+        this.loading = false;
+      },
+
+      async removeItem(key) {
+        await this.updateItemQuantity(key, 0);
+      },
+
+      formatMoney(cents) {
+        return Shopify.formatMoney ?
+          Shopify.formatMoney(cents) :
+          `$${(cents / 100).toFixed(2)}`;
+      },
+
+      applyQuantumEffects() {
+        // Calculate total trauma level from cart items
+        let totalTrauma = 0;
+        let itemsWithTrauma = 0;
+
+        this.items.forEach(item => {
+          if (item.properties && item.properties._trauma_level) {
+            totalTrauma += parseInt(item.properties._trauma_level) * item.quantity;
+            itemsWithTrauma += item.quantity;
+          }
+        });
+
+        // Average trauma level
+        const avgTrauma = itemsWithTrauma > 0 ? totalTrauma / itemsWithTrauma : 0;
+
+        // Apply system-wide trauma level for quantum effects
+        if (window.NeuralBus && window.NeuralBus.setTraumaIndex) {
+          window.NeuralBus.setTraumaIndex(Math.min(10, avgTrauma));
+        }
+
+        // Apply visual effects based on trauma level
+        const cartDrawer = document.getElementById('memory-archive-drawer');
+        if (cartDrawer) {
+          // Remove existing trauma classes
+          cartDrawer.classList.remove('trauma-low', 'trauma-medium', 'trauma-high', 'trauma-extreme');
+
+          // Add appropriate trauma class
+          if (avgTrauma > 0) {
+            if (avgTrauma <= 3) {
+              cartDrawer.classList.add('trauma-low');
+            } else if (avgTrauma <= 6) {
+              cartDrawer.classList.add('trauma-medium');
+            } else if (avgTrauma <= 8) {
+              cartDrawer.classList.add('trauma-high');
+            } else {
+              cartDrawer.classList.add('trauma-extreme');
+            }
+          }
+        }
+      }
+    }));
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_trauma_indicators",
+      "label": "Show trauma level indicators",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quantum_effects",
+      "label": "Enable quantum visual effects",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

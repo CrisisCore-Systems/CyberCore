@@ -1,200 +1,27 @@
 {% comment %}
-  Quantum Layer - VoidBloom's recursive visual effects system
-  @MutationCompatible: All Profiles
+  QUANTUM LAYER
+
+  Creates a dynamic visual layer that responds to trauma patterns and user interactions.
+  This layer provides the visual foundation for the VoidBloom theme experience.
+
+  @MutationCompatible: VoidBloom
   @StrategyProfile: quantum-entangled
-  @Version: 3.7.1
+  @Version: 1.0.0
 {% endcomment %}
 
-<div class="quantum-layer" data-phase="{{ settings.default_memory_phase }}" data-trauma="{{ settings.default_trauma_type }}">
-  <div class="quantum-background"></div>
-  <div class="quantum-particles"></div>
-  <div class="quantum-glitch"></div>
+<div
+  class="quantum-layer"
+  data-quantum-layer
+  data-trauma-pattern="{{ product.metafields.voidbloom.trauma_pattern | default: 'none' }}"
+  data-intensity="{{ product.metafields.voidbloom.intensity | default: '5' }}"
+>
+  <div class="quantum-layer__background"></div>
+  <div class="quantum-layer__grid"></div>
+  <div class="quantum-layer__particles"></div>
+  <div class="quantum-layer__glitch"></div>
 </div>
 
-{% if customer %}
-  {% assign quantum_registry = customer.metafields.voidbloom_quantum_config.registry | json %}
-  {% assign nonce_registry = customer.metafields.voidbloom_memory_protected.nonce | json %}
-{% else %}
-  {% assign quantum_registry = '{}' %}
-  {% assign nonce_registry = '{}' %}
-{% endif %}
-
-{% if quantum_registry %}
-<script type="application/json" id="quantum-registry-data">
-  {{ quantum_registry }}
-</script>
-{% endif %}
-
-{% if nonce_registry %}
-<script type="application/json" id="nonce-registry-data">
-  {{ nonce_registry }}
-</script>
-{% endif %}
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize quantum layer
-    const quantumLayer = {
-      init: function() {
-        // Check for user's trauma profile
-        this.checkTraumaProfile();
-
-        // Setup event listeners
-        this.setupEvents();
-
-        // Initialize effects
-        this.initEffects();
-      },
-
-      checkTraumaProfile: function() {
-        const userTrauma = localStorage.getItem('voidbloom_primary_trauma');
-        const coherenceBaseline = parseFloat(localStorage.getItem('voidbloom_coherence_baseline') || '0.5');
-
-        if (userTrauma) {
-          // Update the trauma pattern
-          const traumaPattern = document.querySelector('.trauma-pattern');
-          if (traumaPattern) {
-            traumaPattern.setAttribute('data-trauma-type', userTrauma);
-            traumaPattern.style.setProperty('--trauma-intensity', coherenceBaseline);
-          }
-
-          // Update quantum layer
-          document.querySelector('.quantum-layer').setAttribute('data-trauma', userTrauma);
-        }
-      },
-
-      setupEvents: function() {
-        // Listen for trauma events from Neural Bus
-        if (window.NeuralBus) {
-          NeuralBus.subscribe('trauma:activated', this.handleTraumaEvent.bind(this));
-          NeuralBus.subscribe('phase:changed', this.handlePhaseChange.bind(this));
-          NeuralBus.subscribe('quantum:mutation', this.handleQuantumMutation.bind(this));
-        }
-
-        // Handle scroll intensity changes
-        window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
-
-        // Handle cursor movement for quantum field distortions
-        document.addEventListener('mousemove', this.handleMouseMove.bind(this), { passive: true });
-      },
-
-      initEffects: function() {
-        // Initialize WebGL effects if available
-        if (window.QEARWebGLBridge) {
-          this.qearBridge = new QEARWebGLBridge({
-            targetSelector: '.quantum-particles',
-            traumaType: document.querySelector('.quantum-layer').getAttribute('data-trauma'),
-            intensity: parseFloat(localStorage.getItem('voidbloom_coherence_baseline') || '0.5')
-          });
-          this.qearBridge.initialize();
-        }
-
-        // Initialize glitch effects
-        if (window.GlitchEngine) {
-          this.glitchEngine = new GlitchEngine({
-            targetSelector: '.quantum-glitch',
-            autoStart: false,
-            profile: 'quantum'
-          });
-        }
-      },
-
-      handleTraumaEvent: function(data) {
-        if (!data || !data.type) return;
-
-        // Update class on quantum layer
-        const quantumLayer = document.querySelector('.quantum-layer');
-
-        // Remove previous trauma classes
-        ["abandonment", "fragmentation", "recursion", "surveillance", "displacement", "dissolution"].forEach(trauma => {
-          quantumLayer.classList.remove(`trauma-${trauma}`);
-        });
-
-        // Add new trauma class
-        quantumLayer.classList.add(`trauma-${data.type}`);
-        quantumLayer.setAttribute('data-trauma', data.type);
-
-        // Trigger glitch effect for transition
-        if (this.glitchEngine) {
-          this.glitchEngine.start({
-            duration: 1000,
-            intensity: data.intensity || 0.5
-          });
-        }
-
-        // Update WebGL effects
-        if (this.qearBridge) {
-          this.qearBridge.triggerTrauma(data.type, data.intensity || 0.5);
-        }
-      },
-
-      handlePhaseChange: function(data) {
-        if (!data || !data.phase) return;
-
-        // Update data attribute
-        document.querySelector('.quantum-layer').setAttribute('data-phase', data.phase);
-
-        // Trigger phase-specific effects
-        // In a real implementation, this would animate the transition
-        document.body.classList.add('phase-transitioning');
-
-        setTimeout(() => {
-          document.body.classList.remove('phase-transitioning');
-        }, 2000);
-      },
-
-      handleQuantumMutation: function(data) {
-        // Handle quantum mutation events from QEAR
-        if (!data) return;
-
-        // Trigger glitch effect for mutation
-        if (this.glitchEngine) {
-          this.glitchEngine.start({
-            duration: 500,
-            intensity: data.intensity || 0.3,
-            profile: 'mutation'
-          });
-        }
-      },
-
-      handleScroll: function() {
-        // Calculate scroll position as percentage
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrollPercent = scrollTop / scrollHeight;
-
-        // Adjust quantum effects based on scroll
-        document.querySelector('.quantum-background').style.setProperty('--scroll-intensity', scrollPercent);
-
-        // Trigger subtle glitches on scroll breakpoints
-        if (scrollPercent > 0.3 && scrollPercent < 0.32 && this.glitchEngine) {
-          this.glitchEngine.triggerMicroGlitch();
-        }
-        if (scrollPercent > 0.7 && scrollPercent < 0.72 && this.glitchEngine) {
-          this.glitchEngine.triggerMicroGlitch();
-        }
-      },
-
-      handleMouseMove: function(e) {
-        // Get mouse position
-        const mouseX = e.clientX / window.innerWidth;
-        const mouseY = e.clientY / window.innerHeight;
-
-        // Apply distortion to quantum field
-        document.querySelector('.quantum-background').style.setProperty('--mouse-x', mouseX);
-        document.querySelector('.quantum-background').style.setProperty('--mouse-y', mouseY);
-      }
-    };
-
-    // Initialize if quantum effects are enabled
-    if (window.voidBloom && window.voidBloom.config.quantumEffects) {
-      quantumLayer.init();
-    }
-  });
-</script>
-
 <style>
-  /* Quantum Layer Base Styles */
   .quantum-layer {
     position: fixed;
     top: 0;
@@ -206,133 +33,351 @@
     overflow: hidden;
   }
 
-  .quantum-background {
+  .quantum-layer__background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--phase-background);
-    opacity: 0.8;
-    --scroll-intensity: 0;
-    --mouse-x: 0.5;
-    --mouse-y: 0.5;
+    background: var(--vb-color-background);
+    opacity: 1;
+    transition: opacity 0.5s ease;
   }
 
-  .quantum-particles {
+  .quantum-layer__grid {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    transform: perspective(500px) rotateX(60deg) scale(1.5);
+    transform-origin: center bottom;
+    transition: opacity 0.5s ease, transform 1s ease;
   }
 
-  .quantum-glitch {
+  .quantum-layer__particles {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    mix-blend-mode: overlay;
+    background-image: radial-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.2;
+    animation: particles-float 60s linear infinite;
+  }
+
+  @keyframes particles-float {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
+
+  .quantum-layer__glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    pointer-events: none;
+    mix-blend-mode: overlay;
   }
 
-  /* Phase-specific backgrounds */
-  .quantum-layer[data-phase="cyber-lotus"] .quantum-background {
-    background: radial-gradient(
-      ellipse at calc(var(--mouse-x) * 100%) calc(var(--mouse-y) * 100%),
-      rgba(80, 255, 64, 0.15),
-      rgba(19, 0, 25, 0.9)
+  /* Trauma pattern specific styles */
+
+  /* Fragmentation - Broken, separated pieces */
+  .quantum-layer[data-trauma-pattern="fragmentation"] .quantum-layer__grid {
+    background-size: 15px 15px;
+    animation: grid-shift 30s linear infinite;
+    opacity: 0.4;
+  }
+
+  .quantum-layer[data-trauma-pattern="fragmentation"] .quantum-layer__glitch {
+    opacity: 0.2;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 255, 0.1) 31%, rgba(0, 255, 255, 0.1) 33%, transparent 34%);
+    background-size: 10px 10px;
+    animation: glitch-shift 0.3s steps(2) infinite;
+  }
+
+  @keyframes grid-shift {
+    0% {
+      background-position: 0 0;
+    }
+    25% {
+      background-position: 5px 0;
+    }
+    50% {
+      background-position: 5px 5px;
+    }
+    75% {
+      background-position: 0 5px;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+
+  @keyframes glitch-shift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(2px, -1px, 0);
+    }
+    100% {
+      transform: translate3d(-2px, 1px, 0);
+    }
+  }
+
+  /* Recursion - Patterns within patterns */
+  .quantum-layer[data-trauma-pattern="recursion"] .quantum-layer__grid {
+    background-image: repeating-conic-gradient(rgba(0, 255, 255, 0.05) 0%, transparent 5%, transparent 45%, rgba(0, 255, 255, 0.05) 50%);
+    background-size: 100px 100px;
+    transform: none;
+    opacity: 0.4;
+  }
+
+  .quantum-layer[data-trauma-pattern="recursion"] .quantum-layer__particles {
+    background-image: repeating-radial-gradient(rgba(0, 255, 255, 0.1) 10%, transparent 20%);
+    animation: particles-pulse 20s ease-in-out infinite;
+  }
+
+  @keyframes particles-pulse {
+    0% {
+      background-size: 40px 40px;
+    }
+    50% {
+      background-size: 80px 80px;
+    }
+    100% {
+      background-size: 40px 40px;
+    }
+  }
+
+  /* Abandonment - Empty space, isolation */
+  .quantum-layer[data-trauma-pattern="abandonment"] .quantum-layer__grid {
+    opacity: 0.15;
+    background-size: 40px 40px;
+  }
+
+  .quantum-layer[data-trauma-pattern="abandonment"] .quantum-layer__particles {
+    opacity: 0.1;
+    background-size: 100px 100px;
+  }
+
+  .quantum-layer[data-trauma-pattern="abandonment"] .quantum-layer__background {
+    background: radial-gradient(circle at center, var(--vb-color-background) 0%, rgba(0, 0, 15, 1) 100%);
+  }
+
+  /* Surveillance - Watching, being observed */
+  .quantum-layer[data-trauma-pattern="surveillance"] .quantum-layer__grid {
+    background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 10px 10px;
+    opacity: 0.2;
+  }
+
+  .quantum-layer[data-trauma-pattern="surveillance"] .quantum-layer__particles {
+    background-image: radial-gradient(rgba(0, 255, 255, 0.2) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: eye-scan 15s infinite;
+  }
+
+  @keyframes eye-scan {
+    0%, 100% {
+      background-position: 0 0;
+    }
+    25% {
+      background-position: 100% 0;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0 100%;
+    }
+  }
+
+  /* Displacement - Being removed from origin */
+  .quantum-layer[data-trauma-pattern="displacement"] .quantum-layer__grid {
+    transform: perspective(500px) rotateX(70deg) translateY(30px) scale(2);
+    animation: grid-float 15s ease-in-out infinite;
+  }
+
+  .quantum-layer[data-trauma-pattern="displacement"] .quantum-layer__particles {
+    animation: particles-drift 30s linear infinite;
+  }
+
+  @keyframes grid-float {
+    0%, 100% {
+      transform: perspective(500px) rotateX(70deg) translateY(30px) scale(2);
+    }
+    50% {
+      transform: perspective(500px) rotateX(65deg) translateY(20px) scale(1.8);
+    }
+  }
+
+  @keyframes particles-drift {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 200px -100px;
+    }
+  }
+
+  /* Dissolution - Fading, losing cohesion */
+  .quantum-layer[data-trauma-pattern="dissolution"] .quantum-layer__grid {
+    opacity: 0.2;
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(0, 255, 255, 0.03),
+      rgba(0, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 20px
     );
+    animation: dissolution 20s linear infinite;
   }
 
-  .quantum-layer[data-phase="alien-flora"] .quantum-background {
-    background: radial-gradient(
-      ellipse at calc(var(--mouse-x) * 100%) calc(var(--mouse-y) * 100%),
-      rgba(255, 153, 0, 0.15),
-      rgba(25, 15, 0, 0.9)
-    );
+  .quantum-layer[data-trauma-pattern="dissolution"] .quantum-layer__particles {
+    opacity: 0.15;
+    background-image: radial-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 15px 15px;
+    animation: dissolve-pulse 10s ease-in-out infinite;
   }
 
-  .quantum-layer[data-phase="rolling-virus"] .quantum-background {
-    background: radial-gradient(
-      ellipse at calc(var(--mouse-x) * 100%) calc(var(--mouse-y) * 100%),
-      rgba(255, 33, 80, 0.15),
-      rgba(51, 0, 17, 0.9)
-    );
+  @keyframes dissolution {
+    0% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.1;
+    }
   }
 
-  /* Trauma-specific effects */
-  .quantum-layer[data-trauma="abandonment"] .quantum-background {
-    animation: quantum-pulse-abandonment 8s ease-in-out infinite;
+  @keyframes dissolve-pulse {
+    0%, 100% {
+      background-size: 15px 15px;
+      opacity: 0.15;
+    }
+    50% {
+      background-size: 25px 25px;
+      opacity: 0.05;
+    }
   }
 
-  .quantum-layer[data-trauma="fragmentation"] .quantum-background {
-    animation: quantum-shatter 10s linear infinite;
+  /* Intensity modifiers */
+  .quantum-layer[data-intensity="1"] .quantum-layer__grid,
+  .quantum-layer[data-intensity="1"] .quantum-layer__particles,
+  .quantum-layer[data-intensity="1"] .quantum-layer__glitch {
+    opacity: 0.1;
   }
 
-  .quantum-layer[data-trauma="recursion"] .quantum-background {
-    animation: quantum-recursion 12s linear infinite;
+  .quantum-layer[data-intensity="10"] .quantum-layer__grid {
+    opacity: 0.6;
   }
 
-  .quantum-layer[data-trauma="surveillance"] .quantum-background {
-    animation: quantum-scan 6s linear infinite;
+  .quantum-layer[data-intensity="10"] .quantum-layer__particles {
+    opacity: 0.4;
   }
 
-  .quantum-layer[data-trauma="displacement"] .quantum-background {
-    animation: quantum-displace 15s ease-in-out infinite;
-  }
-
-  .quantum-layer[data-trauma="dissolution"] .quantum-background {
-    animation: quantum-dissolve 20s ease-in-out infinite;
-  }
-
-  /* Animation Keyframes */
-  @keyframes quantum-pulse-abandonment {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-
-  @keyframes quantum-shatter {
-    0% { transform: translate(0) rotate(0); }
-    25% { transform: translate(5px, -3px) rotate(1deg); }
-    50% { transform: translate(-2px, 5px) rotate(-1deg); }
-    75% { transform: translate(-5px, -2px) rotate(1deg); }
-    100% { transform: translate(0) rotate(0); }
-  }
-
-  @keyframes quantum-recursion {
-    0% { transform: rotate(0); }
-    100% { transform: rotate(360deg); }
-  }
-
-  @keyframes quantum-scan {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 100%; }
-  }
-
-  @keyframes quantum-displace {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-  }
-
-  @keyframes quantum-dissolve {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 0.4; }
-  }
-
-  /* Phase transition animation */
-  .phase-transitioning .quantum-background {
-    animation: phase-transition 2s ease-in-out;
-  }
-
-  @keyframes phase-transition {
-    0% { filter: brightness(1) contrast(1); }
-    25% { filter: brightness(1.5) contrast(1.2); }
-    50% { filter: brightness(0.8) contrast(1.5) hue-rotate(15deg); }
-    75% { filter: brightness(1.2) contrast(0.9) hue-rotate(-15deg); }
-    100% { filter: brightness(1) contrast(1); }
+  .quantum-layer[data-intensity="10"] .quantum-layer__glitch {
+    opacity: 0.3;
   }
 </style>
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  const quantumLayer = document.querySelector('[data-quantum-layer]');
+
+  if (quantumLayer) {
+    // Initialize trauma pattern
+    const initialTraumaPattern = quantumLayer.getAttribute('data-trauma-pattern');
+    const initialIntensity = quantumLayer.getAttribute('data-intensity');
+
+    // Initialize Neural Bus connection if available
+    if (window.NeuralBus) {
+      // Publish initial state
+      NeuralBus.publish('trauma:initialized', {
+        type: initialTraumaPattern,
+        intensity: initialIntensity
+      });
+
+      // Subscribe to trauma pattern changes
+      NeuralBus.subscribe('trauma:change', function(data) {
+        if (data.type) {
+          quantumLayer.setAttribute('data-trauma-pattern', data.type);
+        }
+
+        if (data.intensity) {
+          quantumLayer.setAttribute('data-intensity', data.intensity);
+        }
+
+        // Add a temporary class to trigger animations
+        quantumLayer.classList.add('quantum-layer--transitioning');
+        setTimeout(function() {
+          quantumLayer.classList.remove('quantum-layer--transitioning');
+        }, 1000);
+      });
+    }
+
+    // Respond to scroll events
+    window.addEventListener('scroll', function() {
+      const scrollPercentage = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+
+      // Adjust grid perspective based on scroll
+      const gridElement = quantumLayer.querySelector('.quantum-layer__grid');
+      if (gridElement) {
+        gridElement.style.transform = `perspective(500px) rotateX(${60 + (scrollPercentage * 0.1)}deg) scale(${1.5 + (scrollPercentage * 0.005)})`;
+      }
+
+      // Adjust particle opacity based on scroll
+      const particlesElement = quantumLayer.querySelector('.quantum-layer__particles');
+      if (particlesElement) {
+        particlesElement.style.opacity = 0.2 + (scrollPercentage * 0.002);
+      }
+    });
+
+    // Mouse movement effect
+    document.addEventListener('mousemove', function(event) {
+      const mouseX = event.clientX / window.innerWidth;
+      const mouseY = event.clientY / window.innerHeight;
+
+      // Slight grid movement based on mouse position
+      const gridElement = quantumLayer.querySelector('.quantum-layer__grid');
+      if (gridElement) {
+        gridElement.style.backgroundPosition = `${mouseX * 10}px ${mouseY * 10}px`;
+      }
+
+      // Particles follow mouse slightly
+      const particlesElement = quantumLayer.querySelector('.quantum-layer__particles');
+      if (particlesElement) {
+        particlesElement.style.backgroundPosition = `${mouseX * 20}px ${mouseY * 20}px`;
+      }
+    });
+
+    // Glitch effect on click
+    document.addEventListener('click', function() {
+      const glitchElement = quantumLayer.querySelector('.quantum-layer__glitch');
+      if (glitchElement) {
+        glitchElement.style.opacity = '0.3';
+        setTimeout(function() {
+          glitchElement.style.opacity = '';
+        }, 300);
+      }
+    });
+  }
+});
+{% endjavascript %}

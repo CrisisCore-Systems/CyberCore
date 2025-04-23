@@ -1,0 +1,124 @@
+{% comment %}
+  Skip to Content Link for Accessibility
+  @MutationCompatible: All Profiles
+  @StrategyProfile: quantum-optimized
+  @Version: 1.0.0
+{% endcomment %}
+
+<a href="#MainContent" class="skip-to-content" data-trauma-responsive="true">
+  {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
+</a>
+
+<style>
+  .skip-to-content {
+    position: absolute;
+    top: -100px;
+    left: 10px;
+    z-index: var(--vb-z-max, 9999);
+    padding: var(--vb-space-2, 0.5rem) var(--vb-space-4, 1rem);
+    background-color: var(--vb-color-primary, #00ffff);
+    color: var(--vb-color-background, #001a33);
+    text-decoration: none;
+    border-radius: var(--vb-radius-md, 0.25rem);
+    box-shadow: var(--vb-shadow-lg);
+    transition: top 0.2s ease-in-out;
+    font-weight: var(--vb-font-weight-medium, 500);
+  }
+
+  .skip-to-content:focus {
+    top: 10px;
+    outline: none;
+  }
+
+  [data-trauma-type="abandonment"] .skip-to-content:focus {
+    animation: skip-pulse-abandonment 2s infinite var(--vb-ease-abandon);
+    background-color: var(--vb-color-trauma-abandonment, #1e00cc);
+    color: #ffffff;
+  }
+
+  [data-trauma-type="fragmentation"] .skip-to-content:focus {
+    background-color: var(--vb-color-trauma-fragmentation, #aa00ff);
+    color: #ffffff;
+    animation: skip-fragment 1.5s infinite var(--vb-ease-fragment);
+  }
+
+  [data-trauma-type="recursion"] .skip-to-content:focus {
+    background-color: var(--vb-color-trauma-recursion, #580A87);
+    color: #ffffff;
+    animation: skip-recursion 3s infinite var(--vb-ease-recursive);
+  }
+
+  [data-trauma-type="surveillance"] .skip-to-content:focus {
+    background-color: var(--vb-color-trauma-surveillance, #00ffaa);
+    color: #001a33;
+    animation: skip-scan 1.5s infinite var(--vb-ease-surveilled);
+  }
+
+  [data-trauma-type="displacement"] .skip-to-content:focus {
+    background-color: var(--vb-color-trauma-displacement, #ff00aa);
+    color: #ffffff;
+    animation: skip-displace 2s infinite var(--vb-ease-displaced);
+  }
+
+  [data-trauma-type="dissolution"] .skip-to-content:focus {
+    background-color: var(--vb-color-trauma-dissolution, #001e6b);
+    color: #ffffff;
+    animation: skip-dissolve 3s infinite var(--vb-ease-dissolve);
+  }
+
+  @keyframes skip-pulse-abandonment {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  @keyframes skip-fragment {
+    0% { clip-path: inset(0 0 0 0); }
+    20% { clip-path: inset(10% 0 0 0); }
+    40% { clip-path: inset(0 10% 0 0); }
+    60% { clip-path: inset(0 0 10% 0); }
+    80% { clip-path: inset(0 0 0 10%); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes skip-recursion {
+    0%, 100% { transform: scale(1); }
+    33% { transform: scale(1.05); }
+    66% { transform: scale(0.97); }
+  }
+
+  @keyframes skip-scan {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 0%; }
+  }
+
+  @keyframes skip-displace {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+  }
+
+  @keyframes skip-dissolve {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skip-to-content {
+      transition: none;
+    }
+
+    .skip-to-content:focus {
+      animation: none !important;
+    }
+  }
+
+  @media (prefers-contrast: high) {
+    .skip-to-content:focus {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      outline: 3px solid #ffffff !important;
+      animation: none !important;
+    }
+  }
+</style>

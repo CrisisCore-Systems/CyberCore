@@ -1,0 +1,29 @@
+{% comment %}
+  CANONICAL-URL.LIQUID
+  Generates proper canonical URL tags for improved SEO
+
+  Usage:
+  {% render 'canonical-url' %}
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+{% assign canonical_url = canonical_url | default: request.origin | append: request.path %}
+
+{% if request.page_type == 'collection' and paginate.current_page > 1 %}
+  {% assign canonical_url = canonical_url | split: '?' | first %}
+{% elsif request.page_type == 'search' and search.performed %}
+  {% assign canonical_url = request.origin | append: routes.search_url %}
+{% endif %}
+
+<link rel="canonical" href="{{ canonical_url }}">
+
+{% if paginate.previous %}
+  <link rel="prev" href="{{ paginate.previous.url }}">
+{% endif %}
+
+{% if paginate.next %}
+  <link rel="next" href="{{ paginate.next.url }}">
+{% endif %}

@@ -1,0 +1,71 @@
+{% comment %}
+  JSON-LD.LIQUID
+  Structured data for improved SEO
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  {% if template.name == 'product' %}
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "image": [
+    {{ product.featured_image | img_url: 'grande' | json }}
+    {% for image in product.images offset: 1 limit: 3 %}
+      ,{{ image | img_url: 'grande' | json }}
+    {% endfor %}
+  ],
+  "description": {{ product.description | strip_html | truncatewords: 50 | json }},
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": {{ shop.name | json }}
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": {{ canonical_url | json }},
+    "price": {{ product.selected_or_first_available_variant.price | money_without_currency | strip_html | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": {% if product.selected_or_first_available_variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+    "itemCondition": "https://schema.org/NewCondition"
+  }
+  {% elsif template.name == 'collection' %}
+  "@type": "CollectionPage",
+  "name": {{ collection.title | json }},
+  "description": {{ collection.description | strip_html | truncatewords: 50 | json }},
+  "url": {{ canonical_url | json }}
+  {% elsif template.name == 'article' %}
+  "@type": "Article",
+  "headline": {{ article.title | json }},
+  "image": {{ article.image | img_url: 'grande' | json }},
+  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ settings.share_image | default: shop.logo | img_url: '600x' | prepend: "https:" | json }}
+    }
+  },
+  "description": {{ article.excerpt_or_content | strip_html | truncatewords: 50 | json }}
+  {% else %}
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ shop.url }}/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+  {% endif %}
+}
+</script>

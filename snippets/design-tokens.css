@@ -1,0 +1,100 @@
+/* DESIGN-TOKENS.CSS
+ * Central repository for all design variables
+ * @Version: 1.0.0
+ * @Optimized: April 2025
+ */
+
+:root {
+  /* COLOR SYSTEM */
+  --vb-color-primary: #161920;
+  --vb-color-secondary: #39c4ff;
+  --vb-color-tertiary: #ff0099;
+  --vb-color-accent: #00f6ff;
+  --vb-color-warning: #ffcc00;
+  --vb-color-error: #ff3377;
+  --vb-color-success: #00ff99;
+  --vb-color-background: #0d0e13;
+  --vb-color-surface: #1a1d2a;
+  --vb-color-text: rgba(255, 255, 255, 0.87);
+  --vb-color-text-secondary: rgba(255, 255, 255, 0.6);
+
+  /* SPACING SYSTEM */
+  --vb-space-xs: 0.25rem;
+  --vb-space-sm: 0.5rem;
+  --vb-space-md: 1rem;
+  --vb-space-lg: 1.5rem;
+  --vb-space-xl: 2rem;
+  --vb-space-xxl: 3rem;
+
+  /* TYPOGRAPHY */
+  --vb-font-primary: 'Quantum Sans', sans-serif;
+  --vb-font-secondary: 'Void Mono', monospace;
+  --vb-font-display: 'Glitch Protocol', sans-serif;
+  --vb-font-size-xs: 0.75rem;
+  --vb-font-size-sm: 0.875rem;
+  --vb-font-size-md: 1rem;
+  --vb-font-size-lg: 1.25rem;
+  --vb-font-size-xl: 1.5rem;
+  --vb-font-size-xxl: 2rem;
+  --vb-font-size-xxxl: 3rem;
+
+  /* ANIMATION TIMING */
+  --vb-animation-speed-fast: 150ms;
+  --vb-animation-speed-medium: 300ms;
+  --vb-animation-speed-slow: 500ms;
+  --vb-animation-speed-very-slow: 1000ms;
+
+  /* LAYOUT */
+  --vb-border-radius-sm: 4px;
+  --vb-border-radius-md: 8px;
+  --vb-border-radius-lg: 16px;
+  --vb-border-radius-circle: 50%;
+
+  /* GLITCH EFFECT INTENSITY */
+  --vb-glitch-intensity: 1;
+  --vb-trauma-intensity: 0.7;
+}
+
+/* Critical CSS Rules - Only the most essential styles */
+html,
+body {
+  background-color: var(--vb-color-background);
+  color: var(--vb-color-text);
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  margin: 0;
+  padding: 0;
+}
+
+/* Container defaults */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--vb-space-md);
+}
+
+/* Media queries for container */
+@media (max-width: 1248px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 100%;
+    padding: 0 var(--vb-space-sm);
+  }
+}

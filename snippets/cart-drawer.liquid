@@ -1,0 +1,316 @@
+{% comment %}
+  CART-DRAWER.LIQUID
+  Optimized cart drawer with performance focus
+
+  Usage:
+  {% render 'cart-drawer' %}
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<div id="cart-drawer" class="cart-drawer" aria-hidden="true" data-cart-drawer>
+  <div class="cart-drawer__overlay" data-cart-close tabindex="-1"></div>
+
+  <div class="cart-drawer__content" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title">
+    <div class="cart-drawer__header">
+      <h2 id="cart-drawer-title" class="cart-drawer__title">{{ 'cart.general.title' | t }}</h2>
+      <button type="button" class="cart-drawer__close" data-cart-close aria-label="{{ 'general.accessibility.close_modal' | t }}">
+        {% render 'icon-close' %}
+      </button>
+    </div>
+
+    <div class="cart-drawer__body" data-cart-body>
+      {% if cart.item_count > 0 %}
+        <form action="{{ routes.cart_url }}" method="post" id="cart-drawer-form" class="cart-drawer__form">
+          <div class="cart-drawer__items" data-cart-items>
+            {% for item in cart.items %}
+              <div class="cart-drawer__item" data-cart-item data-variant-id="{{ item.variant_id }}">
+                <div class="cart-drawer__item-image">
+                  {% if item.image %}
+                    <img
+                      src="{{ item.image | img_url: '120x' }}"
+                      alt="{{ item.image.alt | escape }}"
+                      width="60"
+                      height="60"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="cart-drawer__item-image-placeholder"></div>
+                  {% endif %}
+                </div>
+
+                <div class="cart-drawer__item-details">
+                  <a href="{{ item.url }}" class="cart-drawer__item-title">{{ item.product.title }}</a>
+
+                  {% unless item.product.has_only_default_variant %}
+                    <p class="cart-drawer__item-variant">{{ item.variant.title }}</p>
+                  {% endunless %}
+
+                  <div class="cart-drawer__item-price-quantity">
+                    <div class="cart-drawer__item-quantity">
+                      <button
+                        type="button"
+                        class="cart-drawer__quantity-button"
+                        data-quantity-minus
+                        aria-label="{{ 'cart.general.decrease_quantity' | t }}"
+                      >-</button>
+
+                      <input
+                        type="number"
+                        name="updates[{{ item.key }}]"
+                        id="updates_{{ item.key }}"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        aria-label="{{ 'cart.general.item_quantity' | t }}"
+                        data-quantity-input
+                      >
+
+                      <button
+                        type="button"
+                        class="cart-drawer__quantity-button"
+                        data-quantity-plus
+                        aria-label="{{ 'cart.general.increase_quantity' | t }}"
+                      >+</button>
+                    </div>
+
+                    <div class="cart-drawer__item-price">
+                      {{ item.final_line_price | money }}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="cart-drawer__item-remove"
+                  data-item-remove
+                  aria-label="{{ 'cart.general.remove' | t }}"
+                >
+                  {% render 'icon-remove' %}
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="cart-drawer__footer">
+            <div class="cart-drawer__subtotal">
+              <span class="cart-drawer__subtotal-label">{{ 'cart.general.subtotal' | t }}</span>
+              <span class="cart-drawer__subtotal-price" data-cart-subtotal>{{ cart.total_price | money }}</span>
+            </div>
+
+            <div class="cart-drawer__note">
+              <label for="cart-note" class="cart-drawer__note-label">{{ 'cart.general.note' | t }}</label>
+              <textarea
+                id="cart-note"
+                name="note"
+                class="cart-drawer__note-input"
+                data-cart-note
+              >{{ cart.note }}</textarea>
+            </div>
+
+            <div class="cart-drawer__buttons">
+              <button
+                type="submit"
+                name="checkout"
+                class="cart-drawer__checkout button button--primary"
+                {% if cart.item_count == 0 %}disabled{% endif %}
+              >
+                {{ 'cart.general.checkout' | t }}
+              </button>
+
+              <button
+                type="button"
+                class="cart-drawer__continue button button--secondary"
+                data-cart-close
+              >
+                {{ 'cart.general.continue_shopping' | t }}
+              </button>
+            </div>
+          </div>
+        </form>
+      {% else %}
+        <div class="cart-drawer__empty">
+          <p class="cart-drawer__empty-text">{{ 'cart.general.empty' | t }}</p>
+          <button type="button" class="cart-drawer__continue button button--primary" data-cart-close>
+            {{ 'cart.general.continue_shopping' | t }}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% unless cart_drawer_initialized %}
+<script>
+  // Defer cart drawer initialization to improve page load performance
+  document.addEventListener('DOMContentLoaded', function() {
+    // Use requestIdleCallback or setTimeout as fallback
+    (window.requestIdleCallback || window.setTimeout)(function() {
+      initCartDrawer();
+    }, { timeout: 500 });
+
+    function initCartDrawer() {
+      var cartDrawer = document.querySelector('[data-cart-drawer]');
+      if (!cartDrawer) return;
+
+      var openButtons = document.querySelectorAll('[data-cart-open]');
+      var closeButtons = document.querySelectorAll('[data-cart-close]');
+      var quantityMinusButtons = cartDrawer.querySelectorAll('[data-quantity-minus]');
+      var quantityPlusButtons = cartDrawer.querySelectorAll('[data-quantity-plus]');
+      var removeButtons = cartDrawer.querySelectorAll('[data-item-remove]');
+
+      // Open cart drawer
+      openButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          openCartDrawer();
+        });
+      });
+
+      // Close cart drawer
+      closeButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+          closeCartDrawer();
+        });
+      });
+
+      // Quantity adjustment
+      quantityMinusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          var input = button.nextElementSibling;
+          var newValue = parseInt(input.value) - 1;
+          if (newValue >= 0) {
+            input.value = newValue;
+            updateCartItem(input);
+          }
+        });
+      });
+
+      quantityPlusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          var input = button.previousElementSibling;
+          input.value = parseInt(input.value) + 1;
+          updateCartItem(input);
+        });
+      });
+
+      // Remove item
+      removeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          var item = button.closest('[data-cart-item]');
+          var input = item.querySelector('[data-quantity-input]');
+          input.value = 0;
+          updateCartItem(input);
+        });
+      });
+
+      // Functions
+      function openCartDrawer() {
+        cartDrawer.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('cart-drawer-open');
+
+        // Focus trap
+        setTimeout(function() {
+          cartDrawer.querySelector('.cart-drawer__close').focus();
+        }, 100);
+      }
+
+      function closeCartDrawer() {
+        cartDrawer.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('cart-drawer-open');
+      }
+
+      function updateCartItem(input) {
+        // Create a debounced update function to prevent excessive requests
+        clearTimeout(input.timer);
+        input.timer = setTimeout(function() {
+          var form = document.getElementById('cart-drawer-form');
+          var formData = new FormData(form);
+
+          fetch(window.Shopify.routes.root + 'cart/update.js', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(cart => {
+            updateCartDrawer(cart);
+            if (cart.item_count === 0) {
+              refreshCartDrawer();
+            }
+          })
+          .catch(error => console.error('Error updating cart:', error));
+        }, 500);
+      }
+
+      function updateCartDrawer(cart) {
+        var subtotalElement = document.querySelector('[data-cart-subtotal]');
+        if (subtotalElement) {
+          subtotalElement.innerHTML = formatMoney(cart.total_price);
+        }
+
+        var cartItems = cart.items || [];
+        var cartItemElements = document.querySelectorAll('[data-cart-item]');
+
+        cartItemElements.forEach(function(itemElement) {
+          var variantId = itemElement.dataset.variantId;
+          var cartItem = cartItems.find(item => item.variant_id == variantId);
+
+          if (!cartItem) {
+            itemElement.style.display = 'none';
+            return;
+          }
+
+          var quantityInput = itemElement.querySelector('[data-quantity-input]');
+          if (quantityInput && quantityInput.value != cartItem.quantity) {
+            quantityInput.value = cartItem.quantity;
+          }
+
+          var priceElement = itemElement.querySelector('.cart-drawer__item-price');
+          if (priceElement) {
+            priceElement.innerHTML = formatMoney(cartItem.final_line_price);
+          }
+        });
+
+        // Update cart count in header
+        var cartCountElements = document.querySelectorAll('[data-cart-count]');
+        cartCountElements.forEach(function(element) {
+          element.innerHTML = cart.item_count;
+          element.classList.toggle('hidden', cart.item_count === 0);
+        });
+      }
+
+      function refreshCartDrawer() {
+        fetch(window.location.pathname + '?section_id=cart-drawer')
+          .then(response => response.text())
+          .then(html => {
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            var newCartBody = tempDiv.querySelector('[data-cart-body]');
+            var currentCartBody = document.querySelector('[data-cart-body]');
+
+            if (newCartBody && currentCartBody) {
+              currentCartBody.innerHTML = newCartBody.innerHTML;
+            }
+
+            // Reinitialize event listeners
+            initCartDrawer();
+          })
+          .catch(error => console.error('Error refreshing cart drawer:', error));
+      }
+
+      function formatMoney(cents) {
+        if (typeof Shopify.formatMoney === 'function') {
+          return Shopify.formatMoney(cents);
+        }
+
+        var value = cents / 100;
+        return '$' + value.toFixed(2);
+      }
+    }
+  });
+
+  {% assign cart_drawer_initialized = true %}
+</script>
+{% endunless %}

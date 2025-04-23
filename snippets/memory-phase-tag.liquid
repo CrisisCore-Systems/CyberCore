@@ -1,0 +1,49 @@
+{% comment %}
+  VOIDBLOOM MEMORY PHASE TAG
+  Visual indicator for memory phase classification
+
+  Usage:
+  {% render 'memory-phase-tag', phase: product.metafields.voidbloom.memory_phase, size: 'sm' %}
+{% endcomment %}
+
+{% assign phase = phase | default: 'cyber-lotus' %}
+{% assign size = size | default: 'md' %}
+
+{% assign phase_classes = '' %}
+{% assign size_classes = '' %}
+
+{% case phase %}
+  {% when 'cyber-lotus' %}
+    {% assign phase_classes = 'bg-cyber-900/20 text-cyber-500 border-cyber-900/40' %}
+  {% when 'alien-flora' %}
+    {% assign phase_classes = 'bg-alien-900/20 text-alien-500 border-alien-900/40' %}
+  {% when 'rolling-virus' %}
+    {% assign phase_classes = 'bg-virus-900/20 text-virus-500 border-virus-900/40' %}
+  {% when 'trauma-core' %}
+    {% assign phase_classes = 'bg-trauma-900/20 text-trauma-500 border-trauma-900/40' %}
+  {% else %}
+    {% assign phase_classes = 'bg-void-900/20 text-void-500 border-void-900/40' %}
+{% endcase %}
+
+{% case size %}
+  {% when 'sm' %}
+    {% assign size_classes = 'text-xs px-2 py-0.5' %}
+  {% when 'lg' %}
+    {% assign size_classes = 'text-base px-3 py-1.5' %}
+  {% else %}
+    {% assign size_classes = 'text-sm px-3 py-1' %}
+{% endcase %}
+
+<span class="memory-phase-tag rounded-full inline-flex items-center border {{ phase_classes }} {{ size_classes }}">
+  {% case phase %}
+    {% when 'cyber-lotus' %}
+      {% render 'icon-cyber-lotus', class: 'h-3 w-3 mr-1' %}
+    {% when 'alien-flora' %}
+      {% render 'icon-alien-flora', class: 'h-3 w-3 mr-1' %}
+    {% when 'rolling-virus' %}
+      {% render 'icon-rolling-virus', class: 'h-3 w-3 mr-1' %}
+    {% when 'trauma-core' %}
+      {% render 'icon-trauma-core', class: 'h-3 w-3 mr-1' %}
+  {% endcase %}
+  <span>{{ phase | replace: '-', ' ' | capitalize }}</span>
+</span>

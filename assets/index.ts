@@ -7,12 +7,12 @@
  */
 
 // Import Web Components
-export { HologramComponent } from './HologramComponent';
+import { HologramComponent } from './HologramComponent';
 
 // Import core services
 export { EnhancedCart } from './enhanced-cart';
 export { NeuralBus } from './neural-bus';
-export { QuantumWebGLController } from './quantum-webgl';
+export { QuantumWebGL } from './quantum-webgl';
 
 // Import WebGL bridge
 export { QEARWebGLBridge } from './qear-webgl-bridge';
@@ -25,7 +25,7 @@ export { TraumaIndex } from './TraumaIndex';
 
 // Register Web Components if not already registered
 if (!customElements.get('quantum-hologram')) {
-  customElements.define('quantum-hologram', HologramComponent as any);
+  customElements.define('quantum-hologram', HologramComponent);
 }
 
 // Initialize services with webpack environment variables

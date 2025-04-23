@@ -1,0 +1,261 @@
+{% comment %}
+  PREDICTIVE-SEARCH.LIQUID
+  Optimized predictive search component with performance focus
+
+  Usage:
+  {% render 'predictive-search' %}
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<div class="predictive-search" data-predictive-search>
+  <form action="{{ routes.search_url }}" method="get" class="predictive-search__form" role="search">
+    <div class="predictive-search__input-wrapper">
+      <input
+        type="search"
+        name="q"
+        id="predictive-search-input"
+        class="predictive-search__input"
+        placeholder="{{ 'general.search.placeholder' | t }}"
+        aria-expanded="false"
+        aria-owns="predictive-search-results"
+        aria-controls="predictive-search-results"
+        aria-haspopup="listbox"
+        role="combobox"
+        data-predictive-search-input
+      >
+      <input type="hidden" name="type" value="product">
+
+      <button
+        type="submit"
+        class="predictive-search__submit"
+        aria-label="{{ 'general.search.submit' | t }}"
+      >
+        {% render 'icon-search' %}
+      </button>
+
+      <button
+        type="button"
+        class="predictive-search__clear"
+        aria-label="{{ 'general.search.clear' | t }}"
+        hidden
+        data-predictive-search-clear
+      >
+        {% render 'icon-close' %}
+      </button>
+
+      <div class="predictive-search__loading-indicator" aria-hidden="true" data-loading-indicator>
+        <div class="loading-indicator"></div>
+      </div>
+    </div>
+
+    <div
+      id="predictive-search-results"
+      class="predictive-search__results"
+      role="listbox"
+      aria-labelledby="predictive-search-input"
+      data-predictive-search-results
+    ></div>
+  </form>
+</div>
+
+<template data-predictive-search-item-template>
+  <a href="{{ item.url }}" class="predictive-search__item" role="option" data-predictive-search-item>
+    <div class="predictive-search__item-image">
+      <img src="{{ item.image }}" alt="{{ item.title }}" width="50" height="50" loading="lazy">
+    </div>
+    <div class="predictive-search__item-content">
+      <div class="predictive-search__item-title">{{ item.title }}</div>
+      <div class="predictive-search__item-vendor">{{ item.vendor }}</div>
+      <div class="predictive-search__item-price">{{ item.price }}</div>
+    </div>
+  </a>
+</template>
+
+<template data-predictive-search-no-results-template>
+  <div class="predictive-search__no-results">
+    <p>{{ 'general.search.no_results' | t }}</p>
+  </div>
+</template>
+
+<script>
+  // Defer initialization to improve page load performance
+  document.addEventListener('DOMContentLoaded', function() {
+    // Use requestIdleCallback or setTimeout as fallback
+    (window.requestIdleCallback || window.setTimeout)(function() {
+      initPredictiveSearch();
+    }, { timeout: 500 });
+
+    function initPredictiveSearch() {
+      var predictiveSearchContainer = document.querySelector('[data-predictive-search]');
+      if (!predictiveSearchContainer) return;
+
+      var searchInput = predictiveSearchContainer.querySelector('[data-predictive-search-input]');
+      var searchResults = predictiveSearchContainer.querySelector('[data-predictive-search-results]');
+      var clearButton = predictiveSearchContainer.querySelector('[data-predictive-search-clear]');
+      var loadingIndicator = predictiveSearchContainer.querySelector('[data-loading-indicator]');
+      var itemTemplate = document.querySelector('[data-predictive-search-item-template]');
+      var noResultsTemplate = document.querySelector('[data-predictive-search-no-results-template]');
+
+      var debounceTimeout;
+      var currentSearchTerm = '';
+      var baseUrl = window.Shopify ? (window.Shopify.routes.root + 'search/suggest.json') : '/search/suggest.json';
+
+      // Event listeners
+      searchInput.addEventListener('input', handleSearchInput);
+      searchInput.addEventListener('focus', handleSearchFocus);
+      searchInput.addEventListener('keydown', handleSearchKeydown);
+      clearButton.addEventListener('click', clearSearch);
+
+      // Close search results when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!predictiveSearchContainer.contains(event.target)) {
+          closeSearchResults();
+        }
+      });
+
+      function handleSearchInput(event) {
+        var searchTerm = event.target.value.trim();
+
+        // Show/hide clear button
+        clearButton.hidden = searchTerm.length === 0;
+
+        if (searchTerm.length < 3) {
+          closeSearchResults();
+          currentSearchTerm = '';
+          return;
+        }
+
+        if (searchTerm === currentSearchTerm) return;
+        currentSearchTerm = searchTerm;
+
+        // Debounce search to avoid excessive API calls
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(function() {
+          performSearch(searchTerm);
+        }, 300);
+      }
+
+      function handleSearchFocus(event) {
+        if (currentSearchTerm.length >= 3) {
+          openSearchResults();
+        }
+      }
+
+      function handleSearchKeydown(event) {
+        if (event.key === 'Escape') {
+          closeSearchResults();
+        } else if (event.key === 'ArrowDown' && searchResults.children.length > 0) {
+          event.preventDefault();
+          searchResults.querySelector('[data-predictive-search-item]').focus();
+        }
+      }
+
+      function performSearch(term) {
+        showLoading(true);
+        openSearchResults();
+
+        var url = baseUrl + '?q=' + encodeURIComponent(term) + '&resources[type]=product&resources[limit]=4';
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            renderSearchResults(data);
+            showLoading(false);
+          })
+          .catch(error => {
+            console.error('Error performing search:', error);
+            showLoading(false);
+          });
+      }
+
+      function renderSearchResults(data) {
+        searchResults.innerHTML = '';
+
+        var results = data.resources.results.products || [];
+
+        if (results.length === 0) {
+          renderNoResults();
+          return;
+        }
+
+        results.forEach(function(product) {
+          var itemElement = itemTemplate.content.cloneNode(true);
+          var itemLink = itemElement.querySelector('[data-predictive-search-item]');
+
+          // Replace template variables with actual data
+          var html = itemLink.outerHTML
+            .replace('{{ item.url }}', product.url)
+            .replace('{{ item.image }}', product.image || '')
+            .replace('{{ item.title }}', product.title)
+            .replace('{{ item.vendor }}', product.vendor || '')
+            .replace('{{ item.price }}', product.price || '');
+
+          // Parse HTML string to DOM and append to results
+          var tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          searchResults.appendChild(tempDiv.firstChild);
+        });
+
+        // Add keyboard navigation for results
+        addResultsKeyboardNavigation();
+      }
+
+      function renderNoResults() {
+        var noResultsElement = noResultsTemplate.content.cloneNode(true);
+        searchResults.appendChild(noResultsElement);
+      }
+
+      function addResultsKeyboardNavigation() {
+        var items = searchResults.querySelectorAll('[data-predictive-search-item]');
+
+        items.forEach(function(item, index) {
+          item.setAttribute('tabindex', '0');
+
+          item.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault();
+              if (index < items.length - 1) {
+                items[index + 1].focus();
+              }
+            } else if (event.key === 'ArrowUp') {
+              event.preventDefault();
+              if (index > 0) {
+                items[index - 1].focus();
+              } else {
+                searchInput.focus();
+              }
+            } else if (event.key === 'Escape') {
+              closeSearchResults();
+              searchInput.focus();
+            }
+          });
+        });
+      }
+
+      function openSearchResults() {
+        searchInput.setAttribute('aria-expanded', 'true');
+        searchResults.classList.add('active');
+      }
+
+      function closeSearchResults() {
+        searchInput.setAttribute('aria-expanded', 'false');
+        searchResults.classList.remove('active');
+      }
+
+      function clearSearch() {
+        searchInput.value = '';
+        currentSearchTerm = '';
+        clearButton.hidden = true;
+        closeSearchResults();
+        searchInput.focus();
+      }
+
+      function showLoading(isLoading) {
+        loadingIndicator.classList.toggle('active', isLoading);
+      }
+    }
+  });
+</script>

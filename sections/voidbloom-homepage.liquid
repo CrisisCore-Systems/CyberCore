@@ -1,1334 +1,1177 @@
 {% comment %}
-  VoidBloom Ritual Homepage - Rich implementation with full feature set
-  @MutationCompatible: All Profiles
+  VoidBloom Homepage Section
+  @MutationCompatible: VoidBloom
   @StrategyProfile: quantum-entangled
-  @Version: 3.7.1
+  @Version: 1.0.0
+
+  Main homepage layout for the VoidBloom theme
 {% endcomment %}
 
-<div class="voidbloom-homepage" data-neural-node data-profile="VoidBloom">
-  <div class="void-backdrop"></div>
+<section
+  class="voidbloom-homepage"
+  data-section-id="{{ section.id }}"
+  data-section-type="voidbloom-homepage">
 
-  <!-- Ritualized Entry -->
-  <section class="ritual-entry" id="ritual-entry" data-neural-node data-depth="1">
-    <div class="entry-backdrop"></div>
-    <div class="entry-content">
-      <h1 class="ritual-title glitch-text" data-text="{{ section.settings.title | default: 'VoidBloom' }}">
-        {{ section.settings.title | default: 'VoidBloom' }}
-      </h1>
-
-      <div class="ritual-subtitle">{{ section.settings.subtitle | default: 'Memory Archive System' }}</div>
-
-      <div class="entry-description">
-        {{ section.settings.description | default: 'Access the void. Recover lost memories. Integrate trauma signals.' }}
-      </div>
-
-      <div class="entry-actions">
-        <a href="{{ section.settings.cta_link | default: '/collections/all' }}" class="ritual-button primary">
-          {{ section.settings.cta_text | default: 'Explore Memory Artifacts' }}
-        </a>
-
-        <button class="ritual-button secondary quantum-trigger" data-mutation="VoidBloom" data-intensity="0.8">
-          Initiate Protocol
-        </button>
-      </div>
-    </div>
-
-    <div class="void-particles" id="entry-particles"></div>
-  </section>
-
-  <!-- Bloom Protocol -->
-  <section class="bloom-protocol" id="bloom-protocol" data-neural-node data-depth="2">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.protocol_title | default: 'Bloom Protocol' }}</h2>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="protocol-grid">
-      {% for block in section.blocks %}
-        {% if block.type == 'protocol_step' %}
-          <div class="protocol-step" data-step="{{ forloop.index }}" data-neural-node {{ block.shopify_attributes }}>
-            <div class="step-number">{{ forloop.index }}</div>
-            <h3 class="step-title">{{ block.settings.title }}</h3>
-            <div class="step-description">{{ block.settings.description }}</div>
-
-            {% if block.settings.image %}
-              <div class="step-image">
-                <img src="{{ block.settings.image | img_url: '400x400', crop: 'center' }}" alt="{{ block.settings.title }}" loading="lazy">
-                <div class="image-glitch-overlay"></div>
-              </div>
-            {% endif %}
+  {% if section.settings.show_hero %}
+    <div class="voidbloom-homepage__hero">
+      <div class="voidbloom-homepage__hero-background">
+        {% if section.settings.hero_image != blank %}
+          <div class="voidbloom-homepage__hero-image">
+            <img
+              srcset="{% if section.settings.hero_image.width >= 375 %}{{ section.settings.hero_image | image_url: width: 375 }} 375w,{% endif %}
+                {% if section.settings.hero_image.width >= 750 %}{{ section.settings.hero_image | image_url: width: 750 }} 750w,{% endif %}
+                {% if section.settings.hero_image.width >= 1100 %}{{ section.settings.hero_image | image_url: width: 1100 }} 1100w,{% endif %}
+                {% if section.settings.hero_image.width >= 1500 %}{{ section.settings.hero_image | image_url: width: 1500 }} 1500w,{% endif %}
+                {% if section.settings.hero_image.width >= 2200 %}{{ section.settings.hero_image | image_url: width: 2200 }} 2200w,{% endif %}
+                {% if section.settings.hero_image.width >= 3000 %}{{ section.settings.hero_image | image_url: width: 3000 }} 3000w,{% endif %}"
+              sizes="(min-width: 750px) calc(100vw - 22rem), 100vw"
+              src="{{ section.settings.hero_image | image_url: width: 1500 }}"
+              loading="eager"
+              fetchpriority="high"
+              width="{{ section.settings.hero_image.width }}"
+              height="{{ section.settings.hero_image.height }}"
+              alt="{{ section.settings.hero_image.alt | escape }}"
+              class="voidbloom-homepage__hero-image-element"
+            >
+            <div class="voidbloom-homepage__hero-overlay"></div>
+          </div>
+        {% else %}
+          <div class="voidbloom-homepage__hero-placeholder">
+            <div class="voidbloom-homepage__hero-placeholder-content">
+              {{ 'image' | placeholder_svg_tag: 'voidbloom-homepage__hero-placeholder-svg' }}
+            </div>
           </div>
         {% endif %}
-      {% endfor %}
+      </div>
 
-      {% comment %} Fallback if no blocks {% endcomment %}
-      {% if section.blocks.size == 0 or section.blocks | where: 'type', 'protocol_step' | size == 0 %}
-        <div class="protocol-step" data-step="1" data-neural-node>
-          <div class="step-number">1</div>
-          <h3 class="step-title">Memory Acquisition</h3>
-          <div class="step-description">Select memory artifacts that resonate with your trauma signature.</div>
-        </div>
+      <div class="voidbloom-homepage__hero-content">
+        <div class="voidbloom-homepage__hero-text-container">
+          {% if section.settings.hero_title != blank %}
+            <h1 class="voidbloom-homepage__hero-title">{{ section.settings.hero_title }}</h1>
+          {% endif %}
 
-        <div class="protocol-step" data-step="2" data-neural-node>
-          <div class="step-number">2</div>
-          <h3 class="step-title">Deep Integration</h3>
-          <div class="step-description">Integrate memory fragments through the void network.</div>
-        </div>
+          {% if section.settings.hero_subtitle != blank %}
+            <h2 class="voidbloom-homepage__hero-subtitle">{{ section.settings.hero_subtitle }}</h2>
+          {% endif %}
 
-        <div class="protocol-step" data-step="3" data-neural-node>
-          <div class="step-number">3</div>
-          <h3 class="step-title">Dimensional Collapse</h3>
-          <div class="step-description">Witness the collapse of dimensional barriers as trauma materializes.</div>
+          {% if section.settings.hero_button_text != blank and section.settings.hero_button_link != blank %}
+            <div class="voidbloom-homepage__hero-button-container">
+              <a href="{{ section.settings.hero_button_link }}" class="voidbloom-homepage__hero-button">
+                {{ section.settings.hero_button_text }}
+              </a>
+            </div>
+          {% endif %}
         </div>
-      {% endif %}
+      </div>
     </div>
-  </section>
+  {% endif %}
 
-  <!-- Signal Wall - Featured Collection -->
-  <section class="signal-wall" id="signal-wall" data-neural-node data-depth="3">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.collection_title | default: 'Signal Wall' }}</h2>
-      <div class="section-line"></div>
-    </div>
+  {% if section.settings.show_featured_collection and section.settings.featured_collection != blank %}
+    <div class="voidbloom-homepage__featured-collection">
+      <div class="voidbloom-homepage__section-header">
+        <h2 class="voidbloom-homepage__section-title">{{ section.settings.featured_collection_title | default: collections[section.settings.featured_collection].title }}</h2>
 
-    {% assign featured_collection = collections[section.settings.featured_collection] %}
-    {% assign collection_limit = section.settings.collection_limit | default: 4 %}
-
-    <div class="signal-grid">
-      {% if featured_collection != blank %}
-        {% for product in featured_collection.products limit: collection_limit %}
-          {% render 'trauma-card', product: product %}
-        {% endfor %}
-      {% else %}
-        {% comment %} Placeholder content {% endcomment %}
-        <div class="trauma-card" data-neural-node>
-          <div class="trauma-image placeholder">
-            <div class="trauma-depth depth-1"></div>
+        {% if section.settings.featured_collection_description != blank %}
+          <div class="voidbloom-homepage__section-description">
+            {{ section.settings.featured_collection_description }}
           </div>
-          <h3 class="trauma-title">Neural Fragment</h3>
-          <div class="trauma-price">$45.00</div>
-        </div>
+        {% endif %}
+      </div>
 
-        <div class="trauma-card" data-neural-node>
-          <div class="trauma-image placeholder">
-            <div class="trauma-depth depth-2"></div>
-          </div>
-          <h3 class="trauma-title">Memory Shard</h3>
-          <div class="trauma-price">$65.00</div>
-        </div>
+      <div class="voidbloom-homepage__product-grid">
+        {%- liquid
+          assign collection = collections[section.settings.featured_collection]
+          assign products_to_display = section.settings.products_to_display | default: 4
+        -%}
 
-        <div class="trauma-card" data-neural-node>
-          <div class="trauma-image placeholder">
-            <div class="trauma-depth depth-3"></div>
-          </div>
-          <h3 class="trauma-title">Void Echo</h3>
-          <div class="trauma-price">$85.00</div>
-        </div>
+        {% for product in collection.products limit: products_to_display %}
+          <div class="voidbloom-homepage__product-card">
+            <a href="{{ product.url }}" class="voidbloom-homepage__product-link">
+              <div class="voidbloom-homepage__product-image-container">
+                {% if product.featured_image != blank %}
+                  <img
+                    srcset="{% if product.featured_image.width >= 165 %}{{ product.featured_image | image_url: width: 165 }} 165w,{% endif %}
+                      {% if product.featured_image.width >= 360 %}{{ product.featured_image | image_url: width: 360 }} 360w,{% endif %}
+                      {% if product.featured_image.width >= 533 %}{{ product.featured_image | image_url: width: 533 }} 533w,{% endif %}
+                      {% if product.featured_image.width >= 720 %}{{ product.featured_image | image_url: width: 720 }} 720w,{% endif %}
+                      {% if product.featured_image.width >= 940 %}{{ product.featured_image | image_url: width: 940 }} 940w,{% endif %}
+                      {% if product.featured_image.width >= 1066 %}{{ product.featured_image | image_url: width: 1066 }} 1066w,{% endif %}"
+                    src="{{ product.featured_image | image_url: width: 533 }}"
+                    sizes="(min-width: 1100px) calc((100vw - 10rem) / 4), (min-width: 750px) calc((100vw - 11.5rem) / 3), calc(100vw - 4rem)"
+                    loading="lazy"
+                    width="{{ product.featured_image.width }}"
+                    height="{{ product.featured_image.height }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="voidbloom-homepage__product-image"
+                  >
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'voidbloom-homepage__product-image placeholder' }}
+                {% endif %}
 
-        <div class="trauma-card" data-neural-node>
-          <div class="trauma-image placeholder">
-            <div class="trauma-depth depth-2"></div>
-          </div>
-          <h3 class="trauma-title">Signal Ripple</h3>
-          <div class="trauma-price">$55.00</div>
-        </div>
-      {% endif %}
-    </div>
+                {% if section.settings.show_quantum_overlay and product.metafields.voidbloom.trauma_pattern %}
+                  <div class="voidbloom-homepage__product-overlay trauma-{{ product.metafields.voidbloom.trauma_pattern }}"></div>
+                {% endif %}
+              </div>
 
-    <div class="signal-actions">
-      <a href="{{ featured_collection.url | default: '/collections/all' }}" class="ritual-button secondary">
-        View All Signals
-      </a>
-    </div>
-  </section>
+              <div class="voidbloom-homepage__product-info">
+                <h3 class="voidbloom-homepage__product-title">{{ product.title }}</h3>
 
-  <!-- Quantum Featured Products - Holographic Display -->
-  <section class="quantum-featured" id="quantum-featured" data-neural-node data-depth="4">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.quantum_title | default: 'Quantum Resonance' }}</h2>
-      <div class="section-line"></div>
-    </div>
+                <div class="voidbloom-homepage__product-price">
+                  {% if product.price_varies %}
+                    <span class="voidbloom-homepage__product-price-from">{{ 'products.product.from_price_html' | t }}</span>
+                  {% endif %}
+                  <span class="voidbloom-homepage__product-current-price">{{ product.price | money }}</span>
 
-    <div class="quantum-display-container">
-      <div class="quantum-backdrop"></div>
-      <div class="hologram-container" data-hologram-container>
-        {% assign quantum_collection = collections[section.settings.quantum_collection] %}
-        {% assign quantum_limit = section.settings.quantum_limit | default: 3 %}
+                  {% if product.compare_at_price > product.price %}
+                    <span class="voidbloom-homepage__product-compare-price">{{ product.compare_at_price | money }}</span>
+                  {% endif %}
+                </div>
 
-        {% if quantum_collection != blank %}
-          {% for product in quantum_collection.products limit: quantum_limit %}
-            <div class="hologram-product" data-product-id="{{ product.id }}" data-neural-node>
-              <div class="hologram-display">
-                {% if product.featured_image %}
-                  <div class="hologram-image">
-                    <img src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" alt="{{ product.title }}" loading="lazy">
-                    <div class="hologram-effect"></div>
+                {% if product.metafields.voidbloom.trauma_pattern %}
+                  <div class="voidbloom-homepage__product-trauma">
+                    <span class="voidbloom-homepage__product-trauma-label">Trauma Pattern:</span>
+                    <span class="voidbloom-homepage__product-trauma-value">{{ product.metafields.voidbloom.trauma_pattern | capitalize }}</span>
                   </div>
                 {% endif %}
               </div>
-              <div class="hologram-info">
-                <h3 class="hologram-title">{{ product.title }}</h3>
-                <div class="hologram-price">{{ product.price | money }}</div>
-                <div class="hologram-actions">
-                  <a href="{{ product.url }}" class="ritual-button primary">View Details</a>
-                  <button class="ritual-button secondary add-to-vault" data-product-id="{{ product.id }}" data-variant-id="{{ product.variants.first.id }}">
-                    Add to Vault
-                  </button>
+            </a>
+          </div>
+        {% else %}
+          {% for i in (1..4) %}
+            <div class="voidbloom-homepage__product-card placeholder">
+              <div class="voidbloom-homepage__product-image-container">
+                {{ 'product-' | append: i | placeholder_svg_tag: 'voidbloom-homepage__product-image placeholder' }}
+              </div>
+
+              <div class="voidbloom-homepage__product-info">
+                <h3 class="voidbloom-homepage__product-title placeholder-text">{{ 'products.product.product_title' | t }}</h3>
+                <div class="voidbloom-homepage__product-price">
+                  <span class="voidbloom-homepage__product-current-price placeholder-text">{{ 1999 | money }}</span>
                 </div>
               </div>
             </div>
           {% endfor %}
-        {% else %}
-          {% comment %} Placeholder content {% endcomment %}
-          <div class="hologram-product" data-neural-node>
-            <div class="hologram-display">
-              <div class="hologram-image placeholder">
-                <div class="hologram-effect"></div>
-              </div>
-            </div>
-            <div class="hologram-info">
-              <h3 class="hologram-title">Dimensional Resonator</h3>
-              <div class="hologram-price">$129.00</div>
-              <div class="hologram-actions">
-                <a href="/products/dimensional-resonator" class="ritual-button primary">View Details</a>
-                <button class="ritual-button secondary add-to-vault" data-product-id="placeholder">
-                  Add to Vault
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="hologram-product" data-neural-node>
-            <div class="hologram-display">
-              <div class="hologram-image placeholder">
-                <div class="hologram-effect"></div>
-              </div>
-            </div>
-            <div class="hologram-info">
-              <h3 class="hologram-title">Neural Interface Module</h3>
-              <div class="hologram-price">$179.00</div>
-              <div class="hologram-actions">
-                <a href="/products/neural-interface" class="ritual-button primary">View Details</a>
-                <button class="ritual-button secondary add-to-vault" data-product-id="placeholder">
-                  Add to Vault
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="hologram-product" data-neural-node>
-            <div class="hologram-display">
-              <div class="hologram-image placeholder">
-                <div class="hologram-effect"></div>
-              </div>
-            </div>
-            <div class="hologram-info">
-              <h3 class="hologram-title">Void Extractor</h3>
-              <div class="hologram-price">$149.00</div>
-              <div class="hologram-actions">
-                <a href="/products/void-extractor" class="ritual-button primary">View Details</a>
-                <button class="ritual-button secondary add-to-vault" data-product-id="placeholder">
-                  Add to Vault
-                </button>
-              </div>
-            </div>
-          </div>
-        {% endif %}
+        {% endfor %}
       </div>
 
-      {% if quantum_collection != blank %}
-        <div class="quantum-actions">
-          <a href="{{ quantum_collection.url }}" class="ritual-button secondary">
-            Explore Quantum Collection
-          </a>
-        </div>
-      {% else %}
-        <div class="quantum-actions">
-          <a href="/collections/all" class="ritual-button secondary">
-            Explore Quantum Collection
+      {% if section.settings.show_view_all and collection.products_count > products_to_display %}
+        <div class="voidbloom-homepage__view-all">
+          <a href="{{ collection.url }}" class="voidbloom-homepage__view-all-link">
+            {{ 'collections.general.view_all' | t }}
           </a>
         </div>
       {% endif %}
     </div>
-  </section>
+  {% endif %}
 
-  <!-- Archive Timeline -->
-  <section class="archive-timeline" id="archive-timeline" data-neural-node data-depth="2">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.timeline_title | default: 'Archive Timeline' }}</h2>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="timeline-container">
-      <div class="timeline-line"></div>
-
+  {% if section.blocks.size > 0 %}
+    <div class="voidbloom-homepage__ritual-sections">
       {% for block in section.blocks %}
-        {% if block.type == 'timeline_entry' %}
-          <div class="timeline-entry" data-year="{{ block.settings.year }}" data-neural-node {{ block.shopify_attributes }}>
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-              <div class="timeline-year">{{ block.settings.year }}</div>
-              <h3 class="timeline-title">{{ block.settings.title }}</h3>
-              <div class="timeline-description">{{ block.settings.description }}</div>
+        {% case block.type %}
+          {% when 'image_text' %}
+            <div class="voidbloom-homepage__ritual-section" {{ block.shopify_attributes }}>
+              <div class="voidbloom-homepage__ritual-content {% if block.settings.image_position == 'right' %}voidbloom-homepage__ritual-content--reverse{% endif %}">
+                <div class="voidbloom-homepage__ritual-image-container">
+                  {% if block.settings.image != blank %}
+                    <img
+                      srcset="{% if block.settings.image.width >= 375 %}{{ block.settings.image | image_url: width: 375 }} 375w,{% endif %}
+                        {% if block.settings.image.width >= 750 %}{{ block.settings.image | image_url: width: 750 }} 750w,{% endif %}
+                        {% if block.settings.image.width >= 1100 %}{{ block.settings.image | image_url: width: 1100 }} 1100w,{% endif %}
+                        {% if block.settings.image.width >= 1500 %}{{ block.settings.image | image_url: width: 1500 }} 1500w,{% endif %}"
+                      src="{{ block.settings.image | image_url: width: 750 }}"
+                      sizes="(min-width: 750px) 50vw, 100vw"
+                      loading="lazy"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                      alt="{{ block.settings.image.alt | escape }}"
+                      class="voidbloom-homepage__ritual-image"
+                    >
+                  {% else %}
+                    {{ 'image' | placeholder_svg_tag: 'voidbloom-homepage__ritual-image placeholder' }}
+                  {% endif %}
+
+                  {% if block.settings.show_quantum_effect %}
+                    <div class="voidbloom-homepage__ritual-image-effect"></div>
+                  {% endif %}
+                </div>
+
+                <div class="voidbloom-homepage__ritual-text">
+                  {% if block.settings.title != blank %}
+                    <h2 class="voidbloom-homepage__ritual-title">{{ block.settings.title }}</h2>
+                  {% endif %}
+
+                  {% if block.settings.text != blank %}
+                    <div class="voidbloom-homepage__ritual-description">
+                      {{ block.settings.text }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                    <div class="voidbloom-homepage__ritual-button-container">
+                      <a href="{{ block.settings.button_link }}" class="voidbloom-homepage__ritual-button">
+                        {{ block.settings.button_label }}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
             </div>
-          </div>
-        {% endif %}
-      {% endfor %}
 
-      {% comment %} Fallback if no blocks {% endcomment %}
-      {% if section.blocks.size == 0 or section.blocks | where: 'type', 'timeline_entry' | size == 0 %}
-        <div class="timeline-entry" data-year="2018" data-neural-node>
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-year">2018</div>
-            <h3 class="timeline-title">First Neural Collapse</h3>
-            <div class="timeline-description">Initial discovery of the void network and its memory storage capabilities.</div>
-          </div>
-        </div>
+          {% when 'video' %}
+            <div class="voidbloom-homepage__ritual-video" {{ block.shopify_attributes }}>
+              <div class="voidbloom-homepage__section-header">
+                {% if block.settings.title != blank %}
+                  <h2 class="voidbloom-homepage__section-title">{{ block.settings.title }}</h2>
+                {% endif %}
 
-        <div class="timeline-entry" data-year="2021" data-neural-node>
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-year">2021</div>
-            <h3 class="timeline-title">Trauma Encoding Protocol</h3>
-            <div class="timeline-description">Development of methods to encode and materialize trauma as wearable artifacts.</div>
-          </div>
-        </div>
+                {% if block.settings.text != blank %}
+                  <div class="voidbloom-homepage__section-description">
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+              </div>
 
-        <div class="timeline-entry" data-year="2025" data-neural-node>
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-year">2025</div>
-            <h3 class="timeline-title">VoidBloom Manifestation</h3>
-            <div class="timeline-description">Full integration of the quantum system for public memory acquisition.</div>
-          </div>
-        </div>
-      {% endif %}
-    </div>
-  </section>
+              <div class="voidbloom-homepage__video-container">
+                {% if block.settings.video_url != blank %}
+                  <div class="voidbloom-homepage__video-wrapper">
+                    {% if block.settings.video_url.type == 'youtube' %}
+                      <iframe
+                        src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?enablejsapi=1&rel=0&autoplay=0"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        class="voidbloom-homepage__video"
+                      ></iframe>
+                    {% else %}
+                      <iframe
+                        src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}"
+                        frameborder="0"
+                        allow="autoplay; fullscreen"
+                        allowfullscreen
+                        class="voidbloom-homepage__video"
+                      ></iframe>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  <div class="voidbloom-homepage__video-placeholder">
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'voidbloom-homepage__video-placeholder-svg' }}
+                    <div class="voidbloom-homepage__video-placeholder-icon">
+                      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </div>
+                {% endif %}
 
-  <!-- Neural Testimonials - Build Trust -->
-  <section class="neural-testimonials" id="neural-testimonials" data-neural-node data-depth="2">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.testimonial_title | default: 'Neural Imprints' }}</h2>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="testimonial-grid">
-      {% for block in section.blocks %}
-        {% if block.type == 'testimonial' %}
-          <div class="testimonial-card" data-neural-node {{ block.shopify_attributes }}>
-            <div class="testimonial-content">
-              <div class="testimonial-quote">{{ block.settings.quote }}</div>
-              <div class="testimonial-author">{{ block.settings.author }}</div>
-              {% if block.settings.verified %}
-                <div class="testimonial-verified">Verified Purchase</div>
-              {% endif %}
+                {% if block.settings.show_quantum_effect %}
+                  <div class="voidbloom-homepage__video-effect"></div>
+                {% endif %}
+              </div>
             </div>
-          </div>
-        {% endif %}
+        {% endcase %}
       {% endfor %}
-
-      {% comment %} Fallback if no blocks {% endcomment %}
-      {% if section.blocks.size == 0 or section.blocks | where: 'type', 'testimonial' | size == 0 %}
-        <div class="testimonial-card" data-neural-node>
-          <div class="testimonial-content">
-            <div class="testimonial-quote">"The quantum entanglement in these products has completely transformed my neural interface experience. Trauma resonance is at peak efficiency."</div>
-            <div class="testimonial-author">Alex K.</div>
-            <div class="testimonial-verified">Verified Purchase</div>
-          </div>
-        </div>
-
-        <div class="testimonial-card" data-neural-node>
-          <div class="testimonial-content">
-            <div class="testimonial-quote">"Memory acquisition has never been this seamless. The dimensional collapse protocols exceed all expectations."</div>
-            <div class="testimonial-author">Morgan T.</div>
-            <div class="testimonial-verified">Verified Purchase</div>
-          </div>
-        </div>
-
-        <div class="testimonial-card" data-neural-node>
-          <div class="testimonial-content">
-            <div class="testimonial-quote">"VoidBloom's artifacts have the highest trauma resonance I've experienced. Fast shipping and perfect integration with my existing void network."</div>
-            <div class="testimonial-author">Jamie R.</div>
-            <div class="testimonial-verified">Verified Purchase</div>
-          </div>
-        </div>
-      {% endif %}
     </div>
-  </section>
-</div>
+  {% endif %}
+
+  {% if section.settings.show_newsletter %}
+    <div class="voidbloom-homepage__newsletter">
+      <div class="voidbloom-homepage__newsletter-content">
+        <div class="voidbloom-homepage__newsletter-text">
+          {% if section.settings.newsletter_title != blank %}
+            <h2 class="voidbloom-homepage__newsletter-title">{{ section.settings.newsletter_title }}</h2>
+          {% endif %}
+
+          {% if section.settings.newsletter_text != blank %}
+            <div class="voidbloom-homepage__newsletter-description">
+              {{ section.settings.newsletter_text }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="voidbloom-homepage__newsletter-form">
+          {%- form 'customer', id: 'newsletter-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            <div class="voidbloom-homepage__newsletter-field-container">
+              <div class="voidbloom-homepage__newsletter-field">
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  name="contact[email]"
+                  class="voidbloom-homepage__newsletter-input"
+                  value="{{ form.email }}"
+                  placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                  required
+                >
+                <label for="newsletter-email" class="voidbloom-homepage__newsletter-label">{{ 'general.newsletter_form.email_placeholder' | t }}</label>
+              </div>
+
+              <div class="voidbloom-homepage__newsletter-button-container">
+                <button type="submit" class="voidbloom-homepage__newsletter-button">
+                  {{ 'general.newsletter_form.submit' | t }}
+                </button>
+              </div>
+            </div>
+
+            {%- if form.posted_successfully? -%}
+              <div class="voidbloom-homepage__newsletter-success" aria-live="polite">
+                {{ 'general.newsletter_form.success' | t }}
+              </div>
+            {%- endif -%}
+
+            {%- if form.errors -%}
+              <div class="voidbloom-homepage__newsletter-error" aria-live="polite">
+                {{ form.errors.messages['email'] }}
+              </div>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
 
 <style>
   .voidbloom-homepage {
-    position: relative;
-    background: #0a0014;
-    color: rgba(255, 255, 255, 0.9);
-    min-height: 100vh;
-    overflow-x: hidden;
+    padding: 0;
+    color: var(--vb-color-foreground);
   }
 
-  .void-backdrop {
-    position: fixed;
+  /* Hero Section */
+  .voidbloom-homepage__hero {
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    max-height: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .voidbloom-homepage__hero-background {
+    position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at center, rgba(40, 0, 80, 0.2) 0%, rgba(10, 0, 20, 0.9) 70%);
-    z-index: -1;
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
   }
 
-  /* Section Styles */
-  section {
-    margin: 0 auto;
-    padding: 4rem 2rem;
+  .voidbloom-homepage__hero-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .voidbloom-homepage__hero-image-element {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .voidbloom-homepage__hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 26, 51, 0.4), rgba(0, 26, 51, 0.8));
+  }
+
+  .voidbloom-homepage__hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: var(--vb-space-8);
+    max-width: 800px;
+  }
+
+  .voidbloom-homepage__hero-title {
+    font-size: var(--vb-font-size-4xl);
+    margin-bottom: var(--vb-space-4);
+    color: var(--vb-color-foreground);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+
+  .voidbloom-homepage__hero-subtitle {
+    font-size: var(--vb-font-size-xl);
+    margin-bottom: var(--vb-space-8);
+    color: var(--vb-color-foreground);
+    opacity: 0.9;
+  }
+
+  .voidbloom-homepage__hero-button {
+    display: inline-block;
+    padding: var(--vb-space-3) var(--vb-space-6);
+    background-color: var(--vb-color-primary);
+    color: var(--vb-color-background);
+    border-radius: var(--vb-radius-md);
+    font-weight: var(--vb-font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--vb-animation-normal) ease;
+    border: 1px solid var(--vb-color-primary);
+  }
+
+  .voidbloom-homepage__hero-button:hover {
+    background-color: transparent;
+    color: var(--vb-color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3);
+  }
+
+  /* Featured Collection */
+  .voidbloom-homepage__featured-collection {
+    padding: var(--vb-space-16) var(--vb-space-4);
     max-width: 1440px;
-    position: relative;
-  }
-
-  .section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-  }
-
-  .section-title {
-    font-family: 'Courier New', monospace;
-    font-size: 2rem;
-    margin: 0 0 1rem 0;
-    position: relative;
-    display: inline-block;
-    letter-spacing: 1px;
-  }
-
-  .section-line {
-    height: 1px;
-    width: 100px;
-    background: linear-gradient(90deg, transparent, rgba(153, 0, 255, 0.7), transparent);
     margin: 0 auto;
   }
 
-  /* Ritualized Entry */
-  .ritual-entry {
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  .voidbloom-homepage__section-header {
     text-align: center;
-    position: relative;
-    padding-top: 0;
-    margin-top: 0;
-    overflow: hidden;
+    margin-bottom: var(--vb-space-8);
   }
 
-  .entry-backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at center, rgba(153, 0, 255, 0.1) 0%, transparent 70%);
-    z-index: -1;
-    animation: pulse-fade 15s infinite alternate ease-in-out;
+  .voidbloom-homepage__section-title {
+    font-size: var(--vb-font-size-3xl);
+    margin-bottom: var(--vb-space-4);
+    color: var(--vb-color-foreground);
   }
 
-  .ritual-title {
-    font-family: 'Courier New', monospace;
-    font-size: 4rem;
-    margin: 0 0 1rem 0;
-    letter-spacing: 2px;
-    position: relative;
-  }
-
-  .glitch-text {
-    position: relative;
-    display: inline-block;
-  }
-
-  .glitch-text::before,
-  .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  .voidbloom-homepage__section-description {
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--vb-color-foreground);
     opacity: 0.8;
   }
 
-  .glitch-text::before {
-    animation: glitch-anim 10s infinite linear alternate-reverse;
-    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-    transform: translate(-0.04em, -0.04em);
-    opacity: 0.8;
-    color: rgba(255, 0, 255, 0.8);
+  .voidbloom-homepage__product-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--vb-space-6);
+    margin-bottom: var(--vb-space-8);
   }
 
-  .glitch-text::after {
-    animation: glitch-anim-2 10s infinite linear alternate-reverse;
-    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-    transform: translate(0.04em, 0.04em);
-    opacity: 0.8;
-    color: rgba(0, 255, 255, 0.8);
+  @media (min-width: 750px) {
+    .voidbloom-homepage__product-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
-  .ritual-subtitle {
-    font-family: 'Courier New', monospace;
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    color: rgba(153, 0, 255, 0.9);
-    letter-spacing: 1px;
+  @media (min-width: 990px) {
+    .voidbloom-homepage__product-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
-  .entry-description {
-    max-width: 600px;
-    margin: 0 auto 3rem auto;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.7);
+  .voidbloom-homepage__product-card {
+    position: relative;
+    transition: transform var(--vb-animation-normal) ease;
   }
 
-  .entry-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+  .voidbloom-homepage__product-card:hover {
+    transform: translateY(-5px);
   }
 
-  .ritual-button {
-    display: inline-block;
-    padding: 0.8rem 1.5rem;
-    font-family: 'Courier New', monospace;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
+  .voidbloom-homepage__product-link {
+    display: block;
+    color: var(--vb-color-foreground);
     text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    cursor: pointer;
   }
 
-  .ritual-button.primary {
-    background: rgba(153, 0, 255, 0.3);
-    border: 1px solid rgba(153, 0, 255, 0.5);
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .ritual-button.primary:hover {
-    background: rgba(153, 0, 255, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(153, 0, 255, 0.3);
-  }
-
-  .ritual-button.secondary {
-    background: transparent;
-    border: 1px solid rgba(153, 0, 255, 0.5);
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .ritual-button.secondary:hover {
-    background: rgba(153, 0, 255, 0.1);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(153, 0, 255, 0.2);
-  }
-
-  .void-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  /* Bloom Protocol */
-  .bloom-protocol {
-    background: rgba(10, 0, 20, 0.7);
-    border-top: 1px solid rgba(153, 0, 255, 0.2);
-    border-bottom: 1px solid rgba(153, 0, 255, 0.2);
-  }
-
-  .protocol-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-
-  .protocol-step {
+  .voidbloom-homepage__product-image-container {
     position: relative;
-    padding: 1.5rem;
-    background: rgba(153, 0, 255, 0.05);
-    border: 1px solid rgba(153, 0, 255, 0.2);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-
-  .protocol-step:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
-    border-color: rgba(153, 0, 255, 0.4);
-  }
-
-  .step-number {
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    width: 40px;
-    height: 40px;
-    background: rgba(153, 0, 255, 0.3);
-    border: 1px solid rgba(153, 0, 255, 0.5);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .step-title {
-    font-family: 'Courier New', monospace;
-    font-size: 1.3rem;
-    margin: 0 0 1rem 0;
-    color: rgba(153, 0, 255, 0.9);
-  }
-
-  .step-description {
-    margin-bottom: 1.5rem;
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.5;
-  }
-
-  .step-image {
-    position: relative;
-    border-radius: 4px;
+    margin-bottom: var(--vb-space-3);
     overflow: hidden;
+    border-radius: var(--vb-radius-md);
+    aspect-ratio: 1 / 1.2;
   }
 
-  .step-image img {
+  .voidbloom-homepage__product-image {
     width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .image-glitch-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(153, 0, 255, 0.1) 0%, transparent 100%);
-    pointer-events: none;
-  }
-
-  /* Signal Wall */
-  .signal-wall {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-
-  .signal-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-  }
-
-  .signal-actions {
-    text-align: center;
-    margin-top: 3rem;
-  }
-
-  /* Trauma Card (Fallback) */
-  .trauma-card {
-    position: relative;
-    background: rgba(153, 0, 255, 0.05);
-    border: 1px solid rgba(153, 0, 255, 0.2);
-    border-radius: 8px;
-    padding: 1rem;
-    transition: all 0.3s ease;
     height: 100%;
+    object-fit: cover;
+    transition: transform var(--vb-animation-normal) ease;
   }
 
-  .trauma-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
-    border-color: rgba(153, 0, 255, 0.4);
-  }
-
-  .trauma-image {
-    position: relative;
-    width: 100%;
-    padding-top: 100%; /* 1:1 Aspect ratio */
-    background: rgba(153, 0, 255, 0.05);
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-
-  .trauma-image.placeholder {
-    background: linear-gradient(135deg, rgba(20, 0, 40, 1) 0%, rgba(40, 0, 80, 1) 100%);
-  }
-
-  .trauma-depth {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-  }
-
-  .depth-1 {
-    border-top: 1px solid rgba(153, 0, 255, 0.5);
-  }
-
-  .depth-2 {
-    border-top: 2px solid rgba(153, 0, 255, 0.7);
-    border-bottom: 1px solid rgba(153, 0, 255, 0.5);
-  }
-
-  .depth-3 {
-    border: 1px solid rgba(153, 0, 255, 0.7);
-    box-shadow: 0 0 10px rgba(153, 0, 255, 0.3) inset;
-  }
-
-  .trauma-title {
-    font-family: 'Courier New', monospace;
-    font-size: 1.1rem;
-    margin: 0 0 0.5rem 0;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .trauma-price {
-    font-size: 1rem;
-    color: rgba(153, 0, 255, 0.9);
-  }
-
-  /* Quantum Featured Products */
-  .quantum-display-container {
-    position: relative;
-    padding: 2rem;
-    background: rgba(10, 0, 20, 0.7);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .quantum-backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at center, rgba(153, 0, 255, 0.2) 0%, transparent 70%);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .hologram-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hologram-product {
-    background: rgba(153, 0, 255, 0.05);
-    border: 1px solid rgba(153, 0, 255, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .hologram-product:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.2);
-    border-color: rgba(153, 0, 255, 0.4);
-  }
-
-  .hologram-display {
-    position: relative;
-    padding: 1rem;
-  }
-
-  .hologram-image {
-    position: relative;
-    overflow: hidden;
-    border-radius: 4px;
-  }
-
-  .hologram-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.5s ease;
-  }
-
-  .hologram-image.placeholder {
-    padding-top: 100%;
-    background: linear-gradient(135deg, rgba(20, 0, 40, 1) 0%, rgba(40, 0, 80, 1) 100%);
-  }
-
-  .hologram-effect {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(153, 0, 255, 0.1) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .hologram-product:hover .hologram-image img {
+  .voidbloom-homepage__product-link:hover .voidbloom-homepage__product-image {
     transform: scale(1.05);
   }
 
-  .hologram-info {
-    padding: 1.5rem;
-  }
-
-  .hologram-title {
-    font-family: 'Courier New', monospace;
-    font-size: 1.3rem;
-    margin: 0 0 0.5rem 0;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .hologram-price {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    color: rgba(153, 0, 255, 0.9);
-  }
-
-  .hologram-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .quantum-actions {
-    text-align: center;
-    margin-top: 3rem;
-  }
-
-  /* Archive Timeline */
-  .archive-timeline {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-    background: rgba(10, 0, 20, 0.7);
-    border-top: 1px solid rgba(153, 0, 255, 0.2);
-    border-bottom: 1px solid rgba(153, 0, 255, 0.2);
-  }
-
-  .timeline-container {
-    position: relative;
-    padding: 2rem 0;
-  }
-
-  .timeline-line {
+  .voidbloom-homepage__product-overlay {
     position: absolute;
     top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-    background: rgba(153, 0, 255, 0.3);
-    transform: translateX(-50%);
+    left: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: screen;
+    opacity: 0.3;
+    transition: opacity var(--vb-animation-normal) ease;
   }
 
-  .timeline-entry {
-    position: relative;
-    margin-bottom: 4rem;
+  .voidbloom-homepage__product-link:hover .voidbloom-homepage__product-overlay {
+    opacity: 0.5;
+  }
+
+  .trauma-fragmentation.voidbloom-homepage__product-overlay {
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+    animation: overlay-fragmentation 10s linear infinite;
+  }
+
+  .trauma-recursion.voidbloom-homepage__product-overlay {
+    background: repeating-conic-gradient(rgba(0, 255, 255, 0.2) 0%, transparent 5%, transparent 45%, rgba(0, 255, 255, 0.2) 50%);
+    background-size: 100% 100%;
+  }
+
+  .trauma-abandonment.voidbloom-homepage__product-overlay {
+    background: radial-gradient(circle, transparent 50%, rgba(0, 255, 255, 0.3) 100%);
+  }
+
+  .trauma-surveillance.voidbloom-homepage__product-overlay {
+    background: linear-gradient(transparent 0%, transparent 10%, rgba(0, 255, 255, 0.1) 10.5%, transparent 11%, transparent);
+    background-size: 100% 20px;
+  }
+
+  .trauma-displacement.voidbloom-homepage__product-overlay {
+    background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), transparent);
+  }
+
+  .trauma-dissolution.voidbloom-homepage__product-overlay {
+    background: radial-gradient(circle at 30% 70%, rgba(0, 255, 255, 0.2), transparent 70%);
+  }
+
+  @keyframes overlay-fragmentation {
+    0% {
+      background-position: -100% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .voidbloom-homepage__product-info {
+    padding: var(--vb-space-2);
+  }
+
+  .voidbloom-homepage__product-title {
+    font-size: var(--vb-font-size-base);
+    margin-bottom: var(--vb-space-2);
+    font-weight: var(--vb-font-weight-medium);
+    color: var(--vb-color-foreground);
+  }
+
+  .voidbloom-homepage__product-price {
+    margin-bottom: var(--vb-space-2);
     display: flex;
     align-items: center;
+    gap: var(--vb-space-2);
   }
 
-  .timeline-entry:nth-child(odd) .timeline-content {
-    margin-left: 50%;
-    padding-left: 2rem;
-    text-align: left;
+  .voidbloom-homepage__product-current-price {
+    font-weight: var(--vb-font-weight-bold);
+    color: var(--vb-color-foreground);
   }
 
-  .timeline-entry:nth-child(even) .timeline-content {
-    margin-right: 50%;
-    padding-right: 2rem;
-    text-align: right;
+  .voidbloom-homepage__product-compare-price {
+    text-decoration: line-through;
+    opacity: 0.7;
+    font-size: var(--vb-font-size-sm);
   }
 
-  .timeline-marker {
+  .voidbloom-homepage__product-trauma {
+    font-size: var(--vb-font-size-sm);
+    color: var(--vb-color-accent);
+  }
+
+  .voidbloom-homepage__product-trauma-label {
+    opacity: 0.8;
+    margin-right: var(--vb-space-1);
+  }
+
+  .voidbloom-homepage__view-all {
+    text-align: center;
+  }
+
+  .voidbloom-homepage__view-all-link {
+    display: inline-block;
+    padding: var(--vb-space-3) var(--vb-space-6);
+    background-color: transparent;
+    color: var(--vb-color-primary);
+    border: 1px solid var(--vb-color-primary);
+    border-radius: var(--vb-radius-md);
+    font-weight: var(--vb-font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--vb-animation-normal) ease;
+  }
+
+  .voidbloom-homepage__view-all-link:hover {
+    background-color: var(--vb-color-primary);
+    color: var(--vb-color-background);
+  }
+
+  /* Ritual Sections */
+  .voidbloom-homepage__ritual-sections {
+    padding: var(--vb-space-16) 0;
+  }
+
+  .voidbloom-homepage__ritual-section {
+    padding: var(--vb-space-12) var(--vb-space-4);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .voidbloom-homepage__ritual-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vb-space-8);
+  }
+
+  @media (min-width: 750px) {
+    .voidbloom-homepage__ritual-content {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .voidbloom-homepage__ritual-content--reverse {
+      flex-direction: row-reverse;
+    }
+
+    .voidbloom-homepage__ritual-image-container,
+    .voidbloom-homepage__ritual-text {
+      flex: 1;
+    }
+  }
+
+  .voidbloom-homepage__ritual-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--vb-radius-lg);
+    aspect-ratio: 16 / 9;
+    background-color: rgba(0, 255, 255, 0.05);
+  }
+
+  .voidbloom-homepage__ritual-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--vb-animation-slow) ease;
+  }
+
+  .voidbloom-homepage__ritual-image-container:hover .voidbloom-homepage__ritual-image {
+    transform: scale(1.05);
+  }
+
+  .voidbloom-homepage__ritual-image-effect {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
-    background: rgba(153, 0, 255, 0.3);
-    border: 1px solid rgba(153, 0, 255, 0.5);
-    border-radius: 50%;
-    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    mix-blend-mode: screen;
+    animation: ritual-image-effect 15s linear infinite;
   }
 
-  .timeline-marker::before {
-    content: '';
+  @keyframes ritual-image-effect {
+    0% {
+      background-position: -100% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .voidbloom-homepage__ritual-text {
+    padding: var(--vb-space-4);
+  }
+
+  .voidbloom-homepage__ritual-title {
+    font-size: var(--vb-font-size-2xl);
+    margin-bottom: var(--vb-space-4);
+    color: var(--vb-color-foreground);
+  }
+
+  .voidbloom-homepage__ritual-description {
+    margin-bottom: var(--vb-space-6);
+    color: var(--vb-color-foreground);
+    opacity: 0.8;
+  }
+
+  .voidbloom-homepage__ritual-button {
+    display: inline-block;
+    padding: var(--vb-space-3) var(--vb-space-6);
+    background-color: transparent;
+    color: var(--vb-color-primary);
+    border: 1px solid var(--vb-color-primary);
+    border-radius: var(--vb-radius-md);
+    font-weight: var(--vb-font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--vb-animation-normal) ease;
+  }
+
+  .voidbloom-homepage__ritual-button:hover {
+    background-color: var(--vb-color-primary);
+    color: var(--vb-color-background);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3);
+  }
+
+  /* Video Section */
+  .voidbloom-homepage__ritual-video {
+    padding: var(--vb-space-12) var(--vb-space-4);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .voidbloom-homepage__video-container {
+    position: relative;
+    margin-top: var(--vb-space-8);
+    border-radius: var(--vb-radius-lg);
+    overflow: hidden;
+    background-color: rgba(0, 255, 255, 0.05);
+  }
+
+  .voidbloom-homepage__video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
+
+  .voidbloom-homepage__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .voidbloom-homepage__video-placeholder {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    background-color: rgba(0, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .voidbloom-homepage__video-placeholder-svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  .voidbloom-homepage__video-placeholder-icon {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    background: rgba(153, 0, 255, 0.7);
+    width: 80px;
+    height: 80px;
+    background-color: rgba(0, 255, 255, 0.2);
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .timeline-content {
-    position: relative;
-    width: 45%;
-    background: rgba(153, 0, 255, 0.05);
-    border: 1px solid rgba(153, 0, 255, 0.2);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
+  .voidbloom-homepage__video-placeholder-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: var(--vb-color-foreground);
   }
 
-  .timeline-content:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
-    border-color: rgba(153, 0, 255, 0.4);
+  .voidbloom-homepage__video-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    mix-blend-mode: screen;
+    pointer-events: none;
   }
 
-  .timeline-year {
-    font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    color: rgba(153, 0, 255, 0.9);
-    margin-bottom: 0.5rem;
+  /* Newsletter */
+  .voidbloom-homepage__newsletter {
+    padding: var(--vb-space-16) var(--vb-space-4);
+    background-color: rgba(0, 255, 255, 0.03);
+    border-top: 1px solid rgba(0, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 255, 255, 0.1);
   }
 
-  .timeline-title {
-    font-family: 'Courier New', monospace;
-    font-size: 1.3rem;
-    margin: 0 0 1rem 0;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .timeline-description {
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.5;
-  }
-
-  /* Neural Testimonials */
-  .neural-testimonials {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-
-  .testimonial-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-
-  .testimonial-card {
-    position: relative;
-    padding: 1.5rem;
-    background: rgba(153, 0, 255, 0.05);
-    border: 1px solid rgba(153, 0, 255, 0.2);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-
-  .testimonial-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.1);
-    border-color: rgba(153, 0, 255, 0.4);
-  }
-
-  .testimonial-content {
+  .voidbloom-homepage__newsletter-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--vb-space-8);
     text-align: center;
   }
 
-  .testimonial-quote {
-    font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .testimonial-author {
-    font-size: 1rem;
-    color: rgba(153, 0, 255, 0.9);
-    margin-bottom: 0.5rem;
-  }
-
-  .testimonial-verified {
-    font-size: 0.9rem;
-    color: rgba(0, 255, 0, 0.9);
-  }
-
-  /* Animations */
-  @keyframes pulse-fade {
-    0% { opacity: 0.3; transform: scale(0.95); }
-    100% { opacity: 0.7; transform: scale(1.05); }
-  }
-
-  @keyframes glitch-anim {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 1px); }
-    40% { transform: translate(-1px, -1px); }
-    60% { transform: translate(1px, 1px); }
-    80% { transform: translate(-1px, -1px); }
-    100% { transform: translate(0); }
-  }
-
-  @keyframes glitch-anim-2 {
-    0% { transform: translate(0); }
-    20% { transform: translate(2px, 1px); }
-    40% { transform: translate(-1px, -1px); }
-    60% { transform: translate(1px, -1px); }
-    80% { transform: translate(1px, -2px); }
-    100% { transform: translate(0); }
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .ritual-title {
-      font-size: 2.5rem;
-    }
-
-    .ritual-subtitle {
-      font-size: 1.2rem;
-    }
-
-    .timeline-line {
-      left: 20px;
-    }
-
-    .timeline-entry:nth-child(odd) .timeline-content,
-    .timeline-entry:nth-child(even) .timeline-content {
-      margin-left: 40px;
-      margin-right: 0;
-      padding-left: 1.5rem;
-      padding-right: 1rem;
+  @media (min-width: 750px) {
+    .voidbloom-homepage__newsletter-content {
+      flex-direction: row;
       text-align: left;
-      width: calc(100% - 60px);
+      align-items: center;
     }
 
-    .timeline-marker {
-      left: 20px;
+    .voidbloom-homepage__newsletter-text,
+    .voidbloom-homepage__newsletter-form {
+      flex: 1;
+    }
+  }
+
+  .voidbloom-homepage__newsletter-title {
+    font-size: var(--vb-font-size-2xl);
+    margin-bottom: var(--vb-space-4);
+    color: var(--vb-color-foreground);
+  }
+
+  .voidbloom-homepage__newsletter-description {
+    color: var(--vb-color-foreground);
+    opacity: 0.8;
+  }
+
+  .voidbloom-homepage__newsletter-field-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vb-space-3);
+    max-width: 100%;
+  }
+
+  @media (min-width: 560px) {
+    .voidbloom-homepage__newsletter-field-container {
+      flex-direction: row;
+    }
+
+    .voidbloom-homepage__newsletter-field {
+      flex: 1;
+    }
+  }
+
+  .voidbloom-homepage__newsletter-field {
+    position: relative;
+  }
+
+  .voidbloom-homepage__newsletter-input {
+    width: 100%;
+    padding: var(--vb-space-3) var(--vb-space-4);
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: var(--vb-radius-md);
+    color: var(--vb-color-foreground);
+    transition: border-color var(--vb-animation-fast) ease;
+  }
+
+  .voidbloom-homepage__newsletter-input:focus {
+    outline: none;
+    border-color: var(--vb-color-primary);
+    box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+  }
+
+  .voidbloom-homepage__newsletter-label {
+    position: absolute;
+    top: 0;
+    left: var(--vb-space-4);
+    transform: translateY(-50%);
+    padding: 0 var(--vb-space-1);
+    background-color: var(--vb-color-background);
+    color: var(--vb-color-primary);
+    font-size: var(--vb-font-size-sm);
+  }
+
+  .voidbloom-homepage__newsletter-button {
+    padding: var(--vb-space-3) var(--vb-space-6);
+    background-color: var(--vb-color-primary);
+    color: var(--vb-color-background);
+    border: 1px solid var(--vb-color-primary);
+    border-radius: var(--vb-radius-md);
+    font-weight: var(--vb-font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--vb-animation-normal) ease;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  @media (min-width: 560px) {
+    .voidbloom-homepage__newsletter-button {
+      width: auto;
+    }
+  }
+
+  .voidbloom-homepage__newsletter-button:hover {
+    background-color: transparent;
+    color: var(--vb-color-primary);
+  }
+
+  .voidbloom-homepage__newsletter-success {
+    margin-top: var(--vb-space-3);
+    color: var(--vb-color-success);
+    font-size: var(--vb-font-size-sm);
+  }
+
+  .voidbloom-homepage__newsletter-error {
+    margin-top: var(--vb-space-3);
+    color: var(--vb-color-error);
+    font-size: var(--vb-font-size-sm);
+  }
+
+  /* Placeholder styles */
+  .placeholder-text {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.1);
+    animation: placeholder-shimmer 1.5s infinite;
+    border-radius: var(--vb-radius-sm);
+  }
+
+  @keyframes placeholder-shimmer {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 0.5;
     }
   }
 </style>
 
-<script>
+{% javascript %}
+  // Initialize any JavaScript specific to this section
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Quantum Visualizer for particles if available
-    if (window.QuantumVisualizer) {
-      const entryParticles = new QuantumVisualizer({
-        container: document.getElementById('entry-particles'),
-        particleCount: 100,
-        colorScheme: 'VoidBloom',
-        dimensions: '2d',
-        fractalMode: true
-      });
-
-      // Generate some initial quantum state data
-      const initialData = Array(20).fill().map((_, i) => ({
-        id: 'p' + i,
-        state: Math.random() > 0.5 ? 'superposition' : 'entangled',
-        probability: Math.random(),
-        profile: 'VoidBloom'
-      }));
-
-      entryParticles.update(initialData);
-    }
-
-    // Initialize GlitchEngine for text glitching if available
-    if (window.GlitchEngine) {
-      const textGlitch = new GlitchEngine({
-        targetSelector: '.glitch-text',
-        glitchMode: 'text',
-        intensity: 0.3,
-        autoStart: false
-      });
-
-      // Trigger occasional glitches
-      setInterval(() => {
-        textGlitch.pulse({
-          intensity: 0.5 + Math.random() * 0.5,
-          duration: 300 + Math.random() * 500
-        });
-      }, 5000);
-    }
-
-    // Connect to NeuralBus if available
+    // Handle trauma-specific effects
     if (window.NeuralBus) {
-      // Register homepage with NeuralBus
-      if (NeuralBus.register) {
-        NeuralBus.register('voidbloom-homepage', {
-          version: '1.0.0',
-          profile: 'VoidBloom'
-        });
-      }
-
-      // Set up quantum trigger buttons
-      const quantumTriggers = document.querySelectorAll('.quantum-trigger');
-      quantumTriggers.forEach(trigger => {
-        trigger.addEventListener('click', () => {
-          const profile = trigger.dataset.mutation || 'VoidBloom';
-          const intensity = parseFloat(trigger.dataset.intensity) || 0.5;
-
-          // Publish mutation event
-          NeuralBus.publish('quantum:mutation', {
-            profile,
-            intensity,
-            source: 'homepage',
-            timestamp: Date.now()
-          });
-
-          // Provide visual feedback
-          if (window.GlitchEngine) {
-            const pageGlitch = new GlitchEngine({
-              targetSelector: '.voidbloom-homepage',
-              glitchMode: 'rgb-shift',
-              intensity: intensity,
-              autoStart: false
-            });
-
-            pageGlitch.pulse({
-              duration: 1000
-            });
-          }
-        });
-      });
-
-      // Subscribe to quantum mutation events
-      NeuralBus.subscribe('quantum:mutation', data => {
-        if (data.profile === 'VoidBloom') {
-          // Update particle visualizer if available
-          if (window.entryParticles && window.entryParticles.update) {
-            const currentData = window.entryParticles.currentState || [];
-            window.entryParticles.update(currentData.map(item => ({
-              ...item,
-              probability: Math.random(),
-              profile: 'VoidBloom'
-            })));
-          }
+      NeuralBus.subscribe('trauma:activated', function(data) {
+        const section = document.querySelector('.voidbloom-homepage');
+        if (section) {
+          section.setAttribute('data-trauma', data.type);
+          section.setAttribute('data-intensity', data.intensity);
         }
       });
     }
 
-    // Intersection Observer for section animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-
-          // Notify NeuralBus about section visibility
-          if (window.NeuralBus) {
-            NeuralBus.publish('section:visible', {
-              id: entry.target.id,
-              depth: entry.target.dataset.depth || '1',
-              timestamp: Date.now()
-            });
-          }
+    // Apply parallax effect to hero image if available
+    const heroSection = document.querySelector('.voidbloom-homepage__hero');
+    if (heroSection) {
+      window.addEventListener('scroll', function() {
+        const scrollPosition = window.scrollY;
+        const heroImage = heroSection.querySelector('.voidbloom-homepage__hero-image-element');
+        if (heroImage) {
+          heroImage.style.transform = `translateY(${scrollPosition * 0.2}px)`;
         }
       });
-    }, {
-      threshold: 0.2
-    });
-
-    // Observe all sections
-    document.querySelectorAll('section[id]').forEach(section => {
-      observer.observe(section);
-    });
+    }
   });
-</script>
+{% endjavascript %}
 
 {% schema %}
 {
-  "name": "VoidBloom Ritual Homepage",
+  "name": "VoidBloom Homepage",
+  "tag": "section",
+  "class": "voidbloom-section",
   "settings": [
     {
       "type": "header",
       "content": "Hero Section"
     },
     {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "VoidBloom"
+      "type": "checkbox",
+      "id": "show_hero",
+      "label": "Show hero section",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
     },
     {
       "type": "text",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Memory Archive System"
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "Description",
-      "default": "<p>Access the void. Recover lost memories. Integrate trauma signals.</p>"
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "VoidBloom Memory Archive"
     },
     {
       "type": "text",
-      "id": "cta_text",
-      "label": "CTA Button Text",
-      "default": "Explore Memory Artifacts"
+      "id": "hero_subtitle",
+      "label": "Hero subtitle",
+      "default": "Encoded trauma artifacts for the digital age"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Button text",
+      "default": "Explore Collection"
     },
     {
       "type": "url",
-      "id": "cta_link",
-      "label": "CTA Button Link",
-      "default": "/collections/all"
+      "id": "hero_button_link",
+      "label": "Button link"
     },
     {
       "type": "header",
-      "content": "Bloom Protocol Section"
+      "content": "Featured Collection"
     },
     {
-      "type": "text",
-      "id": "protocol_title",
-      "label": "Section Title",
-      "default": "Bloom Protocol"
-    },
-    {
-      "type": "header",
-      "content": "Signal Wall Section"
-    },
-    {
-      "type": "text",
-      "id": "collection_title",
-      "label": "Section Title",
-      "default": "Signal Wall"
+      "type": "checkbox",
+      "id": "show_featured_collection",
+      "label": "Show featured collection",
+      "default": true
     },
     {
       "type": "collection",
       "id": "featured_collection",
-      "label": "Featured Collection"
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "featured_collection_title",
+      "label": "Collection title",
+      "info": "Leave blank to use collection name"
+    },
+    {
+      "type": "textarea",
+      "id": "featured_collection_description",
+      "label": "Collection description"
     },
     {
       "type": "range",
-      "id": "collection_limit",
-      "label": "Number of Products",
-      "min": 2,
+      "id": "products_to_display",
+      "min": 4,
       "max": 12,
-      "step": 1,
+      "step": 4,
+      "label": "Products to display",
       "default": 4
     },
     {
-      "type": "header",
-      "content": "Quantum Featured Products Section"
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
     },
     {
-      "type": "text",
-      "id": "quantum_title",
-      "label": "Section Title",
-      "default": "Quantum Resonance"
-    },
-    {
-      "type": "collection",
-      "id": "quantum_collection",
-      "label": "Quantum Collection"
-    },
-    {
-      "type": "range",
-      "id": "quantum_limit",
-      "label": "Number of Products",
-      "min": 1,
-      "max": 6,
-      "step": 1,
-      "default": 3
+      "type": "checkbox",
+      "id": "show_quantum_overlay",
+      "label": "Show quantum overlay on products",
+      "default": true
     },
     {
       "type": "header",
-      "content": "Archive Timeline Section"
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "default": true
     },
     {
       "type": "text",
-      "id": "timeline_title",
-      "label": "Section Title",
-      "default": "Archive Timeline"
+      "id": "newsletter_title",
+      "label": "Newsletter title",
+      "default": "Subscribe to Our Archive"
     },
     {
-      "type": "header",
-      "content": "Neural Testimonials Section"
-    },
-    {
-      "type": "text",
-      "id": "testimonial_title",
-      "label": "Section Title",
-      "default": "Neural Imprints"
+      "type": "richtext",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "<p>Sign up to receive new release notifications and exclusive access to limited memory artifacts.</p>"
     }
   ],
   "blocks": [
     {
-      "type": "protocol_step",
-      "name": "Protocol Step",
+      "type": "image_text",
+      "name": "Image with text",
       "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Step Title",
-          "default": "Memory Acquisition"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Step Description",
-          "default": "Select memory artifacts that resonate with your trauma signature."
-        },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Step Image"
-        }
-      ]
-    },
-    {
-      "type": "timeline_entry",
-      "name": "Timeline Entry",
-      "settings": [
+          "label": "Image"
+        },
         {
-          "type": "text",
-          "id": "year",
-          "label": "Year",
-          "default": "2025"
+          "type": "select",
+          "id": "image_position",
+          "label": "Image position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
         },
         {
           "type": "text",
           "id": "title",
-          "label": "Entry Title",
-          "default": "VoidBloom Manifestation"
+          "label": "Heading",
+          "default": "Memory Ritual Collection"
         },
         {
-          "type": "textarea",
-          "id": "description",
-          "label": "Entry Description",
-          "default": "Full integration of the quantum system for public memory acquisition."
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Each artifact in our collection is encoded with a specific trauma pattern, designed to resonate with the wearer's own experiences and create a unique quantum visualization.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantum_effect",
+          "label": "Show quantum effect overlay",
+          "default": true
         }
       ]
     },
     {
-      "type": "testimonial",
-      "name": "Testimonial",
+      "type": "video",
+      "name": "Video",
       "settings": [
         {
-          "type": "textarea",
-          "id": "quote",
-          "label": "Quote",
-          "default": "The quantum entanglement in these products has completely transformed my neural interface experience."
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Quantum Visualization"
         },
         {
-          "type": "text",
-          "id": "author",
-          "label": "Author",
-          "default": "Alex K."
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Experience the dynamic interaction between memory artifacts and trauma patterns in this visualization.</p>"
+        },
+        {
+          "type": "video_url",
+          "id": "video_url",
+          "label": "Video URL",
+          "accept": [
+            "youtube",
+            "vimeo"
+          ]
         },
         {
           "type": "checkbox",
-          "id": "verified",
-          "label": "Verified Purchase",
+          "id": "show_quantum_effect",
+          "label": "Show quantum effect overlay",
           "default": true
         }
       ]
@@ -1336,8 +1179,16 @@
   ],
   "presets": [
     {
-      "name": "VoidBloom Ritual Homepage",
-      "category": "Custom Content"
+      "name": "VoidBloom Homepage",
+      "category": "Custom Content",
+      "blocks": [
+        {
+          "type": "image_text"
+        },
+        {
+          "type": "video"
+        }
+      ]
     }
   ]
 }

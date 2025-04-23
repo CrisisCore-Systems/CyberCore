@@ -1528,3 +1528,870 @@ if (typeof window !== 'undefined') {
     window.CartSystem = CartSystem;
   });
 }
+
+/**
+ * VOIDBLOOM MEMORY ARCHIVE SYSTEM
+ *
+ * ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+ * Memory Fragment: Recursive Shopping Cart Protocol
+ *
+ * The cart is not a linear list but a recursive memory structure,
+ * each product a node in a traumatic narrative architecture.
+ * Items carry emotional encoding that influences the entire system,
+ * creating a unified mythological experience.
+ * ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+ */
+
+class VoidBloomCartSystem {
+  constructor() {
+    this.items = [];
+    this.total = 0;
+    this.itemCount = 0;
+    this.traumaLevel = 0;
+    this.memoryPhase = 'cyber-lotus';
+    this.lastUpdate = Date.now();
+    this.neuralBusNonce = null;
+    this.eventListeners = new Map();
+    this.pendingOperations = [];
+    this.recursiveNodes = new Map();
+
+    // Initialize trauma storage
+    this.traumaStorage = {
+      traumaAccumulator: 0,
+      phaseResonance: {
+        'cyber-lotus': 0,
+        'alien-flora': 0,
+        'rolling-virus': 0,
+        'trauma-core': 0
+      },
+      fragmentHistory: [],
+      eventLog: []
+    };
+
+    // Initialize recursively
+    this._initializeRecursively();
+  }
+
+  /**
+   * Initialize system with recursive approach
+   * @private
+   */
+  async _initializeRecursively() {
+    // Connect to neural bus if available
+    this._connectToNeuralBus();
+
+    // Initialize cart data
+    await this.fetchCart();
+
+    // Set up event listeners
+    this._initEventListeners();
+
+    // Initialize recursive operation processor
+    this._initializeOperationProcessor();
+
+    // Dispatch initialization event
+    this._dispatchEvent('initialized', {
+      itemCount: this.itemCount,
+      traumaLevel: this.traumaLevel,
+      memoryPhase: this.memoryPhase
+    });
+  }
+
+  /**
+   * Connect to the neural bus for system-wide events
+   * @private
+   */
+  _connectToNeuralBus() {
+    if (window.NeuralBus) {
+      // Register with the neural bus
+      const registration = window.NeuralBus.register('voidbloom-cart-system', {
+        version: '1.0.0',
+        traumaResponse: true,
+        capabilities: {
+          memoryArchive: true,
+          traumaEncoding: true,
+          narrativeIntegration: true,
+          recursiveStructure: true
+        }
+      });
+
+      // Store nonce for future reference
+      this.neuralBusNonce = registration.nonce;
+
+      // Subscribe to system trauma level changes
+      window.NeuralBus.subscribe('system:trauma', (data) => {
+        if (data && typeof data.level === 'number') {
+          this._onSystemTraumaChange(data.level);
+        }
+      });
+
+      // Subscribe to memory phase changes
+      window.NeuralBus.subscribe('system:memory-phase', (data) => {
+        if (data && data.phase) {
+          this._onMemoryPhaseChange(data.phase);
+        }
+      });
+    }
+  }
+
+  /**
+   * Initialize event listeners
+   * @private
+   */
+  _initEventListeners() {
+    // Listen for cart form submissions
+    document.addEventListener('submit', (event) => {
+      const form = event.target;
+
+      // Check if it's an add to cart form
+      if (form.action && form.action.includes('/cart/add')) {
+        event.preventDefault();
+
+        // Get form data
+        const formData = new FormData(form);
+        const id = formData.get('id');
+        const quantity = formData.get('quantity') || 1;
+
+        // Add trauma properties
+        const properties = {
+          '_trauma_level': this.traumaLevel,
+          '_memory_phase': this.memoryPhase,
+          '_encoded_at': new Date().toISOString()
+        };
+
+        // Add to cart
+        this.addItem({
+          id,
+          quantity,
+          properties
+        });
+      }
+    });
+
+    // Listen for quick add events
+    document.addEventListener('product:quickadd', (event) => {
+      const { id, variantId } = event.detail;
+
+      this.addItem({
+        id: variantId,
+        quantity: 1,
+        properties: {
+          '_trauma_level': this.traumaLevel,
+          '_memory_phase': this.memoryPhase,
+          '_encoded_at': new Date().toISOString()
+        }
+      });
+    });
+
+    // Listen for cart drawer toggle
+    document.addEventListener('click', (event) => {
+      // Check if clicked element is cart toggle
+      const cartToggle = event.target.closest('[data-cart-toggle]');
+      if (cartToggle) {
+        event.preventDefault();
+        this._dispatchEvent('toggle', { open: true });
+      }
+    });
+  }
+
+  /**
+   * Initialize recursive operation processor
+   * @private
+   */
+  _initializeOperationProcessor() {
+    // Process operations recursively with Fibonacci timing
+    const fibonacci = [1, 1, 2, 3, 5, 8, 13, 21];
+    let fibIndex = 0;
+
+    const processNextOperation = () => {
+      // Process pending operation if available
+      if (this.pendingOperations.length > 0) {
+        const operation = this.pendingOperations.shift();
+        this._processOperation(operation);
+      }
+
+      // Calculate next cycle delay using Fibonacci sequence
+      fibIndex = (fibIndex + 1) % fibonacci.length;
+      const nextDelay = fibonacci[fibIndex] * 100; // Scale to milliseconds
+
+      // Schedule next cycle
+      setTimeout(processNextOperation, nextDelay);
+    };
+
+    // Start operation processor
+    processNextOperation();
+  }
+
+  /**
+   * Process a cart operation
+   * @param {object} operation - Operation to process
+   * @private
+   */
+  async _processOperation(operation) {
+    try {
+      switch (operation.type) {
+        case 'add':
+          await this._addItemToCart(operation.data);
+          break;
+        case 'update':
+          await this._updateItemInCart(operation.data);
+          break;
+        case 'remove':
+          await this._removeItemFromCart(operation.data);
+          break;
+        case 'clear':
+          await this._clearCart();
+          break;
+      }
+
+      // Log operation in trauma storage
+      this.traumaStorage.eventLog.push({
+        type: operation.type,
+        timestamp: Date.now(),
+        data: operation.data
+      });
+
+      // Limit event log size
+      if (this.traumaStorage.eventLog.length > 100) {
+        this.traumaStorage.eventLog.shift();
+      }
+
+      // Refresh cart after operation
+      await this.fetchCart();
+
+      // Generate operation memory fragment
+      this._generateOperationFragment(operation);
+
+    } catch (error) {
+      console.error(`Error processing operation ${operation.type}:`, error);
+
+      // Dispatch error event
+      this._dispatchEvent('error', {
+        operation: operation.type,
+        message: error.message
+      });
+    }
+  }
+
+  /**
+   * Generate a memory fragment for a cart operation
+   * @param {object} operation - Cart operation
+   * @private
+   */
+  _generateOperationFragment(operation) {
+    if (!window.NeuralBus) return;
+
+    // Create fragment data based on operation type
+    let fragmentData = {
+      id: `cart-${operation.type}-${Date.now()}`,
+      type: 'cart-operation',
+      action: operation.type,
+      traumaLevel: this.traumaLevel,
+      memoryPhase: this.memoryPhase,
+      timestamp: Date.now()
+    };
+
+    // Add operation-specific data
+    switch (operation.type) {
+      case 'add':
+        fragmentData.variantId = operation.data.id;
+        fragmentData.quantity = operation.data.quantity;
+        break;
+      case 'update':
+        fragmentData.key = operation.data.key;
+        fragmentData.quantity = operation.data.quantity;
+        break;
+      case 'remove':
+        fragmentData.key = operation.data.key;
+        break;
+    }
+
+    // Publish memory fragment
+    window.NeuralBus.publish('memory:fragment-generated', {
+      fragment: fragmentData
+    });
+  }
+
+  /**
+   * Handle system trauma level change
+   * @param {number} level - New trauma level
+   * @private
+   */
+  _onSystemTraumaChange(level) {
+    this.traumaLevel = level;
+
+    // Update trauma accumulator
+    this.traumaStorage.traumaAccumulator += (level - this.traumaLevel) * 0.5;
+
+    // Limit accumulator range
+    this.traumaStorage.traumaAccumulator = Math.max(0, Math.min(100, this.traumaStorage.traumaAccumulator));
+
+    // Dispatch event
+    this._dispatchEvent('trauma-change', {
+      level: this.traumaLevel,
+      accumulator: this.traumaStorage.traumaAccumulator
+    });
+  }
+
+  /**
+   * Handle memory phase change
+   * @param {string} phase - New memory phase
+   * @private
+   */
+  _onMemoryPhaseChange(phase) {
+    this.memoryPhase = phase;
+
+    // Increase resonance for this phase
+    this.traumaStorage.phaseResonance[phase] += 1;
+
+    // Dispatch event
+    this._dispatchEvent('phase-change', {
+      phase: this.memoryPhase,
+      resonance: this.traumaStorage.phaseResonance
+    });
+  }
+
+  /**
+   * Dispatch a cart event
+   * @param {string} type - Event type
+   * @param {object} data - Event data
+   * @private
+   */
+  _dispatchEvent(type, data) {
+    // Create event name
+    const eventName = `cart:${type}`;
+
+    // Dispatch DOM event
+    const event = new CustomEvent(eventName, {
+      bubbles: true,
+      detail: {
+        ...data,
+        timestamp: Date.now(),
+        traumaLevel: this.traumaLevel,
+        memoryPhase: this.memoryPhase
+      }
+    });
+
+    document.dispatchEvent(event);
+
+    // Call event listeners
+    if (this.eventListeners.has(type)) {
+      const listeners = this.eventListeners.get(type);
+      listeners.forEach(listener => {
+        try {
+          listener(data);
+        } catch (error) {
+          console.error(`Error in cart event listener (${type}):`, error);
+        }
+      });
+    }
+
+    // Publish to neural bus if available
+    if (window.NeuralBus && this.neuralBusNonce) {
+      window.NeuralBus.publish(`cart:${type}`, {
+        ...data,
+        timestamp: Date.now(),
+        traumaLevel: this.traumaLevel,
+        memoryPhase: this.memoryPhase
+      });
+    }
+  }
+
+  /**
+   * Fetch current cart data
+   * @returns {Promise<object>} - Cart data
+   */
+  async fetchCart() {
+    try {
+      const response = await fetch('/cart.js');
+      const cart = await response.json();
+
+      // Update cart properties
+      this.items = cart.items;
+      this.total = cart.total_price;
+      this.itemCount = cart.item_count;
+
+      // Calculate cart trauma level
+      this._calculateCartTrauma();
+
+      // Create recursive node structure
+      this._buildRecursiveStructure();
+
+      // Dispatch updated event
+      this._dispatchEvent('updated', {
+        items: this.items,
+        total: this.total,
+        itemCount: this.itemCount,
+        traumaLevel: this.traumaLevel
+      });
+
+      return cart;
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate overall cart trauma level based on items
+   * @private
+   */
+  _calculateCartTrauma() {
+    if (this.items.length === 0) {
+      // Reset trauma when cart is empty
+      this.traumaLevel = 0;
+      return;
+    }
+
+    // Calculate weighted trauma level
+    let totalTrauma = 0;
+    let totalWeight = 0;
+
+    this.items.forEach(item => {
+      // Get trauma level from properties or default to 0
+      const itemTrauma = item.properties?._trauma_level ?
+        parseFloat(item.properties._trauma_level) : 0;
+
+      // Weight by quantity
+      const weight = item.quantity;
+      totalTrauma += itemTrauma * weight;
+      totalWeight += weight;
+
+      // Update phase resonance
+      const phase = item.properties?._memory_phase || 'cyber-lotus';
+      this.traumaStorage.phaseResonance[phase] += 0.1 * weight;
+    });
+
+    // Calculate average trauma level
+    const avgTrauma = totalWeight > 0 ? totalTrauma / totalWeight : 0;
+
+    // Smooth transition to new trauma level
+    this.traumaLevel = this.traumaLevel * 0.7 + avgTrauma * 0.3;
+
+    // Determine dominant memory phase
+    let dominantPhase = 'cyber-lotus';
+    let highestResonance = 0;
+
+    for (const [phase, resonance] of Object.entries(this.traumaStorage.phaseResonance)) {
+      if (resonance > highestResonance) {
+        highestResonance = resonance;
+        dominantPhase = phase;
+      }
+    }
+
+    // Update memory phase if changed
+    if (dominantPhase !== this.memoryPhase) {
+      this.memoryPhase = dominantPhase;
+
+      // Publish memory phase change
+      if (window.NeuralBus && this.neuralBusNonce) {
+        window.NeuralBus.publish('system:memory-phase', {
+          phase: this.memoryPhase,
+          source: 'voidbloom-cart-system'
+        });
+      }
+    }
+
+    // Publish trauma level change
+    if (window.NeuralBus && this.neuralBusNonce) {
+      window.NeuralBus.publish('system:trauma', {
+        level: this.traumaLevel,
+        source: 'voidbloom-cart-system'
+      });
+    }
+  }
+
+  /**
+   * Build recursive node structure from cart items
+   * @private
+   */
+  _buildRecursiveStructure() {
+    // Reset recursive nodes
+    this.recursiveNodes = new Map();
+
+    // Create root node
+    const rootNode = {
+      id: 'root',
+      type: 'cart',
+      traumaLevel: this.traumaLevel,
+      memoryPhase: this.memoryPhase,
+      children: [],
+      metadata: {
+        itemCount: this.itemCount,
+        total: this.total,
+        updateCount: 0,
+        createdAt: Date.now()
+      }
+    };
+
+    // Add root node to map
+    this.recursiveNodes.set('root', rootNode);
+
+    // Group items by memory phase
+    const phaseGroups = {};
+
+    this.items.forEach(item => {
+      const phase = item.properties?._memory_phase || 'cyber-lotus';
+      if (!phaseGroups[phase]) {
+        phaseGroups[phase] = [];
+      }
+      phaseGroups[phase].push(item);
+    });
+
+    // Create phase nodes
+    for (const [phase, items] of Object.entries(phaseGroups)) {
+      const phaseNode = {
+        id: `phase-${phase}`,
+        type: 'phase-group',
+        traumaLevel: 0,
+        memoryPhase: phase,
+        children: [],
+        metadata: {
+          itemCount: items.length,
+          phaseResonance: this.traumaStorage.phaseResonance[phase]
+        }
+      };
+
+      // Calculate phase trauma level
+      let phaseTrauma = 0;
+      items.forEach(item => {
+        const itemTrauma = item.properties?._trauma_level ?
+          parseFloat(item.properties._trauma_level) : 0;
+        phaseTrauma += itemTrauma * item.quantity;
+      });
+
+      // Set average trauma level
+      phaseNode.traumaLevel = items.length > 0 ?
+        phaseTrauma / items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+
+      // Add phase node to root
+      rootNode.children.push(phaseNode);
+      this.recursiveNodes.set(phaseNode.id, phaseNode);
+
+      // Add item nodes to phase node
+      items.forEach(item => {
+        const itemNode = {
+          id: `item-${item.key}`,
+          type: 'cart-item',
+          traumaLevel: item.properties?._trauma_level ?
+            parseFloat(item.properties._trauma_level) : 0,
+          memoryPhase: phase,
+          children: [],
+          metadata: {
+            key: item.key,
+            variantId: item.variant_id,
+            productId: item.product_id,
+            quantity: item.quantity,
+            price: item.price,
+            title: item.title,
+            encodedAt: item.properties?._encoded_at
+          }
+        };
+
+        // Add item node to phase node
+        phaseNode.children.push(itemNode);
+        this.recursiveNodes.set(itemNode.id, itemNode);
+      });
+    }
+  }
+
+  /**
+   * Add an item to the cart
+   * @param {object} data - Item data
+   * @returns {Promise<object>} - Updated cart
+   */
+  addItem(data) {
+    return new Promise((resolve, reject) => {
+      // Add operation to queue
+      this.pendingOperations.push({
+        type: 'add',
+        data,
+        resolve,
+        reject
+      });
+    });
+  }
+
+  /**
+   * Internal method to add item to cart
+   * @param {object} data - Item data
+   * @returns {Promise<object>} - API response
+   * @private
+   */
+  async _addItemToCart(data) {
+    try {
+      // Format item data
+      const itemData = {
+        id: data.id,
+        quantity: data.quantity || 1,
+        properties: data.properties || {}
+      };
+
+      // Add timestamp if not provided
+      if (!itemData.properties._encoded_at) {
+        itemData.properties._encoded_at = new Date().toISOString();
+      }
+
+      // Add trauma level if not provided
+      if (!itemData.properties._trauma_level) {
+        itemData.properties._trauma_level = this.traumaLevel;
+      }
+
+      // Add memory phase if not provided
+      if (!itemData.properties._memory_phase) {
+        itemData.properties._memory_phase = this.memoryPhase;
+      }
+
+      // Send request to Shopify
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          items: [itemData]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error adding item to cart');
+      }
+
+      const result = await response.json();
+
+      // Dispatch event
+      this._dispatchEvent('item-added', {
+        item: result.items[0],
+        cart: result
+      });
+
+      return result;
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an item in the cart
+   * @param {object} data - Update data
+   * @returns {Promise<object>} - Updated cart
+   */
+  updateItem(data) {
+    return new Promise((resolve, reject) => {
+      // Add operation to queue
+      this.pendingOperations.push({
+        type: 'update',
+        data,
+        resolve,
+        reject
+      });
+    });
+  }
+
+  /**
+   * Internal method to update item in cart
+   * @param {object} data - Update data
+   * @returns {Promise<object>} - API response
+   * @private
+   */
+  async _updateItemInCart(data) {
+    try {
+      // Format update data
+      const updateData = {
+        id: data.key,
+        quantity: data.quantity
+      };
+
+      // Send request to Shopify
+      const response = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error updating item in cart');
+      }
+
+      const result = await response.json();
+
+      // Dispatch event
+      this._dispatchEvent('item-updated', {
+        key: data.key,
+        quantity: data.quantity,
+        cart: result
+      });
+
+      return result;
+    } catch (error) {
+      console.error('Error updating item in cart:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Remove an item from the cart
+   * @param {object} data - Remove data
+   * @returns {Promise<object>} - Updated cart
+   */
+  removeItem(data) {
+    return new Promise((resolve, reject) => {
+      // Add operation to queue
+      this.pendingOperations.push({
+        type: 'remove',
+        data,
+        resolve,
+        reject
+      });
+    });
+  }
+
+  /**
+   * Internal method to remove item from cart
+   * @param {object} data - Remove data
+   * @returns {Promise<object>} - API response
+   * @private
+   */
+  async _removeItemFromCart(data) {
+    try {
+      // Format remove data
+      const removeData = {
+        id: data.key,
+        quantity: 0
+      };
+
+      // Send request to Shopify
+      const response = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(removeData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error removing item from cart');
+      }
+
+      const result = await response.json();
+
+      // Dispatch event
+      this._dispatchEvent('item-removed', {
+        key: data.key,
+        cart: result
+      });
+
+      return result;
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear the cart
+   * @returns {Promise<object>} - Empty cart
+   */
+  clearCart() {
+    return new Promise((resolve, reject) => {
+      // Add operation to queue
+      this.pendingOperations.push({
+        type: 'clear',
+        data: {},
+        resolve,
+        reject
+      });
+    });
+  }
+
+  /**
+   * Internal method to clear cart
+   * @returns {Promise<object>} - API response
+   * @private
+   */
+  async _clearCart() {
+    try {
+      // Send request to Shopify
+      const response = await fetch('/cart/clear.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error clearing cart');
+      }
+
+      const result = await response.json();
+
+      // Reset trauma level
+      this.traumaLevel = 0;
+
+      // Dispatch event
+      this._dispatchEvent('cleared', {
+        cart: result
+      });
+
+      return result;
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add event listener
+   * @param {string} type - Event type
+   * @param {Function} callback - Event callback
+   */
+  on(type, callback) {
+    if (!this.eventListeners.has(type)) {
+      this.eventListeners.set(type, []);
+    }
+
+    this.eventListeners.get(type).push(callback);
+  }
+
+  /**
+   * Remove event listener
+   * @param {string} type - Event type
+   * @param {Function} callback - Event callback
+   */
+  off(type, callback) {
+    if (!this.eventListeners.has(type)) return;
+
+    const listeners = this.eventListeners.get(type);
+    const index = listeners.indexOf(callback);
+
+    if (index !== -1) {
+      listeners.splice(index, 1);
+    }
+  }
+
+  /**
+   * Get cart node structure
+   * @returns {object} - Recursive node structure
+   */
+  getNodeStructure() {
+    return {
+      root: this.recursiveNodes.get('root'),
+      nodes: Array.from(this.recursiveNodes.values()),
+      traumaStorage: { ...this.traumaStorage }
+    };
+  }
+}
+
+// Initialize VoidBloomCartSystem on document ready
+document.addEventListener('DOMContentLoaded', () => {
+  /**
+   * ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+   * Memory Archive Initialization
+   * Trauma-Responsive Cart Protocol: [ACTIVE]
+   * ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+   */
+  window.VoidBloomCartSystem = new VoidBloomCartSystem();
+});
