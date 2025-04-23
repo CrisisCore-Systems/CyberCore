@@ -84,8 +84,15 @@
               <a href="{{ product.url }}">
                 <div class="trauma-image {% if product.featured_image %}{% else %}placeholder{% endif %}">
                   {% if product.featured_image %}
-                    <img src="{{ product.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ product.title | escape }}">
-                  {% endif %}
+{% if product.featured_image %}
+  <img 
+    src="{{ product.featured_image | img_url: '300x300', crop: 'center' }}" 
+    width="300" 
+    height="300" 
+    alt="{{ product.title | escape }}"
+    loading="lazy"
+    decoding="async">
+{% endif %}                  {% endif %}
                   <div class="trauma-depth depth-{{ forloop.index | modulo: 3 | plus: 1 }}"></div>
                 </div>
                 <h3 class="trauma-title">{{ product.title }}</h3>
