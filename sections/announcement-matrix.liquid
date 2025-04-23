@@ -1,0 +1,166 @@
+{% comment %}
+  Section: Announcement Matrix v2.5
+  Displays announcements from metafields or fallback settings.
+  Optionally fetches dynamic alerts via JS (see theme.js / external JS).
+
+  Requires:
+  - Snippet: 'snippets/announcement-card.liquid'
+  - CSS: Styles for '.announcement-matrix' and the card in theme.css
+  - JS: AnnouncementMatrix class and initialization in theme.js (or similar)
+  - Optional: App endpoint at '/apps/voidbloom-alerts'
+  - Optional: AnnouncementBar class for JS interaction
+
+  Improvements:
+  - Removed inline <style> and <script> (move to theme assets).
+  - Added setting to enable/disable dynamic JS fetching.
+  - Added aria-live attribute for accessibility.
+  - Added schema info text.
+{% endcomment %}
+
+{%- liquid
+  assign load_dynamic = section.settings.enable_dynamic_fetch
+  assign ns = section.settings.metafield_namespace | default: "alerts"
+  assign key = section.settings.metafield_key | default: "alerts"
+
+  assign announcements = product.metafields[ns][key]
+  unless announcements
+    assign announcements = shop.metafields[ns][key]
+  endunless
+
+  comment
+    Check if metafield value is a list (newer JSON metafield type)
+    or needs parsing (older JSON string metafield type).
+    This example assumes it's accessible as 'announcements.value' like a list.
+    Adjust parsing if using older JSON string metafields.
+  endcomment
+  assign announcement_list = announcements.value | default: null
+-%}
+
+{% comment %}
+  Container for announcements.
+  - Add 'data-load-dynamic="true"' if JS fetching is enabled.
+  - Add 'data-dynamic-endpoint="/apps/voidbloom-alerts"' if needed by JS (or keep hardcoded in JS).
+  - 'aria-live="polite"' helps screen readers announce dynamically added alerts.
+{% endcomment %}
+<div class="announcement-matrix"
+     data-section-id="{{ section.id }}"
+     data-section-type="announcement-matrix"
+     data-announcement-matrix
+     {% if load_dynamic %}data-load-dynamic="true"{% endif %}
+     aria-live="polite">
+
+  {%- if announcement_list.size > 0 -%}
+    {%- comment %} Render alerts from Metafield {%- endcomment %}
+    {%- for alert in announcement_list -%}
+      {%- render 'announcement-card',
+              message: alert.message,
+              expires: alert.expires,
+              priority: alert.priority,
+              pulse_color: alert.color,
+              glitch: alert.glitch,
+              id_suffix: forloop.index
+      -%}
+    {%- endfor -%}
+  {%- else -%}
+    {%- comment %} Fallback to rendering a single card from section settings {%- endcomment %}
+    {%- render 'announcement-card',
+            message: section.settings.message,
+            expires: section.settings.expiration_date,
+            priority: section.settings.priority,
+            pulse_color: section.settings.pulse_color,
+            glitch: section.settings.glitch_intensity,
+            id_suffix: 'default'
+    -%}
+  {%- endif -%}
+</div>
+
+{% comment %}
+  IMPORTANT:
+  - Move the <style> block content to your theme.css file.
+  - Move the <script> block content (corrected version) to your theme.js file
+    or a dedicated JS asset file included in theme.liquid.
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Announce Matrix",
+  "tag": "div",
+  "class": "announcement-matrix-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Data Source (Metafield)"
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "Metafield Namespace",
+      "default": "alerts",
+      "info": "Namespace for the list metafield (e.g., 'custom', 'alerts'). Checks product then shop level."
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "Metafield Key",
+      "default": "alerts",
+      "info": "Key for the list metafield (e.g., 'active_alerts', 'messages'). Expected type: List of JSON objects, or JSON String."
+    },
+    {
+       "type": "checkbox",
+       "id": "enable_dynamic_fetch",
+       "label": "Enable dynamic fetching?",
+       "default": false,
+       "info": "Attempt to fetch additional alerts from /apps/voidbloom-alerts via JavaScript."
+    },
+    {
+      "type": "header",
+      "content": "Fallback Settings"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Default Message",
+      "default": "▲ SYSTEM OK ▲",
+      "info": "Displayed if the metafield is not found or empty."
+    },
+    {
+      "type": "select",
+      "id": "priority",
+      "label": "Default Alert Level",
+      "options": [
+        { "value": "0", "label": "Standard" },
+        { "value": "1", "label": "High" },
+        { "value": "2", "label": "Critical" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "color",
+      "id": "pulse_color",
+      "label": "Default Pulse Color",
+      "default": "#00FF00"
+    },
+    {
+      "type": "range",
+      "id": "glitch_intensity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Default Glitch Level",
+      "default": 0.3
+    },
+    {
+      "type": "text",
+      "id": "expiration_date",
+      "label": "Default Expire Date",
+      "info": "YYYY-MM-DD UTC. Requires logic in 'announcement-card.liquid' or JS to handle."
+    }
+  ],
+   "presets": [
+    {
+      "name": "Announce Matrix"
+    }
+  ]
+}
+{% endschema %}
+EOF
