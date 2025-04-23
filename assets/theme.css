@@ -567,5 +567,34 @@ textarea:focus {
    End of Custom Header Adjustments
    ========================================================================== */
 
+/* ==========================================================================
+   Header Action Icon Size Adjustment (Fix for large icons)
+   ========================================================================== */
 
-EOF
+/* Set an explicit size for SVGs within the header actions container */
+.header-actions svg {
+  width: 24px;  /* Adjust this value as needed */
+  height: 24px; /* Adjust this value as needed */
+  display: block; /* Prevents potential extra spacing issues */
+  flex-shrink: 0; /* Prevent shrinking if in a flex container */
+}
+
+/* Optional: Ensure the containers don't force extra size */
+.header-actions .icon-search,
+.header-actions .icon-account,
+.header-actions .icon-cart,
+.header-actions .icon-menu {
+   /* Typically fine, but ensure no large width/height/padding is set here by other rules */
+   line-height: 0; /* Helps if alignment issues occur */
+}
+
+/* Ensure the buttons/links containing the icons behave */
+.header-actions .header-action {
+    display: inline-flex; /* Align icon nicely within the link/button */
+    align-items: center;
+    justify-content: center;
+    padding: 5px; /* Adjust padding around icon as needed */
+     /* Reset min-width/min-height if they are causing issues */
+    min-width: auto;
+    min-height: auto;
+}
