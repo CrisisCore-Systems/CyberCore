@@ -123,12 +123,10 @@
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
 
   {%- comment %} Core quantum modules {%- endcomment %}
-  {{ 'neural-bus.js'         | asset_url | script_tag }}
-  {{ 'glitch-engine.js'      | asset_url | script_tag }}
-  {{ 'quantum-visualizer.js' | asset_url | script_tag }}
-  {{ 'hologram-renderer.js'  | asset_url | script_tag }}
-  {{ 'ar-bridge.js'          | asset_url | script_tag }}
-  {{ 'cart-system.js'        | asset_url | script_tag }}
-
-</body>
-</html>
+  <script type="module" defer src="{{ 'neural-bus.js'           | asset_url }}"></script>
+  <script type="module" defer src="{{ 'glitch-engine.js'        | asset_url }}"></script>
+  <script type="module" defer src="{{ 'cart-system.js'           | asset_url }}"></script>
+  {%- comment %} Uncomment and upload these modules when ready {%- endcomment %}
+  <!-- <script type="module" defer src="{{ 'quantum-visualizer.js'  | asset_url }}"></script> -->
+  <!-- <script type="module" defer src="{{ 'hologram-renderer.js'     | asset_url }}"></script> -->
+  <!-- <script type="module" defer src="{{ 'ar-bridge.js'             | asset_url }}"></script> -->
