@@ -7,16 +7,20 @@
   <div class="footer-grid-container">
     <div class="footer-brand quantum-fade-in">
       {% if settings.footer_logo != blank %}
-{% if settings.footer_logo != blank %}
-  {% assign footer_logo_size = '180x' %}
-  {% assign img_url = settings.footer_logo | img_url: footer_logo_size %}
-  {% assign img_dimensions = settings.footer_logo | image_dimensions %}
-  {% assign img_width = 180 %}
-  {% assign img_height = img_width | times: img_dimensions.height | divided_by: img_dimensions.width | round %}
-  <img src="{{ img_url }}" width="{{ img_width }}" height="{{ img_height }}" alt="{{ shop.name }}" class="footer-logo">
-{% else %}
-  <h2 class="glitch-text" data-text="{{ shop.name }}">{{ shop.name }}</h2>
-{% endif %}      {% else %}
+        {% assign footer_logo_size = '180x' %}
+        {% assign img_width = 180 %}
+        
+        {% capture img_attributes %}
+          class="footer-logo"
+          alt="{{ shop.name }}"
+          width="{{ img_width }}"
+          height="{{ settings.footer_logo.aspect_ratio | default: 1 | times: img_width | round }}"
+          loading="lazy"
+          decoding="async"
+        {% endcapture %}
+        
+        {{ settings.footer_logo | image_url: width: img_width | image_tag: img_attributes }}
+      {% else %}
         <h2 class="glitch-text" data-text="{{ shop.name }}">{{ shop.name }}</h2>
       {% endif %}
       
