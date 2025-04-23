@@ -259,14 +259,14 @@ class RitualEngine {
 
         <div class="ritual-phases">
           ${this.initiationPhases
-    .map(
-      (phase, index) =>
-        `<div class="ritual-phase ${index === 0 ? 'current' : ''}" data-phase="${phase}">
+            .map(
+              (phase, index) =>
+                `<div class="ritual-phase ${index === 0 ? 'current' : ''}" data-phase="${phase}">
               <div class="phase-indicator"></div>
               <div class="phase-name">${phase}</div>
             </div>`
-    )
-    .join('')}
+            )
+            .join('')}
         </div>
 
         <div class="ritual-content">
@@ -311,18 +311,18 @@ class RitualEngine {
     const contentContainer = document.querySelector('.ritual-content');
 
     switch (phaseName) {
-    case 'recognition':
-      this.loadRecognitionPhase(contentContainer);
-      break;
-    case 'resonance':
-      this.loadResonancePhase(contentContainer);
-      break;
-    case 'recursion':
-      this.loadRecursionPhase(contentContainer);
-      break;
-    case 'integration':
-      this.loadIntegrationPhase(contentContainer);
-      break;
+      case 'recognition':
+        this.loadRecognitionPhase(contentContainer);
+        break;
+      case 'resonance':
+        this.loadResonancePhase(contentContainer);
+        break;
+      case 'recursion':
+        this.loadRecursionPhase(contentContainer);
+        break;
+      case 'integration':
+        this.loadIntegrationPhase(contentContainer);
+        break;
     }
 
     // Update button
@@ -706,18 +706,18 @@ class RitualEngine {
   collectPhaseData(phaseName) {
     // Collect data from the current phase
     switch (phaseName) {
-    case 'recognition':
-      this.collectRecognitionData();
-      break;
-    case 'resonance':
-      this.collectResonanceData();
-      break;
-    case 'recursion':
-      this.collectRecursionData();
-      break;
-    case 'integration':
-      this.collectIntegrationData();
-      break;
+      case 'recognition':
+        this.collectRecognitionData();
+        break;
+      case 'resonance':
+        this.collectResonanceData();
+        break;
+      case 'recursion':
+        this.collectRecursionData();
+        break;
+      case 'integration':
+        this.collectIntegrationData();
+        break;
     }
 
     // Transmit phase completion to Neural Bus

@@ -1,38 +1,52 @@
 {% comment %}
-  Renders a responsive image using srcset for multiple screen sizes
+  Renders a responsive image
 
   Accepts:
-  - image: {Object} Image object from Shopify (required)
-  - sizes: {String} Sizes attribute for the img tag (default: "100vw")
-  - alt: {String} Alt text for the image (default: image.alt or empty string)
-  - class: {String} Additional classes for the img tag
-  - widths: {Array} Array of widths to use for srcset (default: [180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048])
+  - image: {Object} Image object
+  - max_width: {Number} Max width of the image container (default: 700)
+  - max_height: {Number} Max height of the image container (default: no max height)
+  - sizes: {String} Sizes attribute for the img tag
+  - alt: {String} Alt text for the image
+  - class: {String} Additional classes for the img element
+  - loading: {String} Loading attribute for the image (lazy, eager, auto)
 
   Usage:
-  {% render 'responsive-image', image: section.settings.hero_image, sizes: "(min-width: 768px) 50vw, 100vw", class: "hero-image" %}
+  {% render 'responsive-image',
+    image: section.settings.image,
+    max_width: 800,
+    sizes: "(min-width: 750px) 800px, 100vw",
+    alt: product.title,
+    class: "featured-image",
+    loading: "lazy"
+  %}
 {% endcomment %}
 
 {%- if image != blank -%}
-  {%- if widths == blank -%}
-    {%- assign widths = '180,360,540,720,900,1080,1296,1512,1728,2048' | split: ',' -%}
-  {%- endif -%}
-
-  {%- if sizes == blank -%}
-    {%- assign sizes = '100vw' -%}
-  {%- endif -%}
+  {%- assign img_url = image | image_url: width: 1 -%}
+  {%- assign max_width = max_width | default: 700 -%}
 
   <img
-    src="{{ image | image_url: width: 720 }}"
-    srcset="{%- for width in widths -%}
-      {{ image | image_url: width: width }} {{ width }}w{%- unless forloop.last -%}, {%- endunless -%}
-    {%- endfor -%}"
-    sizes="{{ sizes }}"
-    alt="{{ alt | default: image.alt | escape }}"
-    loading="lazy"
+    src="{{ image | image_url: width: max_width }}"
+    srcset="
+      {%- if image.width >= 200 -%}{{ image | image_url: width: 200 }} 200w,{%- endif -%}
+      {%- if image.width >= 400 -%}{{ image | image_url: width: 400 }} 400w,{%- endif -%}
+      {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+      {%- if image.width >= 800 -%}{{ image | image_url: width: 800 }} 800w,{%- endif -%}
+      {%- if image.width >= 1000 -%}{{ image | image_url: width: 1000 }} 1000w,{%- endif -%}
+      {%- if image.width >= 1200 -%}{{ image | image_url: width: 1200 }} 1200w,{%- endif -%}
+      {%- if image.width >= 1500 -%}{{ image | image_url: width: 1500 }} 1500w,{%- endif -%}
+      {%- if image.width >= 1800 -%}{{ image | image_url: width: 1800 }} 1800w,{%- endif -%}
+      {{ image | image_url: width: image.width }} {{ image.width }}w
+    "
+    sizes="{{ sizes | default: '(min-width: 750px) 700px, 100vw' }}"
+    src="{{ image | image_url: width: max_width }}"
+    loading="{{ loading | default: 'lazy' }}"
+    alt="{{ alt | escape }}"
     width="{{ image.width }}"
     height="{{ image.height }}"
     class="{{ class }}"
+    {% if max_height %}style="max-height: {{ max_height }}px;"{% endif %}
   >
 {%- else -%}
-  {{ 'image' | placeholder_svg_tag: 'placeholder-svg ' | append: class }}
+  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
 {%- endif -%}

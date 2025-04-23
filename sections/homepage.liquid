@@ -1,0 +1,490 @@
+{% comment %}
+  HOMEPAGE - RECURSIVE RITUAL
+  @MutationCompatible: VoidBloom
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+{% endcomment %}
+
+<div class="voidbloom-homepage" data-trauma-pattern="{{ section.settings.default_trauma_pattern }}" data-intensity="{{ section.settings.default_intensity }}">
+
+  <!-- Quantum Layer -->
+  <div class="quantum-layer" data-quantum-layer data-trauma-pattern="{{ section.settings.default_trauma_pattern }}" data-intensity="{{ section.settings.default_intensity }}">
+    <div class="quantum-layer__grid"></div>
+    <div class="quantum-layer__particles"></div>
+    <div class="quantum-layer__glitch"></div>
+  </div>
+
+  <!-- Hero Section -->
+  {% if section.settings.show_hero %}
+    <div class="voidbloom-homepage__hero">
+      <div class="voidbloom-homepage__hero-image-container">
+        {% if section.settings.hero_image != blank %}
+          <img
+            src="{{ section.settings.hero_image | image_url: width: 1500 }}"
+            alt="{{ section.settings.hero_image.alt | escape }}"
+            class="voidbloom-homepage__hero-image-element"
+          >
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'voidbloom-homepage__hero-placeholder-svg' }}
+        {% endif %}
+      </div>
+      <div class="voidbloom-homepage__hero-content">
+        {% if section.settings.hero_title != blank %}
+          <h1 class="voidbloom-homepage__hero-title">{{ section.settings.hero_title }}</h1>
+        {% endif %}
+
+        {% if section.settings.hero_subtitle != blank %}
+          <p class="voidbloom-homepage__hero-subtitle">{{ section.settings.hero_subtitle }}</p>
+        {% endif %}
+
+        {% if section.settings.hero_button_text != blank and section.settings.hero_button_link != blank %}
+          <a href="{{ section.settings.hero_button_link }}" class="voidbloom-homepage__hero-button">
+            {{ section.settings.hero_button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Featured Collection -->
+  {% if section.settings.show_featured_collection and section.settings.featured_collection != blank %}
+    <div class="voidbloom-homepage__featured-collection">
+      <h2 class="voidbloom-homepage__featured-collection-title">
+        {{ section.settings.featured_collection_title | default: collections[section.settings.featured_collection].title }}
+      </h2>
+
+      <div class="voidbloom-homepage__products">
+        {%- liquid
+          assign collection = collections[section.settings.featured_collection]
+          assign products_to_display = section.settings.products_to_display | default: 4
+        -%}
+
+        {% if collection.products.size > 0 %}
+          {% for product in collection.products limit: products_to_display %}
+            <div class="voidbloom-homepage__product" {% if product.metafields.voidbloom.trauma_pattern %}data-trauma-pattern="{{ product.metafields.voidbloom.trauma_pattern }}"{% endif %}>
+              <a href="{{ product.url }}" class="voidbloom-homepage__product-link">
+                <div class="voidbloom-homepage__product-image-container">
+                  {% if product.featured_image != blank %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 533 }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      class="voidbloom-homepage__product-image"
+                    >
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'voidbloom-homepage__product-image placeholder' }}
+                  {% endif %}
+
+                  {% if section.settings.show_quantum_overlay and product.metafields.voidbloom.trauma_pattern %}
+                    <div class="voidbloom-homepage__quantum-overlay" data-trauma-pattern="{{ product.metafields.voidbloom.trauma_pattern }}"></div>
+                  {% endif %}
+                </div>
+
+                <h3 class="voidbloom-homepage__product-title">{{ product.title }}</h3>
+
+                <div class="voidbloom-homepage__product-price">
+                  {{ product.price | money }}
+                </div>
+
+                {% if product.metafields.voidbloom.trauma_pattern %}
+                  <div class="voidbloom-homepage__product-trauma">
+                    <span>Trauma Pattern: {{ product.metafields.voidbloom.trauma_pattern | capitalize }}</span>
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>No products found in this collection.</p>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_view_all and collection.products_count > products_to_display %}
+        <div class="voidbloom-homepage__view-all">
+          <a href="{{ collections[section.settings.featured_collection].url }}" class="voidbloom-homepage__view-all-link">
+            {{ 'collections.general.view_all' | t }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <!-- Content Blocks -->
+  {% if section.blocks.size > 0 %}
+    <div class="voidbloom-homepage__blocks">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'image_text' %}
+            <div class="voidbloom-homepage__image-text" {{ block.shopify_attributes }}>
+              <div class="voidbloom-homepage__image-text-container {% if block.settings.image_position == 'right' %}voidbloom-homepage__image-text-container--reversed{% endif %}">
+                <div class="voidbloom-homepage__image-text-image-container">
+                  {% if block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 750 }}"
+                      alt="{{ block.settings.image.alt | escape }}"
+                      class="voidbloom-homepage__image-text-image"
+                    >
+                  {% else %}
+                    {{ 'image' | placeholder_svg_tag: 'voidbloom-homepage__ritual-image placeholder' }}
+                  {% endif %}
+
+                  {% if block.settings.show_quantum_effect %}
+                    <div class="voidbloom-homepage__quantum-effect" data-trauma-pattern="{{ section.settings.default_trauma_pattern }}"></div>
+                  {% endif %}
+                </div>
+
+                <div class="voidbloom-homepage__image-text-content">
+                  <h3>{{ block.settings.title }}</h3>
+                  <p>{{ block.settings.text }}</p>
+                </div>
+              </div>
+            </div>
+
+          {% when 'video' %}
+            <div class="voidbloom-homepage__video" {{ block.shopify_attributes }}>
+              <div class="voidbloom-homepage__video-content">
+                <h3>{{ block.settings.title }}</h3>
+                <p>{{ block.settings.text }}</p>
+              </div>
+
+              <div class="voidbloom-homepage__video-container">
+                {% if block.settings.video_url != blank %}
+                  <div class="voidbloom-homepage__video-wrapper">
+                    {% if block.settings.video_url.type == 'youtube' %}
+                      <iframe
+                        src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}"
+                        class="voidbloom-homepage__video-player"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                      ></iframe>
+                    {% else %}
+                      <iframe
+                        src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}"
+                        class="voidbloom-homepage__video-player"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                      ></iframe>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'voidbloom-homepage__video-placeholder-svg' }}
+                {% endif %}
+
+                {% if block.settings.show_quantum_effect %}
+                  <div class="voidbloom-homepage__quantum-effect" data-trauma-pattern="{{ section.settings.default_trauma_pattern }}"></div>
+                {% endif %}
+              </div>
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Newsletter -->
+  {% if section.settings.show_newsletter %}
+    <div class="voidbloom-homepage__newsletter">
+      <div class="voidbloom-homepage__newsletter-container">
+        {% if section.settings.newsletter_title != blank %}
+          <h2 class="voidbloom-homepage__newsletter-title">{{ section.settings.newsletter_title }}</h2>
+        {% endif %}
+
+        {% if section.settings.newsletter_text != blank %}
+          <div class="voidbloom-homepage__newsletter-text">{{ section.settings.newsletter_text }}</div>
+        {% endif %}
+
+        {%- form 'customer', id: 'newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="voidbloom-homepage__newsletter-form">
+            <div class="voidbloom-homepage__newsletter-input-wrapper">
+              <label for="NewsletterForm--{{ section.id }}" class="visually-hidden">{{ 'general.newsletter_form.email_placeholder' | t }}</label>
+              <input
+                id="NewsletterForm--{{ section.id }}"
+                type="email"
+                name="contact[email]"
+                class="voidbloom-homepage__newsletter-input"
+                value="{% if customer %}{{ customer.email }}{% endif %}"
+                placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                required
+              >
+            </div>
+            <button
+              type="submit"
+              class="voidbloom-homepage__newsletter-submit"
+              name="commit"
+            >
+              {{ 'general.newsletter_form.submit' | t }}
+            </button>
+          </div>
+
+          {%- if form.posted_successfully? -%}
+            <div class="voidbloom-homepage__newsletter-success">
+              {{ 'general.newsletter_form.success' | t }}
+            </div>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="voidbloom-homepage__newsletter-error">
+              {{ form.errors.messages['email'] }}
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "VoidBloom Homepage",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_hero",
+      "label": "Show Hero Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Hero Button Text"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_link",
+      "label": "Hero Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_collection",
+      "label": "Show Featured Collection"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Featured Collection"
+    },
+    {
+      "type": "text",
+      "id": "featured_collection_title",
+      "label": "Featured Collection Title"
+    },
+    {
+      "type": "number",
+      "id": "products_to_display",
+      "label": "Number of Products to Display",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter Title"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter Text"
+    },
+    {
+      "type": "text",
+      "id": "default_trauma_pattern",
+      "label": "Default Trauma Pattern"
+    },
+    {
+      "type": "number",
+      "id": "default_intensity",
+      "label": "Default Intensity",
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_text",
+      "name": "Image with Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantum_effect",
+          "label": "Show Quantum Effect"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantum_effect",
+          "label": "Show Quantum Effect"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% javascript %}
+  // VoidBloom Quantum Layer Initialization
+  document.addEventListener('DOMContentLoaded', function() {
+    const quantumLayer = document.querySelector('[data-quantum-layer]');
+    if (quantumLayer) {
+      // Initialize trauma pattern
+      const initialTraumaPattern = quantumLayer.getAttribute('data-trauma-pattern');
+      const initialIntensity = quantumLayer.getAttribute('data-intensity');
+
+      // Initialize Neural Bus connection if available
+      if (window.NeuralBus) {
+        // Publish initial state
+        NeuralBus.publish('trauma:initialized', {
+          type: initialTraumaPattern,
+          intensity: initialIntensity
+        });
+
+        // Subscribe to trauma pattern changes
+        NeuralBus.subscribe('trauma:change', function(data) {
+          if (data.type) {
+            quantumLayer.setAttribute('data-trauma-pattern', data.type);
+          }
+          if (data.intensity) {
+            quantumLayer.setAttribute('data-intensity', data.intensity);
+          }
+
+          // Add a temporary class to trigger animations
+          quantumLayer.classList.add('quantum-layer--transitioning');
+          setTimeout(function() {
+            quantumLayer.classList.remove('quantum-layer--transitioning');
+          }, 1000);
+        });
+      }
+
+      // Respond to scroll events
+      window.addEventListener('scroll', function() {
+        const scrollPercentage = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+
+        // Adjust grid perspective based on scroll
+        const gridElement = quantumLayer.querySelector('.quantum-layer__grid');
+        if (gridElement) {
+          gridElement.style.transform = `perspective(500px) rotateX(${60 + (scrollPercentage * 0.1)}deg) scale(${1.5 + (scrollPercentage * 0.005)})`;
+        }
+
+        // Adjust particle opacity based on scroll
+        const particlesElement = quantumLayer.querySelector('.quantum-layer__particles');
+        if (particlesElement) {
+          particlesElement.style.opacity = 0.2 + (scrollPercentage * 0.002);
+        }
+      });
+
+      // Mouse movement effect
+      document.addEventListener('mousemove', function(event) {
+        const gridElement = quantumLayer.querySelector('.quantum-layer__grid');
+        if (gridElement) {
+          const rect = quantumLayer.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          gridElement.style.transform = `translate(${x * 0.05}px, ${y * 0.05}px)`;
+        }
+      });
+
+      // Glitch effect on click
+      document.addEventListener('click', function() {
+        const glitchElement = quantumLayer.querySelector('.quantum-layer__glitch');
+        if (glitchElement) {
+          glitchElement.classList.add('quantum-layer__glitch--active');
+          setTimeout(function() {
+            glitchElement.classList.remove('quantum-layer__glitch--active');
+          }, 500);
+        }
+      });
+    }
+  });
+
+  // VoidBloom Homepage Section Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle trauma-specific effects
+    if (window.NeuralBus) {
+      NeuralBus.subscribe('trauma:change', function(data) {
+        console.log('Trauma pattern changed:', data);
+      });
+    }
+
+    // Apply parallax effect to hero image if available
+    const heroSection = document.querySelector('.voidbloom-homepage__hero');
+    if (heroSection) {
+      const heroImage = heroSection.querySelector('.voidbloom-homepage__hero-image-element');
+      if (heroImage) {
+        window.addEventListener('scroll', function() {
+          const scrollY = window.scrollY;
+          heroImage.style.transform = `translateY(${scrollY * 0.5}px)`;
+        });
+      }
+    }
+  });
+{% endjavascript %}
