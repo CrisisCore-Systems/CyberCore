@@ -1,6 +1,268 @@
+{% comment %}
+  @MutationCompatible: CyberLotus, ObsidianBloom
+  @StrategyProfile: quantum-entangled
+{% endcomment %}
+
+<footer class="voidbloom-footer" role="contentinfo">
+  <div class="footer-grid-container">
+    <div class="footer-brand quantum-fade-in">
+      {% if settings.footer_logo != blank %}
+        <img src="{{ settings.footer_logo | img_url: '180x' }}" alt="{{ shop.name }}" class="footer-logo">
+      {% else %}
+        <h2 class="glitch-text" data-text="{{ shop.name }}">{{ shop.name }}</h2>
+      {% endif %}
+      
+      {% if settings.footer_tagline != blank %}
+        <p class="footer-tagline">{{ settings.footer_tagline }}</p>
+      {% endif %}
+      
+      <div class="social-links">
+        {% if settings.social_twitter_link != blank %}
+          <a href="{{ settings.social_twitter_link }}" target="_blank" rel="noopener" aria-label="Twitter">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 4.01C21.13 4.46 20.18 4.76 19.16 4.89C20.19 4.34 20.97 3.44 21.34 2.34C20.39 2.91 19.31 3.32 18.2 3.54C17.29 2.55 16.03 2 14.61 2C11.9 2 9.67 4.01 9.67 6.58C9.67 7.02 9.72 7.43 9.82 7.82C5.89 7.59 2.4 5.78 0.933 3.11C0.453 3.91 0.179 4.82 0.179 5.77C0.179 7.55 1.06 9.1 2.41 10C1.59 9.97 0.827 9.71 0.127 9.31V9.37C0.127 11.59 1.88 13.4 4.07 13.9C3.6 14.01 3.1 14.07 2.59 14.07C2.22 14.07 1.86 14.04 1.52 13.97C2.24 15.74 4.04 17.01 6.14 17.05C4.47 18.2 2.4 18.91 0.177 18.91C-0.26 18.91 -0.69 18.89 -1.1 18.84C1.03 20.06 3.5 20.8 6.14 20.8C14.6 20.8 19.2 14.17 19.2 8.44L19.18 7.75C20.15 7.13 21 6.34 21.72 5.44C20.85 5.8 19.91 6.05 18.94 6.16" fill="currentColor"/>
+            </svg>
+          </a>
+        {% endif %}
+        
+        {% if settings.social_facebook_link != blank %}
+          <a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 12.05C20 7.60001 16.4 4.00001 12 4.00001C7.60003 4.00001 4.00003 7.60001 4.00003 12C4.00003 15.9 6.80003 19.1 10.5 19.9V14.5H8.50003V12H10.5V10.1C10.5 8.30001 11.9 6.80001 13.7 6.80001H16V9.40001H14C13.4 9.40001 13 9.80001 13 10.4V12H15.9V14.5H13V20.1C17 19.4 20 16.1 20 12.05Z" fill="currentColor"/>
+            </svg>
+          </a>
+        {% endif %}
+        
+        {% if settings.social_instagram_link != blank %}
+          <a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C14.717 2 15.056 2.01 16.122 2.06C17.187 2.11 17.912 2.277 18.55 2.525C19.21 2.779 19.766 3.123 20.322 3.678C20.8305 4.1779 21.224 4.78259 21.475 5.45C21.722 6.087 21.89 6.813 21.94 7.878C21.987 8.944 22 9.283 22 12C22 14.717 21.99 15.056 21.94 16.122C21.89 17.187 21.722 17.912 21.475 18.55C21.2247 19.2178 20.8311 19.8226 20.322 20.322C19.822 20.8303 19.2173 21.2238 18.55 21.475C17.913 21.722 17.187 21.89 16.122 21.94C15.056 21.987 14.717 22 12 22C9.283 22 8.944 21.99 7.878 21.94C6.813 21.89 6.088 21.722 5.45 21.475C4.78233 21.2245 4.17753 20.8309 3.678 20.322C3.16941 19.8222 2.77593 19.2175 2.525 18.55C2.277 17.913 2.11 17.187 2.06 16.122C2.013 15.056 2 14.717 2 12C2 9.283 2.01 8.944 2.06 7.878C2.11 6.812 2.277 6.088 2.525 5.45C2.77524 4.78218 3.1688 4.17732 3.678 3.678C4.17767 3.16923 4.78243 2.77573 5.45 2.525C6.088 2.277 6.812 2.11 7.878 2.06C8.944 2.013 9.283 2 12 2ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7ZM18.5 6.75C18.5 6.41848 18.3683 6.10054 18.1339 5.86612C17.8995 5.6317 17.5815 5.5 17.25 5.5C16.9185 5.5 16.6005 5.6317 16.3661 5.86612C16.1317 6.10054 16 6.41848 16 6.75C16 7.08152 16.1317 7.39946 16.3661 7.63388C16.6005 7.8683 16.9185 8 17.25 8C17.5815 8 17.8995 7.8683 18.1339 7.63388C18.3683 7.39946 18.5 7.08152 18.5 6.75ZM12 9C12.7956 9 13.5587 9.31607 14.1213 9.87868C14.6839 10.4413 15 11.2044 15 12C15 12.7956 14.6839 13.5587 14.1213 14.1213C13.5587 14.6839 12.7956 15 12 15C11.2044 15 10.4413 14.6839 9.87868 14.1213C9.31607 13.5587 9 12.7956 9 12C9 11.2044 9.31607 10.4413 9.87868 9.87868C10.4413 9.31607 11.2044 9 12 9Z" fill="currentColor"/>
+            </svg>
+          </a>
+        {% endif %}
+        
+        {% if settings.social_youtube_link != blank %}
+          <a href="{{ settings.social_youtube_link }}" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21.593 7.203C21.3711 6.53305 20.9211 6.03111 20.3236 5.73079C19.178 5.2 12 5.2 12 5.2C12 5.2 4.82203 5.2 3.67644 5.73079C3.07892 6.03111 2.62887 6.53305 2.40701 7.203C2 8.76142 2 12 2 12C2 12 2 15.1228 2.40701 16.797C2.62887 17.467 3.07892 17.9689 3.67644 18.2692C4.82203 18.8 12 18.8 12 18.8C12 18.8 19.178 18.8 20.3236 18.2692C20.9211 17.9689 21.3711 17.467 21.593 16.797C22 15.1228 22 12 22 12C22 12 22 8.76142 21.593 7.203ZM9.99984 15.1999V8.79997L15.5998 12L9.99984 15.1999Z" fill="currentColor"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="footer-nav-section">
+      <h3 class="footer-heading">{{ settings.footer_menu_heading | default: 'Navigation' }}</h3>
+      <ul class="footer-nav">
+        {% for link in linklists[settings.footer_menu].links %}
+          <li><a href="{{ link.url }}" class="quantum-link">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    
+    <div class="footer-secondary-nav">
+      <h3 class="footer-heading">{{ settings.footer_secondary_menu_heading | default: 'Information' }}</h3>
+      <ul class="footer-nav">
+        {% for link in linklists[settings.footer_secondary_menu].links %}
+          <li><a href="{{ link.url }}" class="quantum-link">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    
+    <div class="footer-newsletter">
+      <h3 class="footer-heading">{{ settings.newsletter_heading | default: 'Join Our Network' }}</h3>
+      <p>{{ settings.newsletter_text | default: 'Subscribe to receive updates, access to exclusive deals, and more.' }}</p>
+      
+      {% form 'customer', class: 'newsletter-form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="input-group">
+          <input type="email" name="contact[email]" id="EmailFooter" 
+                 class="quantum-input"
+                 placeholder="{{ settings.newsletter_placeholder | default: 'Your email' }}" 
+                 required>
+          <button type="submit" class="quantum-button">
+            {{ settings.newsletter_button | default: 'Subscribe' }}
+          </button>
+        </div>
+        {% if form.errors %}
+          <div class="form-message form-message--error">{{ form.errors | default_errors }}</div>
+        {% endif %}
+        {% if form.posted_successfully? %}
+          <div class="form-message form-message--success">{{ 'general.newsletter_form.confirmation' | t }}</div>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ settings.copyright_text }}</p>
+    </div>
+    
+    <div class="footer-legal-links">
+      {% if shop.privacy_policy %}
+        <a href="{{ shop.privacy_policy.url }}" class="quantum-link">{{ shop.privacy_policy.title }}</a>
+      {% endif %}
+      {% if shop.terms_of_service %}
+        <a href="{{ shop.terms_of_service.url }}" class="quantum-link">{{ shop.terms_of_service.title }}</a>
+      {% endif %}
+      {% if shop.refund_policy %}
+        <a href="{{ shop.refund_policy.url }}" class="quantum-link">{{ shop.refund_policy.title }}</a>
+      {% endif %}
+    </div>
+    
+    {% if settings.show_payment_icons %}
+      <div class="payment-icons">
+        {% for type in shop.enabled_payment_types %}
+          <span class="payment-icon payment-icon--{{ type }}">
+            {{ type | payment_type_svg_tag }}
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</footer>
+
 {% schema %}
-  {
-    "name": "Section name",
-    "settings": []
-  }
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Footer Layout"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "Footer Logo"
+    },
+    {
+      "type": "text",
+      "id": "footer_tagline",
+      "label": "Footer Tagline",
+      "default": "Exploring the void between technology and imagination."
+    },
+    {
+      "type": "header",
+      "content": "Menu Settings"
+    },
+    {
+      "type": "text",
+      "id": "footer_menu_heading",
+      "label": "Primary Menu Heading",
+      "default": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu",
+      "label": "Footer Menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "footer_secondary_menu_heading",
+      "label": "Secondary Menu Heading",
+      "default": "Information"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_secondary_menu",
+      "label": "Secondary Footer Menu"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter Heading",
+      "default": "Join Our Network"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter Text",
+      "default": "Subscribe to receive updates, access to exclusive deals, and more."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email Placeholder",
+      "default": "Your email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "Subscribe Button Text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter_link",
+      "label": "Twitter URL"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook_link",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram_link",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube_link",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Footer Bottom"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "All rights reserved."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "About Us"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share information about your brand with your customers.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VoidBloom Footer",
+      "category": "Footer"
+    }
+  ]
+}
 {% endschema %}
