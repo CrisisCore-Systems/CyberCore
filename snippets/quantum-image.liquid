@@ -1,0 +1,44 @@
+{% comment %}
+  Quantum Image Component with Trauma Encoding
+
+  Accepts:
+  - image: {Object} The image object
+  - trauma_type: {String} Type of trauma encoding (recursion, fragmentation, etc.)
+  - intensity: {Number} Intensity level of the effect (0-1)
+  - sizes: {String} Sizes attribute for responsive images
+  - class: {String} Additional classes for container
+  - alt: {String} Alt text for the image
+  - loading: {String} Loading attribute (lazy, eager)
+{% endcomment %}
+
+{% assign trauma_type = trauma_type | default: settings.default_trauma_type | default: 'recursion' %}
+{% assign intensity = intensity | default: settings.trauma_intensity | default: 0.5 %}
+
+<div class="quantum-image-container"
+     data-trauma-encoded="true"
+     data-trauma-type="{{ trauma_type }}"
+     data-intensity="{{ intensity }}"
+     {% if class %}class="{{ class }}"{% endif %}>
+
+  {% if image != blank %}
+    <img
+      src="{{ image | img_url: 'medium' }}"
+      srcset="
+        {%- if image.width >= 200 -%}{{ image | img_url: width: 200 }} 200w,{%- endif -%}
+        {%- if image.width >= 400 -%}{{ image | img_url: width: 400 }} 400w,{%- endif -%}
+        {%- if image.width >= 800 -%}{{ image | img_url: width: 800 }} 800w,{%- endif -%}
+        {{ image | img_url: width: image.width }} {{ image.width }}w
+      "
+      sizes="{{ sizes | default: '100vw' }}"
+      loading="{{ loading | default: 'lazy' }}"
+      alt="{{ alt | default: image.alt | escape }}"
+      width="{{ image.width }}"
+      height="{{ image.height }}"
+      class="quantum-image__element"
+    >
+  {% else %}
+    {{ 'image' | placeholder_svg_tag: 'quantum-image__placeholder' }}
+  {% endif %}
+
+  <div class="trauma-overlay"></div>
+</div>

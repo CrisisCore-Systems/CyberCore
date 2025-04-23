@@ -1,0 +1,36 @@
+// ...existing code...
+
+// Responsive images
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+
+  &.image-load-error {
+    background-color: #f8f8f8;
+    min-height: 100px;
+    position: relative;
+
+    &::after {
+      content: 'Image unavailable';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      color: #888;
+    }
+  }
+}
+
+// Placeholder images
+.placeholder-svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  background-color: #f4f4f4;
+  fill: #888;
+}
+
+// ...existing code...

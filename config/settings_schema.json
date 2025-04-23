@@ -2,10 +2,10 @@
   {
     "name": "theme_info",
     "theme_name": "VoidBloom",
-    "theme_version": "3.7.1",
-    "theme_author": "CyberCore",
-    "theme_documentation_url": "https://voidbloom.design/docs",
-    "theme_support_url": "https://voidbloom.design/support"
+    "theme_version": "1.0.0",
+    "theme_author": "CrisisCore Systems",
+    "theme_documentation_url": "https://github.com/CrisisCore-Systems/CyberCore",
+    "theme_support_url": "https://github.com/CrisisCore-Systems/CyberCore/issues"
   },
   {
     "name": "Colors",
@@ -78,12 +78,70 @@
     ]
   },
   {
-    "name": "Quantum Effects",
+    "name": "Trauma Settings",
     "settings": [
       {
-        "type": "header",
-        "content": "Visual Effects"
+        "type": "select",
+        "id": "default_trauma_type",
+        "label": "Default Trauma Pattern",
+        "options": [
+          {
+            "value": "recursion",
+            "label": "Recursion"
+          },
+          {
+            "value": "fragmentation",
+            "label": "Fragmentation"
+          },
+          {
+            "value": "surveillance",
+            "label": "Surveillance"
+          },
+          {
+            "value": "displacement",
+            "label": "Displacement"
+          },
+          {
+            "value": "dissolution",
+            "label": "Dissolution"
+          }
+        ],
+        "default": "recursion"
       },
+      {
+        "type": "range",
+        "id": "trauma_intensity",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "label": "Trauma Intensity",
+        "default": 0.5
+      },
+      {
+        "type": "select",
+        "id": "default_memory_phase",
+        "label": "Default Memory Phase",
+        "options": [
+          {
+            "value": "dormant",
+            "label": "Dormant"
+          },
+          {
+            "value": "active",
+            "label": "Active"
+          },
+          {
+            "value": "cascading",
+            "label": "Cascading"
+          }
+        ],
+        "default": "dormant"
+      }
+    ]
+  },
+  {
+    "name": "Quantum Effects",
+    "settings": [
       {
         "type": "checkbox",
         "id": "enable_quantum_effects",
@@ -91,33 +149,24 @@
         "default": true
       },
       {
-        "type": "range",
-        "id": "quantum_intensity",
-        "min": 0.1,
-        "max": 1.0,
-        "step": 0.1,
-        "label": "Quantum Effect Intensity",
-        "default": 0.7
+        "type": "checkbox",
+        "id": "enable_trauma_encoding",
+        "label": "Enable Trauma Encoding",
+        "default": true
       },
       {
-        "type": "select",
-        "id": "mutation_profile",
-        "label": "Mutation Profile",
-        "options": [
-          {
-            "value": "VoidBloom",
-            "label": "VoidBloom (Default)"
-          },
-          {
-            "value": "CyberLotus",
-            "label": "Cyber Lotus"
-          },
-          {
-            "value": "ObsidianBloom",
-            "label": "Obsidian Bloom"
-          }
-        ],
-        "default": "VoidBloom"
+        "type": "checkbox",
+        "id": "enable_webgl_effects",
+        "label": "Enable WebGL Effects",
+        "default": true,
+        "info": "May impact performance on older devices"
+      },
+      {
+        "type": "checkbox",
+        "id": "reduce_motion",
+        "label": "Reduce Motion",
+        "default": false,
+        "info": "Reduces animations for accessibility"
       }
     ]
   },

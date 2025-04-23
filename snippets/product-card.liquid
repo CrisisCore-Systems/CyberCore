@@ -1,37 +1,55 @@
 {% comment %}
-  VOIDBLOOM PRODUCT CARD
-  Memory artifact display component with trauma-responsive encoding
+  Product Card with Trauma Encoding
 
-  Usage:
-  {% render 'product-card', product: product %}
+  Accepts:
+  - product: {Object} The product object
+  - trauma_type: {String} Type of trauma encoding
+  - show_vendor: {Boolean} Whether to show vendor
+  - show_rating: {Boolean} Whether to show rating
 {% endcomment %}
 
-{% assign trauma_level = product.metafields.voidbloom.trauma_level | default: 0 %}
-{% assign memory_phase = product.metafields.voidbloom.memory_phase | default: "cyber-lotus" %}
+{% assign trauma_type = trauma_type | default: settings.default_trauma_type | default: 'recursion' %}
 
-<div class="product-card">
+<div class="product-card" data-trauma-encoded="true" data-trauma-type="{{ trauma_type }}">
   <a href="{{ product.url | within: collection }}" class="product-card__link">
     <div class="product-card__image-container">
-      {%- if product.featured_media != blank -%}
-        {% render 'responsive-image',
-          image: product.featured_media.preview_image,
-          sizes: "(min-width: 768px) 50vw, 100vw",
-          class: "product-card__image"
-        %}
-      {%- else -%}
-        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-card__image' }}
-      {%- endif -%}
-
-      {%- if product.compare_at_price > product.price -%}
-        <span class="product-card__badge">{{ 'products.product.on_sale' | t }}</span>
-      {%- endif -%}
+      {% render 'quantum-image',
+        image: product.featured_media.preview_image,
+        trauma_type: trauma_type,
+        sizes: "(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw",
+        class: "product-card__image"
+      %}
     </div>
 
     <div class="product-card__info">
+      {% if show_vendor and product.vendor %}
+        <span class="product-card__vendor">{{ product.vendor }}</span>
+      {% endif %}
+
       <h3 class="product-card__title">{{ product.title }}</h3>
+
       <div class="product-card__price">
-        {%- render 'price', product: product -%}
+        {% if product.price_varies %}
+          <span class="price--on-sale">
+            {{ product.price_min | money }} - {{ product.price_max | money }}
+          </span>
+        {% else %}
+          {% if product.compare_at_price > product.price %}
+            <span class="price--on-sale">
+              <s class="price__compare">{{ product.compare_at_price | money }}</s>
+              <span class="price__current">{{ product.price | money }}</span>
+            </span>
+          {% else %}
+            <span class="price__current">{{ product.price | money }}</span>
+          {% endif %}
+        {% endif %}
       </div>
+
+      {% if show_rating and product.metafields.reviews.rating %}
+        <div class="product-card__rating">
+          {{ product.metafields.reviews.rating }}
+        </div>
+      {% endif %}
     </div>
   </a>
 </div>

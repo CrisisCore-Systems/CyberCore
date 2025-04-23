@@ -1,0 +1,100 @@
+/**
+ * VoidBloom - Trauma Encodings CSS
+ */
+
+/* Base Trauma Effects */
+[data-trauma-encoded='true'] {
+  position: relative;
+  --trauma-intensity: 0.5;
+  transition: filter 0.3s ease;
+}
+
+/* Trauma Types */
+[data-trauma-type='recursion'] {
+  --trauma-hue: 280;
+  --trauma-filter: hue-rotate(calc(var(--trauma-hue) * 1deg))
+    saturate(calc(1 + var(--trauma-intensity) * 0.5));
+}
+
+[data-trauma-type='fragmentation'] {
+  --trauma-hue: 180;
+  --trauma-filter: hue-rotate(calc(var(--trauma-hue) * 1deg))
+    contrast(calc(1 + var(--trauma-intensity) * 0.3));
+}
+
+[data-trauma-type='surveillance'] {
+  --trauma-hue: 220;
+  --trauma-filter: hue-rotate(calc(var(--trauma-hue) * 1deg))
+    brightness(calc(1 - var(--trauma-intensity) * 0.2));
+}
+
+[data-trauma-type='displacement'] {
+  --trauma-hue: 30;
+  --trauma-filter: hue-rotate(calc(var(--trauma-hue) * 1deg)) sepia(var(--trauma-intensity));
+}
+
+[data-trauma-type='dissolution'] {
+  --trauma-hue: 340;
+  --trauma-filter: hue-rotate(calc(var(--trauma-hue) * 1deg))
+    opacity(calc(1 - var(--trauma-intensity) * 0.2));
+}
+
+/* Trauma Overlay */
+.trauma-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: var(--trauma-intensity);
+  z-index: 1;
+}
+
+[data-trauma-type='recursion'] .trauma-overlay {
+  background: linear-gradient(45deg, rgba(128, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+}
+
+[data-trauma-type='fragmentation'] .trauma-overlay {
+  background: linear-gradient(45deg, rgba(0, 255, 255, 0.2), rgba(0, 128, 255, 0.2));
+}
+
+[data-trauma-type='surveillance'] .trauma-overlay {
+  background: linear-gradient(45deg, rgba(0, 0, 255, 0.2), rgba(0, 255, 0, 0.2));
+}
+
+[data-trauma-type='displacement'] .trauma-overlay {
+  background: linear-gradient(45deg, rgba(255, 128, 0, 0.2), rgba(255, 0, 128, 0.2));
+}
+
+[data-trauma-type='dissolution'] .trauma-overlay {
+  background: linear-gradient(45deg, rgba(255, 0, 128, 0.2), rgba(128, 0, 255, 0.2));
+}
+
+/* Quantum Image Container */
+.quantum-image-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: #000;
+}
+
+.quantum-image__element {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: var(--trauma-filter);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.quantum-image-container:hover .quantum-image__element {
+  transform: scale(1.02);
+  filter: var(--trauma-filter) brightness(1.1);
+}
+
+/* Fallbacks */
+.no-js [data-trauma-encoded='true'],
+.no-webgl [data-trauma-encoded='true'] {
+  filter: var(--trauma-filter);
+}

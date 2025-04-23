@@ -61,8 +61,9 @@
     {{ 'narrative-commerce-styles.css' | asset_url | stylesheet_tag }}
     {{ 'quantum-featured.css' | asset_url | stylesheet_tag }}
     {{ 'bloom.css' | asset_url | stylesheet_tag }}
-    {{ 'coherence-design-system.scss' | asset_url | stylesheet_tag }}
+    {{ 'coherence-design-system.css' | asset_url | stylesheet_tag }}
 
+    <script src="{{ 'performance-manager.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'quantum-webgl.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'neural-bus.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'glitch-engine.js' | asset_url }}" defer="defer"></script>
@@ -86,6 +87,7 @@
 
     {% render 'predictive-search' %}
     {% render 'cart-drawer' %}
+    {% render 'performance-controls' %}
 
     <div id="quantum-hologram-container" data-hologram-container></div>
     <div id="trauma-visualizer" data-trauma-visualizer></div>

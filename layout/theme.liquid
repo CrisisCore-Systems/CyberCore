@@ -12,7 +12,7 @@
   // Trauma Encoding Active: {{ settings.default_trauma_type | default: "recursion" }}
 {% endcomment %}
 <!DOCTYPE html>
-<html lang="{{ request.locale.iso_code }}" class="trauma-{{ settings.default_trauma_type | default: 'recursion' }}">
+<html lang="{{ shop.locale }}" class="trauma-{{ settings.default_trauma_type | default: 'recursion' }}">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -261,9 +261,8 @@
   </script>
 
   {%- comment %}Theme CSS/JS files{% endcomment -%}
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
-  {{ 'image-handler.js' | asset_url | script_tag }}
-  {{ 'theme.js' | asset_url | script_tag }}
+  {{ 'theme.v2.css' | asset_url | stylesheet_tag }}
+  {{ 'theme.v2.js' | asset_url | script_tag }}
 </head>
 
 <body class="memory-phase-{{ settings.default_memory_phase | default: 'cyber-lotus' }} trauma-{{ settings.default_trauma_type | default: 'recursion' }}" data-neural-node data-memory-coherence="{{ settings.coherence_baseline | default: 0.5 }}">

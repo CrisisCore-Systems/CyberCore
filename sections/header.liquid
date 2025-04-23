@@ -1,99 +1,190 @@
 {% comment %}
-  Header section for CyberCore theme
+  Header section for VoidBloom theme
+  Provides site navigation and branding with trauma encoding visualization
 {% endcomment %}
 
-<header role="banner" class="site-header">
+<header class="site-header" data-trauma-type="{{ section.settings.trauma_type }}" 
+  data-intensity="{{ section.settings.trauma_intensity }}"
+  data-memory-phase="{{ section.settings.memory_phase }}">
+  
   <div class="site-header__container">
     <div class="site-header__logo-container">
-      <a href="/" class="site-header__logo-link">
-        {% if settings.logo %}
-          <img
-            src="{{ settings.logo | image_url: width: 200 }}"
-            alt="{{ shop.name }}"
-            width="{{ settings.logo.width }}"
-            height="{{ settings.logo.height }}"
-            loading="eager"
-            class="site-header__logo"
-          >
+      <a href="/" class="site-header__logo-link" aria-label="{{ shop.name }}">
+        {% if section.settings.logo %}
+          <img src="{{ section.settings.logo | image_url: width: 200 }}" 
+               alt="{{ shop.name }}" 
+               loading="eager"
+               width="{{ section.settings.logo_width }}"
+               class="site-header__logo">
         {% else %}
           <span class="site-header__logo-text">{{ shop.name }}</span>
         {% endif %}
       </a>
     </div>
-
-    <nav role="navigation" class="site-header__nav">
-      <ul class="site-header__menu">
-        {% for link in linklists.main-menu.links %}
-          <li class="site-header__menu-item{% if link.active %} site-header__menu-item--active{% endif %}">
-            <a href="{{ link.url }}" class="site-header__menu-link">{{ link.title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </nav>
-
-    <div class="site-header__actions">
-      <button type="button" class="site-header__search-toggle" aria-label="{{ 'general.search.toggle_search' | t }}" data-toggle-search>
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-        </svg>
-      </button>
-
-      <a href="{{ routes.account_url }}" class="site-header__account" aria-label="{{ 'customer.account.title' | t }}">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-      </a>
-
-      <button type="button" class="site-header__cart" aria-label="{{ 'cart.general.title' | t }}" data-cart-drawer-open>
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-        </svg>
-        <span class="site-header__cart-count" data-cart-count>
-          {{ cart.item_count }}
-        </span>
-      </button>
-    </div>
+    {% render 'primary-navigation' %}
+    {% render 'header-actions' %}
   </div>
 
-  <div class="site-header__search-container" data-search-container>
-    <div class="site-header__search-inner">
-      {% render 'predictive-search' %}
-      <button type="button" class="site-header__search-close" aria-label="{{ 'general.search.close_search' | t }}" data-close-search>
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        </svg>
-      </button>
+  {% if section.settings.show_announcement %}
+    <div class="announcement-bar" data-trauma-type="{{ section.settings.announcement_trauma_type }}">
+      <div class="container">
+        <p class="announcement-text">{{ section.settings.announcement_text }}</p>
+      </div>
     </div>
-  </div>
+  {% endif %}
 </header>
-
-{% if settings.show_announcement %}
-  <div class="announcement-bar">
-    <div class="announcement-bar__message">
-      {{ settings.announcement_text }}
-    </div>
-  </div>
-{% endif %}
 
 {% schema %}
 {
   "name": "Header",
+  "tag": "section",
+  "class": "section-header",
   "settings": [
     {
       "type": "header",
-      "content": "Header Settings"
+      "content": "Branding"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 140,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    {
+      "type": "header",
+      "content": "Trauma Encoding"
+    },
+    {
+      "type": "select",
+      "id": "trauma_type",
+      "label": "Trauma Type",
+      "default": "recursion",
+      "options": [
+        {
+          "value": "abandonment",
+          "label": "Abandonment"
+        },
+        {
+          "value": "fragmentation",
+          "label": "Fragmentation"
+        },
+        {
+          "value": "recursion",
+          "label": "Recursion"
+        },
+        {
+          "value": "surveillance",
+          "label": "Surveillance"
+        },
+        {
+          "value": "displacement",
+          "label": "Displacement"
+        },
+        {
+          "value": "dissolution",
+          "label": "Dissolution"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "trauma_intensity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.7,
+      "label": "Trauma Intensity"
+    },
+    {
+      "type": "select",
+      "id": "memory_phase",
+      "label": "Memory Phase",
+      "default": "cyber-lotus",
+      "options": [
+        {
+          "value": "void-signal",
+          "label": "Void Signal"
+        },
+        {
+          "value": "cyber-lotus",
+          "label": "Cyber Lotus"
+        },
+        {
+          "value": "neural-echo",
+          "label": "Neural Echo"
+        },
+        {
+          "value": "ghost-liminal",
+          "label": "Ghost Liminal"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Announcement Bar"
     },
     {
       "type": "checkbox",
       "id": "show_announcement",
-      "label": "Show announcement bar",
+      "label": "Show announcement",
       "default": false
     },
     {
       "type": "text",
       "id": "announcement_text",
       "label": "Announcement text",
-      "default": "Announce something important here"
+      "default": "Neural Mesh Transfer Active | New Memory Artifacts Uploaded"
+    },
+    {
+      "type": "select",
+      "id": "announcement_trauma_type",
+      "label": "Announcement Trauma Type",
+      "default": "surveillance",
+      "options": [
+        {
+          "value": "abandonment",
+          "label": "Abandonment"
+        },
+        {
+          "value": "fragmentation",
+          "label": "Fragmentation"
+        },
+        {
+          "value": "recursion",
+          "label": "Recursion"
+        },
+        {
+          "value": "surveillance",
+          "label": "Surveillance"
+        },
+        {
+          "value": "displacement",
+          "label": "Displacement"
+        },
+        {
+          "value": "dissolution",
+          "label": "Dissolution"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VoidBloom Header",
+      "settings": {
+        "trauma_type": "recursion",
+        "trauma_intensity": 0.7,
+        "memory_phase": "cyber-lotus"
+      }
     }
   ]
 }
