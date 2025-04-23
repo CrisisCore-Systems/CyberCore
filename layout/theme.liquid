@@ -46,7 +46,7 @@
   {{ 'theme.css' | asset_url | stylesheet_tag }}
   
   <!-- Scripts -->
-  {{ 'theme.js' | asset_url | script_tag: defer: true, nonce: csp_nonce }}
+ {{ 'theme.js' | asset_url | script_tag: defer: true, nonce: csp_nonce }}
   
   <!-- Quantum Layer -->
   {% render 'quantum-layer' %}
