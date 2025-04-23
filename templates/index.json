@@ -11,7 +11,14 @@
   "sections": {
     "ritual_entry": {
       "type": "ritual-entry",
-      "settings": {}
+      "settings": {
+        "title": "Ritual Entry",
+        "subtitle": "Memory Archive System",
+        "description": "<p>Venture beyond the self—access the Void, recover crystalline memory shards, and integrate your trauma signature into living data.</p>",
+        "button1_label": "Explore Memory Artifacts",
+        "button1_link": "",
+        "button2_label": "Initiate Protocol"
+      }
     },
     "bloom_protocol": {
       "type": "bloom-protocol",
