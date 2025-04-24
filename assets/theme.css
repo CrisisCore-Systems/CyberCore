@@ -37,12 +37,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Smooth theme transitions */
 body.theme-transition {
   transition: background-color 1.5s cubic-bezier(0.2,0.8,0.2,1);
 }
 
-/* --- Utility: Visually Hidden (for screen-reader text) --- */
+/* --- Utility: Visually Hidden --- */
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -50,7 +49,7 @@ body.theme-transition {
   padding: 0 !important;
   margin: -1px !important;
   overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
+  clip: rect(0,0,0,0) !important;
   white-space: nowrap !important;
   border: 0 !important;
 }
@@ -75,7 +74,6 @@ button:hover,
   background-color: color-mix(in srgb, var(--phase-secondary) 80%, black 20%);
 }
 
-/* Primary & Secondary Variants */
 .ritual-button.primary {
   background-color: var(--phase-primary);
   border: 1px solid var(--phase-primary);
@@ -115,14 +113,12 @@ button:hover,
   text-decoration: none;
 }
 
-/* Focus outline */
 :focus-visible {
   outline: 2px solid var(--trauma-color);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* --- Reduce Motion --- */
 body.reduce-motion * {
   transition-duration: 0.01ms !important;
   animation-duration: 0.01ms !important;
@@ -182,8 +178,6 @@ body.reduce-motion * {
 .header-action:hover svg {
   stroke: var(--phase-primary);
 }
-
-/* Override header-action button styles */
 .header-action {
   background: transparent !important;
   border: none !important;
@@ -228,8 +222,10 @@ body.reduce-motion * {
 /* --- Modal Container --- */
 .modal-container {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.8);
   display: flex;
   justify-content: center;
@@ -251,38 +247,3 @@ body.reduce-motion * {
   border-radius: 8px;
   max-width: 600px;
   width: 90%;
-}
-
-/* --- Announcement Matrix Base Styles --- */
-.announcement-matrix {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-  pointer-events: none;
-}
-.announcement-card {
-  pointer-events: auto;
-}
-
-/* --- Quantum Layer Effects --- */
-.quantum-layer {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 9000;
-}
-.quantum-grid .grid-line {
-  position: absolute;
-  background: rgba(255,255,255,0.05);
-}
-.quantum-noise {
-  position: absolute;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: transparent;
-}
-.dimensional-ripples .dimensional-ripple {
-  position: absolute;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50%;
