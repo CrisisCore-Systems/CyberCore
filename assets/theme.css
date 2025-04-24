@@ -171,6 +171,16 @@ body.reduce-motion * {
   stroke: var(--phase-primary);
 }
 
+/* Override button defaults for header actions */
+.header-action {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.header-action:hover {
+  background: transparent !important;
+}
+
 /* --- Drawer Components --- */
 .drawer {
   position: fixed;
