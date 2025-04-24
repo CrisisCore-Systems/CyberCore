@@ -28,19 +28,14 @@ body {
   background-color: var(--phase-background);
   color: var(--phase-text);
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 400;
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-body.theme-transition {
-  transition: background-color 1.5s cubic-bezier(0.2,0.8,0.2,1);
 }
 
-/* --- Utility: Visually Hidden --- */
+/* Utility: Hide off-screen */
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -53,10 +48,8 @@ body.theme-transition {
   border: 0 !important;
 }
 
-/* --- Global Button Styles --- */
-button,
-.quantum-button,
-.ritual-button {
+/* --- Global Buttons --- */
+button, .quantum-button, .ritual-button {
   font-family: inherit;
   font-size: 1rem;
   padding: 0.75rem 1.25rem;
@@ -67,18 +60,12 @@ button,
   color: var(--phase-background);
   transition: background-color 0.2s ease;
 }
-button:hover,
-.quantum-button:hover,
-.ritual-button:hover {
+button:hover, .quantum-button:hover, .ritual-button:hover {
   background-color: color-mix(in srgb, var(--phase-secondary) 80%, black 20%);
 }
 .ritual-button.primary {
   background-color: var(--phase-primary);
   border: 1px solid var(--phase-primary);
-  color: var(--phase-background);
-}
-.ritual-button.primary:hover {
-  background-color: color-mix(in srgb, var(--phase-primary) 85%, black 15%);
 }
 .ritual-button.secondary {
   background: transparent;
@@ -90,7 +77,7 @@ button:hover,
   color: var(--phase-text);
 }
 
-/* --- Accessibility: Skip to Content --- */
+/* --- Skip-to-content link --- */
 .skip-to-content {
   position: absolute;
   left: -10000px;
@@ -115,25 +102,20 @@ button:hover,
   outline-offset: 2px;
   border-radius: 4px;
 }
-body.reduce-motion * {
-  transition-duration: 0.01ms !important;
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  scroll-behavior: auto !important;
-}
 
-/* --- Main Content Area --- */
+/* --- Main Layout --- */
 .content-for-layout {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  position: relative;
 }
 @media (min-width: 768px) {
   .content-for-layout { padding: 30px; }
 }
 
-/* --- Header & Navigation --- */
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
 .voidbloom-header .header-container {
   display: flex;
   justify-content: space-between;
@@ -142,7 +124,6 @@ body.reduce-motion * {
 }
 .header-logo .site-logo {
   max-height: 50px;
-  width: auto;
 }
 .header-navigation .nav-menu {
   list-style: none;
@@ -156,7 +137,6 @@ body.reduce-motion * {
   text-decoration: none;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 .header-navigation .nav-link:hover {
   color: var(--phase-primary);
@@ -164,7 +144,11 @@ body.reduce-motion * {
 .header-actions {
   display: flex;
   gap: 1rem;
-  align-items: center;
+}
+.header-action {
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 .header-action svg {
   width: 24px;
@@ -174,57 +158,152 @@ body.reduce-motion * {
 .header-action:hover svg {
   stroke: var(--phase-primary);
 }
-.header-action {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-}
-.header-action:hover {
-  background: transparent !important;
-}
 
-/* --- Drawer Components --- */
-.drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  transform: translateX(100%);
-  width: 100%;
-  max-width: 400px;
-  height: 100%;
-  background-color: var(--phase-tertiary);
-  color: var(--phase-text);
-  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-  transition: transform 0.3s ease;
-  z-index: 9500;
-  visibility: hidden;
-  padding: 20px;
+/* ==========================================================================
+   Custom Sections
+   ========================================================================== */
+/* Ritual Entry */
+.ritual-entry-section {
+  position: relative;
+  padding: 4rem 1rem;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--phase-tertiary);
 }
-.drawer.active {
-  transform: translateX(0);
-  visibility: visible;
-}
-.drawer .close-button {
+.ritual-entry .entry-backdrop {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: var(--phase-text);
-  font-size: 24px;
-  cursor: pointer;
+  inset: 0;
+  background: var(--phase-background);
+  opacity: 0.5;
+  z-index: 0;
 }
-
-/* --- Modal Container --- */
-.modal-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
+.ritual-entry .entry-content {
+  position: relative;
+  z-index: 1;
+  max-width: 750px;
+  margin: 0 auto;
+}
+.ritual-entry .ritual-title {
+  font-size: clamp(2rem,5vw+1rem,3.5rem);
+  color: var(--phase-primary);
+  margin-bottom: 0.75rem;
+}
+.ritual-entry .ritual-subtitle {
+  font-size: clamp(1rem,2vw+0.5rem,1.25rem);
+  color: var(--phase-text);
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+.ritual-entry .entry-description {
+  font-size: 1rem;
+  color: var(--phase-text);
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+.ritual-entry .entry-actions {
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 9600;
-  visibility: hidden;\
+  gap: 1rem;
+}
+
+/* Bloom Protocol */
+.bloom-protocol-section {
+  padding: 3rem 1rem;
+}
+.bloom-protocol .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.bloom-protocol .protocol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap: 2rem;
+}
+.bloom-protocol .protocol-step {
+  background: var(--phase-tertiary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: var(--phase-text);
+}
+.bloom-protocol .step-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--phase-primary);
+  margin-bottom: 0.5rem;
+}
+.bloom-protocol .step-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+/* Signal Wall */
+.signal-wall-section {
+  padding: 3rem 1rem;
+  background: var(--phase-background);
+}
+.signal-wall .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.signal-wall .signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 1.5rem;
+}
+.signal-wall .trauma-card {
+  background: var(--phase-tertiary);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+.signal-wall .trauma-image {
+  position: relative;
+  width: 100%;
+  padding-top: 75%;
+  background: #111;
+  margin-bottom: 0.5rem;
+}
+.signal-wall .trauma-title {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+.signal-wall .trauma-price {
+  font-weight: bold;
+}
+
+/* Neural Testimonials */
+.neural-testimonials-section {
+  padding: 3rem 1rem;
+}
+.neural-testimonials .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.neural-testimonials .testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+  gap: 2rem;
+}
+.neural-testimonials .testimonial-card {
+  background: var(--phase-tertiary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: var(--phase-text);
+}
+
+/* ==========================================================================
+   Quantum Layer & Notifications
+   ========================================================================== */
+.quantum-layer { position: fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9000; }
+.quantum-grid .grid-line { position:absolute;background:rgba(255,255,255,0.05); }
+.quantum-notifications { position:fixed;bottom:20px;right:20px;z-index:9001;pointer-events:auto; }
+
+/* ==========================================================================
+   Responsive Tweaks
+   ========================================================================== */
+@media (max-width: 768px) {
+  .entry-actions { flex-direction: column; }
+  .bloom-protocol .protocol-grid, .signal-wall .signal-grid, .neural-testimonials .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+}
