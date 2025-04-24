@@ -24,9 +24,7 @@
   padding: 0;
   box-sizing: border-box;
 }
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 body {
   background-color: var(--phase-background);
   color: var(--phase-text);
@@ -34,25 +32,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
-a {
-  color: inherit;
-  text-decoration: none;
-}
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-button,
-input,
-select {
-  font: inherit;
-}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+button, input, select { font: inherit; }
 
-/* ------------------------------ Base Elements ------------------------------ */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-mono);
-}
+/* ------------------------------ Base Typography ------------------------------ */
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-mono); }
 h1 { font-size: 2.5rem; margin-bottom: 1rem; }
 h2 { font-size: 2rem; margin-bottom: 0.75rem; }
 h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
@@ -107,9 +92,7 @@ button.secondary:hover,
   max-width: 1200px;
   margin: 0 auto;
 }
-.voidbloom-header .header-logo img {
-  max-height: 50px;
-}
+.voidbloom-header .header-logo img { max-height: 50px; }
 .voidbloom-header .header-navigation {
   flex: 1;
   margin: 0 2rem;
@@ -118,26 +101,19 @@ button.secondary:hover,
   display: flex;
   gap: 2rem;
 }
-.voidbloom-header .nav-item.active .nav-link {
-  color: var(--phase-primary);
-}
+.voidbloom-header .nav-item.active .nav-link { color: var(--phase-primary); }
 .voidbloom-header .nav-link {
   color: var(--phase-text);
   font-weight: 600;
   transition: color 0.2s ease;
 }
-.voidbloom-header .nav-link:hover {
-  color: var(--phase-primary);
-}
+.voidbloom-header .nav-link:hover { color: var(--phase-primary); }
 .voidbloom-header .header-actions {
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
-.voidbloom-header .header-action {
-  color: var(--phase-text);
-  position: relative;
-}
+.voidbloom-header .header-action { color: var(--phase-text); position: relative; }
 .voidbloom-header .cart-count {
   position: absolute;
   top: -0.5rem;
@@ -152,9 +128,7 @@ button.secondary:hover,
   align-items: center;
   justify-content: center;
 }
-.header-action.menu-toggle {
-  display: none;
-}
+.header-action.menu-toggle { display: none; }
 @media (max-width: 768px) {
   .voidbloom-header .nav-menu,
   .voidbloom-header .header-action.search-action,
@@ -165,6 +139,55 @@ button.secondary:hover,
   .voidbloom-header .header-action.menu-toggle {
     display: block;
   }
+}
+
+/* ------------------------------ Glitch Text Animation ------------------------------ */
+.glitch-text {
+  position: relative;
+  color: var(--phase-primary);
+  font-family: var(--font-mono);
+  animation: glitch 2s infinite;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+}
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--phase-secondary);
+  animation: glitch-top 2s infinite linear alternate-reverse;
+}
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--phase-primary);
+  animation: glitch-bottom 1.5s infinite linear alternate-reverse;
+}
+@keyframes glitch {
+  0% { transform: none; }
+  7% { transform: translate(2px, -2px); }
+  14% { transform: translate(-2px, 2px); }
+  21% { transform: translate(2px, 2px); }
+  28% { transform: translate(-2px, -2px); }
+  35% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes glitch-top {
+  0% { clip: rect(0, 9999px, 0, 0); }
+  10% { clip: rect(0, 9999px, 10%, 0); }
+  20% { clip: rect(10%, 9999px, 0, 0); }
+  30% { clip: rect(0, 9999px, 5%, 0); }
+  100% { clip: rect(0, 9999px, 0, 0); }
+}
+@keyframes glitch-bottom {
+  0% { clip: rect(0, 9999px, 0, 0); }
+  10% { clip: rect(50%, 9999px, 60%, 0); }
+  20% { clip: rect(60%, 9999px, 50%, 0); }
+  30% { clip: rect(40%, 9999px, 45%, 0); }
+  100% { clip: rect(0, 9999px, 0, 0); }
 }
 
 /* ------------------------------ Ritual Entry Section ------------------------------ */
@@ -190,7 +213,6 @@ button.secondary:hover,
 }
 .ritual-entry-section .ritual-title {
   font-size: clamp(2rem, 5vw + 1rem, 3.5rem);
-  color: var(--phase-primary);
   margin-bottom: 1rem;
 }
 .ritual-entry-section .ritual-subtitle {
@@ -202,34 +224,24 @@ button.secondary:hover,
   font-size: 1rem;
   opacity: 0.9;
 }
-.ritual-entry-section .entry-actions {
-  margin-top: 2rem;
-}
-.ritual-entry-section .ritual-button {
-  min-width: 200px;
-}
+.ritual-entry-section .entry-actions { margin-top: 2rem; }
+.ritual-entry-section .ritual-button { min-width: 200px; }
 .ritual-entry-section .void-particles {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   z-index: 0;
-  pointer-events: none;
+  /* hook your particle canvas here */
 }
 
 /* ------------------------------ Bloom Protocol Section ------------------------------ */
 .bloom-protocol-section {
-  padding: 4rem 2rem;
-  text-align: center;
+  padding: 4rem 2rem; text-align: center;
 }
-.bloom-protocol-section .section-header {
-  margin-bottom: 2rem;
-}
+.bloom-protocol-section .section-header { margin-bottom: 2rem; }
 .bloom-protocol-section .section-title {
-  font-size: 2rem;
-  color: var(--phase-primary);
+  font-size: 2rem; color: var(--phase-primary);
 }
 .bloom-protocol-section .section-line {
-  width: 50px;
-  height: 4px;
+  width: 50px; height: 4px;
   background: var(--phase-primary);
   margin: 0.5rem auto 0;
 }
@@ -244,7 +256,6 @@ button.secondary:hover,
   padding: 2rem;
   border: 2px solid var(--phase-tertiary);
   border-radius: 8px;
-  position: relative;
 }
 .protocol-step .step-number {
   font-size: 3rem;
@@ -252,26 +263,16 @@ button.secondary:hover,
   color: var(--phase-primary);
   margin-bottom: 1rem;
 }
-.protocol-step .step-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-}
-.protocol-step .step-description {
-  font-size: 1rem;
-  opacity: 0.9;
-}
+.protocol-step .step-title { font-size: 1.25rem; margin-bottom: 0.75rem; }
+.protocol-step .step-description { font-size: 1rem; opacity: 0.9; }
 
 /* ------------------------------ Signal Wall Section ------------------------------ */
 .signal-wall-section {
-  padding: 4rem 2rem;
-  text-align: center;
+  padding: 4rem 2rem; text-align: center;
 }
-.signal-wall-section .section-header {
-  margin-bottom: 2rem;
-}
+.signal-wall-section .section-header { margin-bottom: 2rem; }
 .signal-wall-section .section-title {
-  font-size: 2rem;
-  color: var(--phase-primary);
+  font-size: 2rem; color: var(--phase-primary);
 }
 .signal-grid {
   display: grid;
@@ -283,32 +284,21 @@ button.secondary:hover,
   padding: 1rem;
   border: 2px solid var(--phase-tertiary);
   border-radius: 6px;
-  color: var(--phase-text);
   text-align: center;
 }
 .trauma-image {
   background: #111;
   height: 150px;
   margin-bottom: 1rem;
-  position: relative;
 }
-.trauma-title {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-.trauma-price {
-  font-size: 0.9rem;
-  color: var(--phase-primary);
-}
+.trauma-title { font-size: 1rem; margin-bottom: 0.5rem; }
+.trauma-price { font-size: 0.9rem; color: var(--phase-primary); }
 
 /* ------------------------------ Neural Testimonials Section ------------------------------ */
 .neural-testimonials-section {
-  padding: 4rem 2rem;
-  text-align: center;
+  padding: 4rem 2rem; text-align: center;
 }
-.neural-testimonials-section .section-header {
-  margin-bottom: 2rem;
-}
+.neural-testimonials-section .section-header { margin-bottom: 2rem; }
 .testimonial-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
@@ -319,16 +309,60 @@ button.secondary:hover,
   padding: 1.5rem;
   border: 2px solid var(--phase-tertiary);
   border-radius: 6px;
-  position: relative;
 }
-.testimonial-quote {
-  font-style: italic;
-  opacity: 0.9;
+.testimonial-quote { font-style: italic; opacity: 0.9; }
+.testimonial-author { margin-top: 1rem; font-weight: bold; }
+
+/* ------------------------------ Drawers (Cart & Mobile Menu) ------------------------------ */
+.drawer {
+  position: fixed;
+  top: 0; bottom: 0;
+  width: 300px;
+  background: var(--phase-background);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 2000;
 }
-.testimonial-author {
-  margin-top: 1rem;
-  font-weight: bold;
+.drawer.open { transform: translateX(0); }
+.cart-drawer { right: 0; }
+.mobile-menu-drawer {
+  left: 0;
+  width: 80%;
+  max-width: 320px;
 }
+
+/* ------------------------------ Quantum Notifications ------------------------------ */
+.quantum-notifications {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9000;
+  pointer-events: none;
+}
+.quantum-notification {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0,0,0,0.9);
+  color: var(--phase-primary);
+  border: 1px solid var(--phase-primary);
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: auto;
+}
+.quantum-notification.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quantum-notification-close {
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.quantum-notification-close:hover { opacity: 1; }
 
 /* ------------------------------ Footer Section ------------------------------ */
 .voidbloom-footer {
@@ -345,8 +379,6 @@ button.secondary:hover,
   max-width: 1200px;
   margin: 0 auto;
 }
-.voidbloom-footer .footer-brand {
-}
 .voidbloom-footer .footer-logo {
   display: block;
   max-width: 150px;
@@ -360,18 +392,7 @@ button.secondary:hover,
   display: flex;
   gap: 1rem;
 }
-.voidbloom-footer .social-links a {
-  color: var(--phase-text);
-  transition: color 0.2s ease;
-}
-.voidbloom-footer .social-links a:hover {
-  color: var(--phase-primary);
-}
-.voidbloom-footer .social-links svg {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-}
+.voidbloom-footer .social-links a:hover { color: var(--phase-primary); }
 .voidbloom-footer .footer-heading {
   margin-bottom: 1rem;
   font-weight: 600;
@@ -380,23 +401,9 @@ button.secondary:hover,
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.voidbloom-footer .footer-nav {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.voidbloom-footer .footer-nav li {
-  margin-bottom: 0.6rem;
-}
-.voidbloom-footer .footer-nav li a {
-  color: var(--phase-text);
-  text-decoration: none;
-  opacity: 0.85;
-  transition: color 0.2s ease, padding-left 0.2s ease;
-}
+.voidbloom-footer .footer-nav li { margin-bottom: 0.6rem; }
 .voidbloom-footer .footer-nav li a:hover {
   color: var(--phase-primary);
-  opacity: 1;
   padding-left: 5px;
 }
 .voidbloom-footer .newsletter-form .input-group {
@@ -410,33 +417,15 @@ button.secondary:hover,
   border: 1px solid var(--phase-secondary);
   border-radius: 4px;
   background-color: var(--phase-background);
-  color: var(--phase-text);
 }
 .voidbloom-footer .newsletter-form input[type="email"]:focus {
   border-color: var(--phase-primary);
 }
-.voidbloom-footer .newsletter-form button {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--phase-primary);
-  color: var(--phase-background);
-  border: none;
-  border-radius: 4px;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
 .voidbloom-footer .newsletter-form button:hover {
   background-color: color-mix(in srgb, var(--phase-primary) 80%, black 20%);
 }
-.voidbloom-footer .form-message {
-  margin-top: 0.75rem;
-  font-size: 0.85em;
-  width: 100%;
-}
 .voidbloom-footer .form-message--error {
   color: var(--trauma-fragmentation-color);
-}
-.voidbloom-footer .form-message--success {
-  color: var(--phase-primary);
 }
 .voidbloom-footer .footer-bottom {
   border-top: 1px solid var(--phase-background);
@@ -450,30 +439,13 @@ button.secondary:hover,
   font-size: 0.8rem;
   opacity: 0.7;
 }
-.voidbloom-footer .footer-copyright small {
-  margin: 0;
-}
 .voidbloom-footer .footer-legal-links {
   display: flex;
   gap: 0.5rem 1rem;
 }
-.voidbloom-footer .footer-legal-links a {
-  color: var(--phase-text);
-  text-decoration: none;
-}
 .voidbloom-footer .footer-legal-links a:hover {
   color: var(--phase-primary);
   text-decoration: underline;
-}
-.voidbloom-footer .payment-icons .list-payment {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 0.75rem;
-}
-.voidbloom-footer .payment-icons .list-payment__item {
-  line-height: 0;
 }
 .voidbloom-footer .payment-icons .list-payment__item svg {
   height: 24px;
@@ -483,7 +455,9 @@ button.secondary:hover,
 /* ------------------------------ Responsive Tweaks ------------------------------ */
 @media (max-width: 768px) {
   .ritual-entry-section { padding: 4rem 1rem; }
-  .bloom-protocol-section, .signal-wall-section, .neural-testimonials-section { padding: 3rem 1rem; }
+  .bloom-protocol-section,
+  .signal-wall-section,
+  .neural-testimonials-section { padding: 3rem 1rem; }
   .voidbloom-header .header-container { flex-direction: column; }
   .voidbloom-footer .footer-grid-container { grid-template-columns: 1fr; text-align: center; }
   .voidbloom-footer .footer-bottom { flex-direction: column; gap: 1.5rem; }
