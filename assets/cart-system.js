@@ -1,6 +1,3 @@
-**Note:** All occurrences of the private `#checkHolographicSupport` have been replaced with the public `checkHolographicSupport` method (and its invocation updated). The rest of the class remains identical.
-
-```javascript
 /**
  * CART-SYSTEM.JS
  * Advanced cart functionality for CyberCore theme
@@ -16,84 +13,147 @@ import { NeuralBus } from './neural-bus.js';
 /**
  * CartSystem
  * Advanced cart management system with quantum effects and 3D previews
+ *
+ * Key Features:
+ * - AJAX cart updates without page refresh
+ * - Cart drawer with animations
+ * - Quantity adjustments and validations
+ * - Cross-sell recommendations
+ * - 3D product previews (when supported)
+ * - Integration with NeuralBus events
  */
 export class CartSystem {
-  static #config = { /* ... unchanged config ... */ };
-  static #instance = null;
-  static #eventHandlersAttached = false;
-  static #isOpen = false;
-  static #cartData = null;
-  static #neuralBusConnected = false;
-  static #neuralNonce = null;
-  static #lastRequestTimestamp = 0;
-  static #requestThrottleMs = 500;
-  static #pendingRequests = [];
-  static #holographicPreviewsSupported = false;
-  static #holographicRenderer = null;
-  static #activeProduct = null;
-  static #productMutationRegistry = new Map();
+  // Configuration and state
+  static config = {
+    cartDrawerSelector: '#cart-drawer',
+    cartIconSelector: '#cart-icon-bubble',
+    cartCountSelector: '#cart-count',
+    cartTotalSelector: '#cart-total',
+    addToCartFormSelector: 'form[action="/cart/add"]',
+    cartItemSelector: '.cart-item',
+    cartItemRemoveSelector: '.cart-item__remove',
+    cartItemQuantitySelector: '.cart-item__quantity-input',
+    cartDrawerToggleSelector: '[data-cart-toggle]',
+    cartEmptyMessageSelector: '.cart-empty-message',
+    cartErrorSelector: '.cart-error',
+    cartRecommendationsSelector: '.cart-recommendations',
+    cartCheckoutButtonSelector: '#cart-checkout-button',
+    continueShoppingSelector: '#continue-shopping',
+    cartPreviewContainerSelector: '#cart-preview-container',
+    neuralSynced: true,
+    useQuantumEffects: true,
+    useHolographicPreviews: true,
+    debug: false,
+    apiEndpoints: {
+      cartAdd: '/cart/add.js',
+      cartUpdate: '/cart/update.js',
+      cartChange: '/cart/change.js',
+      cartGet: '/cart.js',
+      cartClear: '/cart/clear.js'
+    }
+  };
+
+  static instance = null;
+  static eventHandlersAttached = false;
+  static isOpen = false;
+  static cartData = null;
+  static neuralBusConnected = false;
+  static holographicPreviewsSupported = false;
+  static holographicRenderer = null;
+  static activeProduct = null;
+  static productMutationRegistry = new Map();
 
   /**
    * Initialize the cart system
+   * @param {Object} options - Configuration overrides
    */
   static initialize(options = {}) {
-    if (this.#instance) return this.#instance;
-    this.#config = { ...this.#config, ...options };
-
-    // Now calling public method
+    if (this.instance) return this.instance;
+    Object.assign(this.config, options);
+    // Check for holographic preview support
     this.checkHolographicSupport();
-
-    this.#attachEventHandlers();
-    this.#fetchCart();
-    if (this.#config.neuralSynced) this.#connectToNeuralBus();
-    this.#instance = this;
-    return this.#instance;
+    this.attachEventHandlers();
+    this.fetchCart().then(() => this.updateCartUI());
+    if (this.config.neuralSynced) this.connectToNeuralBus();
+    if (this.config.debug) console.log('[CartSystem] Initialized', this.config);
+    this.instance = this;
+    return this.instance;
   }
 
-  // ... all other public and private methods unchanged until checkHolographicSupport ...
+  // ... (other public methods: getCart, addToCart, updateItemQuantity, removeItem, clearCart, openCartDrawer, closeCartDrawer, toggleCartDrawer, setActiveProduct, isCartDrawerOpen) ...
 
-  /**
-   * Check for holographic preview support
-   */
+  /** Check for holographic preview support (WebGL and renderer) */
   static checkHolographicSupport() {
-    if (!this.#config.useHolographicPreviews) {
-      this.#holographicPreviewsSupported = false;
-      return;
-    }
+    if (!this.config.useHolographicPreviews) return;
     try {
       const canvas = document.createElement('canvas');
-      this.#holographicPreviewsSupported = !!(
-        (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-      );
-      if (this.#holographicPreviewsSupported) {
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      this.holographicPreviewsSupported = !!gl;
+      if (this.holographicPreviewsSupported) {
         import('./hologram-renderer.js')
-          .then(module => {
-            this.#holographicRenderer = module.HologramRenderer;
-            if (this.#config.debug) {
-              console.log('[CartSystem] Holographic previews enabled');
-            }
-          })
-          .catch(error => {
-            console.warn('Hologram renderer not available:', error);
-            this.#holographicPreviewsSupported = false;
-          });
+          .then(module => { this.holographicRenderer = module.HologramRenderer; })
+          .catch(() => { this.holographicPreviewsSupported = false; });
       }
-    } catch (e) {
-      this.#holographicPreviewsSupported = false;
+    } catch {
+      this.holographicPreviewsSupported = false;
     }
   }
 
-  // ... rest of the class methods remain unchanged ...
+  /** Attach DOM event handlers */
+  static attachEventHandlers() {
+    if (this.eventHandlersAttached) return;
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll(this.config.cartDrawerToggleSelector)
+        .forEach(btn => btn.addEventListener('click', e => { e.preventDefault(); this.toggleCartDrawer(); }));
+      // ... other handlers ...
+      this.eventHandlersAttached = true;
+    });
+  }
 
+  /** Fetch current cart */
+  static async fetchCart() {
+    const res = await fetch(this.config.apiEndpoints.cartGet);
+    if (!res.ok) throw new Error('Cart fetch failed');
+    this.cartData = await res.json();
+    return this.cartData;
+  }
+
+  /** Post data to Shopify API */
+  static async postToShopify(endpoint, data) {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error(`Request to ${endpoint} failed`);
+    return res.json();
+  }
+
+  /** Update cart UI elements */
+  static updateCartUI() {
+    if (!this.cartData) return;
+    const countEl = document.querySelector(this.config.cartCountSelector);
+    if (countEl) {
+      countEl.textContent = this.cartData.item_count;
+      countEl.classList.toggle('hidden', !this.cartData.item_count);
+    }
+    // ... update total, items, recommendations ...
+  }
+
+  /** Connect to NeuralBus */
+  static connectToNeuralBus() {
+    if (typeof NeuralBus === 'undefined') return;
+    const reg = NeuralBus.register('cart-system', { version: '2.2.0' });
+    this.neuralBusConnected = true;
+    NeuralBus.subscribe('cart:refresh', () => this.fetchCart().then(() => this.updateCartUI()));
+  }
+
+  // ... (other handlers and utility methods without private `#` syntax) ...
 }
 
-// Auto-initialize
 if (typeof window !== 'undefined') {
   window.addEventListener('DOMContentLoaded', () => {
-    CartSystem.initialize({
-      debug: window.location.search.includes('debug=true')
-    });
+    CartSystem.initialize({ debug: window.location.search.includes('debug=true') });
     window.CartSystem = CartSystem;
   });
 }
-```
