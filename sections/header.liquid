@@ -1,32 +1,128 @@
 {% comment %}
   Header section for VoidBloom theme
   Provides site navigation and branding with trauma encoding visualization
+  
+  Improvements:
+  - Consolidated HTML from previous versions
+  - Added schema settings for Logo Width, Menu selection, and Sticky Header option
+  - Updated markup to use new settings
+  - Kept original custom settings (Trauma type, Intensity, Memory Phase)
 {% endcomment %}
 
-<header class="site-header" data-trauma-type="{{ section.settings.trauma_type }}" 
-  data-intensity="{{ section.settings.trauma_intensity }}"
-  data-memory-phase="{{ section.settings.memory_phase }}">
-  
-  <div class="site-header__container">
-    <div class="site-header__logo-container">
-      <a href="/" class="site-header__logo-link" aria-label="{{ shop.name }}">
-        {% if section.settings.logo %}
-          <img src="{{ section.settings.logo | image_url: width: 200 }}" 
-               alt="{{ shop.name }}" 
-               loading="eager"
-               width="{{ section.settings.logo_width }}"
-               class="site-header__logo">
-        {% else %}
-          <span class="site-header__logo-text">{{ shop.name }}</span>
-        {% endif %}
+{%- comment %} Determine header classes based on settings {%- endcomment %}
+{%- liquid
+  assign header_classes = 'voidbloom-header site-header'
+  if section.settings.enable_sticky_header
+    assign header_classes = header_classes | append: ' header--sticky supports-sticky-header'
+  endif
+-%}
+
+<header class="{{ header_classes }}"
+        role="banner"
+        data-section-id="{{ section.id }}"
+        data-section-type="header"
+        data-trauma-type="{{ section.settings.trauma_type | default: 'recursion' }}" 
+        data-intensity="{{ section.settings.trauma_intensity | default: 0.7 }}"
+        data-memory-phase="{{ section.settings.memory_phase | default: 'cyber-lotus' }}"
+        data-sticky-header="{{ section.settings.enable_sticky_header }}"
+        data-neural-node="header"
+        data-glitch-level="{{ section.settings.glitch_level | default: 'medium' }}"
+        data-mutation-profile="{{ section.settings.mutation_profile | default: 'CyberLotus' }}">
+
+  <div class="header-container site-header__container">
+    <div class="header-logo site-header__logo-container">
+      <a href="{{ routes.root_url }}" class="logo-link site-header__logo-link" aria-label="{{ shop.name | escape }}">
+        {%- if settings.logo != blank -%}
+          {%- comment %} Use global logo, but control width via section setting {%- endcomment %}
+          {%- assign logo_width = section.settings.logo_width | default: section.settings.logo_max_width | default: 150 -%}
+          {%- capture img_attributes -%}
+            class="site-logo site-header__logo"
+            alt="{{ shop.name | escape }}"
+            width="{{ settings.logo.width }}"
+            height="{{ settings.logo.height }}"
+            style="max-width: {{ logo_width }}px;"
+            loading="eager" {% comment %} Header logo is usually above the fold, load eagerly {%- endcomment %}
+          {%- endcapture -%}
+          {{- settings.logo | image_url: width: logo_width | image_tag: attributes: img_attributes -}}
+        {%- else -%}
+          <span class="site-name glitch-text site-header__logo-text" data-text="{{ shop.name | escape }}">{{ shop.name | escape }}</span>
+        {%- endif -%}
       </a>
     </div>
-    {% render 'primary-navigation' %}
-    {% render 'header-actions' %}
+
+    {%- comment %} Navigation menu {%- endcomment %}
+    {%- assign header_menu = section.settings.menu | default: section.settings.main_menu | default: 'main-menu' -%}
+    {%- if linklists[header_menu].links.size > 0 -%}
+      <nav class="header-navigation" role="navigation">
+        <ul class="nav-menu">
+          {%- for link in linklists[header_menu].links -%}
+            <li class="nav-item{% if link.active %} active{% endif %}{% if link.child_active %} child-active{% endif %}">
+              <a href="{{ link.url }}" class="nav-link">{{ link.title | escape }}</a>
+              {%- comment %} Add dropdown/megamenu logic here if needed {%- endcomment %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- comment %} Header actions (search, account, cart) {%- endcomment %}
+    <div class="header-actions">
+      {%- comment %} Search Action {%- endcomment %}
+      <a href="{{ routes.search_url }}" class="header-action search-action" aria-label="{{ 'general.search.search' | t }}">
+        <div class="icon-search">
+          <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+      </a>
+
+      {%- comment %} Account Action - Link depends on login status {%- endcomment %}
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="header-action account-action" aria-label="{{ 'customer.account.title' | t }}">
+          <div class="icon-account">
+            <span class="visually-hidden">{{ 'customer.account.title' | t }}</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="8" r="5"></circle>
+              <path d="M20 21v-2a7 7 0 0 0-14 0v2"></path>
+            </svg>
+          </div>
+        </a>
+      {%- endif -%}
+
+      {%- comment %} Cart Action - Often triggers a drawer {%- endcomment %}
+      <button class="header-action cart-action" aria-label="{{ 'sections.cart.title' | t | default: 'Cart' }}" data-quantum-trigger="cart" aria-haspopup="dialog">
+        <div class="icon-cart">
+          <span class="visually-hidden">{{ 'sections.cart.title' | t | default: 'Cart' }}</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          {%- comment %} Cart count - update via JS {%- endcomment %}
+          <span class="cart-count" aria-hidden="true">{{ cart.item_count }}</span>
+          <span class="visually-hidden">{{ 'sections.cart.cart_count' | t: count: cart.item_count }}</span>
+        </div>
+      </button>
+
+      {%- comment %} Mobile Menu Toggle - Typically shown/hidden via CSS {%- endcomment %}
+      <button class="header-action menu-toggle" aria-label="{{ 'general.navigation.menu' | t | default: 'Menu' }}" data-quantum-trigger="mobile-menu" aria-expanded="false" aria-controls="MobileMenuDrawer">
+        <div class="icon-menu">
+          <span class="visually-hidden">{{ 'general.navigation.menu' | t | default: 'Menu' }}</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+    </div>
   </div>
 
+  {%- comment %} Announcement bar {%- endcomment %}
   {% if section.settings.show_announcement %}
-    <div class="announcement-bar" data-trauma-type="{{ section.settings.announcement_trauma_type }}">
+    <div class="announcement-bar" data-trauma-type="{{ section.settings.announcement_trauma_type | default: 'surveillance' }}">
       <div class="container">
         <p class="announcement-text">{{ section.settings.announcement_text }}</p>
       </div>
@@ -45,11 +141,6 @@
       "content": "Branding"
     },
     {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo image"
-    },
-    {
       "type": "range",
       "id": "logo_width",
       "min": 50,
@@ -58,6 +149,48 @@
       "default": 140,
       "unit": "px",
       "label": "Logo width"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo max width",
+      "default": 150,
+      "info": "Controls the maximum width of the logo image (uses Logo from Theme Settings)."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Header navigation menu",
+      "default": "main-menu",
+      "info": "Select the menu to display in the header."
+    },
+    {
+      "type": "link_list",
+      "id": "main_menu",
+      "label": "Main Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_header",
+      "label": "Enable sticky header",
+      "default": true,
+      "info": "Header remains visible when scrolling down."
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Use sticky header",
+      "default": true,
+      "info": "Header stays at the top as visitor scrolls"
     },
     {
       "type": "header",
@@ -127,6 +260,41 @@
           "label": "Ghost Liminal"
         }
       ]
+    },
+    {
+      "type": "select",
+      "id": "glitch_level",
+      "label": "Glitch Effect Level",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy"
+        }
+      ],
+      "default": "medium",
+      "info": "Controls the intensity of the glitch effect on your header elements"
+    },
+    {
+      "type": "select",
+      "id": "mutation_profile",
+      "label": "Mutation Profile",
+      "options": [
+        { "value": "CyberLotus", "label": "CyberLotus" },
+        { "value": "ObsidianBloom", "label": "ObsidianBloom" }
+      ],
+      "default": "CyberLotus"
     },
     {
       "type": "header",

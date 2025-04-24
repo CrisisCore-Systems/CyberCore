@@ -1,0 +1,122 @@
+{% comment %}
+  Section: Ritual Entry
+  Displays the main hero/entry section for the homepage.
+  Includes settings for title, subtitle, description, and buttons.
+{% endcomment %}
+
+{% comment %} Assign settings to variables for cleaner access {% endcomment %}
+{%- assign title = section.settings.title -%}
+{%- assign subtitle = section.settings.subtitle -%}
+{%- assign description = section.settings.description -%}
+{%- assign button1_label = section.settings.button1_label -%}
+{%- assign button1_link = section.settings.button1_link -%}
+{%- assign button2_label = section.settings.button2_label -%}
+
+<section class="ritual-entry"
+         id="ritual-entry-{{ section.id }}"
+         data-section-id="{{ section.id }}"
+         data-section-type="ritual-entry"
+         data-neural-node
+         data-depth="1">
+
+  <div class="entry-backdrop">{% comment %} Placeholder for background effects {% endcomment %}</div>
+
+  <div class="entry-content">
+    {%- if title != blank -%}
+      <h1 class="ritual-title glitch-text" data-text="{{ title | escape }}">
+        {{ title | escape }}
+      </h1>
+    {%- endif -%}
+
+    {%- if subtitle != blank -%}
+      <div class="ritual-subtitle">{{ subtitle | escape }}</div>
+    {%- endif -%}
+
+    {%- if description != blank -%}
+      <div class="entry-description">
+        {{ description }}
+      </div>
+    {%- endif -%}
+
+    {%- if button1_label != blank or button2_label != blank -%}
+      <div class="entry-actions">
+        {%- if button1_label != blank and button1_link != blank -%}
+          <a href="{{ button1_link }}" class="ritual-button primary">
+            {{ button1_label | escape }}
+          </a>
+        {%- endif -%}
+
+        {%- if button2_label != blank -%}
+          {% comment %} Keeping custom attributes for JS trigger functionality {% endcomment %}
+          <button class="ritual-button secondary quantum-trigger" data-mutation="VoidBloom" data-intensity="0.8">
+            {{ button2_label | escape }}
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {% comment %} Unique ID for particle container if targeted by JS {% endcomment %}
+  <div class="void-particles" id="entry-particles-{{ section.id }}"></div>
+</section>
+
+{% schema %}
+{
+  "name": "Ritual Entry",
+  "tag": "section",
+  "class": "ritual-entry-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "VoidBloom"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Memory Archive System"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Access the void. Recover lost memories. Integrate trauma signals.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button1_label",
+      "label": "Button 1 Label",
+      "default": "Explore Memory Artifacts"
+    },
+    {
+      "type": "url",
+      "id": "button1_link",
+      "label": "Button 1 Link",
+      "info": "Leave blank to hide button 1."
+    },
+    {
+      "type": "text",
+      "id": "button2_label",
+      "label": "Button 2 Label",
+      "default": "Initiate Protocol",
+      "info": "This button triggers a custom JS action. Leave blank to hide."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ritual Entry",
+      "category": "Custom Content"
+    }
+  ]
+}
+{% endschema %}

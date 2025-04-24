@@ -1,0 +1,143 @@
+{% comment %}
+  Section: Signal Wall (Featured Collection)
+  Displays products from a selected collection in a grid.
+
+  Improvements:
+  - Added schema settings for title, collection selection, product limit, and 'View All' button.
+  - Displays selected collection dynamically instead of hardcoded 'featured'.
+  - Includes onboarding/placeholder content if no collection is selected or empty.
+  - Corrected image tag rendering logic.
+  - Fixed Liquid syntax error in 'View All' button default text.
+{% endcomment %}
+
+{%- liquid
+  assign section_title = section.settings.title
+  assign collection = collections[section.settings.collection]
+  assign products_limit = section.settings.products_to_show
+  assign show_view_all = section.settings.show_view_all
+  assign view_all_label = section.settings.view_all_label
+
+  assign has_content = false
+  if collection != blank and collection.products.size > 0
+    assign has_content = true
+  endif
+-%}
+
+<section class="signal-wall"
+         id="signal-wall-{{ section.id }}"
+         data-section-id="{{ section.id }}"
+         data-section-type="signal-wall"
+         data-neural-node
+         data-depth="3">
+
+  <div class="section-header">
+    {%- if section_title != blank -%}
+      <h2 class="section-title">{{ section_title | escape }}</h2>
+    {%- endif -%}
+    <div class="section-line"></div>
+  </div>
+
+  <div class="signal-grid">
+    {%- if has_content -%}
+      {%- for product in collection.products limit: products_limit -%}
+        <div class="trauma-card" data-neural-node>
+          <a href="{{ product.url }}">
+            <div class="trauma-image {% unless product.featured_image %}placeholder{% endunless %}">
+              {%- if product.featured_image -%}
+                {%- assign image = product.featured_image -%}
+                {%- capture img_attributes -%}
+                  width="{{ image.width }}"
+                  height="{{ image.height }}"
+                  alt="{{ image.alt | default: product.title | escape }}"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                {%- endcapture -%}
+                {{ image | image_url: width: 300, height: 300, crop: 'center' | image_tag: attributes: img_attributes }}
+              {%- else -%}
+                 {%- comment %} Placeholder SVG or CSS background could go here for products without images {%- endcomment %}
+              {%- endif -%}
+              {%- comment %} This depth class seems theme-specific {%- endcomment %}
+              <div class="trauma-depth depth-{{ forloop.index | modulo: 3 | plus: 1 }}"></div>
+            </div>
+            <h3 class="trauma-title">{{ product.title | escape }}</h3>
+            <div class="trauma-price">{{ product.price | money }}</div>
+          </a>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment %} Show onboarding placeholders if no collection selected or collection is empty {%- endcomment %}
+      {%- for i in (1..products_limit) -%}
+        <div class="trauma-card onboarding-placeholder" data-neural-node>
+          <div class="trauma-image placeholder">
+             {% comment %} Placeholder SVG or CSS background {%- endcomment %}
+             <div class="trauma-depth depth-{{ i | modulo: 3 | plus: 1 }}"></div>
+          </div>
+          <h3 class="trauma-title">{{ 'sections.featured_collection.onboarding_title' | t }}</h3>
+          <div class="trauma-price">{{ 4999 | money }}</div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if show_view_all and collection != blank -%}
+    <div class="signal-actions">
+      {%- comment %} Assign the translated default label first to avoid syntax error {%- endcomment %}
+      {%- assign default_button_label = 'sections.featured_collection.view_all' | t -%}
+      <a href="{{ collection.url }}" class="ritual-button secondary">
+        {%- comment %} Now use the variable in the default filter {%- endcomment %}
+        {{ view_all_label | default: default_button_label | escape }}
+      </a>
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "Signal Wall (Collection)",
+  "tag": "section",
+  "class": "signal-wall-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Signal Wall"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to display"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Maximum products to show",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all button label",
+      "default": "View All Signals"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Signal Wall (Collection)",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}
+EOF

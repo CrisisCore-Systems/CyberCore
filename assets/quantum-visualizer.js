@@ -1,135 +1,113 @@
-(function () {
-  'use strict';
+// quantum-visualizer.js
+// Provides QuantumVisualizer for rendering dynamic quantum grid and noise effects
 
-  // Check if the quantum visualizer feature is enabled
-  if (
-    !window.voidBloom ||
-    !window.voidBloom.config ||
-    !window.voidBloom.config.features.quantumVisualizer
-  ) {
-    console.log('Quantum Visualizer is disabled in configuration');
-    return;
+/**
+ * QuantumVisualizer
+ * Manages a Canvas2D-based visualization overlay (grid scan, noise, particles) on a target container.
+ */
+export class QuantumVisualizer {
+  // Store instances keyed by container
+  static _instances = new WeakMap();
+
+  /**
+   * Initialize the quantum visualizer on a container element.
+   * @param {HTMLElement} container - The DOM element to overlay the canvas on
+   * @param {Object} options - Config options
+   * @param {string} options.backgroundColor - CSS color for background overlay
+   * @param {string} options.gridColor - CSS color for grid lines
+   * @param {boolean} options.showNoise - Whether to overlay noise static
+   */
+  static init(container, options = {}) {
+    if (!container || QuantumVisualizer._instances.has(container)) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = options.zIndex || '9000';
+    container.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    const state = { container, canvas, ctx, options };
+    QuantumVisualizer._instances.set(container, state);
+
+    // Resize to match
+    const resize = () => {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    state._resizeHandler = resize;
+
+    // Start animation
+    const animate = () => {
+      QuantumVisualizer._drawFrame(state);
+      state._raf = requestAnimationFrame(animate);
+    };
+    animate();
   }
 
-  class QuantumVisualizer {
-    constructor() {
-      this.container = document.createElement('div');
-      this.container.className = 'quantum-visualizer';
-      this.canvas = document.createElement('canvas');
-      this.container.appendChild(this.canvas);
-      document.body.appendChild(this.container);
+  /**
+   * Destroy the visualizer instance on a container.
+   * @param {HTMLElement} container
+   */
+  static destroy(container) {
+    const state = QuantumVisualizer._instances.get(container);
+    if (!state) return;
+    cancelAnimationFrame(state._raf);
+    window.removeEventListener('resize', state._resizeHandler);
+    state.container.removeChild(state.canvas);
+    QuantumVisualizer._instances.delete(container);
+  }
 
-      this.ctx = this.canvas.getContext('2d');
-      this.particles = [];
-      this.maxParticles = 100;
-      this.traumaProfile = document.body.getAttribute('data-trauma-profile') || 'void';
-      this.memoryPhase = document.body.getAttribute('data-memory-phase') || 'alpha';
+  // Internal: draw a single frame
+  static _drawFrame(state) {
+    const { ctx, canvas, options } = state;
+    const w = canvas.width;
+    const h = canvas.height;
 
-      this.resizeCanvas();
-      this.initParticles();
-      this.bindEvents();
-      this.animate();
+    // Clear
+    ctx.clearRect(0, 0, w, h);
+
+    // Background tint
+    if (options.backgroundColor) {
+      ctx.fillStyle = options.backgroundColor;
+      ctx.fillRect(0, 0, w, h);
     }
 
-    resizeCanvas() {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
+    // Grid scanning effect
+    const gridSize = options.gridSize || 50;
+    ctx.strokeStyle = options.gridColor || 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = 0; x <= w; x += gridSize) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
     }
+    for (let y = 0; y <= h; y += gridSize) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+    }
+    ctx.stroke();
 
-    initParticles() {
-      for (let i = 0; i < this.maxParticles; i++) {
-        this.particles.push({
-          x: Math.random() * this.canvas.width,
-          y: Math.random() * this.canvas.height,
-          radius: Math.random() * 2 + 1,
-          color: this.getParticleColor(),
-          speedX: Math.random() * 3 - 1.5,
-          speedY: Math.random() * 3 - 1.5,
-          phase: Math.random() * Math.PI * 2,
-        });
+    // Noise overlay
+    if (options.showNoise) {
+      const imageData = ctx.getImageData(0, 0, w, h);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const v = (Math.random() * 255) | 0;
+        data[i] = data[i] ^ v;
+        data[i+1] = data[i+1] ^ v;
+        data[i+2] = data[i+2] ^ v;
       }
-    }
-
-    getParticleColor() {
-      // Different colors based on trauma profile
-      const colors = {
-        void: 'rgba(110, 12, 247, 0.7)',
-        glitch: 'rgba(0, 255, 157, 0.7)',
-        quantum: 'rgba(255, 50, 50, 0.7)',
-        memory: 'rgba(255, 215, 0, 0.7)',
-      };
-
-      return colors[this.traumaProfile] || colors.void;
-    }
-
-    bindEvents() {
-      window.addEventListener('resize', () => this.resizeCanvas());
-
-      // Update visualizer when trauma profile changes
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (
-            mutation.attributeName === 'data-trauma-profile' ||
-            mutation.attributeName === 'data-memory-phase'
-          ) {
-            this.traumaProfile = document.body.getAttribute('data-trauma-profile') || 'void';
-            this.memoryPhase = document.body.getAttribute('data-memory-phase') || 'alpha';
-
-            // Update particle colors
-            this.particles.forEach((particle) => {
-              particle.color = this.getParticleColor();
-            });
-          }
-        });
-      });
-
-      observer.observe(document.body, { attributes: true });
-    }
-
-    animate() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-      // Draw and update particles
-      this.particles.forEach((particle) => {
-        this.ctx.beginPath();
-        this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = particle.color;
-        this.ctx.fill();
-
-        // Move particles
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-        particle.phase += 0.01;
-
-        // Apply sinusoidal movement based on memory phase
-        if (this.memoryPhase === 'beta') {
-          particle.x += Math.sin(particle.phase) * 0.5;
-        } else if (this.memoryPhase === 'gamma') {
-          particle.y += Math.cos(particle.phase) * 0.5;
-        } else if (this.memoryPhase === 'omega') {
-          particle.x += Math.sin(particle.phase) * 0.5;
-          particle.y += Math.cos(particle.phase) * 0.5;
-        }
-
-        // Boundary checking
-        if (particle.x < 0 || particle.x > this.canvas.width) {
-          particle.speedX *= -1;
-        }
-
-        if (particle.y < 0 || particle.y > this.canvas.height) {
-          particle.speedY *= -1;
-        }
-      });
-
-      requestAnimationFrame(() => this.animate());
+      ctx.putImageData(imageData, 0, 0);
     }
   }
+}
 
-  // Initialize the quantum visualizer once the DOM is fully loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    // Only initialize if element with class 'quantum-ready' exists
-    if (document.querySelector('.quantum-ready')) {
-      new QuantumVisualizer();
-    }
-  });
-})();
+// Expose globally
+window.QuantumVisualizer = QuantumVisualizer;

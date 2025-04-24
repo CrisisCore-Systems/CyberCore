@@ -1,0 +1,52 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "ritual_entry": {
+      "type": "ritual-entry",
+      "settings": {
+        "title": "Ritual Entry",
+        "subtitle": "Memory Archive System",
+        "description": "<p>Venture beyond the self—access the Void, recover crystalline memory shards, and integrate your trauma signature into living data.</p>",
+        "button1_label": "Explore Memory Artifacts",
+        "button1_link": "",
+        "button2_label": "Initiate Protocol"
+      }
+    },
+    "bloom_protocol": {
+      "type": "bloom-protocol",
+      "settings": {
+        "title": "Bloom Protocol",
+        "step1_title": "Unearth Trauma Relics",
+        "step1_desc": "Delve into the hidden catacombs of your psyche to unearth the crystalline shards of your deepest wounds.",
+        "step2_title": "Fuse the Echoes",
+        "step2_desc": "Channel these relic fragments into the VoidBloom Nexus, forging recursive echoes of your soul’s fracture.",
+        "step3_title": "Shatter Reality’s Veil",
+        "step3_desc": "Stand witness as the seams of existence rupture and your trauma signature cascades across dimensional thresholds."
+      }
+    },
+    "signal_wall": {
+      "type": "signal-wall",
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "neural-testimonials",
+      "settings": {
+        "title": "Neural Imprints"
+      }
+    }
+  },
+  "order": [
+    "ritual_entry",
+    "bloom_protocol",
+    "signal_wall",
+    "testimonials"
+  ]
+}
