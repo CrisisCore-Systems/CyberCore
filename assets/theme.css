@@ -36,7 +36,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-
 body.theme-transition {
   transition: background-color 1.5s cubic-bezier(0.2,0.8,0.2,1);
 }
@@ -73,7 +72,6 @@ button:hover,
 .ritual-button:hover {
   background-color: color-mix(in srgb, var(--phase-secondary) 80%, black 20%);
 }
-
 .ritual-button.primary {
   background-color: var(--phase-primary);
   border: 1px solid var(--phase-primary);
@@ -112,13 +110,11 @@ button:hover,
   padding: 8px 12px;
   text-decoration: none;
 }
-
 :focus-visible {
   outline: 2px solid var(--trauma-color);
   outline-offset: 2px;
   border-radius: 4px;
 }
-
 body.reduce-motion * {
   transition-duration: 0.01ms !important;
   animation-duration: 0.01ms !important;
@@ -231,19 +227,4 @@ body.reduce-motion * {
   justify-content: center;
   align-items: center;
   z-index: 9600;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
-}
-.modal-container.active {
-  visibility: visible;
-  opacity: 1;
-  transition-delay: 0;
-}
-.modal-container .modal-content {
-  background: var(--phase-tertiary);
-  color: var(--phase-text);
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 600px;
-  width: 90%;
+  visibility: hidden;\
