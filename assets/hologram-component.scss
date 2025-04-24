@@ -1,0 +1,240 @@
+/**
+ * CyberCore Hologram Component
+ * Enhanced holographic UI element styling
+ * VERSION: 1.0.0
+ */
+
+@import 'cyber-colors';
+@import 'cyber-animations';
+
+.hologram {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+
+  &__container {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: rgba($primary-dark, 0.6);
+    backdrop-filter: blur(4px);
+    box-shadow: $glow-shadow;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem;
+    color: $secondary-accent;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba($neutral-darkest, 0.1),
+        rgba($neutral-darkest, 0.1) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      opacity: 0.3;
+      z-index: -1;
+    }
+  }
+
+  &__edge {
+    position: absolute;
+    border: 1px solid $primary-accent;
+    pointer-events: none;
+    transition: all $animation-medium $ease-cybernetic;
+
+    &--top-left {
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    &--top-right {
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    &--bottom-left {
+      bottom: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-right: none;
+      border-top: none;
+    }
+
+    &--bottom-right {
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      border-left: none;
+      border-top: none;
+    }
+  }
+
+  &:hover &__edge {
+    width: 30px;
+    height: 30px;
+    border-color: $secondary-accent;
+    box-shadow: 0 0 8px rgba($secondary-accent, 0.6);
+  }
+
+  &__glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba($primary-accent, 0.2), transparent 70%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    animation: neon-flicker 8s infinite;
+  }
+
+  &__scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba($secondary-accent, 0.5),
+      rgba($secondary-accent, 0.8),
+      rgba($secondary-accent, 0.5),
+      transparent
+    );
+    z-index: 3;
+    pointer-events: none;
+    animation: scan-line 2s linear infinite;
+  }
+
+  &--interactive {
+    cursor: pointer;
+
+    .hologram__content {
+      transition: transform $animation-medium $ease-cybernetic;
+    }
+
+    &:hover .hologram__content {
+      transform: translateZ(10px);
+    }
+
+    &:active .hologram__content {
+      transform: translateZ(5px);
+    }
+  }
+
+  &--quantum {
+    &::after {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      right: -10%;
+      bottom: -10%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%239900ff" stroke-width="0.5" fill="none" /></svg>');
+      background-size: 100px 100px;
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+      animation: hex-rotation 60s linear infinite;
+    }
+  }
+}
+
+// Hologram status variants
+.hologram--optimal {
+  .hologram__container {
+    box-shadow: 0 0 8px rgba($success, 0.5), 0 0 16px rgba($success, 0.3);
+  }
+
+  .hologram__edge {
+    border-color: $success;
+  }
+
+  .hologram__glow {
+    background: radial-gradient(circle at 50% 50%, rgba($success, 0.2), transparent 70%);
+  }
+}
+
+.hologram--warning {
+  .hologram__container {
+    box-shadow: 0 0 8px rgba($warning, 0.5), 0 0 16px rgba($warning, 0.3);
+  }
+
+  .hologram__edge {
+    border-color: $warning;
+  }
+
+  .hologram__glow {
+    background: radial-gradient(circle at 50% 50%, rgba($warning, 0.2), transparent 70%);
+  }
+}
+
+.hologram--critical {
+  .hologram__container {
+    box-shadow: 0 0 8px rgba($error, 0.5), 0 0 16px rgba($error, 0.3);
+  }
+
+  .hologram__edge {
+    border-color: $error;
+  }
+
+  .hologram__glow {
+    background: radial-gradient(circle at 50% 50%, rgba($error, 0.2), transparent 70%);
+    animation: neon-flicker 4s infinite;
+  }
+}
+
+// Hologram sizes
+.hologram--small {
+  .hologram__content {
+    padding: 0.75rem;
+  }
+
+  .hologram__edge {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover .hologram__edge {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.hologram--large {
+  .hologram__content {
+    padding: 2rem;
+  }
+
+  .hologram__edge {
+    width: 30px;
+    height: 30px;
+  }
+
+  &:hover .hologram__edge {
+    width: 40px;
+    height: 40px;
+  }
+}

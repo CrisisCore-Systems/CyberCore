@@ -1,0 +1,202 @@
+/**
+ * CyberCore Animation System
+ * A unified animation library with consistent timing functions
+ * VERSION: 1.0.0
+ */
+
+// Core animation timing variables
+$animation-quick: 0.2s;
+$animation-medium: 0.4s;
+$animation-slow: 0.8s;
+
+// Animation easing functions
+$ease-cybernetic: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+$ease-pulse: cubic-bezier(0.33, 0, 0.67, 1);
+$ease-glitch: steps(3, end);
+
+// Reusable animation keyframes
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: skew(0.15deg);
+  }
+  20% {
+    clip-path: inset(75% 0 23% 0);
+    transform: skew(-0.25deg);
+  }
+  40% {
+    clip-path: inset(9% 0 61% 0);
+    transform: skew(0.75deg);
+  }
+  60% {
+    clip-path: inset(33% 0 47% 0);
+    transform: skew(-0.55deg);
+  }
+  80% {
+    clip-path: inset(66% 0 43% 0);
+    transform: skew(0.35deg);
+  }
+  100% {
+    clip-path: inset(40% 0 61% 0);
+    transform: skew(0.15deg);
+  }
+}
+
+@keyframes neon-flicker {
+  0% {
+    opacity: 1;
+  }
+  7% {
+    opacity: 0.8;
+  }
+  8% {
+    opacity: 1;
+  }
+  9% {
+    opacity: 0.8;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 1;
+  }
+  26% {
+    opacity: 0.4;
+  }
+  27% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  91% {
+    opacity: 0.6;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Additional cyberpunk-inspired animations
+@keyframes data-stream {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes digital-noise {
+  0%,
+  100% {
+    background-position: 0 0;
+  }
+  10% {
+    background-position: -5% -10%;
+  }
+  20% {
+    background-position: -15% 5%;
+  }
+  30% {
+    background-position: 7% -25%;
+  }
+  40% {
+    background-position: 20% 25%;
+  }
+  50% {
+    background-position: -25% 10%;
+  }
+  60% {
+    background-position: 15% 5%;
+  }
+  70% {
+    background-position: 0% 15%;
+  }
+  80% {
+    background-position: 25% 35%;
+  }
+  90% {
+    background-position: -10% 10%;
+  }
+}
+
+@keyframes hex-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes quantum-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px rgba(153, 0, 255, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(153, 0, 255, 0.9);
+  }
+}
+
+// Export animation mixins for re-use
+@mixin animate-pulse($duration: $animation-medium, $easing: $ease-pulse) {
+  animation: pulse $duration $easing infinite;
+}
+
+@mixin animate-glitch(
+  $duration: $animation-quick,
+  $easing: $ease-glitch,
+  $delay: 0s,
+  $iteration: infinite
+) {
+  animation: glitch $duration $easing $delay $iteration;
+}
+
+@mixin animate-neon-flicker($duration: 4s) {
+  animation: neon-flicker $duration infinite linear;
+}
+
+@mixin animate-data-stream($duration: 15s, $timing: linear, $iteration: infinite) {
+  background-size: 100% 50px;
+  animation: data-stream $duration $timing $iteration;
+}
+
+@mixin animate-scan-line(
+  $duration: 2s,
+  $timing: cubic-bezier(0.33, 0, 0.67, 1),
+  $iteration: infinite
+) {
+  animation: scan-line $duration $timing $iteration;
+}

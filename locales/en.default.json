@@ -1,43 +1,46 @@
 {
   "accessibility": {
-    "skip_to_content": "Skip to content"
+    "skip_to_content": "Skip to content",
+    "reduce_motion": "Reduce motion effects",
+    "high_contrast": "Enable high contrast mode"
   },
   "general": {
     "accessibility": {
-      "skip_to_content": "Skip to content"
+      "skip_to_content": "Skip to content",
+      "reduce_motion": "Reduce motion"
     },
     "meta": {
       "tags": "Tagged \"{{ tags }}\"",
       "page": "Page {{ page }}"
     },
     "404": {
-      "title": "404 - Page Not Found",
-      "subtext": "The page you requested does not exist.",
-      "link": "Continue shopping"
+      "title": "404 - Memory Fragment Not Found",
+      "subtext": "The memory fragment you're seeking has been lost or corrupted.",
+      "link": "Return to the Void"
     },
     "pagination": {
       "label": "Pagination",
-      "previous": "Previous",
-      "next": "Next"
+      "previous": "Previous Fragment",
+      "next": "Next Fragment"
     },
     "password_page": {
-      "opening_soon": "Opening Soon",
-      "login_form_heading": "Enter store using password",
-      "login_form_password_label": "Password",
-      "login_form_password_placeholder": "Your password",
-      "login_form_submit": "Enter",
-      "signup_form_heading": "Find out when we open",
-      "signup_form_email_label": "Email",
-      "signup_form_email_placeholder": "Your email",
-      "signup_form_submit": "Submit",
-      "signup_form_success": "We will send you an email right before we open!",
-      "admin_link_html": "Are you the store owner? <a href=\"/admin\">Log in here</a>",
-      "password_link": "Enter using password"
+      "opening_soon": "Neural Interface Initializing",
+      "login_form_heading": "Enter archive using encryption key",
+      "login_form_password_label": "Encryption Key",
+      "login_form_password_placeholder": "Your encryption key",
+      "login_form_submit": "Initialize Connection",
+      "signup_form_heading": "Receive memory trace notification",
+      "signup_form_email_label": "Neural Receptor",
+      "signup_form_email_placeholder": "Your neural receptor address",
+      "signup_form_submit": "Subscribe to Memory Protocol",
+      "signup_form_success": "A transmission will be sent before neural interface activation!",
+      "admin_link_html": "Are you the system administrator? <a href=\"/admin\">Access control panel</a>",
+      "password_link": "Enter using encryption key"
     },
     "social": {
-      "share_on_facebook": "Share",
-      "share_on_twitter": "Tweet",
-      "share_on_pinterest": "Pin it",
+      "share_on_facebook": "Share Memory",
+      "share_on_twitter": "Transmit",
+      "share_on_pinterest": "Archive",
       "alt_text": {
         "share_on_facebook": "Share on Facebook",
         "share_on_twitter": "Tweet on Twitter",
@@ -46,149 +49,200 @@
     },
     "search": {
       "title": "Search the Void",
-      "placeholder": "Search our store",
-      "submit": "Search",
+      "placeholder": "Search memory fragments",
+      "submit": "Initiate Search",
       "heading": {
-        "one": "Search result",
-        "other": "Search results"
+        "one": "Memory trace detected",
+        "other": "Memory traces detected"
       },
       "results_with_count": {
-        "one": "{{ count }} result for \"{{ terms }}\"",
-        "other": "{{ count }} results for \"{{ terms }}\""
+        "one": "{{ count }} memory trace for \"{{ terms }}\"",
+        "other": "{{ count }} memory traces for \"{{ terms }}\""
       },
-      "no_results": "No results found for \"{{ terms }}\".",
-      "no_results_html": "Please try a different search term or go back to the <a href=\"/\">home page</a>.",
-      "toggle_search": "Toggle search",
-      "close_search": "Close search"
+      "no_results": "No memory traces found for \"{{ terms }}\".",
+      "no_results_html": "Try altering your neural query parameters or return to the <a href=\"/\">primary interface</a>.",
+      "toggle_search": "Toggle memory search",
+      "close_search": "Close search interface"
     },
     "newsletter_form": {
-      "newsletter_email": "Join our mailing list",
-      "email_placeholder": "Email address",
-      "confirmation": "Thanks for subscribing",
-      "submit": "Subscribe"
+      "newsletter_email": "Join our neural network",
+      "email_placeholder": "Neural receptor address",
+      "confirmation": "Neural connection established",
+      "submit": "Synchronize"
     },
     "cart": {
       "title": "Memory Archive",
-      "note": "Add a note to your order",
-      "remove": "Remove",
-      "subtotal": "Subtotal",
-      "savings": "You're saving",
-      "taxes_included_but_shipping_at_checkout": "Tax included and shipping calculated at checkout",
-      "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
-      "taxes_and_shipping_policy_html": "Taxes and <a href=\"{{ link }}\">shipping</a> calculated at checkout.",
-      "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
-      "update": "Update",
-      "checkout": "Memory Extraction",
+      "note": "Add neural annotation",
+      "remove": "Purge Memory",
+      "subtotal": "Memory Coherence",
+      "savings": "Quantum Discount",
+      "taxes_included_but_shipping_at_checkout": "Neural tax processed and transmission calculated at extraction",
+      "taxes_included_and_shipping_policy_html": "Neural tax processed. <a href=\"{{ link }}\">Transmission</a> calculated at extraction.",
+      "taxes_and_shipping_policy_html": "Neural taxes and <a href=\"{{ link }}\">transmission costs</a> calculated at extraction.",
+      "taxes_and_shipping_at_checkout": "Neural taxes and transmission calculated at extraction",
+      "update": "Recalibrate",
+      "checkout": "Begin Memory Extraction",
       "empty": "Your memory vault is currently empty.",
       "continue_shopping": "Continue collecting memories",
-      "empty_message": "Your memory vault is empty",
-      "item_quantity": "Item quantity",
-      "savings": "You're saving",
+      "empty_message": "Your memory vault contains no fragments",
+      "item_quantity": "Fragment intensity",
       "with_count": {
-        "one": "{{ count }} item",
-        "other": "{{ count }} items"
+        "one": "{{ count }} memory fragment",
+        "other": "{{ count }} memory fragments"
       },
       "general": {
-        "title": "Cart"
+        "title": "Memory Archive"
       }
     },
     "memory_resonance": {
       "title": "Memory Resonance",
       "coherence": "Coherence Level",
-      "trauma_distribution": "Trauma Distribution"
+      "trauma_distribution": "Trauma Distribution",
+      "quantum_profile": "Quantum Profile",
+      "memory_phase": "Memory Phase"
     },
-    "menu": "System Navigation",
-    "currency": "Currency",
-    "powered_by_shopify": "Powered by Shopify",
-    "copyright": "All rights reserved."
+    "quantum_profiles": {
+      "CyberLotus": "Technological alienation and digital transcendence",
+      "ObsidianBloom": "Fragmentation and dissolution of boundaries",
+      "VoidBloom": "Isolation and surveillance anxiety",
+      "NeonVortex": "Recursive patterns and compulsive behaviors"
+    },
+    "trauma_types": {
+      "abandonment": "Abandonment",
+      "fragmentation": "Fragmentation",
+      "recursion": "Recursion",
+      "surveillance": "Surveillance",
+      "displacement": "Displacement",
+      "dissolution": "Dissolution"
+    },
+    "memory_phases": {
+      "cyber-lotus": "Cyber Lotus",
+      "alien-flora": "Alien Flora",
+      "rolling-virus": "Rolling Virus",
+      "obsidian-bloom": "Obsidian Bloom",
+      "void-bloom": "Void Bloom",
+      "neon-vortex": "Neon Vortex"
+    },
+    "coherence_levels": {
+      "high": "High Coherence",
+      "medium": "Medium Coherence",
+      "low": "Low Coherence"
+    },
+    "menu": "Neural Navigation",
+    "currency": "Exchange Units",
+    "powered_by_shopify": "Neural framework by Shopify",
+    "copyright": "All rights encoded."
   },
   "sections": {
     "header": {
-      "menu": "Menu",
+      "menu": "Neural Navigation",
       "cart_count": {
-        "one": "{{ count }} item",
-        "other": "{{ count }} items"
+        "one": "{{ count }} memory fragment",
+        "other": "{{ count }} memory fragments"
       }
     },
     "featured_collection": {
-      "view_all": "View all"
+      "view_all": "Access all memories"
     },
     "featured_blog": {
-      "view_all": "View all"
+      "view_all": "Access all thought patterns"
+    },
+    "quantum_layer": {
+      "trauma_encoding": "Trauma Encoding",
+      "coherence_control": "Coherence Control",
+      "quantum_effects": "Quantum Effects"
     }
   },
   "products": {
     "product": {
       "add_to_cart": "Enter Memory Archive",
-      "description": "Description",
-      "on_sale": "Sale",
-      "product_variants": "Product variants",
+      "description": "Memory Description",
+      "on_sale": "Coherence Boost",
+      "product_variants": "Memory Variants",
       "media": {
-        "open_featured_media": "Open featured media in gallery view",
-        "play_video": "Play video",
-        "gallery_viewer": "Gallery Viewer",
-        "load_image": "Load image {{ index }} in gallery view"
+        "open_featured_media": "Open memory projection in void viewer",
+        "play_video": "Initiate memory sequence",
+        "gallery_viewer": "Void Viewer",
+        "load_image": "Load memory projection {{ index }} in void viewer"
       },
       "quantity": {
-        "label": "Intensity",
-        "input_label": "Quantity for {{ product }}",
-        "increase": "Increase quantity for {{ product }}",
-        "decrease": "Decrease quantity for {{ product }}"
+        "label": "Memory Intensity",
+        "input_label": "Intensity for {{ product }}",
+        "increase": "Increase intensity for {{ product }}",
+        "decrease": "Decrease intensity for {{ product }}"
       },
       "price": {
-        "regular_price": "Regular price",
-        "sale_price": "Sale price"
+        "regular_price": "Standard resonance value",
+        "sale_price": "Enhanced resonance value"
       },
       "pickup_availability": {
-        "view_store_info": "View store information",
-        "check_other_stores": "Check availability at other stores",
-        "pick_up_available": "Pickup available",
-        "pick_up_currently_unavailable": "Pickup currently unavailable",
-        "pick_up_available_at_html": "Pickup available at <span class=\"color-foreground\">{{ location_name }}</span>",
-        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"color-foreground\">{{ location_name }}</span>"
+        "view_store_info": "View memory hub information",
+        "check_other_stores": "Check availability at other memory hubs",
+        "pick_up_available": "Memory extraction available",
+        "pick_up_currently_unavailable": "Memory extraction currently unavailable",
+        "pick_up_available_at_html": "Memory extraction available at <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Memory extraction currently unavailable at <span class=\"color-foreground\">{{ location_name }}</span>"
       },
-      "increase_quantity": "Increase quantity",
-      "decrease_quantity": "Decrease quantity",
+      "increase_quantity": "Increase memory intensity",
+      "decrease_quantity": "Decrease memory intensity",
       "increase_depth": "Increase dimensional depth",
       "decrease_depth": "Decrease dimensional depth",
       "memory_encoding": "Memory Encoding",
       "memory_encoding_title": "Memory Encoding Profile",
       "trauma_type": "Trauma Type",
-      "resonance": "Resonance",
+      "resonance": "Quantum Resonance",
       "compatibility": "Trauma Compatibility",
-      "quick_add": "Quick add",
-      "view_details": "View details",
+      "coherence": "Coherence Rating",
+      "quantum_profile": "Quantum Profile",
+      "quick_add": "Rapid memory acquisition",
+      "view_details": "View memory details",
       "sold_out": "Memory Corrupted",
       "unavailable": "Memory Inaccessible",
-      "vendor": "Vendor",
-      "type": "Type",
-      "sku": "SKU",
-      "material": "Material",
-      "dimensions": "Dimensions",
-      "customer_reviews": "Customer Reviews",
-      "details_title": "Product Details",
-      "reviews": "Reviews",
+      "vendor": "Memory Source",
+      "type": "Memory Classification",
+      "sku": "Memory Trace ID",
+      "material": "Memory Substrate",
+      "dimensions": "Quantum Dimensions",
+      "customer_reviews": "Memory Experiencer Feedback",
+      "details_title": "Memory Details",
+      "reviews": "Memory Feedback",
       "in_stock": "Memory Available"
     },
     "price": "Resonance Value"
   },
   "collection": {
     "sort_by": "Order Memories By",
-    "title": "Memory Collection"
+    "title": "Memory Collection",
+    "filter_by": "Filter Memories By",
+    "filter_button": "Apply Neural Filter",
+    "reset_filters": "Reset Neural Filters",
+    "empty": "No memory fragments detected",
+    "view_product": "Access Memory",
+    "sort_options": {
+      "featured": "Featured Memories",
+      "best_selling": "Highest Resonance",
+      "title_ascending": "Alphabetical (A-Z)",
+      "title_descending": "Alphabetical (Z-A)",
+      "price_ascending": "Resonance (Low to High)",
+      "price_descending": "Resonance (High to Low)",
+      "created_ascending": "Oldest Memories",
+      "created_descending": "Newest Memories",
+      "quantum_resonance": "Quantum Resonance Match"
+    }
   },
   "gift_cards": {
     "issued": {
-      "title": "Here's your {{ value }} gift card for {{ shop }}!",
-      "subtext": "Your gift card",
-      "gift_card_code": "Gift card code",
-      "shop_link": "Continue shopping",
-      "remaining_html": "Remaining {{ balance }}",
-      "add_to_apple_wallet": "Add to Apple Wallet",
-      "qr_image_alt": "QR code — scan to redeem gift card",
-      "copy_code": "Copy code",
-      "expired": "Expired",
-      "copy_code_success": "Code copied successfully",
-      "print_gift_card": "Print"
+      "title": "Here's your {{ value }} memory token for {{ shop }}!",
+      "subtext": "Your memory token",
+      "gift_card_code": "Memory token encryption key",
+      "shop_link": "Continue acquiring memories",
+      "remaining_html": "Remaining resonance {{ balance }}",
+      "add_to_apple_wallet": "Add to Neural Wallet",
+      "qr_image_alt": "Quantum code — scan to redeem memory token",
+      "copy_code": "Copy encryption key",
+      "expired": "Memory Decayed",
+      "copy_code_success": "Encryption key copied to neural buffer",
+      "print_gift_card": "Materialize"
     }
   },
   "date_formats": {
@@ -196,35 +250,107 @@
   },
   "customer": {
     "account": {
-      "title": "Account",
-      "details": "Account Details",
-      "view_addresses": "View Addresses",
-      "return": "Return to Account Details"
+      "title": "Neural Profile",
+      "details": "Neural Interface Details",
+      "view_addresses": "View Memory Extraction Points",
+      "return": "Return to Neural Interface"
     },
-    "log_out": "Terminate Session",
+    "log_out": "Terminate Neural Connection",
     "orders": {
-      "title": "Order History",
-      "order_number": "Order",
-      "order_number_link": "Order number {{ number }}",
-      "date": "Date",
-      "payment_status": "Payment Status",
-      "fulfillment_status": "Fulfillment Status",
-      "total": "Total",
-      "none": "You haven't placed any orders yet."
+      "title": "Memory Extraction History",
+      "order_number": "Memory Extraction",
+      "order_number_link": "Memory extraction reference {{ number }}",
+      "date": "Extraction Date",
+      "payment_status": "Neural Transaction Status",
+      "fulfillment_status": "Memory Transmission Status",
+      "total": "Total Resonance Value",
+      "none": "You haven't extracted any memories yet."
     },
-    "log_in": "Access Archive",
-    "register": "Begin Memory Protocol"
+    "log_in": "Access Neural Archive",
+    "register": "Begin Memory Protocol Initialization"
   },
   "errors": {
     "404": "Memory Fragment Not Found",
     "page_not_found": "The memory fragment you're seeking has been lost or corrupted.",
-    "login_required": "Archive access required"
+    "login_required": "Neural archive access required",
+    "quantum_error": "Quantum coherence failure",
+    "trauma_mismatch": "Trauma profile incompatibility detected",
+    "coherence_failure": "Memory coherence below threshold",
+    "neural_timeout": "Neural connection timed out",
+    "validation": {
+      "required": "This neural input is required",
+      "email": "Please enter a valid neural receptor address",
+      "number": "Please enter a valid quantum value"
+    }
   },
   "footer": {
-    "quick_links": "Quick Links",
-    "contact_us": "Contact Us",
-    "follow_us": "Follow Us",
-    "copyright": "All rights reserved.",
-    "powered_by_html": "Powered by <a href=\"https://www.shopify.com\" target=\"_blank\">Shopify</a>"
+    "quick_links": "Quick Neural Pathways",
+    "contact_us": "Neural Transmission",
+    "follow_us": "Follow Our Memory Trace",
+    "copyright": "All rights encoded.",
+    "powered_by_html": "Neural framework by <a href=\"https://www.shopify.com\" target=\"_blank\">Shopify</a>",
+    "newsletter": {
+      "heading": "Join Our Network",
+      "subheading": "Subscribe to receive updates, access to exclusive neural connections, and more.",
+      "input_placeholder": "Your neural receptor",
+      "submit": "Synchronize"
+    }
+  },
+  "checkout": {
+    "general": {
+      "continue_to_shipping": "Continue to memory transmission",
+      "continue_to_payment": "Continue to neural transaction",
+      "complete_order": "Complete memory extraction",
+      "shipping_address": "Memory transmission coordinates",
+      "billing_address": "Neural transaction coordinates"
+    },
+    "order_summary": {
+      "title": "Memory coherence summary",
+      "payment_method": "Neural transaction method"
+    }
+  },
+  "trauma_taxonomy": {
+    "manager": {
+      "title": "Trauma Taxonomy Manager",
+      "coherence_settings": "Coherence Settings",
+      "trauma_profiles": "Trauma Profiles",
+      "memory_phases": "Memory Phases"
+    },
+    "settings": {
+      "active_profile": "Active Quantum Profile",
+      "coherence_threshold": "Coherence Threshold",
+      "quantum_intensity": "Quantum Effect Intensity",
+      "enable_adaptive_coherence": "Enable Adaptive Coherence",
+      "coherence_decay_rate": "Coherence Decay Rate",
+      "enable_trauma_effects": "Enable Trauma Taxonomy Effects"
+    },
+    "tabs": {
+      "general": "General Settings",
+      "coherence": "Coherence Control",
+      "analytics": "Analytics"
+    },
+    "analytics": {
+      "total_products": "Total Products",
+      "average_coherence": "Average Coherence",
+      "dominant_trauma": "Dominant Trauma",
+      "high_coherence": "High Coherence",
+      "medium_coherence": "Medium Coherence",
+      "low_coherence": "Low Coherence",
+      "refresh_analysis": "Refresh Analysis",
+      "export_report": "Export Full Report"
+    }
+  },
+  "quantum_effects": {
+    "glitch_level": {
+      "none": "None",
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy"
+    },
+    "animation": {
+      "enable": "Enable quantum animations",
+      "disable": "Disable quantum animations",
+      "reduce_motion": "Reduce quantum motion"
+    }
   }
 }

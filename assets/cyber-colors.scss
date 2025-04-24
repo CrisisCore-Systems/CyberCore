@@ -1,0 +1,96 @@
+/**
+ * CyberCore Color System
+ * A cohesive cyberpunk/sci-fi inspired color palette
+ * VERSION: 1.0.0
+ */
+
+// Primary palette
+$primary-dark: #0d0221;
+$primary-medium: #27086b;
+$primary-light: #5d12d2;
+$primary-accent: #9900ff;
+
+// Secondary palette
+$secondary-dark: #02111b;
+$secondary-medium: #0b4f6c;
+$secondary-light: #01baef;
+$secondary-accent: #00ffff;
+
+// Neutral palette
+$neutral-darkest: #08070d;
+$neutral-dark: #1a1a2e;
+$neutral-medium: #393a5a;
+$neutral-light: #8d8daa;
+
+// State colors
+$success: #00ff9f;
+$warning: #ffaa00;
+$error: #ff2a6d;
+$info: #01c8ef;
+
+// Gradient maps
+$cyber-gradient: linear-gradient(135deg, $primary-accent, $secondary-accent);
+$dark-gradient: linear-gradient(135deg, $neutral-darkest, $primary-dark);
+$glow-shadow: 0 0 8px rgba($primary-accent, 0.7), 0 0 16px rgba($secondary-accent, 0.5);
+
+// Transparency levels
+$glass-overlay: rgba($neutral-darkest, 0.7);
+$subtle-highlight: rgba($primary-accent, 0.2);
+$subtle-shadow: rgba($neutral-darkest, 0.5);
+
+// Color functions
+@function cyber-glow($color, $intensity: 0.7) {
+  @return 0 0 8px rgba($color, $intensity);
+}
+
+@function neon-border($color, $width: 1px) {
+  @return $width solid rgba($color, 0.8);
+}
+
+// Color-themed mixins
+@mixin cyber-text-glow($color: $primary-accent) {
+  color: lighten($color, 10%);
+  text-shadow: 0 0 5px rgba($color, 0.7), 0 0 10px rgba($color, 0.5);
+}
+
+@mixin neon-outline($color: $secondary-accent, $width: 1px, $blur: 5px) {
+  box-shadow: 0 0 $blur $width rgba($color, 0.8), inset 0 0 $blur $width rgba($color, 0.5);
+}
+
+@mixin cyber-panel-bg {
+  background: $neutral-darkest;
+  background-image: linear-gradient(135deg, rgba($primary-medium, 0.1) 25%, transparent 25%),
+    linear-gradient(225deg, rgba($primary-medium, 0.1) 25%, transparent 25%),
+    linear-gradient(315deg, rgba($primary-medium, 0.1) 25%, transparent 25%),
+    linear-gradient(45deg, rgba($primary-medium, 0.1) 25%, transparent 25%);
+  background-size: 20px 20px;
+  box-shadow: inset 0 0 50px rgba($primary-dark, 0.5);
+}
+
+// System state color schemes
+$system-states: (
+  'optimal': (
+    primary: $primary-accent,
+    secondary: $secondary-accent,
+    background: $neutral-dark,
+    text: lighten($neutral-light, 20%),
+  ),
+  'warning': (
+    primary: $warning,
+    secondary: mix($warning, $secondary-accent, 70%),
+    background: mix($warning, $neutral-dark, 10%),
+    text: lighten($neutral-light, 15%),
+  ),
+  'critical': (
+    primary: $error,
+    secondary: mix($error, $secondary-accent, 80%),
+    background: mix($error, $neutral-dark, 15%),
+    text: lighten($neutral-light, 10%),
+  ),
+  'standby': (
+    primary: mix($primary-accent, $neutral-medium, 60%),
+    secondary: mix($secondary-accent, $neutral-medium, 60%),
+    background: darken($neutral-dark, 5%),
+    text: $neutral-light,
+  ),
+);

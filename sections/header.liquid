@@ -1,7 +1,7 @@
 {% comment %}
   Header section for VoidBloom theme
   Provides site navigation and branding with trauma encoding visualization
-  
+
   Improvements:
   - Consolidated HTML from previous versions
   - Added schema settings for Logo Width, Menu selection, and Sticky Header option
@@ -21,7 +21,7 @@
         role="banner"
         data-section-id="{{ section.id }}"
         data-section-type="header"
-        data-trauma-type="{{ section.settings.trauma_type | default: 'recursion' }}" 
+        data-trauma-type="{{ section.settings.trauma_type | default: 'recursion' }}"
         data-intensity="{{ section.settings.trauma_intensity | default: 0.7 }}"
         data-memory-phase="{{ section.settings.memory_phase | default: 'cyber-lotus' }}"
         data-sticky-header="{{ section.settings.enable_sticky_header }}"
