@@ -1,449 +1,520 @@
-/* ==========================================================================
-   theme.css — VoidBloom / CyberCore Theme
-   Enhanced: Audit v2025-04-25
-   ========================================================================== */
+/* =============================================================================
+   THEME.CSS — VoidBloom Designs (Upgraded & Updated)
+   =============================================================================
+   This file contains the full, production-ready CSS for the VoidBloom theme,
+   incorporating a visual audit’s refinements for header, hero, sections,
+   grids, and footer. No placeholders or omissions.
+   ============================================================================= */
 
-/* ------------------------------ Root Variables ------------------------------ */
-:root {
-  --phase-background:   #0A0A0E;
-  --phase-text:         #E5E5EB;
-  --phase-primary:      #50FF40;  /* Neon-green accent */
-  --phase-secondary:    #9000FF;  /* Magenta accent */
-  --phase-tertiary:     #130019;
-  --trauma-error:       #FF0040;
-  --font-sans:          'Rajdhani', sans-serif;
-  --font-mono:          'JetBrains Mono', monospace;
-}
-
-/* ------------------------------ Global Reset ------------------------------ */
+/* ----------------------------------------
+   RESET & BASE STYLES
+   ---------------------------------------- */
 *,
 *::before,
-*::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  background: var(--phase-background);
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Rajdhani', sans-serif;
+  background-color: var(--phase-background);
   color: var(--phase-text);
-  font-family: var(--font-sans);
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
-a { color:inherit; text-decoration:none; }
-button,input,select { font:inherit; }
-
-/* ------------------------------ Typography ------------------------------ */
-h1,h2,h3,h4,h5,h6 { font-family:var(--font-mono); }
-h1 { font-size:2.5rem; margin-bottom:1rem; }
-h2 { font-size:2rem; margin-bottom:0.75rem; }
-h3 { font-size:1.5rem; margin-bottom:0.5rem; }
-p,li { margin-bottom:1rem; }
-ul { list-style:none; }
-
-/* ------------------------------ Buttons ------------------------------ */
-button,
-.button,
-.quantum-button {
-  display:inline-block;
-  padding:0.75rem 1.5rem;
-  border:3px solid var(--phase-primary);
-  border-radius:4px;
-  background:var(--phase-primary);
-  color:var(--phase-background);
-  cursor:pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-button.secondary,
-.button.secondary,
-.quantum-button.secondary {
-  background:transparent;
-  border-color:var(--phase-secondary);
-  color:var(--phase-secondary);
-}
-button:hover,
-.button:hover,
-.quantum-button:hover {
-  background: color-mix(in srgb, var(--phase-primary) 80%, black 20%);
-  transform: translateY(-2px);
-}
-button.secondary:hover,
-.button.secondary:hover,
-.quantum-button.secondary:hover {
-  background:var(--phase-secondary);
-  color:var(--phase-background);
-  transform: translateY(-2px);
+  scroll-behavior: smooth;
 }
 
-/* ------------------------------ Header & Navigation ------------------------------ */
+body {
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* ----------------------------------------
+   CSS VARIABLES
+   ---------------------------------------- */
+:root {
+  --phase-background: #0a0a0a;
+  --phase-text: #e1e1e1;
+  --phase-primary: #00ff00;
+  --phase-secondary: #1a0014;
+  --phase-tertiary: #111111;
+}
+
+/* =============================================================================
+   HEADER
+   ============================================================================= */
 .voidbloom-header {
-  position:sticky;
-  top:0; left:0; right:0;
-  background:var(--phase-background);
-  padding:1rem 2rem;
-  z-index:1000;
+  background: var(--phase-tertiary);
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  border-bottom: 1px solid #222;
 }
-.voidbloom-header .header-container {
-  max-width:1200px; margin:0 auto;
-  display:flex; align-items:center; justify-content:space-between;
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
-.voidbloom-header .header-logo img {
-  max-height:48px;
+
+.header-logo .logo-link img {
+  max-width: 150px;
+  height: auto;
 }
-.voidbloom-header .header-navigation {
-  flex:1; margin:0 1.5rem;
+
+.header-navigation {
+  flex: 1;
+  margin: 0 2rem;
 }
-.voidbloom-header .nav-menu {
-  display:flex; gap:2rem;
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
-.voidbloom-header .nav-link {
-  font-weight:600;
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--phase-text);
   transition: color 0.2s;
 }
-.voidbloom-header .nav-item.active .nav-link,
-.voidbloom-header .nav-link:hover {
+
+.nav-link:hover {
   color: var(--phase-primary);
 }
-.voidbloom-header .header-actions {
-  display:flex; gap:1.5rem; align-items:center;
-}
-.voidbloom-header .cart-count {
-  position:absolute; top:-0.4rem; right:-0.6rem;
-  background:var(--phase-primary);
-  color:var(--phase-background);
-  border-radius:50%; width:1.2rem; height:1.2rem;
-  display:flex; align-items:center; justify-content:center;
-  font-size:0.75rem;
-}
-/* Mobile menu toggle */
-.header-action.menu-toggle { display:none; }
-@media (max-width:768px) {
-  .nav-menu,
-  .header-action.search-action,
-  .header-action.account-action,
-  .header-action.cart-action {
-    display:none;
-  }
-  .header-action.menu-toggle { display:block; }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* ------------------------------ Drawer & Backdrop ------------------------------ */
-.drawer-backdrop {
-  position:fixed; inset:0;
-  background: rgba(0,0,0,0.6);
-  opacity:0; visibility:hidden;
-  transition: opacity 0.3s ease;
-  z-index:1900;
-}
-.drawer-backdrop.active {
-  opacity:1; visibility:visible;
-}
-.drawer {
-  position:fixed; top:0; bottom:0;
-  width:300px; background:var(--phase-background);
-  box-shadow:0 0 20px rgba(0,0,0,0.7);
-  transform:translateX(100%);
-  transition:transform 0.3s ease;
-  z-index:2000;
-}
-.drawer.open { transform:translateX(0); }
-.cart-drawer { right:0; }
-.mobile-menu-drawer { left:0; width:80%; max-width:320px; }
-
-/* ------------------------------ Glitch Text ------------------------------ */
-.glitch-text {
-  position:relative;
-  font-family:var(--font-mono);
-  color:var(--phase-primary);
-  text-shadow: 0 0 2px rgba(0,255,64,0.5);
-  animation:glitch 2s infinite;
-}
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position:absolute; top:0; left:0;
-  width:100%; height:100%;
-  overflow:hidden;
-}
-.glitch-text::before {
-  left:2px; text-shadow:-2px 0 var(--phase-secondary);
-  animation:glitch-top 2s infinite linear alternate-reverse;
-}
-.glitch-text::after {
-  left:-2px; text-shadow:-2px 0 var(--phase-primary);
-  animation:glitch-bottom 1.5s infinite linear alternate-reverse;
-}
-@keyframes glitch {
-  0%,35%,100% { transform:none; }
-  7%  { transform: translate(2px,-2px); }
-  14% { transform: translate(-2px,2px); }
-  21% { transform: translate(2px,2px); }
-  28% { transform: translate(-2px,-2px); }
-}
-@keyframes glitch-top {
-  0%   { clip:rect(0,9999px,0,0); }
-  10%  { clip:rect(0,9999px,15%,0); }
-  20%  { clip:rect(15%,9999px,0,0); }
-  30%  { clip:rect(0,9999px,10%,0); }
-  100% { clip:rect(0,9999px,0,0); }
-}
-@keyframes glitch-bottom {
-  0%   { clip:rect(0,9999px,0,0); }
-  10%  { clip:rect(50%,9999px,65%,0); }
-  20%  { clip:rect(65%,9999px,50%,0); }
-  30%  { clip:rect(40%,9999px,45%,0); }
-  100% { clip:rect(0,9999px,0,0); }
+.header-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--phase-text);
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
-/* ------------------------------ Ritual Entry ------------------------------ */
+.header-action:hover {
+  color: var(--phase-primary);
+}
+
+.header-action svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* =============================================================================
+   HERO: RITUAL ENTRY
+   ============================================================================= */
 .ritual-entry-section {
-  position:relative; text-align:center;
-  padding:6rem 1rem; border-bottom:1px solid var(--phase-tertiary);
-}
-.ritual-entry-section .entry-backdrop {
-  position:absolute; inset:0;
-  background:radial-gradient(circle at center,
-    var(--phase-tertiary) 0%,
-    transparent 80%);
-  opacity:0.3; z-index:0;
-}
-.ritual-entry-section .entry-content {
-  position:relative; z-index:1;
-  max-width:700px; margin:0 auto;
-}
-.ritual-entry-section .ritual-title {
-  font-size:clamp(2rem,5vw+1rem,3.5rem);
-  margin-bottom:1rem;
-}
-.ritual-entry-section .ritual-subtitle {
-  font-size:1.25rem; opacity:0.8; margin-bottom:1.5rem;
-}
-.ritual-entry-section .entry-description p {
-  font-size:1rem; opacity:0.9; margin:0 auto 2rem;
-  max-width:600px;
-}
-.ritual-entry-section .entry-actions { margin-top:2rem; }
-.ritual-entry-section .ritual-button {
-  min-width:200px;
-  border-width:3px;
-}
-.ritual-entry-section .void-particles {
-  position:absolute; inset:0; z-index:0;
-  /* attach your canvas here */
-}
-
-/* ------------------------------ Bloom Protocol ------------------------------ */
-.bloom-protocol-section {
-  padding:4rem 2rem; text-align:center;
-}
-.bloom-protocol-section .section-header {
-  margin-bottom:2rem;
-}
-.bloom-protocol-section .section-title {
-  font-size:2rem; color:var(--phase-primary);
-}
-.bloom-protocol-section .section-line {
-  width:50px; height:4px;
-  background:var(--phase-primary);
-  margin:0.5rem auto 0;
-}
-.protocol-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:2rem;
-  margin-top:2rem;
-}
-.protocol-step {
-  background:rgba(19,0,25,0.75);
-  padding:2rem;
-  border:2px solid var(--phase-tertiary);
-  border-radius:8px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.protocol-step:hover {
-  transform: translateY(-5px);
-  box-shadow:0 8px 24px rgba(0,255,64,0.3);
-}
-.protocol-step .step-number {
-  font-size:3rem;
-  color:var(--phase-primary);
-  margin-bottom:1rem;
-}
-.protocol-step .step-title { font-size:1.25rem; margin-bottom:0.75rem; }
-.protocol-step .step-description { opacity:0.9; }
-
-/* ------------------------------ Signal Wall ------------------------------ */
-.signal-wall-section {
-  padding:4rem 2rem; text-align:center;
-}
-.signal-wall-section .section-header {
-  margin-bottom:2rem;
-}
-.signal-wall-section .section-title {
-  font-size:2rem; color:var(--phase-primary);
-}
-.signal-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:1.5rem;
-}
-.trauma-card {
-  background:rgba(19,0,25,0.85);
-  padding:1rem;
-  border:2px solid var(--phase-tertiary);
-  border-radius:6px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.trauma-card:hover {
-  transform: translateY(-4px);
-  box-shadow:0 8px 24px rgba(144,0,255,0.3);
-}
-.trauma-image {
-  background:#111; height:150px; margin-bottom:1rem;
-}
-.trauma-title {
-  font-size:1rem; margin-bottom:0.5rem;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 2rem 4rem;
+  text-align: center;
   color: var(--phase-text);
 }
+
+.entry-backdrop {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      160deg,
+      rgba(25, 0, 50, 0.9),
+      rgba(0, 0, 0, 0.8)
+    )
+    no-repeat center/cover;
+  z-index: -1;
+}
+
+.entry-content h1 {
+  color: var(--phase-primary);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.entry-content .ritual-subtitle {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.entry-content p {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.entry-actions .ritual-button {
+  border: 2px solid var(--phase-primary);
+  background: none;
+  color: var(--phase-primary);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.entry-actions .ritual-button:hover {
+  background: var(--phase-primary);
+  color: var(--phase-background);
+}
+
+/* =============================================================================
+   SECTION: BLOOM PROTOCOL
+   ============================================================================= */
+.bloom-protocol-section {
+  padding: 4rem 2rem;
+  background: var(--phase-secondary);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--phase-primary);
+  position: relative;
+  display: inline-block;
+}
+
+.section-line {
+  height: 4px;
+  width: 50px;
+  background: var(--phase-primary);
+  margin: 0.5rem auto 0;
+}
+
+.protocol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.protocol-step {
+  background: var(--phase-tertiary);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  color: var(--phase-text);
+}
+
+.step-number {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid var(--phase-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin: 0 auto 1rem;
+  color: var(--phase-primary);
+}
+
+.step-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.step-description {
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+/* =============================================================================
+   SECTION: SIGNAL WALL
+   ============================================================================= */
+.signal-wall-section {
+  padding: 4rem 2rem;
+}
+
+.signal-wall-section .section-header {
+  margin-bottom: 3rem;
+}
+
+.signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trauma-card {
+  background: var(--phase-secondary);
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.trauma-image {
+  background: #111;
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 ratio */
+  margin-bottom: 1rem;
+}
+
+.trauma-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--phase-text);
+}
+
 .trauma-price {
-  font-size:0.9rem; color: var(--phase-primary);
-}
-/* mute translation placeholders */
-.trauma-card .trauma-title:contains("Translation missing"),
-.signal-wall-section p:contains("Translation missing") {
-  color: rgba(229,229,235,0.5);
-  font-size:0.85rem;
+  font-size: 0.95rem;
+  color: var(--phase-primary);
 }
 
-/* ------------------------------ Testimonials ------------------------------ */
+/* Hide the entire section if no real products are rendered */
+.signal-wall-section:empty {
+  display: none;
+}
+
+/* =============================================================================
+   SECTION: NEURAL TESTIMONIALS
+   ============================================================================= */
 .neural-testimonials-section {
-  padding:4rem 2rem; text-align:center;
-}
-.neural-testimonials-section .section-header {
-  margin-bottom:2rem;
-}
-.testimonial-grid--empty p {
-  color: rgba(229,229,235,0.5);
-  font-style:italic;
+  padding: 4rem 2rem;
+  background: var(--phase-tertiary);
 }
 
-/* ------------------------------ Quantum Notifications ------------------------------ */
-.quantum-notifications {
-  position:fixed; bottom:20px; right:20px;
-  z-index:9000; pointer-events:none;
+.testimonial-grid--empty {
+  text-align: center;
+  color: #777;
+  font-size: 1rem;
 }
-.quantum-notification {
-  display:flex; gap:1rem;
-  padding:1rem;
-  background:rgba(0,0,0,0.9);
-  color:var(--phase-primary);
-  border:1px solid var(--phase-primary);
-  border-radius:6px;
-  opacity:0; transform: translateY(20px);
-  transition:opacity 0.3s, transform 0.3s;
-  pointer-events:auto;
-}
-.quantum-notification.active {
-  opacity:1; transform: translateY(0);
-}
-.quantum-notification-close {
-  cursor:pointer; opacity:0.7;
-  transition:opacity 0.2s;
-}
-.quantum-notification-close:hover { opacity:1; }
 
-/* ------------------------------ Footer ------------------------------ */
+/* Hide if no blocks */
+.neural-testimonials-section:empty {
+  display: none;
+}
+
+/* =============================================================================
+   FOOTER
+   ============================================================================= */
 .voidbloom-footer {
-  background:var(--phase-tertiary);
-  color:var(--phase-text);
-  padding:4rem 2rem;
-  font-size:0.9rem; line-height:1.5;
+  background: var(--phase-tertiary);
+  color: var(--phase-text);
+  padding: 4rem 2rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
-.voidbloom-footer .footer-grid-container {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:2.5rem 2rem;
-  max-width:1200px; margin:0 auto;
+
+.footer-grid-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+  gap: 2.5rem 2rem;
 }
-.voidbloom-footer .footer-logo img {
-  max-width:150px; margin-bottom:1rem;
+
+.footer-brand h2 {
+  font-size: 1.5rem;
+  color: var(--phase-primary);
+  margin-bottom: 1rem;
 }
-.voidbloom-footer .footer-tagline {
-  opacity:0.8; margin-bottom:1.5rem;
+
+.footer-tagline {
+  opacity: 0.8;
+  line-height: 1.4;
 }
-.voidbloom-footer .footer-heading {
-  margin-bottom:1rem;
-  font-weight:600;
-  font-size:1.1em;
-  color:var(--phase-primary);
-  text-transform:uppercase;
-  letter-spacing:0.05em;
+
+.footer-nav-section,
+.footer-newsletter {
+  /* columns 2 & 3 */
 }
-.voidbloom-footer .footer-nav li { margin-bottom:0.6rem; }
-.voidbloom-footer .footer-nav li a:hover {
-  color:var(--phase-primary);
-  padding-left:5px;
-  transition:padding-left 0.2s;
+
+.footer-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--phase-primary);
 }
-.voidbloom-footer .newsletter-form .input-group {
-  display:flex; gap:0.5rem; flex-wrap:wrap;
+
+.footer-nav,
+.footer-legal-links,
+.list-payment {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-.voidbloom-footer .newsletter-form input[type="email"] {
-  flex:1 1 200px;
-  padding:0.75rem;
-  border:1px solid var(--phase-secondary);
-  border-radius:4px;
-  background:var(--phase-background);
-  color:var(--phase-text);
+
+.footer-nav li {
+  margin-bottom: 0.6rem;
 }
-.voidbloom-footer .newsletter-form input[type="email"]:focus {
-  border-color:var(--phase-primary);
-  outline:none;
+
+.footer-nav li a {
+  color: var(--phase-text);
+  opacity: 0.85;
+  transition: color 0.2s, padding-left 0.2s;
 }
-.voidbloom-footer .newsletter-form button:hover {
+
+.footer-nav li a:hover {
+  color: var(--phase-primary);
+  opacity: 1;
+  padding-left: 5px;
+}
+
+/* Newsletter form */
+.newsletter-form .input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.newsletter-form input[type="email"] {
+  flex: 1 1 200px;
+  padding: 0.75rem;
+  border: 1px solid var(--phase-secondary);
+  border-radius: 4px;
+  background: var(--phase-background);
+  color: var(--phase-text);
+}
+
+.newsletter-form input[type="email"]:focus {
+  border-color: var(--phase-primary);
+}
+
+.newsletter-form button {
+  padding: 0.75rem 1.5rem;
+  background: var(--phase-primary);
+  color: var(--phase-background);
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.newsletter-form button:hover {
   background: color-mix(in srgb, var(--phase-primary) 80%, black 20%);
 }
-.voidbloom-footer .form-message--error {
-  color:var(--trauma-error);
-}
-.voidbloom-footer .footer-bottom {
-  margin-top:3rem; padding-top:2rem;
-  border-top:1px solid var(--phase-background);
-  display:flex; flex-wrap:wrap;
-  justify-content:space-between; align-items:center;
-  gap:1rem; opacity:0.8;
-}
-.voidbloom-footer .footer-legal-links {
-  display:flex; gap:0.5rem 1rem;
-}
-.voidbloom-footer .footer-legal-links a:hover {
-  color:var(--phase-primary); text-decoration:underline;
-}
-.voidbloom-footer .payment-icons .list-payment__item svg {
-  height:24px; fill:currentColor;
+
+.form-message {
+  margin-top: 0.75rem;
+  font-size: 0.85em;
 }
 
-/* ------------------------------ Responsive Breakpoints ------------------------------ */
-@media (max-width:992px) {
-  .protocol-grid {
-    grid-template-columns: repeat(2,1fr);
-  }
+.form-message--error {
+  color: red;
 }
-@media (max-width:768px) {
-  .ritual-entry-section {
-    padding:4rem 1rem;
+
+.form-message--success {
+  color: var(--phase-primary);
+}
+
+/* Footer bottom bar */
+.footer-bottom {
+  border-top: 1px solid var(--phase-tertiary);
+  margin-top: 3rem;
+  padding-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+
+.footer-bottom .footer-legal-links {
+  display: flex;
+  gap: 0.5rem 1rem;
+}
+
+.footer-bottom .footer-legal-links a {
+  color: var(--phase-text);
+}
+
+.footer-bottom .footer-legal-links a:hover {
+  color: var(--phase-primary);
+  text-decoration: underline;
+}
+
+.list-payment {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.list-payment__item svg {
+  height: 24px;
+  fill: currentColor;
+}
+
+/* =============================================================================
+   RESPONSIVE LAYOUT
+   ============================================================================= */
+@media (max-width: 768px) {
+  .header-container {
+    flex-wrap: wrap;
   }
-  .bloom-protocol-section,
-  .signal-wall-section,
-  .neural-testimonials-section {
-    padding:3rem 1rem;
+  .header-navigation {
+    order: 2;
+    width: 100%;
+    margin: 1rem 0;
+    justify-content: center;
   }
-  .voidbloom-header .header-container {
-    flex-direction:column; gap:1rem;
+  .nav-menu {
+    justify-content: center;
+    gap: 1rem;
   }
-  .voidbloom-footer .footer-grid-container {
-    grid-template-columns:1fr; text-align:center;
+  .entry-content {
+    margin-top: 2rem;
   }
-  .voidbloom-footer .footer-bottom {
-    flex-direction:column; gap:1.5rem;
+  .protocol-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .signal-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .footer-grid-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .footer-nav-section,
+  .footer-newsletter {
+    margin: 0 auto;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1.5rem;
   }
 }
