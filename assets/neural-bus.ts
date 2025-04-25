@@ -162,4 +162,13 @@ class NeuralBusImplementation implements NeuralBusInterface {
   }
 }
 
+// Create and export singleton instance
 export const NeuralBus: NeuralBusInterface = new NeuralBusImplementation();
+
+// Also export as default for module compatibility
+export default NeuralBus;
+
+// Add to global scope for backwards compatibility
+if (typeof window !== 'undefined') {
+  window.NeuralBus = NeuralBus;
+}

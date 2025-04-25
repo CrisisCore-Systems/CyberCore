@@ -39,6 +39,9 @@ app.use(connectLivereload({ port: 35731 }));
 // Serve static files from deploy/dev directory
 app.use(express.static(path.join(__dirname, 'deploy/dev')));
 
+// Directly serve files from the dist directory
+app.use('/dist', express.static(path.join(__dirname, 'dist')));
+
 // Serve asset files directly (for development)
 // Add fallback paths to ensure assets are found
 app.use('/assets', [
@@ -334,14 +337,15 @@ app.get('/', (req, res) => {
         </div>
       </div>
 
-      <script src="/assets/neural-bus.js"></script>
-      <script src="/assets/glitch-engine.js"></script>
-      <script src="/assets/quantum-visualizer.js"></script>
-      <script src="/assets/hologram-component.js"></script>
+      <!-- Use the individual component files directly instead of bundled files -->
+      <script src="/assets/neural-bus.js" defer></script>
+      <script src="/assets/glitch-engine.js" defer></script>
+      <script src="/assets/quantum-visualizer.js" defer></script>
+      <script src="/assets/hologram-component.js" defer></script>
 
-      <script>
+      <script defer>
         // Initialize components when everything is loaded
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
           // Make sure NeuralBus is initialized
           if (window.NeuralBus && !window.NeuralBus.events) {
             window.NeuralBus.initialize();
