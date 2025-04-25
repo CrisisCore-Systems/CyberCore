@@ -16,7 +16,7 @@
         "subtitle": "Memory Archive System",
         "description": "<p>Venture beyond the self—access the Void, recover crystalline memory shards, and integrate your trauma signature into living data.</p>",
         "button1_label": "Explore Memory Artifacts",
-        "button1_link": "",
+        "button1_link": "shopify://collections",
         "button2_label": "Initiate Protocol"
       }
     },
@@ -34,7 +34,13 @@
     },
     "signal_wall": {
       "type": "signal-wall",
-      "settings": {}
+      "settings": {
+        "title": "Signal Wall",
+        "collection": "",
+        "products_to_show": 4,
+        "show_view_all": true,
+        "view_all_label": "View All Signals"
+      }
     },
     "testimonials": {
       "type": "neural-testimonials",
