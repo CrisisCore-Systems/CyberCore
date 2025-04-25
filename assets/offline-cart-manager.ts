@@ -1,675 +1,493 @@
 /**
  * OFFLINE-CART-MANAGER.TS
- * Offline support for the cart system with sync capabilities
+ * Manages cart data offline for the VoidBloom theme
  *
  * @MutationCompatible: All Variants
- * @StrategyProfile: persistence
- * @Version: 2.0.0
+ * @StrategyProfile: quantum-entangled
+ * @Version: 1.0.0
  */
 
-/**
- * Enum for offline operation types
- */
-export enum OfflineOperationType {
-  ADD_ITEM = 'ADD_ITEM',
-  UPDATE_ITEM = 'UPDATE_ITEM',
-  REMOVE_ITEM = 'REMOVE_ITEM',
-  CLEAR_CART = 'CLEAR_CART',
-}
+import cartApi from './cart-api';
+import CartErrorHandler, { ErrorCategory } from './cart-error-handler';
+import { sanitizeObject } from './security-utils';
 
 /**
- * Type for cart item
+ * Cart item interface
  */
 export interface CartItem {
   id: string | number;
-  key?: string;
   quantity: number;
-  title: string;
-  price: number;
-  variant_id?: string | number;
-  variantId?: string | number;
-  product_id?: string | number;
-  productId?: string | number;
-  image?: string;
-  url?: string;
-  properties?: {
-    [key: string]: string | number | boolean;
-  };
-  quantumProperties?: {
-    glitchFactor?: number;
-    traumaIndex?: number;
-    mutationProfile?: string;
-    [key: string]: any;
-  };
+  title?: string;
+  price?: number;
+  product_id?: number | string;
+  variant_id?: number | string;
+  key?: string;
+  properties?: Record<string, any>;
+  [key: string]: any;
 }
 
 /**
- * Type for cart data
+ * Cart data interface
  */
 export interface CartData {
-  items: CartItem[];
-  item_count: number;
-  total_price: number;
-  original_total_price?: number;
-  total_weight?: number;
-  currency?: string;
-  note?: string;
-  attributes?: { [key: string]: string };
   token?: string;
-  requires_shipping?: boolean;
+  note?: string | null;
+  attributes?: Record<string, string>;
+  total_price?: number;
+  items: CartItem[];
+  item_count?: number;
+  currency?: string;
+  lastUpdated?: number;
+  items_subtotal_price?: number;
+  original_total_price?: number;
 }
 
 /**
- * Type for offline operations
+ * Offline operation type
  */
-export interface OfflineOperation {
-  id: string;
+enum OfflineOperationType {
+  ADD = 'add',
+  UPDATE = 'update',
+  REMOVE = 'remove',
+  CLEAR = 'clear',
+}
+
+/**
+ * Offline operation interface
+ */
+interface OfflineOperation {
   type: OfflineOperationType;
-  data: any;
   timestamp: number;
-  synced: boolean;
-  syncAttempts: number;
-  error?: string;
+  data: any;
+  id: string;
 }
 
 /**
- * Type for storage statistics
+ * Manages the cart data when offline
  */
-export interface StorageStats {
-  totalSize: number;
-  operationsCount: number;
-  cartSize: number;
-  unsyncedCount: number;
-  oldestOperationDate: Date | null;
-}
-
-/**
- * Offline operation status
- */
-export interface OfflineSyncStatus {
-  success: boolean;
-  completed: number;
-  failed: number;
-  errors: Array<{ id: string; error: string }>;
-}
-
-/**
- * Type for sync operation callback
- */
-type SyncCallback = (operation: OfflineOperation) => Promise<any>;
-
 class OfflineCartManager {
-  private static instance: OfflineCartManager | null = null;
-
-  // Storage keys
-  private readonly STORAGE_KEY_CART = 'cybercore_offline_cart';
-  private readonly STORAGE_KEY_OPERATIONS = 'cybercore_offline_operations';
-  private readonly STORAGE_VERSION = '2.0.0';
-
-  // Private properties
-  private cartData: CartData | null = null;
-  private offlineOperations: OfflineOperation[] = [];
-  private isSyncingOperations: boolean = false;
-  private isOnlineState: boolean = true;
-  private initCompleted: boolean = false;
-  private lastSyncTimestamp: number = 0;
-
-  /**
-   * Private constructor (use getInstance)
-   */
-  private constructor() {
-    this.init();
-  }
+  private storageKey: string = 'voidbloom_offline_cart';
+  private operationsKey: string = 'voidbloom_offline_operations';
+  private cart: CartData | null = null;
+  private pendingOperations: OfflineOperation[] = [];
+  private isInitialized: boolean = false;
+  private maxOperations: number = 100;
 
   /**
    * Initialize the offline cart manager
    */
-  private async init(): Promise<void> {
-    try {
-      // Check online status
-      this.isOnlineState = navigator.onLine;
+  constructor() {
+    this.init();
 
-      // Load stored cart and operations
-      await this.loadFromStorage();
-
-      // Set up online/offline event listeners
-      window.addEventListener('online', this.handleOnlineStatus.bind(this));
-      window.addEventListener('offline', this.handleOnlineStatus.bind(this));
-
-      // Check if there are any unsynced operations when coming back online
-      window.addEventListener('online', this.handleComingBackOnline.bind(this));
-
-      // Clean up old operations periodically
-      setInterval(this.cleanupOldOperations.bind(this), 24 * 60 * 60 * 1000); // Once per day
-
-      this.initCompleted = true;
-    } catch (error) {
-      console.error('Failed to initialize offline cart manager:', error);
-      // Fall back to assuming online mode
-      this.isOnlineState = true;
+    // Listen for online/offline events
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', this.handleOnline.bind(this));
+      window.addEventListener('offline', this.handleOffline.bind(this));
     }
   }
 
   /**
-   * Load cart and operations from storage
+   * Initialize manager
    */
-  private async loadFromStorage(): Promise<void> {
+  private init(): void {
     try {
-      // Load cart data
-      const storedCartData = localStorage.getItem(this.STORAGE_KEY_CART);
-      if (storedCartData) {
-        this.cartData = JSON.parse(storedCartData);
+      // Load cart from storage
+      const storedCart = localStorage.getItem(this.storageKey);
+      if (storedCart) {
+        this.cart = JSON.parse(storedCart);
       } else {
-        // Initialize empty cart
-        this.cartData = {
+        // Create empty cart
+        this.cart = {
           items: [],
           item_count: 0,
           total_price: 0,
+          lastUpdated: Date.now(),
         };
       }
 
-      // Load operations
-      const storedOperations = localStorage.getItem(this.STORAGE_KEY_OPERATIONS);
+      // Load pending operations
+      const storedOperations = localStorage.getItem(this.operationsKey);
       if (storedOperations) {
-        this.offlineOperations = JSON.parse(storedOperations);
+        this.pendingOperations = JSON.parse(storedOperations);
       }
+
+      this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to load from storage:', error);
-      // Initialize with empty data
-      this.cartData = {
+      console.error('Failed to initialize offline cart:', error);
+
+      // Reset to safe defaults
+      this.cart = {
         items: [],
         item_count: 0,
         total_price: 0,
+        lastUpdated: Date.now(),
       };
-      this.offlineOperations = [];
+      this.pendingOperations = [];
     }
   }
 
   /**
-   * Save cart data to storage
+   * Save cart to local storage
    */
-  private saveCartToStorage(): void {
+  private saveCart(): void {
     try {
-      if (this.cartData) {
-        localStorage.setItem(this.STORAGE_KEY_CART, JSON.stringify(this.cartData));
+      // Update timestamp
+      if (this.cart) {
+        this.cart.lastUpdated = Date.now();
       }
+
+      localStorage.setItem(this.storageKey, JSON.stringify(this.cart));
     } catch (error) {
-      console.error('Failed to save cart to storage:', error);
-    }
-  }
-
-  /**
-   * Save operations to storage
-   */
-  private saveOperationsToStorage(): void {
-    try {
-      localStorage.setItem(this.STORAGE_KEY_OPERATIONS, JSON.stringify(this.offlineOperations));
-    } catch (error) {
-      console.error('Failed to save operations to storage:', error);
-    }
-  }
-
-  /**
-   * Clean up old operations from storage
-   */
-  private cleanupOldOperations(): void {
-    try {
-      // Keep only unsynced operations and recent synced operations (less than 7 days old)
-      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-
-      this.offlineOperations = this.offlineOperations.filter((op) => {
-        // Keep all unsynced operations
-        if (!op.synced) {
-          return true;
-        }
-
-        // Keep recent synced operations
-        return op.timestamp > sevenDaysAgo;
+      // Handle storage errors (quota exceeded, etc)
+      CartErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), {
+        component: 'offline-cart-manager',
+        method: 'saveCart',
+        category: ErrorCategory.INTERNAL,
       });
+    }
+  }
 
-      this.saveOperationsToStorage();
+  /**
+   * Save pending operations to local storage
+   */
+  private saveOperations(): void {
+    try {
+      localStorage.setItem(this.operationsKey, JSON.stringify(this.pendingOperations));
     } catch (error) {
-      console.error('Failed to clean up old operations:', error);
-    }
-  }
-
-  /**
-   * Handle online status change
-   */
-  private handleOnlineStatus(event: Event): void {
-    this.isOnlineState = navigator.onLine;
-
-    // If coming back online, try to sync
-    if (this.isOnlineState && event.type === 'online') {
-      this.handleComingBackOnline();
-    }
-  }
-
-  /**
-   * Handle coming back online
-   */
-  private async handleComingBackOnline(): Promise<void> {
-    // Prevent multiple sync attempts
-    if (this.isSyncingOperations) {
-      return;
-    }
-
-    // Check if there are unsynced operations
-    const hasUnsyncedOperations = this.offlineOperations.some((op) => !op.synced);
-
-    // Only try to sync if we have unsynced operations and haven't synced recently
-    const currentTime = Date.now();
-    const hasEnoughTimePassed = currentTime - this.lastSyncTimestamp > 5000; // 5 seconds
-
-    if (hasUnsyncedOperations && hasEnoughTimePassed) {
-      // Dispatch event that we're coming back online with pending operations
-      window.dispatchEvent(
-        new CustomEvent('cart:reconnected', {
-          detail: {
-            pendingOperations: this.offlineOperations.filter((op) => !op.synced).length,
-          },
-        })
-      );
-
-      // Auto-sync operations asynchronously
-      this.syncOfflineOperations(async (operation) => {
-        // Here we simply return a placeholder to indicate success
-        // The actual cart data will be updated when fetchCart is called after
-        return { success: true };
-      }).then((result) => {
-        if (result.success) {
-          // Dispatch event that sync was successful
-          window.dispatchEvent(
-            new CustomEvent('cart:sync-complete', {
-              detail: {
-                success: true,
-                operationsCompleted: result.completed,
-                operationsFailed: result.failed,
-              },
-            })
-          );
-        }
+      // Handle storage errors
+      CartErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), {
+        component: 'offline-cart-manager',
+        method: 'saveOperations',
+        category: ErrorCategory.INTERNAL,
       });
-
-      this.lastSyncTimestamp = currentTime;
     }
   }
 
   /**
-   * Generate a unique ID for operations
+   * Add a pending operation
    */
-  private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-  }
-
-  /**
-   * Add a new offline operation
-   */
-  private addOperation(type: OfflineOperationType, data: any): OfflineOperation {
+  private addOperation(type: OfflineOperationType, data: any): void {
+    // Create operation
     const operation: OfflineOperation = {
-      id: this.generateId(),
       type,
-      data,
       timestamp: Date.now(),
-      synced: false,
-      syncAttempts: 0,
+      data: sanitizeObject(data),
+      id: Math.random().toString(36).substring(2, 15),
     };
 
-    this.offlineOperations.push(operation);
-    this.saveOperationsToStorage();
+    // Add to pending operations
+    this.pendingOperations.push(operation);
 
-    return operation;
+    // Limit number of operations
+    if (this.pendingOperations.length > this.maxOperations) {
+      // Remove oldest operations
+      this.pendingOperations = this.pendingOperations.slice(-this.maxOperations);
+    }
+
+    // Save operations
+    this.saveOperations();
   }
 
   /**
-   * Mark an operation as synced
+   * Recalculate cart totals
    */
-  private markOperationSynced(id: string, error?: string): void {
-    const operationIndex = this.offlineOperations.findIndex((op) => op.id === id);
+  private recalculateCart(): void {
+    if (!this.cart) return;
 
-    if (operationIndex !== -1) {
-      if (error) {
-        // Mark as failed
-        this.offlineOperations[operationIndex].syncAttempts += 1;
-        this.offlineOperations[operationIndex].error = error;
-      } else {
-        // Mark as synced
-        this.offlineOperations[operationIndex].synced = true;
-        this.offlineOperations[operationIndex].error = undefined;
+    // Recalculate item count and total price
+    let itemCount = 0;
+    let totalPrice = 0;
+
+    for (const item of this.cart.items) {
+      itemCount += item.quantity;
+      if (item.price) {
+        totalPrice += item.price * item.quantity;
       }
+    }
 
-      this.saveOperationsToStorage();
+    this.cart.item_count = itemCount;
+    this.cart.total_price = totalPrice;
+    this.cart.items_subtotal_price = totalPrice;
+    this.cart.original_total_price = totalPrice;
+  }
+
+  /**
+   * Handle going online
+   */
+  private async handleOnline(): Promise<void> {
+    // Auto-sync when coming back online
+    if (this.hasOfflineOperations()) {
+      try {
+        await this.syncWithServer();
+      } catch (error) {
+        CartErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), {
+          component: 'offline-cart-manager',
+          method: 'handleOnline',
+          category: ErrorCategory.NETWORK,
+        });
+      }
     }
   }
 
   /**
-   * Apply operation to local cart data
+   * Handle going offline
    */
-  private applyOperationToLocalCart(operation: OfflineOperation): void {
-    if (!this.cartData) {
-      this.cartData = {
-        items: [],
-        item_count: 0,
-        total_price: 0,
-      };
-    }
-
-    switch (operation.type) {
-      case OfflineOperationType.ADD_ITEM:
-        this.applyAddItemOperation(operation.data);
-        break;
-
-      case OfflineOperationType.UPDATE_ITEM:
-        this.applyUpdateItemOperation(operation.data.key, operation.data.quantity);
-        break;
-
-      case OfflineOperationType.REMOVE_ITEM:
-        this.applyRemoveItemOperation(operation.data.key);
-        break;
-
-      case OfflineOperationType.CLEAR_CART:
-        this.applyClearCartOperation();
-        break;
-    }
-
-    // Save updated cart to storage
-    this.saveCartToStorage();
+  private handleOffline(): void {
+    // Just log the offline state - we'll handle operations as they come
+    console.info('OfflineCartManager: Device is offline, cart operations will be queued');
   }
 
+  // PUBLIC API
+
   /**
-   * Apply add item operation to local cart
+   * Add an item to the cart
    */
-  private applyAddItemOperation(item: CartItem): void {
-    if (!this.cartData) return;
+  public addItem(item: CartItem): CartData {
+    if (!this.cart) this.init();
 
-    // Generate a temporary key if needed
-    if (!item.key) {
-      item.key = `offline_${this.generateId()}`;
-    }
+    // Check if item already exists in cart
+    const existingIndex = this.cart!.items.findIndex((i) => String(i.id) === String(item.id));
 
-    // Check if item exists in cart
-    const existingItemIndex = this.cartData.items.findIndex(
-      (i) => (i.key && i.key === item.key) || (i.id && i.id === item.id)
-    );
+    if (existingIndex >= 0) {
+      // Update quantity
+      const existingItem = this.cart!.items[existingIndex];
+      existingItem.quantity += item.quantity;
 
-    if (existingItemIndex !== -1) {
-      // Update existing item
-      this.cartData.items[existingItemIndex].quantity += item.quantity;
+      // Add operation
+      this.addOperation(OfflineOperationType.UPDATE, {
+        key: existingItem.key || String(existingItem.id),
+        quantity: existingItem.quantity,
+      });
     } else {
       // Add new item
-      this.cartData.items.push(item);
+      if (!item.key) {
+        item.key = String(item.id);
+      }
+
+      this.cart!.items.push(item);
+
+      // Add operation
+      this.addOperation(OfflineOperationType.ADD, item);
     }
 
-    // Update cart totals
-    this.updateCartTotals();
-  }
+    // Update cart
+    this.recalculateCart();
+    this.saveCart();
 
-  /**
-   * Apply update item operation to local cart
-   */
-  private applyUpdateItemOperation(key: string, quantity: number): void {
-    if (!this.cartData) return;
-
-    const itemIndex = this.cartData.items.findIndex((i) => i.key === key);
-
-    if (itemIndex !== -1) {
-      // Update quantity
-      this.cartData.items[itemIndex].quantity = quantity;
-
-      // Update cart totals
-      this.updateCartTotals();
-    }
-  }
-
-  /**
-   * Apply remove item operation to local cart
-   */
-  private applyRemoveItemOperation(key: string): void {
-    if (!this.cartData) return;
-
-    // Filter out the item
-    this.cartData.items = this.cartData.items.filter((i) => i.key !== key);
-
-    // Update cart totals
-    this.updateCartTotals();
-  }
-
-  /**
-   * Apply clear cart operation to local cart
-   */
-  private applyClearCartOperation(): void {
-    if (!this.cartData) return;
-
-    // Clear all items
-    this.cartData.items = [];
-
-    // Update cart totals
-    this.updateCartTotals();
-  }
-
-  /**
-   * Update cart totals
-   */
-  private updateCartTotals(): void {
-    if (!this.cartData) return;
-
-    // Update item count
-    this.cartData.item_count = this.cartData.items.reduce(
-      (total, item) => total + item.quantity,
-      0
-    );
-
-    // Update total price
-    this.cartData.total_price = this.cartData.items.reduce((total, item) => {
-      return total + item.price * item.quantity;
-    }, 0);
-  }
-
-  // Public methods
-
-  /**
-   * Get the current cart data
-   */
-  public getCart(): CartData | null {
-    return this.cartData;
-  }
-
-  /**
-   * Update with server cart data
-   */
-  public updateWithServerCart(serverCart: CartData): void {
-    this.cartData = serverCart;
-    this.saveCartToStorage();
-  }
-
-  /**
-   * Add item to offline cart
-   */
-  public addItem(item: CartItem): OfflineOperation {
-    // Create the operation
-    const operation = this.addOperation(OfflineOperationType.ADD_ITEM, item);
-
-    // Apply operation to local cart
-    this.applyOperationToLocalCart(operation);
-
-    return operation;
+    return this.cart!;
   }
 
   /**
    * Update item quantity
    */
-  public updateItemQuantity(key: string, quantity: number): OfflineOperation {
-    // Create the operation
-    const operation = this.addOperation(OfflineOperationType.UPDATE_ITEM, { key, quantity });
+  public updateItemQuantity(key: string, quantity: number): CartData {
+    if (!this.cart) this.init();
 
-    // Apply operation to local cart
-    this.applyOperationToLocalCart(operation);
+    // Find item
+    const itemIndex = this.cart!.items.findIndex((i) => i.key === key || String(i.id) === key);
 
-    return operation;
-  }
+    if (itemIndex >= 0) {
+      if (quantity <= 0) {
+        // Remove item if quantity is 0 or less
+        return this.removeItem(key);
+      } else {
+        // Update quantity
+        this.cart!.items[itemIndex].quantity = quantity;
 
-  /**
-   * Remove item from cart
-   */
-  public removeItem(key: string): OfflineOperation {
-    // Create the operation
-    const operation = this.addOperation(OfflineOperationType.REMOVE_ITEM, { key });
-
-    // Apply operation to local cart
-    this.applyOperationToLocalCart(operation);
-
-    return operation;
-  }
-
-  /**
-   * Clear cart
-   */
-  public clearCart(): OfflineOperation {
-    // Create the operation
-    const operation = this.addOperation(OfflineOperationType.CLEAR_CART, {});
-
-    // Apply operation to local cart
-    this.applyOperationToLocalCart(operation);
-
-    return operation;
-  }
-
-  /**
-   * Get all offline operations
-   */
-  public getOfflineOperations(): OfflineOperation[] {
-    return [...this.offlineOperations];
-  }
-
-  /**
-   * Check if there are any unsynced operations
-   */
-  public hasOfflineOperations(): boolean {
-    return this.offlineOperations.some((op) => !op.synced);
-  }
-
-  /**
-   * Check if currently syncing operations
-   */
-  public isSyncing(): boolean {
-    return this.isSyncingOperations;
-  }
-
-  /**
-   * Check if device is online
-   */
-  public isOnline(): boolean {
-    return this.isOnlineState;
-  }
-
-  /**
-   * Sync offline operations with server
-   */
-  public async syncOfflineOperations(processOperation: SyncCallback): Promise<OfflineSyncStatus> {
-    // Skip if already syncing or no operations to sync
-    if (this.isSyncingOperations || !this.hasOfflineOperations() || !this.isOnlineState) {
-      return {
-        success: false,
-        completed: 0,
-        failed: 0,
-        errors: [],
-      };
-    }
-
-    this.isSyncingOperations = true;
-
-    // Get unsynced operations
-    const unsyncedOperations = this.offlineOperations
-      .filter((op) => !op.synced)
-      .sort((a, b) => a.timestamp - b.timestamp); // Process in order
-
-    const result: OfflineSyncStatus = {
-      success: true,
-      completed: 0,
-      failed: 0,
-      errors: [],
-    };
-
-    try {
-      // Process operations one by one
-      for (const operation of unsyncedOperations) {
-        try {
-          await processOperation(operation);
-
-          // Mark as synced
-          this.markOperationSynced(operation.id);
-          result.completed++;
-        } catch (error) {
-          // Mark as failed
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          this.markOperationSynced(operation.id, errorMessage);
-          result.failed++;
-          result.errors.push({ id: operation.id, error: errorMessage });
-
-          // Mark overall sync as failed if any operation fails
-          result.success = false;
-        }
+        // Add operation
+        this.addOperation(OfflineOperationType.UPDATE, {
+          key,
+          quantity,
+        });
       }
-    } finally {
-      this.isSyncingOperations = false;
     }
 
-    return result;
+    // Update cart
+    this.recalculateCart();
+    this.saveCart();
+
+    return this.cart!;
   }
 
   /**
-   * Get storage statistics
+   * Remove an item from the cart
    */
-  public getStorageStats(): StorageStats {
-    const cartJson = this.cartData ? JSON.stringify(this.cartData) : '';
-    const operationsJson = JSON.stringify(this.offlineOperations);
+  public removeItem(key: string): CartData {
+    if (!this.cart) this.init();
 
-    const unsyncedOperations = this.offlineOperations.filter((op) => !op.synced);
+    // Find item
+    const itemIndex = this.cart!.items.findIndex((i) => i.key === key || String(i.id) === key);
 
-    const oldestOperation =
-      this.offlineOperations.length > 0
-        ? this.offlineOperations.reduce((oldest, current) =>
-            current.timestamp < oldest.timestamp ? current : oldest
-          )
-        : null;
+    if (itemIndex >= 0) {
+      // Remove item
+      this.cart!.items.splice(itemIndex, 1);
 
-    return {
-      totalSize: cartJson.length + operationsJson.length,
-      operationsCount: this.offlineOperations.length,
-      cartSize: cartJson.length,
-      unsyncedCount: unsyncedOperations.length,
-      oldestOperationDate: oldestOperation ? new Date(oldestOperation.timestamp) : null,
-    };
+      // Add operation
+      this.addOperation(OfflineOperationType.REMOVE, {
+        key,
+      });
+    }
+
+    // Update cart
+    this.recalculateCart();
+    this.saveCart();
+
+    return this.cart!;
   }
 
   /**
-   * Clear all offline data
+   * Clear the cart
    */
-  public clearOfflineData(): void {
-    this.cartData = {
+  public clearCart(): CartData {
+    // Create empty cart
+    this.cart = {
       items: [],
       item_count: 0,
       total_price: 0,
+      lastUpdated: Date.now(),
     };
 
-    this.offlineOperations = [];
+    // Add operation
+    this.addOperation(OfflineOperationType.CLEAR, {});
 
-    this.saveCartToStorage();
-    this.saveOperationsToStorage();
+    // Save cart
+    this.saveCart();
+
+    return this.cart;
   }
 
   /**
-   * Get the singleton instance
+   * Get the current cart
    */
-  public static getInstance(): OfflineCartManager {
-    if (!OfflineCartManager.instance) {
-      OfflineCartManager.instance = new OfflineCartManager();
+  public getCart(): CartData {
+    if (!this.cart) this.init();
+    return this.cart!;
+  }
+
+  /**
+   * Update with server cart
+   */
+  public updateWithServerCart(serverCart: CartData): void {
+    this.cart = serverCart;
+
+    // Add timestamp
+    this.cart.lastUpdated = Date.now();
+
+    // Save to local storage
+    this.saveCart();
+  }
+
+  /**
+   * Check if there are pending offline operations
+   */
+  public hasOfflineOperations(): boolean {
+    return this.pendingOperations.length > 0;
+  }
+
+  /**
+   * Get the count of pending operations
+   */
+  public getPendingOperationsCount(): number {
+    return this.pendingOperations.length;
+  }
+
+  /**
+   * Get the pending operations
+   */
+  public getPendingOperations(): OfflineOperation[] {
+    return [...this.pendingOperations];
+  }
+
+  /**
+   * Sync offline operations with the server
+   */
+  public async syncWithServer(): Promise<boolean> {
+    if (!this.hasOfflineOperations()) {
+      return true;
     }
 
-    return OfflineCartManager.instance;
+    // Check if online
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      return false;
+    }
+
+    try {
+      // Clone operations to process
+      const operations = [...this.pendingOperations];
+
+      // Sort by timestamp
+      operations.sort((a, b) => a.timestamp - b.timestamp);
+
+      // Process operations
+      for (const operation of operations) {
+        switch (operation.type) {
+          case OfflineOperationType.ADD:
+            await cartApi.addItem(operation.data);
+            break;
+
+          case OfflineOperationType.UPDATE:
+            await cartApi.updateItemQuantity(operation.data.key, operation.data.quantity);
+            break;
+
+          case OfflineOperationType.REMOVE:
+            await cartApi.removeItem(operation.data.key);
+            break;
+
+          case OfflineOperationType.CLEAR:
+            await cartApi.clearCart();
+            break;
+        }
+
+        // Remove operation from pending list
+        const index = this.pendingOperations.findIndex((op) => op.id === operation.id);
+        if (index >= 0) {
+          this.pendingOperations.splice(index, 1);
+          this.saveOperations();
+        }
+      }
+
+      // Get latest cart from server
+      const serverCart = await cartApi.getCart();
+      this.updateWithServerCart(serverCart);
+
+      return true;
+    } catch (error) {
+      // Handle sync error
+      CartErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), {
+        component: 'offline-cart-manager',
+        method: 'syncWithServer',
+        category: ErrorCategory.NETWORK,
+      });
+
+      return false;
+    }
+  }
+
+  /**
+   * Check if cart is stale (older than specified time)
+   */
+  public isCartStale(maxAgeMs: number = 3600000): boolean {
+    if (!this.cart || !this.cart.lastUpdated) return true;
+
+    const now = Date.now();
+    const age = now - this.cart.lastUpdated;
+
+    return age > maxAgeMs;
+  }
+
+  /**
+   * Clean up old data
+   */
+  public cleanup(): void {
+    // Remove very old operations (>30 days)
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+
+    this.pendingOperations = this.pendingOperations.filter((op) => op.timestamp > thirtyDaysAgo);
+
+    this.saveOperations();
   }
 }
 
-// Export the singleton instance
-const offlineCartManager = OfflineCartManager.getInstance();
+// Create and export singleton instance
+const offlineCartManager = new OfflineCartManager();
 export default offlineCartManager;

@@ -14,31 +14,28 @@ const commonConfig = {
     'core-bundle': [
       './assets/neural-bus.js',
       './assets/performance-manager.js',
-      './assets/coherence-persistence.js'
+      './assets/coherence-persistence.js',
     ],
-    
+
     // WebGL bundle - all visualization effects
     'webgl-bundle': [
       './assets/quantum-webgl.js',
       './assets/qear-webgl-bridge.js',
       './assets/hologram-renderer.js',
-      './assets/glitch-engine.js'
+      './assets/glitch-engine.js',
     ],
-    
+
     // Cart bundle - all cart-related functionality
-    'cart-bundle': [
-      './assets/cart-system.js',
-      './assets/enhanced-cart.js'
-    ],
-    
+    'cart-bundle': ['./assets/cart-system.js', './assets/enhanced-cart.js'],
+
     // Keep some files separate due to specific loading requirements
     'ritual-engine': './assets/ritual-engine.js',
     'voidbloom-store': './assets/voidbloom-store.js',
-    
+
     // Styles
     'main-styles': './assets/main.css',
   },
-  
+
   module: {
     rules: [
       {
@@ -67,12 +64,7 @@ const commonConfig = {
       },
       {
         test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
       },
     ],
   },
@@ -89,8 +81,8 @@ const commonConfig = {
     library: {
       name: '[name]',
       type: 'umd',
-      export: 'default',
     },
+    globalObject: 'this', // Ensure global object works in all environments
   },
   optimization: {
     minimizer: [

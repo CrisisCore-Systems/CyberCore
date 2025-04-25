@@ -9,14 +9,17 @@
  *
  * @MutationCompatible: All Variants
  * @StrategyProfile: quantum-entangled
- * @Version: 4.0.0
+ * @Version: 4.1.0
  */
 
+import { cartApi } from './cart-api';
+import CartErrorHandler, { ErrorCategory, ErrorSeverity } from './cart-error-handler';
+import { getCsrfToken } from './csrf-utils';
+import { memoryEncoder } from './memory-encoder';
 import { NeuralBus } from './neural-bus';
-import CartErrorHandler, { ErrorCategory, ErrorSeverity, ErrorContext } from './cart-error-handler';
+import offlineCartManager, { CartData, CartItem as OfflineCartItem } from './offline-cart-manager';
 import { safeApiClient } from './safe-api-client';
-import { memoryEncoder, TraumaLevel } from './memory-encoder';
-import offlineCartManager, { OfflineOperationType, CartItem as OfflineCartItem, CartData, OfflineOperation } from './offline-cart-manager';
+import { sanitizeHtml } from './security-utils';
 
 // Type definitions
 export { CartData, CartItem } from './offline-cart-manager';
@@ -54,11 +57,11 @@ export interface CartSystemConfig {
     useWorkers: boolean;
     batchRequests: boolean;
     adaptToDevice: boolean;
+    useSafeRenderingMode: boolean;
   };
   traumaVisualization: 'minimal' | 'standard' | 'enhanced';
   requestThrottleMs: number;
   debug: boolean;
-  persistenceKey?: string;
 }
 
 export interface DeviceCapabilities {
@@ -130,14 +133,14 @@ export class CartSystem {
         cartRecommendations: '.cart-recommendations',
         cartCheckoutButton: '#cart-checkout-button',
         continueShoppingButton: '#continue-shopping',
-        cartPreviewContainer: '#cart-preview-container'
+        cartPreviewContainer: '#cart-preview-container',
       },
       apiEndpoints: {
         cartAdd: '/cart/add.js',
         cartUpdate: '/cart/update.js',
         cartChange: '/cart/change.js',
         cartGet: '/cart.js',
-        cartClear: '/cart/clear.js'
+        cartClear: '/cart/clear.js',
       },
       features: {
         neuralSynced: true,
@@ -146,11 +149,12 @@ export class CartSystem {
         useOfflineSupport: true,
         useWorkers: true,
         batchRequests: true,
-        adaptToDevice: true
+        adaptToDevice: true,
+        useSafeRenderingMode: true,
       },
       traumaVisualization: 'standard',
       requestThrottleMs: 300,
-      debug: false
+      debug: false,
     };
 
     // Merge configurations
@@ -171,10 +175,6 @@ export class CartSystem {
         this.#adaptToDevice();
       }
 
-      // Configure memory encoder with visualization mode
-      memoryEncoder.setVisualizationMode(this.#config.traumaVisualization);
-      memoryEncoder.setQuantumEffectsEnabled(this.#config.features.useQuantumEffects);
-
       // Check for holographic preview support
       if (this.#config.features.useHolographicPreviews) {
         await this.#checkHolographicSupport();
@@ -190,7 +190,12 @@ export class CartSystem {
         this.#connectToNeuralBus();
       }
 
-      // Attach DOM event handlers
+      // Listen for online/offline events if offline support is enabled
+      if (this.#config.features.useOfflineSupport) {
+        window.addEventListener('online', this.#handleOnlineStatus.bind(this));
+        window.addEventListener('offline', this.#handleOnlineStatus.bind(this));
+      }
+
       this.#attachEventHandlers();
 
       // Initial cart fetch
@@ -205,7 +210,7 @@ export class CartSystem {
     } catch (error) {
       CartErrorHandler.handleError(error, {
         component: 'cart-system',
-        method: 'init'
+        method: 'init',
       });
     }
   }
@@ -236,7 +241,10 @@ export class CartSystem {
         this.#checkHolographicSupport();
       }
 
-      if (config.features.useWorkers !== undefined && config.features.useWorkers !== !!this.#worker) {
+      if (
+        config.features.useWorkers !== undefined &&
+        config.features.useWorkers !== !!this.#worker
+      ) {
         if (config.features.useWorkers) {
           this.#initializeWorker();
         } else {
@@ -244,13 +252,13 @@ export class CartSystem {
         }
       }
 
-      // Update memory encoder quantum effects
-      if (config.features.useQuantumEffects !== undefined) {
-        memoryEncoder.setQuantumEffectsEnabled(config.features.useQuantumEffects);
+      if (config.features.adaptToDevice !== undefined && config.features.adaptToDevice) {
+        this.#detectDeviceCapabilities();
+        this.#adaptToDevice();
       }
     }
 
-    // Update memory encoder visualization mode if changed
+    // Update memory encoder visualization mode if needed
     if (config.traumaVisualization) {
       memoryEncoder.setVisualizationMode(config.traumaVisualization);
     }
@@ -259,16 +267,27 @@ export class CartSystem {
   /**
    * Safely execute cart operations with error handling
    */
-  async #safeCartOperation<T>(operation: () => Promise<T>, context: string, options: any = {}): Promise<T | null> {
-    return CartErrorHandler.safeExecute(
-      operation,
-      { component: 'cart-system', operation: context },
-      {
-        retryCount: options.retryCount || 3,
-        fallbackValue: options.fallbackValue || null,
-        criticalOperation: options.critical || false
+  async #safeCartOperation<T>(
+    operation: () => Promise<T>,
+    context: string,
+    options: any = {}
+  ): Promise<T | null> {
+    try {
+      return await operation();
+    } catch (error) {
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: context,
+        severity: options.severity || ErrorSeverity.ERROR,
+        category: options.category || ErrorCategory.API,
+      });
+
+      if (options.fallbackValue !== undefined) {
+        return options.fallbackValue;
       }
-    );
+
+      throw error;
+    }
   }
 
   /**
@@ -304,31 +323,37 @@ export class CartSystem {
    * Initialize web worker for quantum effects processing
    */
   #initializeWorker(): void {
-    if (!this.#config.features.useWorkers) return;
+    if (this.#worker) return;
 
     try {
-      if ('Worker' in window) {
-        this.#worker = new Worker(new URL('./quantum-effects-worker.js', import.meta.url));
+      this.#worker = new Worker('/assets/quantum-effects-worker.js');
 
-        this.#worker.addEventListener('message', (event) => {
-          const { type, target, result } = event.data;
+      this.#worker.onmessage = (event) => {
+        const { type, elementId, effect } = event.data;
 
-          // Handle worker responses
-          switch (type) {
-            case 'mutation':
-            case 'glitch':
-            case 'holographic':
-              // Apply the processed effect to the target element
-              this.#applyQuantumEffect(target, type, result);
-              break;
-            default:
-              console.warn('Unknown worker message type:', type);
+        if (type === 'effect-ready') {
+          const element = document.getElementById(elementId);
+          if (element) {
+            // Apply the generated effect to the element
+            Object.assign(element.style, effect.styles || {});
+
+            if (effect.className) {
+              element.classList.add(effect.className);
+            }
+
+            if (effect.html && this.#config.features.useSafeRenderingMode) {
+              element.innerHTML = sanitizeHtml(effect.html);
+            }
           }
-        });
-      }
+        }
+      };
+
+      this.#worker.onerror = (error) => {
+        console.error('Quantum effects worker error:', error);
+        this.#terminateWorker();
+      };
     } catch (e) {
-      console.warn('Failed to initialize worker:', e);
-      this.#worker = null;
+      console.warn('Could not initialize quantum effects worker:', e);
     }
   }
 
@@ -346,45 +371,14 @@ export class CartSystem {
    * Apply quantum effect to element
    */
   #applyQuantumEffect(targetId: string, type: string, effect: any): void {
-    const target = document.getElementById(targetId);
-    if (!target) return;
+    if (!this.#worker) return;
 
-    // Apply the effect based on type and data from worker
-    switch (type) {
-      case 'mutation':
-        // Apply mutations (change appearance or behavior)
-        target.classList.add('mutation-applied');
-        if (effect.cssMutations) {
-          Object.entries(effect.cssMutations).forEach(([prop, value]) => {
-            target.style.setProperty(prop, value as string);
-          });
-        }
-        break;
-
-      case 'glitch':
-        // Apply glitch effect (visual distortion)
-        target.classList.add('glitch-applied');
-        target.style.setProperty('--glitch-intensity', effect.intensity);
-        if (effect.duration > 0) {
-          setTimeout(() => {
-            target.classList.remove('glitch-applied');
-          }, effect.duration);
-        }
-        break;
-
-      case 'holographic':
-        // Apply holographic effect (3D/depth illusion)
-        if (this.#holographicPreviewsSupported && this.#holographicRenderer) {
-          target.classList.add('holographic-container');
-          const hologramElement = document.createElement('div');
-          hologramElement.className = 'hologram-overlay';
-          target.appendChild(hologramElement);
-
-          // Initialize hologram
-          this.#holographicRenderer.init(hologramElement, effect.config);
-        }
-        break;
-    }
+    this.#worker.postMessage({
+      type: 'generate-effect',
+      targetId,
+      effectType: type,
+      parameters: effect,
+    });
   }
 
   /**
@@ -394,7 +388,7 @@ export class CartSystem {
     if (typeof NeuralBus === 'undefined') return;
 
     try {
-      NeuralBus.register('cart-system', { version: '4.0.0' });
+      NeuralBus.register('cart-system', { version: '4.1.0' });
       this.#neuralBusConnected = true;
 
       // Subscribe to relevant events
@@ -415,6 +409,30 @@ export class CartSystem {
   }
 
   /**
+   * Handle online/offline status changes
+   */
+  #handleOnlineStatus = async (): Promise<void> => {
+    const isOnline = navigator.onLine;
+
+    if (isOnline && this.#config.features.useOfflineSupport) {
+      // If we're back online, sync any offline changes
+      try {
+        await this.syncOfflineCart();
+      } catch (error) {
+        // Handle sync errors
+        CartErrorHandler.handleError(error, {
+          component: 'cart-system',
+          method: 'handleOnlineStatus',
+          context: 'Syncing offline cart',
+        });
+      }
+    }
+
+    // Update UI to reflect online/offline status
+    this.#updateCartUI();
+  };
+
+  /**
    * Detect device capabilities
    */
   #detectDeviceCapabilities(): DeviceCapabilities {
@@ -424,7 +442,9 @@ export class CartSystem {
       supportsDynamicEffects: true,
       pixelDensity: window.devicePixelRatio || 1,
       isLowPowerMode: false,
-      isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ),
     };
 
     // Check WebGL support
@@ -495,18 +515,14 @@ export class CartSystem {
     }
 
     // Update memory encoder with new settings
-    memoryEncoder.setVisualizationMode(this.#config.traumaVisualization);
-    memoryEncoder.setQuantumEffectsEnabled(this.#config.features.useQuantumEffects);
-
-    // Log adaptation to NeuralBus
-    if (this.#neuralBusConnected) {
-      NeuralBus.publish('cart:adapted', {
+    if (this.#config.features.neuralSynced) {
+      NeuralBus.publish('cart:adaptation', {
         capabilities: this.#deviceCapabilities,
         adaptedConfig: {
           quantumEffects: this.#config.features.useQuantumEffects,
           holographicPreviews: this.#config.features.useHolographicPreviews,
-          traumaVisualization: this.#config.traumaVisualization
-        }
+          traumaVisualization: this.#config.traumaVisualization,
+        },
       });
     }
   }
@@ -519,19 +535,17 @@ export class CartSystem {
 
     const handleDOMReady = () => {
       // Cart toggle buttons
-      document.querySelectorAll(this.#config.selectors.cartDrawerToggle)
-        .forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.toggleCartDrawer();
-          });
+      document.querySelectorAll(this.#config.selectors.cartDrawerToggle).forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.toggleCartDrawer();
         });
+      });
 
       // Add to cart forms
-      document.querySelectorAll(this.#config.selectors.addToCartForm)
-        .forEach(form => {
-          form.addEventListener('submit', this.#handleAddToCartSubmit.bind(this));
-        });
+      document.querySelectorAll(this.#config.selectors.addToCartForm).forEach((form) => {
+        form.addEventListener('submit', this.#handleAddToCartSubmit.bind(this));
+      });
 
       // Cart item quantity changes
       document.addEventListener('change', (e) => {
@@ -614,7 +628,7 @@ export class CartSystem {
     const output = { ...target };
 
     if (this.#isObject(target) && this.#isObject(source)) {
-      Object.keys(source).forEach(key => {
+      Object.keys(source).forEach((key) => {
         if (this.#isObject(source[key])) {
           if (!(key in target)) {
             Object.assign(output, { [key]: source[key] });
@@ -655,7 +669,7 @@ export class CartSystem {
     if (totalEl) {
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: this.#cartData.currency || 'USD'
+        currency: this.#cartData.currency || 'USD',
       });
       totalEl.textContent = formatter.format(this.#cartData.total_price / 100);
     }
@@ -671,20 +685,28 @@ export class CartSystem {
 
         // Add cart items
         if (this.#cartData.items && this.#cartData.items.length > 0) {
-          this.#cartData.items.forEach(item => {
+          this.#cartData.items.forEach((item) => {
             const itemElement = this.#createCartItemElement(item);
             itemsContainer.appendChild(itemElement);
           });
 
           // Show cart items, hide empty message
-          cartDrawer.querySelector(this.#config.selectors.cartEmptyMessage)?.classList.add('hidden');
+          cartDrawer
+            .querySelector(this.#config.selectors.cartEmptyMessage)
+            ?.classList.add('hidden');
           itemsContainer.classList.remove('hidden');
-          cartDrawer.querySelector(this.#config.selectors.cartCheckoutButton)?.classList.remove('hidden');
+          cartDrawer
+            .querySelector(this.#config.selectors.cartCheckoutButton)
+            ?.classList.remove('hidden');
         } else {
           // Show empty message, hide cart items
-          cartDrawer.querySelector(this.#config.selectors.cartEmptyMessage)?.classList.remove('hidden');
+          cartDrawer
+            .querySelector(this.#config.selectors.cartEmptyMessage)
+            ?.classList.remove('hidden');
           itemsContainer.classList.add('hidden');
-          cartDrawer.querySelector(this.#config.selectors.cartCheckoutButton)?.classList.add('hidden');
+          cartDrawer
+            .querySelector(this.#config.selectors.cartCheckoutButton)
+            ?.classList.add('hidden');
         }
       }
     }
@@ -706,14 +728,19 @@ export class CartSystem {
     itemEl.setAttribute('data-key', item.key || '');
     itemEl.setAttribute('data-id', item.id.toString());
 
+    // Sanitize data before creating HTML (security enhancement)
+    const safeTitle = sanitizeHtml(item.title);
+    const safeImage = sanitizeHtml(item.image || '');
+    const safePrice = this.#formatMoney(item.price);
+
     // Add item HTML
     itemEl.innerHTML = `
       <div class="cart-item__image">
-        <img src="${item.image || ''}" alt="${item.title}">
+        <img src="${safeImage}" alt="${safeTitle}">
       </div>
       <div class="cart-item__details">
-        <h3 class="cart-item__title">${item.title}</h3>
-        <div class="cart-item__price">${this.#formatMoney(item.price)}</div>
+        <h3 class="cart-item__title">${safeTitle}</h3>
+        <div class="cart-item__price">${safePrice}</div>
         <div class="cart-item__quantity">
           <button class="cart-item__quantity-button" data-action="decrease">-</button>
           <input type="number" class="cart-item__quantity-input"
@@ -763,35 +790,14 @@ export class CartSystem {
    * Apply quantum properties to the cart item
    */
   #applyItemQuantumProperties(element: HTMLElement, properties: any): void {
-    if (!this.#config.features.useQuantumEffects) return;
+    if (!this.#worker || !properties) return;
 
-    // Apply effects based on properties
-    if (properties.glitchFactor) {
-      element.style.setProperty('--glitch-factor', properties.glitchFactor.toString());
-      element.classList.add('quantum-glitch');
-    }
+    const elementId = `quantum-cart-item-${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 7)}`;
+    element.id = elementId;
 
-    if (properties.traumaIndex) {
-      element.style.setProperty('--trauma-index', properties.traumaIndex.toString());
-      element.classList.add('trauma-encoded');
-    }
-
-    if (properties.mutationProfile) {
-      element.setAttribute('data-mutation-profile', properties.mutationProfile);
-      element.classList.add('quantum-mutated');
-    }
-
-    // Process with worker if available
-    if (this.#worker) {
-      const elementId = `cart-item-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-      element.id = elementId;
-
-      this.#worker.postMessage({
-        type: 'process',
-        elementId,
-        properties
-      });
-    }
+    this.#applyQuantumEffect(elementId, 'cart-item', properties);
   }
 
   /**
@@ -803,46 +809,23 @@ export class CartSystem {
 
     // Check if indicator already exists
     let indicator = cartDrawer.querySelector('.cart-offline-indicator');
-
     if (!indicator) {
+      // Create the indicator
       indicator = document.createElement('div');
       indicator.className = 'cart-offline-indicator';
+      indicator.setAttribute('role', 'status');
       indicator.innerHTML = `
-        <div class="offline-icon">📴</div>
-        <div class="offline-message">
-          <p>You're currently offline</p>
-          <p class="offline-submessage">Changes will sync when connection is restored</p>
+        <div class="cart-offline-indicator__icon">📶</div>
+        <div class="cart-offline-indicator__message">
+          <p>You're currently offline. Cart changes will be synchronized when you're back online.</p>
         </div>
       `;
 
-      // Add to cart drawer header
-      const header = cartDrawer.querySelector('.cart-drawer__header') || cartDrawer.firstElementChild;
-      if (header) {
-        header.after(indicator);
-      } else {
-        cartDrawer.prepend(indicator);
-      }
-    }
-
-    // Show indicator
-    indicator.classList.remove('hidden');
-
-    // Show sync status if there are pending operations
-    if (offlineCartManager.hasOfflineOperations()) {
-      const stats = offlineCartManager.getStorageStats();
-      const pendingOps = document.createElement('div');
-      pendingOps.className = 'offline-pending-operations';
-      pendingOps.innerHTML = `
-        <span>${stats.unsyncedCount} pending changes</span>
-      `;
-
-      // Add or update counter
-      const existingCounter = indicator.querySelector('.offline-pending-operations');
-      if (existingCounter) {
-        existingCounter.replaceWith(pendingOps);
-      } else {
-        indicator.appendChild(pendingOps);
-      }
+      // Add to cart drawer
+      cartDrawer.prepend(indicator);
+    } else {
+      // Show existing indicator
+      indicator.classList.remove('hidden');
     }
   }
 
@@ -862,416 +845,244 @@ export class CartSystem {
   #formatMoney(cents: number): string {
     const formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: this.#cartData?.currency || 'USD'
+      currency: this.#cartData?.currency || 'USD',
     });
+
     return formatter.format(cents / 100);
   }
 
-  /**
-   * Sync offline operations with the server
-   */
-  async #syncOfflineOperations(): Promise<boolean> {
-    if (!this.#config.features.useOfflineSupport || !offlineCartManager.hasOfflineOperations()) {
-      return true;
-    }
-
-    // If online and has pending operations, sync them
-    if (offlineCartManager.isOnline() && !offlineCartManager.isSyncing()) {
-      const syncCallback = async (operation: OfflineOperation): Promise<any> => {
-        switch (operation.type) {
-          case OfflineOperationType.ADD_ITEM:
-            return this.#addItemOnline(operation.data);
-
-          case OfflineOperationType.UPDATE_ITEM:
-            return this.#updateItemQuantityOnline(
-              operation.data.key,
-              operation.data.quantity
-            );
-
-          case OfflineOperationType.REMOVE_ITEM:
-            return this.#updateItemQuantityOnline(operation.data.key, 0);
-
-          case OfflineOperationType.CLEAR_CART:
-            return this.#clearCartOnline();
-        }
-      };
-
-      this.#triggerEvent('cart:sync-start', {
-        operations: offlineCartManager.getOfflineOperations().filter(op => !op.synced).length
-      });
-
-      const result = await offlineCartManager.syncOfflineOperations(syncCallback);
-
-      this.#triggerEvent('cart:sync-complete', {
-        success: result.success,
-        operationsCompleted: result.completed,
-        operationsFailed: result.failed
-      });
-
-      // Update cart UI after sync
-      await this.fetchCart();
-      this.#updateCartUI();
-
-      return result.success;
-    }
-
-    return false;
-  }
-
-  // PUBLIC API METHODS
+  // PUBLIC API
 
   /**
-   * Get the current cart data
-   */
-  public async getCart(): Promise<CartData | null> {
-    return this.fetchCart();
-  }
-
-  /**
-   * Fetch the current cart from the API
+   * Fetch the current cart data from the server
    */
   public async fetchCart(): Promise<CartData | null> {
-    return this.#safeCartOperation(async () => {
-      // If offline and offline support is enabled, return offline cart
-      if (this.#config.features.useOfflineSupport && !offlineCartManager.isOnline()) {
-        const offlineCart = offlineCartManager.getCart();
-        if (offlineCart) {
-          this.#cartData = offlineCart;
-          return this.#cartData;
-        }
-      }
-
-      // Otherwise fetch from server
-      try {
-        const { data } = await this.#apiClient.get<CartData>(this.#config.apiEndpoints.cartGet);
-        this.#cartData = data;
-
-        // Update offline cart if online
-        if (this.#config.features.useOfflineSupport && offlineCartManager.isOnline()) {
-          offlineCartManager.updateWithServerCart(data);
-        }
-
+    try {
+      // Check if we're offline
+      if (this.#config.features.useOfflineSupport && !navigator.onLine) {
+        // Use offline cart data
+        this.#cartData = offlineCartManager.getCart();
         return this.#cartData;
-      } catch (error) {
-        // If network error and offline support enabled, fall back to offline cart
-        if (this.#config.features.useOfflineSupport) {
-          const offlineCart = offlineCartManager.getCart();
-          if (offlineCart) {
-            this.#cartData = offlineCart;
-            return this.#cartData;
-          }
-        }
-        throw error;
-      }
-    }, 'fetchCart', { fallbackValue: this.#cartData });
-  }
-
-  /**
-   * Add an item to the cart
-   */
-  public async addToCart(formDataOrItem: FormData | any): Promise<any> {
-    // Check if offline and offline support is enabled
-    if (this.#config.features.useOfflineSupport && !offlineCartManager.isOnline()) {
-      return this.#addItemOffline(formDataOrItem);
-    }
-
-    return this.#addItemOnline(formDataOrItem);
-  }
-
-  /**
-   * Add item to cart offline
-   */
-  private async #addItemOffline(formDataOrItem: FormData | any): Promise<any> {
-    let item: OfflineCartItem;
-
-    if (formDataOrItem instanceof FormData) {
-      // Convert FormData to cart item format
-      const formDataObject = Object.fromEntries(formDataOrItem.entries());
-      const id = formDataObject.id || formDataObject.variant_id;
-      const quantity = parseInt(formDataObject.quantity as string || '1', 10);
-
-      // Basic item structure for offline mode
-      item = {
-        id: id as string,
-        variantId: formDataObject.variant_id as string,
-        quantity,
-        price: 0, // Price will be estimated
-        title: formDataObject.product_title as string || 'Product',
-        properties: {}
-      };
-
-      // Check for properties
-      for (const [key, value] of Object.entries(formDataObject)) {
-        if (key.startsWith('properties[')) {
-          if (!item.properties) item.properties = {};
-          const propName = key.replace('properties[', '').replace(']', '');
-          item.properties[propName] = value;
-        }
-      }
-    } else {
-      // Already in proper format
-      item = formDataOrItem as OfflineCartItem;
-    }
-
-    // Add to offline cart manager
-    const operation = offlineCartManager.addItem(item);
-
-    // Get updated cart
-    const cart = offlineCartManager.getCart();
-    this.#cartData = cart;
-
-    // Update UI
-    this.#updateCartUI();
-
-    // Open cart drawer
-    this.openCartDrawer();
-
-    // Trigger event
-    this.#triggerEvent('cart:item-added', {
-      item,
-      offline: true,
-      operationId: operation.id
-    });
-
-    return { item, operation };
-  }
-
-  /**
-   * Add item to cart online
-   */
-  private async #addItemOnline(formDataOrItem: FormData | any): Promise<any> {
-    return this.#safeCartOperation(async () => {
-      let data: any;
-
-      if (formDataOrItem instanceof FormData) {
-        // Convert FormData to JSON
-        data = Object.fromEntries(formDataOrItem.entries());
-      } else {
-        data = formDataOrItem;
       }
 
-      // Make the API request
-      const { data: response } = await this.#apiClient.post(this.#config.apiEndpoints.cartAdd, data);
+      // Use updated cart API
+      this.#cartData = await cartApi.getCart();
 
-      // Update cart data
-      await this.fetchCart();
-      this.#updateCartUI();
+      // Update offline cart manager with server data
+      if (this.#config.features.useOfflineSupport) {
+        offlineCartManager.updateWithServerCart(this.#cartData);
+      }
 
-      // Open cart drawer
-      this.openCartDrawer();
+      // If user is online but there are pending offline operations, sync them
+      if (
+        this.#config.features.useOfflineSupport &&
+        navigator.onLine &&
+        offlineCartManager.hasOfflineOperations()
+      ) {
+        await this.syncOfflineCart();
+      }
 
-      // Trigger event
-      this.#triggerEvent('cart:item-added', {
-        item: response,
-        cartData: this.#cartData
+      // Trigger event for cart update
+      this.#triggerEvent('cart:updated', {
+        cart: this.#cartData,
       });
 
-      return response;
-    }, 'addToCart');
-  }
+      return this.#cartData;
+    } catch (error) {
+      // Handle error using the error handler
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: 'fetchCart',
+        category: ErrorCategory.API,
+      });
 
-  /**
-   * Update item quantity
-   */
-  public async updateItemQuantity(key: string, quantity: number): Promise<any> {
-    if (!key) return null;
+      // If offline support is enabled, fall back to offline cart
+      if (this.#config.features.useOfflineSupport) {
+        this.#cartData = offlineCartManager.getCart();
+        return this.#cartData;
+      }
 
-    // Check if offline and offline support is enabled
-    if (this.#config.features.useOfflineSupport && !offlineCartManager.isOnline()) {
-      return this.#updateItemQuantityOffline(key, quantity);
+      return null;
     }
-
-    return this.#updateItemQuantityOnline(key, quantity);
   }
 
   /**
-   * Update item quantity in offline mode
+   * Add item to cart using FormData
    */
-  private async #updateItemQuantityOffline(key: string, quantity: number): Promise<any> {
-    if (quantity <= 0) {
-      // Remove item
-      const operation = offlineCartManager.removeItem(key);
+  public async addToCart(formData: FormData): Promise<CartData | null> {
+    try {
+      // Add CSRF token for security
+      if (this.#config.features.useSafeRenderingMode) {
+        formData.append('csrf_token', getCsrfToken());
+      }
 
-      // Get updated cart
-      const cart = offlineCartManager.getCart();
-      this.#cartData = cart;
+      // Process form data securely
+      if (this.#config.features.useOfflineSupport && !navigator.onLine) {
+        // Create cart item from form data
+        const formObject: Record<string, any> = {};
+        const properties: Record<string, any> = {};
+
+        formData.forEach((value, key) => {
+          if (key.startsWith('properties[') && key.endsWith(']')) {
+            const propName = key.slice(11, -1);
+            properties[propName] = value;
+          } else {
+            formObject[key] = value;
+          }
+        });
+
+        const cartItem: CartItem = {
+          id: formObject.id || formObject.variant_id,
+          quantity: parseInt(formObject.quantity, 10) || 1,
+          title: formObject.product_title || 'Product',
+          price: parseInt(formObject.price, 10) || 0,
+          properties: Object.keys(properties).length > 0 ? properties : undefined,
+        };
+
+        // Add to offline cart
+        offlineCartManager.addItem(cartItem);
+        this.#cartData = offlineCartManager.getCart();
+      } else {
+        // Use cart API to process form
+        this.#cartData = await cartApi.processForm(formData);
+      }
+
+      // Open cart drawer if not already open
+      if (!this.#isOpen) {
+        this.openCartDrawer();
+      }
 
       // Update UI
       this.#updateCartUI();
 
       // Trigger event
-      this.#triggerEvent('cart:item-removed', {
-        key,
-        offline: true,
-        operationId: operation.id
+      this.#triggerEvent('cart:item-added', {
+        cart: this.#cartData,
       });
 
-      return { removed: true, operation };
-    } else {
-      // Update quantity
-      const operation = offlineCartManager.updateItemQuantity(key, quantity);
+      return this.#cartData;
+    } catch (error) {
+      // Handle error
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: 'addToCart',
+        category: ErrorCategory.API,
+      });
 
-      // Get updated cart
-      const cart = offlineCartManager.getCart();
-      this.#cartData = cart;
+      return null;
+    }
+  }
+
+  /**
+   * Update the quantity of a cart item
+   */
+  public async updateItemQuantity(key: string, quantity: number): Promise<CartData | null> {
+    try {
+      if (this.#config.features.useOfflineSupport && !navigator.onLine) {
+        // Update in offline cart
+        offlineCartManager.updateItemQuantity(key, quantity);
+        this.#cartData = offlineCartManager.getCart();
+      } else {
+        // Use cart API
+        this.#cartData = await cartApi.updateItemQuantity(key, quantity);
+      }
 
       // Update UI
       this.#updateCartUI();
 
       // Trigger event
       this.#triggerEvent('cart:item-updated', {
-        key,
+        cart: this.#cartData,
+        itemKey: key,
         quantity,
-        offline: true,
-        operationId: operation.id
       });
 
-      return { updated: true, quantity, operation };
+      return this.#cartData;
+    } catch (error) {
+      // Handle error
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: 'updateItemQuantity',
+        category: ErrorCategory.API,
+      });
+
+      return null;
     }
-  }
-
-  /**
-   * Update item quantity online
-   */
-  private async #updateItemQuantityOnline(key: string, quantity: number): Promise<any> {
-    return this.#safeCartOperation(async () => {
-      const data = {
-        id: key,
-        quantity
-      };
-
-      // Make API request
-      const { data: response } = await this.#apiClient.post(this.#config.apiEndpoints.cartChange, data);
-
-      // Update cart data and UI
-      this.#cartData = response;
-      this.#updateCartUI();
-
-      // Trigger appropriate event
-      if (quantity <= 0) {
-        this.#triggerEvent('cart:item-removed', {
-          key,
-          cartData: this.#cartData
-        });
-      } else {
-        this.#triggerEvent('cart:item-updated', {
-          key,
-          quantity,
-          cartData: this.#cartData
-        });
-      }
-
-      return response;
-    }, 'updateItemQuantity');
   }
 
   /**
    * Remove an item from the cart
    */
-  public async removeItem(key: string): Promise<any> {
-    return this.updateItemQuantity(key, 0);
+  public async removeItem(key: string): Promise<CartData | null> {
+    try {
+      if (this.#config.features.useOfflineSupport && !navigator.onLine) {
+        // Remove from offline cart
+        offlineCartManager.removeItem(key);
+        this.#cartData = offlineCartManager.getCart();
+      } else {
+        // Use cart API
+        this.#cartData = await cartApi.removeItem(key);
+      }
+
+      // Update UI
+      this.#updateCartUI();
+
+      // Trigger event
+      this.#triggerEvent('cart:item-removed', {
+        cart: this.#cartData,
+        itemKey: key,
+      });
+
+      return this.#cartData;
+    } catch (error) {
+      // Handle error
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: 'removeItem',
+        category: ErrorCategory.API,
+      });
+
+      return null;
+    }
   }
 
   /**
    * Clear the cart
    */
-  public async clearCart(): Promise<any> {
-    // Check if offline and offline support is enabled
-    if (this.#config.features.useOfflineSupport && !offlineCartManager.isOnline()) {
-      return this.#clearCartOffline();
-    }
+  public async clearCart(): Promise<CartData | null> {
+    try {
+      if (this.#config.features.useOfflineSupport && !navigator.onLine) {
+        // Clear offline cart
+        offlineCartManager.clearCart();
+        this.#cartData = offlineCartManager.getCart();
+      } else {
+        // Use cart API
+        this.#cartData = await cartApi.clearCart();
+      }
 
-    return this.#clearCartOnline();
-  }
-
-  /**
-   * Clear cart in offline mode
-   */
-  private async #clearCartOffline(): Promise<any> {
-    const operation = offlineCartManager.clearCart();
-
-    // Get updated cart
-    const cart = offlineCartManager.getCart();
-    this.#cartData = cart;
-
-    // Update UI
-    this.#updateCartUI();
-
-    // Trigger event
-    this.#triggerEvent('cart:cleared', {
-      offline: true,
-      operationId: operation.id
-    });
-
-    return { cleared: true, operation };
-  }
-
-  /**
-   * Clear cart online
-   */
-  private async #clearCartOnline(): Promise<any> {
-    return this.#safeCartOperation(async () => {
-      // Make API request
-      const { data: response } = await this.#apiClient.post(this.#config.apiEndpoints.cartClear, {});
-
-      // Update cart data and UI
-      this.#cartData = response;
+      // Update UI
       this.#updateCartUI();
 
       // Trigger event
       this.#triggerEvent('cart:cleared', {
-        cartData: this.#cartData
+        cart: this.#cartData,
       });
 
-      return response;
-    }, 'clearCart');
-  }
+      return this.#cartData;
+    } catch (error) {
+      // Handle error
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: 'clearCart',
+        category: ErrorCategory.API,
+      });
 
-  /**
-   * Sync offline cart changes with the server
-   */
-  public async syncOfflineCart(): Promise<boolean> {
-    if (!this.#config.features.useOfflineSupport) {
-      return false;
+      return null;
     }
-
-    return this.#syncOfflineOperations();
   }
 
   /**
-   * Open the cart drawer
-   */
-  public openCartDrawer(): void {
-    const drawer = document.querySelector(this.#config.selectors.cartDrawer);
-    if (!drawer) return;
-
-    drawer.classList.add('open');
-    document.body.classList.add('cart-drawer-open');
-    this.#isOpen = true;
-
-    // Trigger event
-    this.#triggerEvent('cart:opened', {
-      cartData: this.#cartData
-    });
-  }
-
-  /**
-   * Close the cart drawer
-   */
-  public closeCartDrawer(): void {
-    const drawer = document.querySelector(this.#config.selectors.cartDrawer);
-    if (!drawer) return;
-
-    drawer.classList.remove('open');
-    document.body.classList.remove('cart-drawer-open');
-    this.#isOpen = false;
-
-    // Trigger event
-    this.#triggerEvent('cart:closed', {});
-  }
-
-  /**
-   * Toggle the cart drawer
+   * Toggle cart drawer open/closed
    */
   public toggleCartDrawer(): void {
     if (this.#isOpen) {
@@ -1282,101 +1093,131 @@ export class CartSystem {
   }
 
   /**
-   * Check if cart drawer is open
+   * Open the cart drawer
    */
-  public isCartDrawerOpen(): boolean {
-    return this.#isOpen;
-  }
+  public openCartDrawer(): void {
+    const cartDrawer = document.querySelector(this.#config.selectors.cartDrawer);
+    if (!cartDrawer) return;
 
-  /**
-   * Add trauma-encoded memory to cart
-   */
-  public async addTraumaMemory(productId: number, quantity: number, traumaLevel: number): Promise<any> {
-    if (traumaLevel < 1 || traumaLevel > 5) {
-      throw new Error(`Invalid trauma level: ${traumaLevel}. Must be between 1-5.`);
+    // Open drawer
+    cartDrawer.classList.add('active');
+    this.#isOpen = true;
+
+    // Apply quantum effects if enabled
+    if (this.#config.features.useQuantumEffects) {
+      this.#applyQuantumEffect('cart-drawer', 'open', {
+        timestamp: Date.now(),
+      });
     }
 
-    // Use memory encoder to generate encoded properties
-    const product = { id: productId };
-    const encodedProperties = memoryEncoder.encodeTrauma(product, traumaLevel);
-
-    // Generate quantum properties for visualization
-    const quantumProperties = {
-      glitchFactor: traumaLevel * 0.2,
-      traumaIndex: traumaLevel,
-      mutationProfile: `trauma-level-${traumaLevel}`
-    };
-
-    // Add to cart with properties
-    return this.addToCart({
-      id: productId,
-      quantity,
-      properties: encodedProperties,
-      quantumProperties
+    // Trigger event
+    this.#triggerEvent('cart:opened', {
+      cart: this.#cartData,
     });
   }
 
   /**
-   * Apply a profile to the cart system
+   * Close the cart drawer
    */
-  public applyProfile(profileName: string): void {
-    // Implementation for profile application
-    console.log(`Applied profile: ${profileName}`);
+  public closeCartDrawer(): void {
+    const cartDrawer = document.querySelector(this.#config.selectors.cartDrawer);
+    if (!cartDrawer) return;
+
+    // Close drawer
+    cartDrawer.classList.remove('active');
+    this.#isOpen = false;
+
+    // Apply quantum effects if enabled
+    if (this.#config.features.useQuantumEffects) {
+      this.#applyQuantumEffect('cart-drawer', 'close', {
+        timestamp: Date.now(),
+      });
+    }
+
+    // Trigger event
+    this.#triggerEvent('cart:closed', {
+      cart: this.#cartData,
+    });
   }
 
   /**
-   * Check if a feature is enabled
+   * Sync offline cart operations with the server
    */
-  public isFeatureEnabled(feature: string): boolean {
-    // Check experiments first
-    if (this.#experimentVariants.has(feature)) {
-      const variant = this.#experimentVariants.get(feature);
-      return variant !== 'disabled';
-    }
+  public async syncOfflineCart(): Promise<boolean> {
+    if (!this.#config.features.useOfflineSupport) return false;
 
-    // Then check config
-    return !!this.#config.features[feature as keyof typeof this.#config.features];
+    try {
+      // Trigger sync start event
+      this.#triggerEvent('cart:sync-start', {});
+
+      // Perform sync
+      const syncResult = await offlineCartManager.syncWithServer();
+
+      // If sync was successful, refresh cart from server
+      if (syncResult) {
+        this.#cartData = await cartApi.getCart();
+        this.#updateCartUI();
+      }
+
+      // Trigger sync complete event
+      this.#triggerEvent('cart:sync-complete', {
+        success: syncResult,
+        cart: this.#cartData,
+      });
+
+      return syncResult;
+    } catch (error) {
+      // Handle error
+      CartErrorHandler.handleError(error, {
+        component: 'cart-system',
+        method: 'syncOfflineCart',
+        category: ErrorCategory.NETWORK,
+      });
+
+      // Trigger sync complete event with failure
+      this.#triggerEvent('cart:sync-complete', {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+
+      return false;
+    }
   }
 
   /**
-   * Get offline status and stats
+   * Get the current cart data
    */
-  public getOfflineStatus(): {
-    isOnline: boolean;
-    hasOfflineOperations: boolean;
-    pendingOperationCount: number;
-    storageStats: any;
-  } {
-    if (!this.#config.features.useOfflineSupport) {
-      return {
-        isOnline: true,
-        hasOfflineOperations: false,
-        pendingOperationCount: 0,
-        storageStats: null
-      };
-    }
-
-    return {
-      isOnline: offlineCartManager.isOnline(),
-      hasOfflineOperations: offlineCartManager.hasOfflineOperations(),
-      pendingOperationCount: offlineCartManager.getOfflineOperations().filter(op => !op.synced).length,
-      storageStats: offlineCartManager.getStorageStats()
-    };
+  public getCartData(): CartData | null {
+    return this.#cartData;
   }
 
   /**
-   * Cleans up the cart system
+   * Apply trauma encoding to a product
    */
-  public destroy(): void {
-    // Clean up intervals, workers, etc.
-    if (this.#worker) {
-      this.#terminateWorker();
+  public encodeProductTrauma(
+    product: { id: number | string; [key: string]: any },
+    traumaLevel: number
+  ): Record<string, any> {
+    if (!product || traumaLevel < 1 || traumaLevel > 5) {
+      return {};
     }
 
-    // Force sync any pending offline changes
-    if (this.#config.features.useOfflineSupport && offlineCartManager.isOnline()) {
-      this.syncOfflineCart();
-    }
+    // Use memory encoder to apply trauma
+    return memoryEncoder.encodeTrauma(product, traumaLevel);
+  }
+
+  /**
+   * Get device capabilities
+   */
+  public getDeviceCapabilities(): DeviceCapabilities | null {
+    return this.#deviceCapabilities;
+  }
+
+  /**
+   * Check if cart drawer is open
+   */
+  public isCartOpen(): boolean {
+    return this.#isOpen;
   }
 }
 
@@ -1385,7 +1226,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('DOMContentLoaded', () => {
     // Create the cart system instance
     const cartSystem = CartSystem.getInstance({
-      debug: window.location.search.includes('debug=true')
+      debug: window.location.search.includes('debug=true'),
     });
 
     // Expose to window for backward compatibility

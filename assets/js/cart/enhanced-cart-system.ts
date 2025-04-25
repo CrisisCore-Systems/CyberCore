@@ -7,10 +7,10 @@
  * @Version: 3.0.0
  */
 
-import { NeuralBus } from './neural-bus';
+import { NeuralBus } from '../core/neural-bus';
 import { CartErrorHandler } from './cart-error-handler';
-import { domCache } from './dom-cache-manager';
-import { cartAccessibility } from './cart-accessibility';
+import { domCache } from '../utils/dom-cache-manager';
+import { cartAccessibility } from '../accessibility/cart-accessibility';
 
 // Type definitions
 export interface CartItem {
@@ -315,7 +315,7 @@ export class CartSystem {
 
       if (this.#holographicPreviewsSupported) {
         try {
-          const module = await import('./hologram-renderer.js');
+          const module = await import('../quantum-hologram-renderer.js');
           this.#holographicRenderer = module.HologramRenderer;
         } catch (e) {
           this.#holographicPreviewsSupported = false;
@@ -336,7 +336,7 @@ export class CartSystem {
 
     try {
       if ('Worker' in window) {
-        this.#worker = new Worker(new URL('./quantum-effects-worker.js', import.meta.url));
+        this.#worker = new Worker(new URL('../quantum-effects-worker.js', import.meta.url));
 
         this.#worker.addEventListener('message', (event) => {
           const { type, target, result } = event.data;
@@ -802,18 +802,18 @@ export class CartSystem {
           // Show cart items, hide empty message
           const emptyMessageEl = cartDrawer.querySelector(this.#config.selectors.cartEmptyMessage);
           if (emptyMessageEl) emptyMessageEl.classList.add('hidden');
-
+          
           itemsContainer.classList.remove('hidden');
-
+          
           const checkoutButtonEl = cartDrawer.querySelector(this.#config.selectors.cartCheckoutButton);
           if (checkoutButtonEl) checkoutButtonEl.classList.remove('hidden');
         } else {
           // Show empty message, hide cart items
           const emptyMessageEl = cartDrawer.querySelector(this.#config.selectors.cartEmptyMessage);
           if (emptyMessageEl) emptyMessageEl.classList.remove('hidden');
-
+          
           itemsContainer.classList.add('hidden');
-
+          
           const checkoutButtonEl = cartDrawer.querySelector(this.#config.selectors.cartCheckoutButton);
           if (checkoutButtonEl) checkoutButtonEl.classList.add('hidden');
         }

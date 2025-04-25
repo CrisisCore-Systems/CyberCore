@@ -1,419 +1,219 @@
 /**
- * SafeApiClient
- * Enhanced API client with robust error handling, retry logic, and recovery mechanisms for the CyberCore Cart System
+ * SAFE-API-CLIENT.TS
+ * Secure API client for VoidBloom Theme
  *
  * @MutationCompatible: All Variants
  * @StrategyProfile: quantum-entangled
  * @Version: 1.0.0
  */
 
-import CartErrorHandler, { ErrorCategory, ErrorContext } from './cart-error-handler';
-import { NeuralBus } from './neural-bus';
+import CartErrorHandler from './cart-error-handler';
+import { validateAuthenticityToken } from './security-utils';
 
-/**
- * Configuration options for SafeApiClient
- */
-export interface SafeApiClientConfig {
-  /** Default number of retry attempts */
-  maxRetries?: number;
-  /** Base delay between retries in ms (exponential backoff applied) */
-  retryDelay?: number;
-  /** Global request timeout in ms */
-  timeout?: number;
-  /** Whether to use NeuralBus for event broadcasting */
-  useNeuralBus?: boolean;
-  /** Custom headers to include with all requests */
+// API Configuration
+const API_CONFIG = {
+  version: '2023-07', // Shopify API version
+  maxRetries: 3,
+  timeout: 10000, // 10 seconds
+  baseUrl: '', // Will use relative URLs by default
+};
+
+// Request options interface
+interface ApiClientOptions {
   headers?: Record<string, string>;
-  /** Enable debug logging */
-  debug?: boolean;
-  /** Whether to cache GET requests */
-  cacheGet?: boolean;
-  /** Cache TTL in ms (default: 5 minutes) */
-  cacheTtl?: number;
+  timeout?: number;
+  retry?: boolean;
+  maxRetries?: number;
+  validateCsrf?: boolean;
+}
+
+// Response interface
+interface ApiResponse<T = any> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  error?: Error;
 }
 
 /**
- * Response metadata for tracking and diagnostics
+ * Safe API Client with error handling, retries, and proper security
  */
-export interface ResponseMetadata {
-  /** Request start timestamp */
-  requestStartTime: number;
-  /** Total time to complete the request (including retries) */
-  totalTime: number;
-  /** Number of retries performed */
-  retryCount: number;
-  /** Request URL */
-  url: string;
-  /** Request method */
-  method: string;
-  /** Cache hit indicator (for GET requests when caching enabled) */
-  fromCache?: boolean;
-  /** Quantum state stabilization factor (0-1) */
-  quantumStability?: number;
-}
-
-// Cache entry type
-interface CacheEntry {
-  data: any;
-  expires: number;
-}
-
-/**
- * Safe API Client with comprehensive error handling and retry logic
- */
-export class SafeApiClient {
-  private config: SafeApiClientConfig;
-  private cache: Map<string, CacheEntry> = new Map();
-  private neuralBusConnected: boolean = false;
-  private quantumStabilityFactor: number = 1.0;
+class SafeApiClient {
+  private defaultOptions: ApiClientOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Shopify-API-Version': API_CONFIG.version,
+    },
+    timeout: API_CONFIG.timeout,
+    retry: true,
+    maxRetries: API_CONFIG.maxRetries,
+    validateCsrf: true,
+  };
 
   /**
-   * Create a new SafeApiClient instance
+   * Make a GET request
    */
-  constructor(config: Partial<SafeApiClientConfig> = {}) {
-    // Default configuration
-    this.config = {
-      maxRetries: 3,
-      retryDelay: 500,
-      timeout: 10000,
-      useNeuralBus: true,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-      debug: false,
-      cacheGet: true,
-      cacheTtl: 5 * 60 * 1000, // 5 minutes
-      ...config,
-    };
-
-    // Try to connect to NeuralBus if enabled
-    if (this.config.useNeuralBus && typeof NeuralBus !== 'undefined') {
-      try {
-        NeuralBus.register('safe-api-client', {
-          version: '1.0.0',
-          capabilities: ['retry', 'error-handling', 'caching'],
-        });
-        this.neuralBusConnected = true;
-
-        // Subscribe to stability updates
-        NeuralBus.subscribe('quantum:stability-update', (data) => {
-          if (typeof data.factor === 'number') {
-            this.quantumStabilityFactor = Math.max(0, Math.min(1, data.factor));
-          }
-        });
-      } catch (e) {
-        this.log('Failed to connect to NeuralBus:', e);
-      }
-    }
+  async get<T = any>(url: string, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+    return this.request<T>('GET', url, null, options);
   }
 
   /**
-   * Make a GET request with error handling and retries
+   * Make a POST request
    */
-  public async get<T = any>(
+  async post<T = any>(
     url: string,
-    options: RequestInit = {}
-  ): Promise<{ data: T; metadata: ResponseMetadata }> {
-    // Check cache first if enabled
-    if (this.config.cacheGet) {
-      const cacheKey = this.getCacheKey(url, options);
-      const cached = this.cache.get(cacheKey);
+    data: any = null,
+    options: ApiClientOptions = {}
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>('POST', url, data, options);
+  }
 
-      if (cached && cached.expires > Date.now()) {
-        const metadata: ResponseMetadata = {
-          requestStartTime: Date.now(),
-          totalTime: 0,
-          retryCount: 0,
-          url,
-          method: 'GET',
-          fromCache: true,
-          quantumStability: this.quantumStabilityFactor,
+  /**
+   * Make a PUT request
+   */
+  async put<T = any>(
+    url: string,
+    data: any = null,
+    options: ApiClientOptions = {}
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>('PUT', url, data, options);
+  }
+
+  /**
+   * Make a DELETE request
+   */
+  async delete<T = any>(url: string, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+    return this.request<T>('DELETE', url, null, options);
+  }
+
+  /**
+   * Make a request with error handling and retries
+   */
+  private async request<T = any>(
+    method: string,
+    url: string,
+    data: any = null,
+    options: ApiClientOptions = {}
+  ): Promise<ApiResponse<T>> {
+    const mergedOptions = { ...this.defaultOptions, ...options };
+    const { headers, timeout, retry, maxRetries, validateCsrf } = mergedOptions;
+
+    let retries = 0;
+
+    while (true) {
+      try {
+        // Check CSRF token for mutations
+        if (validateCsrf && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method.toUpperCase())) {
+          const token =
+            (data && data.authenticity_token) ||
+            new URLSearchParams(data).get('authenticity_token');
+
+          if (token && !validateAuthenticityToken(token)) {
+            throw new Error('Invalid CSRF token');
+          }
+        }
+
+        // Build the fetch options
+        const fetchOptions: RequestInit = {
+          method,
+          headers,
+          credentials: 'same-origin', // Include cookies for same-origin requests
         };
 
-        this.log('Cache hit for:', url);
-        return { data: cached.data, metadata };
-      }
-    }
+        // Add body for methods that support it
+        if (data !== null && ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())) {
+          fetchOptions.body = typeof data === 'string' ? data : JSON.stringify(data);
+        }
 
-    // Merge options with defaults
-    const fetchOptions: RequestInit = {
-      method: 'GET',
-      headers: { ...this.config.headers, ...options.headers },
-      ...options,
-    };
-
-    return this.safeRequest<T>(url, fetchOptions);
-  }
-
-  /**
-   * Make a POST request with error handling and retries
-   */
-  public async post<T = any>(
-    url: string,
-    data: any,
-    options: RequestInit = {}
-  ): Promise<{ data: T; metadata: ResponseMetadata }> {
-    // Merge options with defaults
-    const fetchOptions: RequestInit = {
-      method: 'POST',
-      headers: { ...this.config.headers, ...options.headers },
-      body: typeof data === 'string' ? data : JSON.stringify(data),
-      ...options,
-    };
-
-    return this.safeRequest<T>(url, fetchOptions);
-  }
-
-  /**
-   * Make a PUT request with error handling and retries
-   */
-  public async put<T = any>(
-    url: string,
-    data: any,
-    options: RequestInit = {}
-  ): Promise<{ data: T; metadata: ResponseMetadata }> {
-    // Merge options with defaults
-    const fetchOptions: RequestInit = {
-      method: 'PUT',
-      headers: { ...this.config.headers, ...options.headers },
-      body: typeof data === 'string' ? data : JSON.stringify(data),
-      ...options,
-    };
-
-    return this.safeRequest<T>(url, fetchOptions);
-  }
-
-  /**
-   * Make a DELETE request with error handling and retries
-   */
-  public async delete<T = any>(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<{ data: T; metadata: ResponseMetadata }> {
-    // Merge options with defaults
-    const fetchOptions: RequestInit = {
-      method: 'DELETE',
-      headers: { ...this.config.headers, ...options.headers },
-      ...options,
-    };
-
-    return this.safeRequest<T>(url, fetchOptions);
-  }
-
-  /**
-   * Clear the cache
-   */
-  public clearCache(): void {
-    this.cache.clear();
-    this.log('Cache cleared');
-  }
-
-  /**
-   * Generate a cache key for a request
-   */
-  private getCacheKey(url: string, options: RequestInit): string {
-    // Create a key based on URL and relevant options
-    const queryParams = options.body ? JSON.stringify(options.body) : '';
-    return `${url}_${queryParams}`;
-  }
-
-  /**
-   * Execute a request with safety mechanisms
-   */
-  private async safeRequest<T>(
-    url: string,
-    options: RequestInit
-  ): Promise<{ data: T; metadata: ResponseMetadata }> {
-    const startTime = Date.now();
-    let retryCount = 0;
-    let lastError: Error | null = null;
-
-    // Add stability factor to request headers
-    if (this.quantumStabilityFactor !== 1.0) {
-      const headers = (options.headers as Record<string, string>) || {};
-      headers['X-Quantum-Stability'] = this.quantumStabilityFactor.toFixed(2);
-      options.headers = headers;
-    }
-
-    // Try the request with retries
-    for (let attempt = 0; attempt <= this.config.maxRetries; attempt++) {
-      if (attempt > 0) {
-        retryCount++;
-        // Exponential backoff with jitter
-        const delay =
-          this.config.retryDelay * Math.pow(2, attempt - 1) * (0.8 + Math.random() * 0.4);
-        this.log(`Retry ${attempt}/${this.config.maxRetries} after ${delay.toFixed(0)}ms`);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-
-      try {
-        // Add timeout to the request
+        // Set up timeout
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
-        const fetchOptions = { ...options, signal: controller.signal };
+        fetchOptions.signal = controller.signal;
 
-        // Execute the request
-        const response = await fetch(url, fetchOptions);
-        clearTimeout(timeoutId);
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        if (!response.ok) {
-          // Handle error response (4xx, 5xx)
-          const errorData = await this.tryParseJson(response);
-          const errorMessage =
-            errorData?.message || `Request failed with status ${response.status}`;
-          const error = new Error(errorMessage);
-          Object.assign(error, {
-            status: response.status,
-            statusText: response.statusText,
-            data: errorData,
+        try {
+          const response = await fetch(url, fetchOptions);
+          clearTimeout(timeoutId);
+
+          // Parse the response
+          let responseData: any = null;
+          const contentType = response.headers.get('content-type') || '';
+
+          if (contentType.includes('application/json')) {
+            responseData = await response.json();
+          } else if (contentType.includes('text/')) {
+            responseData = await response.text();
+          } else {
+            responseData = await response.blob();
+          }
+
+          // Convert headers to a plain object
+          const responseHeaders: Record<string, string> = {};
+          response.headers.forEach((value, key) => {
+            responseHeaders[key] = value;
           });
+
+          // Check if the response was successful
+          if (!response.ok) {
+            throw new Error(
+              `Request failed with status ${response.status}: ${response.statusText}`
+            );
+          }
+
+          // Return the response
+          return {
+            data: responseData,
+            status: response.status,
+            headers: responseHeaders,
+          };
+        } catch (error) {
+          clearTimeout(timeoutId);
           throw error;
         }
-
-        // Parse the response
-        const data = await this.tryParseJson(response);
-
-        // Cache the result if it's a GET request and caching is enabled
-        if (options.method === 'GET' && this.config.cacheGet) {
-          const cacheKey = this.getCacheKey(url, options);
-          this.cache.set(cacheKey, {
-            data,
-            expires: Date.now() + this.config.cacheTtl,
-          });
-        }
-
-        // Publish success to NeuralBus
-        if (this.neuralBusConnected) {
-          NeuralBus.publish('api:request-success', {
-            url,
-            method: options.method,
-            duration: Date.now() - startTime,
-            retryCount,
-            timestamp: Date.now(),
-          });
-        }
-
-        // Return the data with metadata
-        const metadata: ResponseMetadata = {
-          requestStartTime: startTime,
-          totalTime: Date.now() - startTime,
-          retryCount,
-          url,
-          method: options.method as string,
-          quantumStability: this.quantumStabilityFactor,
-        };
-
-        return { data, metadata };
       } catch (error) {
-        lastError = error as Error;
+        retries++;
 
-        // Check if we've been aborted due to timeout
-        if (error.name === 'AbortError') {
-          error.message = `Request timeout after ${this.config.timeout}ms`;
+        // Log the error
+        CartErrorHandler.handleError(error as Error, {
+          component: 'safe-api-client',
+          method: method,
+          url: url,
+          attempt: retries,
+        });
+
+        // Check if we should retry
+        if (!retry || retries >= maxRetries) {
+          return {
+            data: null,
+            status: 0,
+            headers: {},
+            error: error as Error,
+          };
         }
 
-        // Check if it's a network error
-        const isNetworkError =
-          error instanceof TypeError &&
-          (error.message.includes('network') || error.message.includes('failed to fetch'));
-
-        // Determine if we should retry
-        const shouldRetry =
-          attempt < this.config.maxRetries &&
-          (isNetworkError || this.isRetryableHttpStatus(error.status));
-
-        if (!shouldRetry) {
-          // We won't retry, so log the final error
-          this.log('Request failed after', retryCount, 'retries:', error);
-          break;
-        }
+        // Wait before retrying (exponential backoff)
+        await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, retries - 1)));
       }
     }
-
-    // All retries failed
-    const errorContext: ErrorContext = {
-      component: 'SafeApiClient',
-      operation: options.method as string,
-      url,
-      retryCount,
-      timestamp: Date.now(),
-      requestData: options.body ? JSON.parse(options.body as string) : undefined,
-    };
-
-    // Handle the error through the CartErrorHandler
-    CartErrorHandler.handleError(lastError, errorContext, ErrorCategory.NETWORK);
-
-    // Publish failure to NeuralBus
-    if (this.neuralBusConnected) {
-      NeuralBus.publish('api:request-failed', {
-        url,
-        method: options.method,
-        duration: Date.now() - startTime,
-        retryCount,
-        error: {
-          message: lastError.message,
-          status: lastError.status,
-          name: lastError.name,
-        },
-        timestamp: Date.now(),
-      });
-    }
-
-    // Rethrow the error with additional metadata
-    const enhancedError = new Error(
-      `Request failed after ${retryCount} retries: ${lastError.message}`
-    );
-    Object.assign(enhancedError, {
-      originalError: lastError,
-      retryCount,
-      duration: Date.now() - startTime,
-      url,
-      method: options.method,
-    });
-    throw enhancedError;
   }
 
   /**
-   * Check if an HTTP status code is retryable
+   * Update API version
    */
-  private isRetryableHttpStatus(status?: number): boolean {
-    if (!status) return false;
-
-    // Retry server errors (5xx) and specific client errors
-    return (
-      (status >= 500 && status < 600) || // Server errors
-      status === 408 || // Request Timeout
-      status === 429 // Too Many Requests
-    );
+  setApiVersion(version: string): void {
+    API_CONFIG.version = version;
+    this.defaultOptions.headers['X-Shopify-API-Version'] = version;
   }
 
   /**
-   * Try to parse JSON response, fallback to text if not valid JSON
+   * Get current API version
    */
-  private async tryParseJson(response: Response): Promise<any> {
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      try {
-        return await response.json();
-      } catch (e) {
-        // If JSON parsing fails, fall back to text
-        return { text: await response.text() };
-      }
-    }
-    return { text: await response.text() };
-  }
-
-  /**
-   * Conditional logging based on debug setting
-   */
-  private log(...args: any[]): void {
-    if (this.config.debug) {
-      console.log('[SafeApiClient]', ...args);
-    }
+  getApiVersion(): string {
+    return API_CONFIG.version;
   }
 }
 
-// Export a default instance with default config
+// Export singleton instance
 export const safeApiClient = new SafeApiClient();
 export default safeApiClient;
