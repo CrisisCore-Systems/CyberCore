@@ -13,13 +13,13 @@
  */
 window.NeuralBus = {
   initialize: function (config) {
-    console.log('NeuralBus initialized with config:', config);
     this.events = {};
     this.components = {};
     this.config = config || {
       traumaEncoding: true,
       debugMode: false,
     };
+    console.log('NeuralBus initialized with config:', this.config);
     return this;
   },
 
@@ -46,10 +46,19 @@ window.NeuralBus = {
       active: true,
     };
     this.publish('component:registered', { name: componentName, config: config });
-    return true;
+    return {
+      nonce: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+      timestamp: Date.now(),
+    };
   },
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-  window.NeuralBus.initialize();
+  // Initialize with default configuration
+  window.NeuralBus.initialize({
+    traumaEncoding: true,
+    debugMode: false,
+    autoConnect: true,
+    version: '3.1.0',
+  });
 });

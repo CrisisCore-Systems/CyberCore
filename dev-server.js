@@ -4,6 +4,16 @@ const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 const fs = require('fs');
+const { execSync } = require('child_process');
+
+// Run the sync-assets script before starting the server
+console.log('🔄 Running asset sync script...');
+try {
+  require('./scripts/sync-assets');
+} catch (error) {
+  console.error('❌ Error syncing assets:', error.message);
+  console.log('⚠️ Continuing startup with potentially missing assets');
+}
 
 // Create Express server
 const app = express();
@@ -13,24 +23,32 @@ const port = 3000;
 const liveReloadServer = livereload.createServer({
   exts: ['js', 'html', 'css', 'liquid', 'json'],
   delay: 1000,
-  port: 35730  // Changed from default 35729 to avoid conflicts
+  port: 35731, // Changed to 35731 to avoid conflicts with other processes
 });
 liveReloadServer.watch([
   path.join(__dirname, 'deploy/dev'),
   path.join(__dirname, 'assets'),
   path.join(__dirname, 'templates'),
   path.join(__dirname, 'sections'),
-  path.join(__dirname, 'snippets')
+  path.join(__dirname, 'snippets'),
 ]);
 
 // Add livereload middleware
-app.use(connectLivereload());
+app.use(connectLivereload({ port: 35731 }));
 
 // Serve static files from deploy/dev directory
 app.use(express.static(path.join(__dirname, 'deploy/dev')));
 
 // Serve asset files directly (for development)
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+// Add fallback paths to ensure assets are found
+app.use('/assets', [
+  // First try deploy/dev/assets
+  express.static(path.join(__dirname, 'deploy/dev/assets')),
+  // Then try the source assets directory
+  express.static(path.join(__dirname, 'assets')),
+  // Finally try the dist directory
+  express.static(path.join(__dirname, 'dist')),
+]);
 
 // Simple liquid variable parser for demonstration
 /**
@@ -39,22 +57,22 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 function parseLiquid(content, data = {}) {
   // This is a very simplified version that only handles basic variables
   let result = content;
-  
+
   // Replace section settings with defaults
   result = result.replace(/{{ section\.settings\.([\w]+) \| default: ['"]([^'"]+)['"] }}/g, '$2');
-  
+
   // Handle default shop name
   result = result.replace(/{{ shop\.name \| default: ['"]([^'"]+)['"] }}/g, '$1');
-  
+
   // Handle basic date
   result = result.replace(/{{ ['"]now['"] \| date: ['"][^'"]+['"] }}/g, new Date().toISOString());
-  
+
   // Handle basic variables from data object
-  Object.keys(data).forEach(key => {
+  Object.keys(data).forEach((key) => {
     const regex = new RegExp(`{{ ${key} }}`, 'g');
     result = result.replace(regex, data[key]);
   });
-  
+
   return result;
 }
 
@@ -65,16 +83,19 @@ function parseLiquid(content, data = {}) {
 function renderTemplate(templatePath, data = {}) {
   try {
     let content = fs.readFileSync(templatePath, 'utf8');
-    
+
     // Handle {% render %} tags
-    content = content.replace(/{%\s*render\s+['"]([^'"]+)['"]([\s\S]*?)%}/g, (match, snippet, params) => {
-      const snippetPath = path.join(__dirname, 'snippets', `${snippet}.liquid`);
-      if (fs.existsSync(snippetPath)) {
-        return fs.readFileSync(snippetPath, 'utf8');
+    content = content.replace(
+      /{%\s*render\s+['"]([^'"]+)['"]([\s\S]*?)%}/g,
+      (match, snippet, params) => {
+        const snippetPath = path.join(__dirname, 'snippets', `${snippet}.liquid`);
+        if (fs.existsSync(snippetPath)) {
+          return fs.readFileSync(snippetPath, 'utf8');
+        }
+        return `<!-- Snippet ${snippet} not found -->`;
       }
-      return `<!-- Snippet ${snippet} not found -->`;
-    });
-    
+    );
+
     // Handle {% section %} tags
     content = content.replace(/{%\s*section\s+['"]([^'"]+)['"]\s*%}/g, (match, section) => {
       const sectionPath = path.join(__dirname, 'sections', `${section}.liquid`);
@@ -83,7 +104,7 @@ function renderTemplate(templatePath, data = {}) {
       }
       return `<!-- Section ${section} not found -->`;
     });
-    
+
     // Handle simplified liquid variables
     return parseLiquid(content, data);
   } catch (error) {
@@ -97,7 +118,7 @@ app.get('/voidbloom', (req, res) => {
   const templatePath = path.join(__dirname, 'templates', 'index.liquid');
   const content = renderTemplate(templatePath, {
     title: 'VoidBloom',
-    subtitle: 'Memory Archive System'
+    subtitle: 'Memory Archive System',
   });
   res.send(content);
 });
@@ -212,12 +233,12 @@ app.get('/', (req, res) => {
         <h1>CyberCore Component Preview</h1>
         <p>Interactive preview of quantum-themed components</p>
       </header>
-      
+
       <div class="page-navigation">
         <a href="/">Component Demo</a>
         <a href="/voidbloom">VoidBloom Homepage</a>
       </div>
-      
+
       <div class="controls">
         <div class="control-group">
           <label for="profile">Mutation Profile:</label>
@@ -230,7 +251,7 @@ app.get('/', (req, res) => {
           <button class="btn" onclick="triggerMutation()">Apply Mutation</button>
         </div>
       </div>
-      
+
       <div class="component-grid">
         <!-- Hologram Component -->
         <div class="component-card">
@@ -239,20 +260,20 @@ app.get('/', (req, res) => {
           </div>
           <div class="component-content">
             <div id="hologram-container" style="height: 200px;">
-              <cart-preview-hologram product-id="1001" 
+              <cart-preview-hologram product-id="1001"
                 profile="CyberLotus" autorotate="true"
                 model-url="/assets/models/cube.glb"></cart-preview-hologram>
             </div>
           </div>
           <div class="component-footer">
-            <pre>&lt;cart-preview-hologram 
-  product-id="1001" 
+            <pre>&lt;cart-preview-hologram
+  product-id="1001"
   profile="CyberLotus"
   autorotate="true"&gt;
 &lt;/cart-preview-hologram&gt;</pre>
           </div>
         </div>
-        
+
         <!-- Glitch Effect -->
         <div class="component-card">
           <div class="component-header">
@@ -273,7 +294,7 @@ app.get('/', (req, res) => {
 });</pre>
           </div>
         </div>
-        
+
         <!-- Quantum Visualizer -->
         <div class="component-card">
           <div class="component-header">
@@ -285,12 +306,13 @@ app.get('/', (req, res) => {
             </div>
           </div>
           <div class="component-footer">
-            <pre>const visualizer = new QuantumVisualizer({
-  container: document.getElementById('visualizer-container')
-});</pre>
+            <pre>QuantumVisualizer.init(
+  document.getElementById('visualizer-container'),
+  { showNoise: true }
+);</pre>
           </div>
         </div>
-        
+
         <!-- Neural Bus Events -->
         <div class="component-card">
           <div class="component-header">
@@ -305,53 +327,66 @@ app.get('/', (req, res) => {
             </div>
           </div>
           <div class="component-footer">
-            <pre>NeuralBus.publish('test:event', { 
-  value: Math.random() 
+            <pre>NeuralBus.publish('test:event', {
+  value: Math.random()
 });</pre>
           </div>
         </div>
       </div>
-      
+
       <script src="/assets/neural-bus.js"></script>
       <script src="/assets/glitch-engine.js"></script>
       <script src="/assets/quantum-visualizer.js"></script>
       <script src="/assets/hologram-component.js"></script>
-      
+
       <script>
         // Initialize components when everything is loaded
         window.addEventListener('DOMContentLoaded', () => {
+          // Make sure NeuralBus is initialized
+          if (window.NeuralBus && !window.NeuralBus.events) {
+            window.NeuralBus.initialize();
+          }
+
           // Initialize Glitch Engine
           window.glitchEngine = new GlitchEngine({
             targetSelector: '#glitch-target',
             intensity: 0.5,
             autoStart: false
           });
-          
+
           // Initialize Quantum Visualizer
-          window.quantumVisualizer = new QuantumVisualizer({
-            container: document.getElementById('visualizer-container'),
-            particleCount: 200,
-            fractalMode: true
-          });
-          
-          // Generate some initial quantum state data
-          const initialData = Array(10).fill().map((_, i) => ({
-            id: 'q' + i,
-            state: Math.random() > 0.5 ? 'superposition' : 'entangled',
-            probability: Math.random(),
-            profile: 'CyberLotus'
-          }));
-          
-          window.quantumVisualizer.update(initialData);
-          
+          if (window.QuantumVisualizer) {
+            QuantumVisualizer.init(
+              document.getElementById('visualizer-container'),
+              {
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                gridColor: 'rgba(0, 255, 204, 0.3)',
+                showNoise: true,
+                gridSize: 30
+              }
+            );
+          }
+
           // Set up Neural Bus event logging
           if (window.NeuralBus) {
-            NeuralBus.subscribe('*', (data) => {
-              logEvent(data);
+            NeuralBus.subscribe('test:event', (data) => {
+              logEvent('test:event: ' + JSON.stringify(data));
+            });
+
+            NeuralBus.subscribe('glitch:started', (data) => {
+              logEvent('glitch:started: ' + JSON.stringify(data));
+            });
+
+            NeuralBus.subscribe('glitch:stopped', (data) => {
+              logEvent('glitch:stopped: ' + JSON.stringify(data));
+            });
+
+            NeuralBus.subscribe('quantum:mutation', (data) => {
+              logEvent('quantum:mutation: ' + JSON.stringify(data));
             });
           }
         });
-        
+
         // Function to trigger glitch effect
         function triggerGlitch() {
           if (window.glitchEngine) {
@@ -361,39 +396,31 @@ app.get('/', (req, res) => {
             });
           }
         }
-        
+
         // Function to publish neural bus event
         function publishEvent(eventName, data) {
           if (window.NeuralBus) {
             NeuralBus.publish(eventName, data);
+            logEvent('Published: ' + eventName);
           }
         }
-        
+
         // Function to log events
-        function logEvent(data) {
+        function logEvent(message) {
           const eventLog = document.getElementById('event-log');
           const entry = document.createElement('div');
-          entry.textContent = new Date().toISOString().substr(11, 8) + ': ' + JSON.stringify(data);
+          const timestamp = new Date().toISOString().substr(11, 8);
+          entry.textContent = timestamp + ': ' + message;
           eventLog.prepend(entry);
         }
-        
+
         // Function to change mutation profile
         function changeMutationProfile(profile) {
           document.querySelectorAll('cart-preview-hologram').forEach(hologram => {
             hologram.setAttribute('profile', profile);
           });
-          
-          // Update visualizer if available
-          if (window.quantumVisualizer) {
-            const currentData = window.quantumVisualizer.currentState || [];
-            const updatedData = currentData.map(item => ({
-              ...item,
-              profile
-            }));
-            window.quantumVisualizer.update(updatedData);
-          }
         }
-        
+
         // Function to trigger mutation
         function triggerMutation() {
           const profile = document.getElementById('profile').value;
@@ -402,7 +429,7 @@ app.get('/', (req, res) => {
             timestamp: Date.now(),
             source: 'preview-server'
           });
-          
+
           // Also trigger a glitch for visual feedback
           triggerGlitch();
         }
