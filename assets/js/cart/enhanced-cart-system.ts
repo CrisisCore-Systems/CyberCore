@@ -802,18 +802,18 @@ export class CartSystem {
           // Show cart items, hide empty message
           const emptyMessageEl = cartDrawer.querySelector(this.#config.selectors.cartEmptyMessage);
           if (emptyMessageEl) emptyMessageEl.classList.add('hidden');
-          
+
           itemsContainer.classList.remove('hidden');
-          
+
           const checkoutButtonEl = cartDrawer.querySelector(this.#config.selectors.cartCheckoutButton);
           if (checkoutButtonEl) checkoutButtonEl.classList.remove('hidden');
         } else {
           // Show empty message, hide cart items
           const emptyMessageEl = cartDrawer.querySelector(this.#config.selectors.cartEmptyMessage);
           if (emptyMessageEl) emptyMessageEl.classList.remove('hidden');
-          
+
           itemsContainer.classList.add('hidden');
-          
+
           const checkoutButtonEl = cartDrawer.querySelector(this.#config.selectors.cartCheckoutButton);
           if (checkoutButtonEl) checkoutButtonEl.classList.add('hidden');
         }

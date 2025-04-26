@@ -1,9 +1,9 @@
 <div class="site-header__actions">
-  <button type="button" class="site-header__search-toggle" aria-label="Toggle search" data-action="toggle-search">
+  <button type="button" class="site-header__search-toggle" aria-label="{{ 'general.search.toggle_search' | t }}" data-action="toggle-search">
     {% render 'icon-search' %}
   </button>
 
-  <a href="{{ routes.cart_url }}" class="site-header__cart" aria-label="View cart">
+  <a href="{{ routes.cart_url }}" class="site-header__cart" aria-label="{{ 'general.cart.title' | t }}">
     {% render 'icon-cart' %}
     <span class="site-header__cart-count" data-cart-count>
       {{ cart.item_count }}
@@ -11,7 +11,7 @@
   </a>
 
   {% if shop.customer_accounts_enabled %}
-    <a href="{{ routes.account_url }}" class="site-header__account" aria-label="Account">
+    <a href="{{ routes.account_url }}" class="site-header__account" aria-label="{{ 'customer.account.title' | t }}">
       {% render 'icon-account' %}
     </a>
   {% endif %}

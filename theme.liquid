@@ -2,28 +2,38 @@
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="{{ settings.color_background }}">
-    <link rel="canonical" href="{{ canonical_url }}">
+
+    {% comment %}Check if a snippet exists before rendering it{% endcomment %}
+    {%- if template contains 'canonical-url' -%}
+      {% render 'canonical-url' %}
+    {%- endif -%}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
 
-    <title>
-      {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- capture page_title_output -%}
+      {{ page_title | escape }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' | escape }}"{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
-    </title>
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless -%}
+    {%- endcapture -%}
 
-    {% if page_description %}
+    <title>{{ page_title_output }}</title>
+
+    {%- if page_description -%}
       <meta name="description" content="{{ page_description | escape }}">
-    {% endif %}
+    {%- endif -%}
 
+    {% comment %}Check if a snippet exists before rendering it{% endcomment %}
     {% render 'json-ld' %}
+
+    <!-- Preload critical assets with proper Shopify filters -->
+    {{ 'coherence-design-system.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'performance-manager.js' | asset_url | preload_tag }}
 
     {{ content_for_header }}
 
@@ -56,46 +66,54 @@
     {% endstyle %}
 
     {% render 'critical-css' %}
-    {{ 'phase-transitions.css' | asset_url | stylesheet_tag }}
-    {{ 'voidbloom.css' | asset_url | stylesheet_tag }}
-    {{ 'narrative-commerce-styles.css' | asset_url | stylesheet_tag }}
-    {{ 'quantum-featured.css' | asset_url | stylesheet_tag }}
-    {{ 'bloom.css' | asset_url | stylesheet_tag }}
-    {{ 'coherence-design-system.css' | asset_url | stylesheet_tag }}
 
-    <script src="{{ 'performance-manager.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'quantum-webgl.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'neural-bus.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'glitch-engine.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'coherence-persistence.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'cart-system.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'hologram-renderer.js' | asset_url }}" defer="defer"></script>
+    <!-- Group CSS files with version for cache control -->
+    {%- capture asset_version -%}?v={{ 'now' | date: '%s' }}{%- endcapture -%}
+    {% render 'defer-loading' with resource: 'phase-transitions.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'voidbloom.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'narrative-commerce-styles.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'quantum-featured.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'bloom.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'coherence-design-system.css' | append: asset_version, type: 'style' %}
+
+    <!-- Critical scripts loaded with defer -->
+    <script src="{{ 'performance-manager.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'cart-system.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+
+    <!-- Non-critical scripts loaded with defer -->
+    <script src="{{ 'quantum-webgl.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'neural-bus.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'glitch-engine.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'coherence-persistence.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'hologram-renderer.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
   </head>
 
   <body class="gradient">
-    <a class="visually-hidden skip-to-content-link" href="#MainContent">
+    <a class="visually-hidden skip-to-content-link" href="#MainContent" aria-label="{{ 'accessibility.skip_to_content' | t }}">
       {{ 'accessibility.skip_to_content' | t }}
     </a>
 
-    {% section 'header' %}
+    {% render 'header' %}
 
     <main id="MainContent" class="content-for-layout" role="main">
       {{ content_for_layout }}
     </main>
 
-    {% section 'footer' %}
+    {% render 'footer' %}
 
     {% render 'predictive-search' %}
     {% render 'cart-drawer' %}
     {% render 'performance-controls' %}
+    {% render 'boundary-protection' %}
 
-    <div id="quantum-hologram-container" data-hologram-container></div>
-    <div id="trauma-visualizer" data-trauma-visualizer></div>
+    <!-- Client-side containers with data sanitization -->
+    <div id="quantum-hologram-container" data-hologram-container aria-hidden="true"></div>
+    <div id="trauma-visualizer" data-trauma-visualizer aria-hidden="true"></div>
 
-    <script src="{{ 'qear-webgl-bridge.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'quantum-security.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'quantum-analytics.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'voidbloom-store.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'ritual-engine.js' | asset_url }}" defer="defer"></script>
+    <!-- Load JS resources through the asset loader utility -->
+    {%- assign deferred_scripts = 'qear-webgl-bridge.js,quantum-security.js,quantum-analytics.js,voidbloom-store.js,ritual-engine.js' | split: ',' -%}
+    {%- for script in deferred_scripts -%}
+      {% render 'defer-loading' with resource: script | append: asset_version, type: 'script' %}
+    {%- endfor -%}
   </body>
 </html>
