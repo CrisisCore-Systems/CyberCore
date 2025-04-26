@@ -5,11 +5,42 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="{{ settings.color_background }}">
 
+    <!-- Resource hints: Preconnect to domains - Establishes early connections -->
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://monorail-edge.shopifysvc.com" crossorigin>
+    <link rel="preconnect" href="https://v.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://analytics.shopify.com" crossorigin>
+    
+    <!-- DNS-prefetch as fallback for browsers that don't support preconnect -->
+    <link rel="dns-prefetch" href="https://fonts.shopify.com">
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+    <link rel="dns-prefetch" href="https://v.shopify.com">
+    <link rel="dns-prefetch" href="https://analytics.shopify.com">
+
+    <!-- Preload critical fonts - High priority resources needed right away -->
+    <link rel="preload" href="{{ settings.type_body_font | font_url }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ settings.type_header_font | font_url }}" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Preload critical CSS identified in P1-01 -->
+    <link rel="preload" href="{{ 'critical.css' | asset_url }}" as="style">
+    <link rel="preload" href="{{ 'reset.css' | asset_url }}" as="style">
+    <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style">
+    
+    <!-- Preload critical above-the-fold images -->
+    <link rel="preload" href="{{ 'logo.png' | asset_url }}" as="image" type="image/png">
+    
+    <!-- Preload critical JS needed for initial interactions -->
+    <link rel="preload" href="{{ 'performance-manager.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'cart-system.js' | asset_url }}" as="script">
+
+    <!-- Template and profile-specific resource hints -->
+    {% render 'template-resource-hints' %}
+
     {% comment %}Check if a snippet exists before rendering it{% endcomment %}
     {%- if template contains 'canonical-url' -%}
       {% render 'canonical-url' %}
     {%- endif -%}
-    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
@@ -32,7 +63,7 @@
     {% render 'json-ld' %}
 
     <!-- Preload critical assets with proper Shopify filters -->
-    {{ 'coherence-design-system.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'vb-core.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'performance-manager.js' | asset_url | preload_tag }}
 
     {{ content_for_header }}
@@ -67,14 +98,23 @@
 
     {% render 'critical-css' %}
 
-    <!-- Group CSS files with version for cache control -->
+    <!-- Core CSS Architecture - P1-12 Implementation -->
     {%- capture asset_version -%}?v={{ 'now' | date: '%s' }}{%- endcapture -%}
+    <link rel="stylesheet" href="{{ 'reset.css' | asset_url }}{{ asset_version }}">
+    <link rel="stylesheet" href="{{ 'base.css' | asset_url }}{{ asset_version }}">
+    {% render 'defer-loading' with resource: 'accessibility.css' | append: asset_version, type: 'style' %}
+
+    <!-- Component System & Profiles -->
+    {% render 'defer-loading' with resource: 'components.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'layouts.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'profiles.css' | append: asset_version, type: 'style' %}
+    {% render 'defer-loading' with resource: 'utilities.css' | append: asset_version, type: 'style' %}
+
+    <!-- Legacy CSS - Being gradually migrated to new architecture -->
     {% render 'defer-loading' with resource: 'phase-transitions.css' | append: asset_version, type: 'style' %}
-    {% render 'defer-loading' with resource: 'voidbloom.css' | append: asset_version, type: 'style' %}
     {% render 'defer-loading' with resource: 'narrative-commerce-styles.css' | append: asset_version, type: 'style' %}
     {% render 'defer-loading' with resource: 'quantum-featured.css' | append: asset_version, type: 'style' %}
     {% render 'defer-loading' with resource: 'bloom.css' | append: asset_version, type: 'style' %}
-    {% render 'defer-loading' with resource: 'coherence-design-system.css' | append: asset_version, type: 'style' %}
 
     <!-- Critical scripts loaded with defer -->
     <script src="{{ 'performance-manager.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
@@ -88,14 +128,14 @@
     <script src="{{ 'hologram-renderer.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
   </head>
 
-  <body class="gradient">
-    <a class="visually-hidden skip-to-content-link" href="#MainContent" aria-label="{{ 'accessibility.skip_to_content' | t }}">
+  <body class="gradient vb-body" data-profile="cyber-lotus">
+    <a class="visually-hidden skip-to-content-link vb-skip-link" href="#MainContent" aria-label="{{ 'accessibility.skip_to_content' | t }}">
       {{ 'accessibility.skip_to_content' | t }}
     </a>
 
     {% render 'header' %}
 
-    <main id="MainContent" class="content-for-layout" role="main">
+    <main id="MainContent" class="content-for-layout vb-main" role="main">
       {{ content_for_layout }}
     </main>
 
@@ -107,8 +147,8 @@
     {% render 'boundary-protection' %}
 
     <!-- Client-side containers with data sanitization -->
-    <div id="quantum-hologram-container" data-hologram-container aria-hidden="true"></div>
-    <div id="trauma-visualizer" data-trauma-visualizer aria-hidden="true"></div>
+    <div id="quantum-hologram-container" class="vb-hologram-container" data-hologram-container aria-hidden="true"></div>
+    <div id="trauma-visualizer" class="vb-trauma-visualizer" data-trauma-visualizer aria-hidden="true"></div>
 
     <!-- Load JS resources through the asset loader utility -->
     {%- assign deferred_scripts = 'qear-webgl-bridge.js,quantum-security.js,quantum-analytics.js,voidbloom-store.js,ritual-engine.js' | split: ',' -%}

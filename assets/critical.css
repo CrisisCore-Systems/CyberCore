@@ -1,4 +1,11 @@
-/* Base critical styles */
+/**
+ * CRITICAL.CSS
+ * Contains only essential styles required for above-the-fold content
+ * This file should be inlined in the <head> of the document
+ * @Version: 2.1.0 (Post Phase 1 Optimization)
+ */
+
+/* Design tokens - Only those needed for above-the-fold */
 :root {
   --primary-color: #1a1a1a;
   --secondary-color: #333;
@@ -6,24 +13,36 @@
   --text-color: #f7f7f7;
   --error-color: #ff3232;
   --success-color: #00ff9d;
-  --font-body: 'Syn Nova', sans-serif;
+
+  /* Simplified font definitions */
+  --font-body: 'Syn Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Quantum Blur', serif;
+
+  /* Layout tokens */
+  --header-height: 60px;
+  --announcement-height: 40px;
+  --container-max-width: 1440px;
+  --container-padding: 1.5rem;
 }
 
+/* Reset - Only essential reset properties */
 html {
-  font-size: 62.5%;
+  font-size: 62.5%; /* 10px base for rem calculation */
   box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: var(--font-body);
   font-size: 1.6rem;
   line-height: 1.5;
@@ -31,24 +50,63 @@ body {
   background-color: var(--primary-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header critical styles */
+/* Accessibility - Critical for initial interaction */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-to-content-link {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  z-index: 100;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+  font-weight: bold;
+  transition: top 0.15s ease;
+}
+
+.skip-to-content-link:focus {
+  top: 0;
+  outline: 2px solid var(--accent-color);
+}
+
+/* Header - Critical for first paint */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 10;
   background-color: var(--primary-color);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
 }
 
 .site-header__container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
-  max-width: 1440px;
+  padding: 0 var(--container-padding);
+  max-width: var(--container-max-width);
   margin: 0 auto;
+  width: 100%;
 }
 
 .site-header__logo-link {
@@ -60,34 +118,59 @@ body {
   height: auto;
 }
 
-/* Announcement bar critical styles */
+/* Announcement bar - Usually above the fold */
 .announcement-bar {
   background-color: var(--accent-color);
   padding: 0.8rem 0;
   text-align: center;
+  height: var(--announcement-height);
 }
 
 .announcement-bar__content {
-  max-width: 1440px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--container-padding);
 }
 
-/* Animation */
-@keyframes glitch {
-  0%,
-  100% {
-    transform: translate(0);
-  }
-  33% {
-    transform: translate(-2px, 2px);
-  }
-  66% {
-    transform: translate(2px, -2px);
-  }
+/* Critical container layout */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
 }
 
-.glitch-effect:hover {
-  animation: glitch 0.3s infinite;
-  color: var(--accent-color);
+/* LCP optimization - Hero section placeholder dimensions */
+.hero-section {
+  width: 100%;
+  min-height: calc(100vh - var(--header-height) - var(--announcement-height));
+  position: relative;
+}
+
+/* Add space for the content to prevent layout shifts */
+.content-placeholder {
+  width: 100%;
+  height: 400px;
+}
+
+/* Content area */
+.vb-main {
+  flex: 1;
+}
+
+/* Font display optimization */
+@font-face {
+  font-family: 'Syn Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/syn-nova.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Quantum Blur';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/quantum-blur.woff2') format('woff2');
 }
