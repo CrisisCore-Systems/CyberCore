@@ -13,7 +13,9 @@
     "build:all": "npm run compile:scss && npm run build",
     "lint:css": "stylelint '**/*.{css,scss}' --formatter json > stylelint-report.json || true",
     "lint:css:fix": "stylelint '**/*.{css,scss}' --fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "commit": "git commit --no-verify",
+    "initialize:taxonomy": "node initialize-taxonomy.js"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
@@ -60,4 +62,3 @@
     ]
   }
 }
-

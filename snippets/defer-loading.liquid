@@ -1,162 +1,52 @@
 {% comment %}
-  DEFER-LOADING.LIQUID
-  Optimizes loading of JavaScript and CSS components
+  defer-loading.liquid
+  Handles deferred loading of resources (scripts and styles)
 
-  @MutationCompatible: All Variants
-  @StrategyProfile: quantum-entangled
-  @Version: 2.0.0
+  Parameters:
+  - resource: URL of the resource to load
+  - type: "script" or "style"
+  - priority: optional, one of "high", "medium", "low" (defaults to "medium")
+  - attributes: optional, JSON string of additional attributes to add
 {% endcomment %}
 
-{% assign resource_url = resource | asset_url %}
+{% liquid
+  assign resource_url = resource | default: ''
+  assign resource_type = type | default: 'script'
+  assign resource_priority = priority | default: 'medium'
+  assign resource_attributes = attributes | default: '{}'
 
-{% if type == 'style' %}
-  <link rel="stylesheet" href="{{ resource_url }}" media="print" onload="this.media='all'; this.onload=null;">
-  <noscript><link rel="stylesheet" href="{{ resource_url }}"></noscript>
-{% elsif type == 'script' %}
-  <script>
-    (function() {
-      // Use IntersectionObserver to load when viewport is close
-      if ('IntersectionObserver' in window) {
-        const loadHandler = function() {
-          // Use requestIdleCallback or setTimeout as fallback
-          const scheduleLoad = window.requestIdleCallback || setTimeout;
+  # Ensure we have a resource URL
+  if resource_url == ''
+    return
+  endif
+%}
 
-          scheduleLoad(function() {
-            const script = document.createElement('script');
-            script.src = "{{ resource_url }}";
-            script.async = true;
-            document.head.appendChild(script);
-          }, { timeout: 1500 });
-
-          // Clean up observer
-          observer.disconnect();
-        };
-
-        // Create observer
-        const observer = new IntersectionObserver(
-          function(entries) {
-            if (entries[0].isIntersecting || entries[0].intersectionRatio > 0) {
-              loadHandler();
-            }
-          },
-          { rootMargin: "600px 0px" } // Load when within 600px of viewport
-        );
-
-        // Observe document body to trigger load
-        observer.observe(document.body);
-
-        // Set a timeout to ensure it loads eventually
-        setTimeout(function() {
-          if (observer) {
-            loadHandler();
-          }
-        }, 3000);
-      } else {
-        // Fallback for browsers without IntersectionObserver
-        document.addEventListener('DOMContentLoaded', function() {
-          setTimeout(function() {
-            const script = document.createElement('script');
-            script.src = "{{ resource_url }}";
-            script.async = true;
-            document.head.appendChild(script);
-          }, 1000);
-        });
-      }
-    })();
+{% if resource_type == 'script' %}
+  <script type="application/json" data-script-definition>
+    {
+      "id": "{{ resource_url | handleize | replace: '-', '_' }}",
+      "src": "{{ resource_url }}",
+      "category": "{% if resource_priority == 'high' %}functional{% elsif resource_priority == 'low' %}nonEssential{% else %}functional{% endif %}",
+      "attributes": {{ resource_attributes }}
+    }
   </script>
-{% elsif type == 'module' %}
-  <script type="module" src="{{ resource_url }}" async></script>
-{% else %}
-  <!-- Component-based loading based on page requirements -->
+{% elsif resource_type == 'style' %}
+  <link rel="preload" href="{{ resource_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ resource_url }}"></noscript>
   <script>
+    // Fallback for browsers that don't support preload
     (function() {
-      // Determine if we're on a low-power device
-      const isLowPowerDevice = Boolean(
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
-        !matchMedia('(min-device-width: 768px)').matches
-      );
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '{{ resource_url }}';
+      link.media = 'print';
+      link.setAttribute('data-deferred', 'true');
+      document.head.appendChild(link);
 
-      // Check if we should defer loading based on settings and device
-      const shouldDeferLoading = {{ settings.defer_quantum_initialization | default: true }} || isLowPowerDevice;
-
-      // Define the load handler function
-      const loadComponentHandler = function() {
-        // Check if element exists before loading related scripts
-        if (document.querySelector('[data-quantum-visualizer]')) {
-          loadScript('{{ "quantum-visualizer.js" | asset_url }}');
-        }
-
-        if (document.querySelector('[data-trauma-pattern]')) {
-          loadScript('{{ "quantum-webgl.js" | asset_url }}');
-        }
-
-        // Always load these after idle for core functionality
-        if (typeof window.NeuralBus === 'undefined') {
-          loadScript('{{ "neural-bus.js" | asset_url }}');
-        }
-
-        if (typeof window.GlitchEngine === 'undefined' && {{ settings.enable_quantum_effects | default: true }}) {
-          loadScript('{{ "glitch-engine.js" | asset_url }}');
-        }
-      };
-
-      // Helper to load scripts dynamically
-      function loadScript(src) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        document.head.appendChild(script);
-
-        // Track for debugging purposes
-        if (window.performance && window.performance.mark) {
-          const scriptName = src.split('/').pop().split('.')[0];
-          window.performance.mark(`${scriptName}-load-start`);
-          script.onload = function() {
-            window.performance.mark(`${scriptName}-load-end`);
-            window.performance.measure(
-              `${scriptName}-load-measure`,
-              `${scriptName}-load-start`,
-              `${scriptName}-load-end`
-            );
-          };
-        }
-      }
-
-      if (shouldDeferLoading) {
-        // Use modern loading techniques
-        if ('IntersectionObserver' in window) {
-          // Create observer with generous margin to start loading before needed
-          const observer = new IntersectionObserver(
-            function(entries) {
-              if (entries[0].isIntersecting || entries[0].intersectionRatio > 0) {
-                loadComponentHandler();
-                observer.disconnect();
-              }
-            },
-            { rootMargin: "800px 0px" } // Start loading when within 800px
-          );
-
-          // Observe the main content
-          const mainContent = document.querySelector('#MainContent') || document.body;
-          if (mainContent) {
-            observer.observe(mainContent);
-          }
-
-          // Set a timeout to ensure it loads eventually
-          setTimeout(function() {
-            loadComponentHandler();
-            observer.disconnect();
-          }, 4000);
-        } else {
-          // Fallback to DOMContentLoaded with timeout
-          document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(loadComponentHandler, 1000);
-          });
-        }
-      } else {
-        // Load immediately after DOM is ready
-        document.addEventListener('DOMContentLoaded', loadComponentHandler);
-      }
+      // Set media back to all after 250ms if supported
+      setTimeout(function() {
+        link.media = 'all';
+      }, 250);
     })();
   </script>
 {% endif %}

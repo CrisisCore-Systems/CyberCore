@@ -30,8 +30,8 @@
       border-box;
     border: var(--border-width) solid transparent;
     border-radius: 4px;
-    inset: 0;
     content: '';
+    inset: 0;
     mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;

@@ -37,7 +37,7 @@
     <!-- Preload critical above-the-fold images -->
     <link rel="preload" href="{{ 'logo.png' | asset_url }}" as="image" type="image/png">
 
-    <!-- Preload critical JS needed for initial interactions -->
+    <!-- Preload only true critical JS needed for initial interactions -->
     <link rel="preload" href="{{ 'performance-manager.js' | asset_url }}" as="script">
     <link rel="preload" href="{{ 'cart-system.js' | asset_url }}" as="script">
 
@@ -109,13 +109,15 @@
     {%- capture asset_version -%}?v={{ 'now' | date: '%s' }}{%- endcapture -%}
     <link rel="stylesheet" href="{{ 'reset.css' | asset_url }}{{ asset_version }}">
     <link rel="stylesheet" href="{{ 'base.css' | asset_url }}{{ asset_version }}">
+    <link rel="stylesheet" href="{{ 'vb-core.css' | asset_url }}{{ asset_version }}">
+    <link rel="stylesheet" href="{{ 'coherence-design-system.css' | asset_url }}{{ asset_version }}">
+    <link rel="stylesheet" href="{{ 'components.css' | asset_url }}{{ asset_version }}">
     {% render 'defer-loading' with resource: 'accessibility.css' | append: asset_version, type: 'style' %}
 
-    <!-- Component System & Profiles -->
-    {% render 'defer-loading' with resource: 'components.css' | append: asset_version, type: 'style' %}
-    {% render 'defer-loading' with resource: 'layouts.css' | append: asset_version, type: 'style' %}
-    {% render 'defer-loading' with resource: 'profiles.css' | append: asset_version, type: 'style' %}
-    {% render 'defer-loading' with resource: 'utilities.css' | append: asset_version, type: 'style' %}
+    <!-- Additional CSS loaded with normal priority -->
+    <link rel="stylesheet" href="{{ 'layouts.css' | asset_url }}{{ asset_version }}">
+    <link rel="stylesheet" href="{{ 'profiles.css' | asset_url }}{{ asset_version }}">
+    <link rel="stylesheet" href="{{ 'utilities.css' | asset_url }}{{ asset_version }}">
 
     <!-- Legacy CSS - Being gradually migrated to new architecture -->
     {% render 'defer-loading' with resource: 'phase-transitions.css' | append: asset_version, type: 'style' %}
@@ -124,19 +126,68 @@
     {% render 'defer-loading' with resource: 'bloom.css' | append: asset_version, type: 'style' %}
 
     <!-- Critical scripts loaded with defer -->
+    <script src="{{ 'critical-path-optimizer.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
     <script src="{{ 'performance-manager.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'script-controller.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
     <script src="{{ 'cart-system.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
     <script src="{{ 'image-loading-attributes.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'script-loader.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
 
-    <!-- Non-critical scripts loaded with defer -->
-    <script src="{{ 'quantum-webgl.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-    <script src="{{ 'neural-bus.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-    <script src="{{ 'glitch-engine.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-    <script src="{{ 'coherence-persistence.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-    <script src="{{ 'hologram-renderer.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <!-- Script definitions for controlled loading -->
+    <script type="application/json" data-script-definition>
+      {
+        "id": "quantum-webgl",
+        "src": "{{ 'quantum-webgl.js' | asset_url }}{{ asset_version }}",
+        "category": "nonEssential",
+        "attributes": {
+          "data-performance-critical": "true"
+        }
+      }
+    </script>
+    <script type="application/json" data-script-definition>
+      {
+        "id": "neural-bus",
+        "src": "{{ 'neural-bus.js' | asset_url }}{{ asset_version }}",
+        "category": "functional",
+        "dependencies": ["quantum-webgl"]
+      }
+    </script>
+    <script type="application/json" data-script-definition>
+      {
+        "id": "glitch-engine",
+        "src": "{{ 'glitch-engine.js' | asset_url }}{{ asset_version }}",
+        "category": "nonEssential"
+      }
+    </script>
+    <script type="application/json" data-script-definition>
+      {
+        "id": "coherence-persistence",
+        "src": "{{ 'coherence-persistence.js' | asset_url }}{{ asset_version }}",
+        "category": "functional"
+      }
+    </script>
+    <script type="application/json" data-script-definition>
+      {
+        "id": "hologram-renderer",
+        "src": "{{ 'hologram-renderer.js' | asset_url }}{{ asset_version }}",
+        "category": "nonEssential",
+        "dependencies": ["quantum-webgl"]
+      }
+    </script>
+
+    <!-- Load the lazy-quantum.js only when needed -->
+    <script>
+      // Load only the essential scripts immediately
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.VoidBloomScriptLoader) {
+          // Low priority visual effects - only load when needed and visible
+          window.VoidBloomScriptLoader.queueScript('{{ "lazy-quantum.js" | asset_url }}{{ asset_version }}', 'low');
+        }
+      });
+    </script>
   </head>
 
-  <body class="gradient vb-body" data-profile="cyber-lotus">
+  <body class="gradient vb-body" data-profile="cyberlotus">
     <a class="visually-hidden skip-to-content-link vb-skip-link" href="#MainContent" aria-label="{{ 'accessibility.skip_to_content' | t }}">
       {{ 'accessibility.skip_to_content' | t }}
     </a>

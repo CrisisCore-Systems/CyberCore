@@ -356,8 +356,8 @@
 }
 
 .vb-modal__backdrop {
-  background-color: rgb(0 0 0 / 70%);
   backdrop-filter: blur(4px);
+  background-color: rgb(0 0 0 / 70%);
   inset: 0;
   position: absolute;
 }

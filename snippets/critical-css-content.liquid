@@ -1,0 +1,178 @@
+{% comment %}
+  critical-css-content.liquid
+  Contains the actual CSS content to be inlined in the <head>
+  This is kept separate to improve maintainability
+{% endcomment %}
+
+/* Design tokens - Only those needed for above-the-fold */
+:root {
+  /* Primary colors */
+  --vb-color-primary-dark: #0a0a14;
+  --vb-color-primary: #171730;
+  --vb-color-primary-light: #2d2d5a;
+
+  /* Secondary colors */
+  --vb-color-secondary-dark: #00091a;
+  --vb-color-secondary: #001a33;
+  --vb-color-secondary-light: #00264d;
+
+  /* Accent colors */
+  --vb-color-accent-blue: #0cf;
+  --vb-color-accent-purple: #9f6cf9;
+  --vb-color-accent-cyan: #0ff;
+
+  /* Text colors */
+  --vb-color-text: #f0f8ff;
+  --vb-color-text-secondary: rgb(240 248 255 / 70%);
+
+  /* Layout tokens */
+  --vb-header-height: 60px;
+  --vb-announcement-height: 40px;
+  --vb-container-max-width: 1440px;
+  --vb-container-padding: 1.5rem;
+  --z-header: 10;
+  --z-above: 1;
+  --z-below: -1;
+}
+
+/* Reset - Only essential reset properties */
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-text);
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Skip link for accessibility */
+.visually-hidden,
+.skip-to-content-link {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.skip-to-content-link:focus {
+  background-color: var(--vb-color-primary-dark);
+  border-radius: 0 0 4px 4px;
+  clip: auto;
+  color: var(--vb-color-accent-cyan);
+  height: auto;
+  left: 0;
+  padding: 1rem 2rem;
+  top: 0;
+  width: auto;
+  z-index: 999;
+}
+
+/* Header - Critical for first paint */
+.site-header {
+  align-items: center;
+  background-color: var(--vb-color-primary-dark);
+  display: flex;
+  height: var(--vb-header-height);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: var(--z-header);
+}
+
+.site-header__logo {
+  display: block;
+  max-height: 40px;
+  max-width: 180px;
+  padding: 0.5rem 0;
+}
+
+.site-header__logo img {
+  display: block;
+  height: auto;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+}
+
+/* Container and main content */
+.page-width,
+.vb-container {
+  margin: 0 auto;
+  max-width: var(--vb-container-max-width);
+  padding: 0 var(--vb-container-padding);
+  width: 100%;
+}
+
+.vb-main {
+  flex: 1 0 auto;
+}
+
+/* Hero section - LCP optimizations */
+.hero-section {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 50vh;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.hero-section__image {
+  height: 100%;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: var(--z-below);
+}
+
+.hero-section__content {
+  max-width: 800px;
+  padding: 3rem;
+  position: relative;
+  text-align: center;
+  z-index: var(--z-above);
+}
+
+/* Performance mode - hide heavy effects */
+[data-low-performance] .vb-quantum-effect,
+[data-low-performance] .quantum-visualizer,
+[data-low-performance] [data-trauma-type] {
+  display: none !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

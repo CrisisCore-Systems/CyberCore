@@ -220,13 +220,11 @@
 [data-vb-profile='voidbloom'] .vb-btn,
 .vb-profile-voidbloom .vb-btn {
   backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
   background-color: transparent;
 }
 
 [data-vb-profile='voidbloom'] .vb-card,
 .vb-profile-voidbloom .vb-card {
-  backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background-color: rgb(var(--vb-color-surface-rgb), 0.7);
 }
@@ -240,7 +238,6 @@
 
 [data-vb-profile='frostedchrome'] .vb-card,
 .vb-profile-frostedchrome .vb-card {
-  backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background-color: rgb(255 255 255 / 70%);
   border: none;

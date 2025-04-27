@@ -429,6 +429,7 @@
   100% {
     opacity: calc(var(--vb-bloom-intensity) * 30%);
   }
+
   50% {
     opacity: calc(var(--vb-bloom-intensity) * 80%);
   }
@@ -438,6 +439,7 @@
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 100% 100%;
   }
@@ -447,6 +449,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -456,6 +459,7 @@
   0% {
     background-position: 0 0;
   }
+
   100% {
     background-position: 0 100px;
   }
@@ -465,6 +469,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -475,6 +480,7 @@
     opacity: calc(var(--vb-bloom-intensity) * 30%);
     transform: scale(0.95);
   }
+
   100% {
     opacity: calc(var(--vb-bloom-intensity) * 80%);
     transform: scale(1.05);
@@ -486,6 +492,7 @@
   100% {
     opacity: 80%;
   }
+
   50% {
     opacity: 100%;
   }
@@ -496,6 +503,7 @@
   100% {
     filter: brightness(1);
   }
+
   50% {
     filter: brightness(1.2);
   }
@@ -506,6 +514,7 @@
   100% {
     opacity: 100%;
   }
+
   50% {
     opacity: 70%;
   }
@@ -515,18 +524,23 @@
   0% {
     transform: translate(0);
   }
+
   20% {
     transform: translate(-2px, 2px);
   }
+
   40% {
     transform: translate(2px, -2px);
   }
+
   60% {
     transform: translate(-1px, -2px);
   }
+
   80% {
     transform: translate(2px, 1px);
   }
+
   100% {
     transform: translate(0);
   }
@@ -537,6 +551,7 @@
   100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.01);
   }
@@ -546,9 +561,11 @@
   0% {
     box-shadow: 0 0 0 rgb(0 202 255 / 0%);
   }
+
   50% {
     box-shadow: 0 0 20px rgb(0 202 255 / 50%);
   }
+
   100% {
     box-shadow: 0 0 0 rgb(0 202 255 / 0%);
   }
@@ -558,12 +575,15 @@
   0% {
     transform: translateX(0);
   }
+
   25% {
     transform: translateX(-5px);
   }
+
   75% {
     transform: translateX(5px);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -573,9 +593,11 @@
   0% {
     filter: blur(0);
   }
+
   50% {
     filter: blur(1px);
   }
+
   100% {
     filter: blur(0);
   }
@@ -585,15 +607,19 @@
   0% {
     filter: brightness(1) contrast(1);
   }
+
   25% {
     filter: brightness(1.5) contrast(1.2);
   }
+
   50% {
     filter: brightness(0.8) contrast(1.5) hue-rotate(15deg);
   }
+
   75% {
     filter: brightness(1.2) contrast(0.9) hue-rotate(-15deg);
   }
+
   100% {
     filter: brightness(1) contrast(1);
   }
@@ -603,6 +629,7 @@
   0% {
     top: 0;
   }
+
   100% {
     top: 100%;
   }
@@ -640,10 +667,11 @@
 
 /* Base bloom container */
 .vb-bloom-container {
-  --vb-bloom-color: rgba(255, 255, 255, 0.7);
+  --vb-bloom-color: rgb(255 255 255 / 70%);
   --vb-bloom-intensity: 0.6;
   --vb-bloom-radius: 10px;
   --vb-bloom-angle: 45deg;
+
   position: relative;
   z-index: 1;
 }
@@ -667,32 +695,32 @@
 
 /* Trauma-specific bloom effects */
 .vb-bloom-container.vb-trauma-abandonment {
-  --vb-bloom-color: rgba(57, 94, 152, 0.7);
+  --vb-bloom-color: rgb(57 94 152 / 70%);
   --vb-bloom-radius: 15px;
 }
 
 .vb-bloom-container.vb-trauma-fragmentation {
-  --vb-bloom-color: rgba(147, 86, 217, 0.7);
+  --vb-bloom-color: rgb(147 86 217 / 70%);
   --vb-bloom-radius: 8px;
 }
 
 .vb-bloom-container.vb-trauma-surveillance {
-  --vb-bloom-color: rgba(40, 184, 178, 0.7);
+  --vb-bloom-color: rgb(40 184 178 / 70%);
   --vb-bloom-radius: 12px;
 }
 
 .vb-bloom-container.vb-trauma-recursion {
-  --vb-bloom-color: rgba(227, 116, 99, 0.7);
+  --vb-bloom-color: rgb(227 116 99 / 70%);
   --vb-bloom-radius: 10px;
 }
 
 .vb-bloom-container.vb-trauma-displacement {
-  --vb-bloom-color: rgba(70, 166, 148, 0.7);
+  --vb-bloom-color: rgb(70 166 148 / 70%);
   --vb-bloom-radius: 18px;
 }
 
 .vb-bloom-container.vb-trauma-dissolution {
-  --vb-bloom-color: rgba(103, 60, 171, 0.7);
+  --vb-bloom-color: rgb(103 60 171 / 70%);
   --vb-bloom-radius: 20px;
 }
 
@@ -721,8 +749,9 @@
     opacity: var(--vb-bloom-intensity);
     transform: scale(1);
   }
+
   50% {
-    opacity: calc(var(--vb-bloom-intensity) * 0.5);
+    opacity: calc(var(--vb-bloom-intensity) * 50%);
     transform: scale(1.1);
   }
 }
@@ -732,7 +761,7 @@
 }
 
 /* Responsive bloom adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .vb-bloom-container {
     --vb-bloom-radius: calc(var(--vb-bloom-radius) * 0.7);
   }
@@ -750,7 +779,7 @@
 
 /* Special bloom effect for quantum buttons */
 .vb-quantum-bloom-button {
-  --vb-bloom-color: rgba(118, 74, 188, 0.7);
+  --vb-bloom-color: rgb(118 74 188 / 70%);
   --vb-bloom-intensity: 0.8;
   --vb-bloom-radius: 12px;
   --vb-bloom-transition-speed: 0.3s;
@@ -774,7 +803,7 @@
   filter: blur(var(--vb-bloom-radius));
   height: 120%;
   left: -10%;
-  opacity: 0;
+  opacity: 0%;
   position: absolute;
   top: -10%;
   transform: scale(0.8);
@@ -785,7 +814,7 @@
 }
 
 .vb-quantum-bloom-button:hover {
-  box-shadow: 0 0 15px rgba(118, 74, 188, 0.4);
+  box-shadow: 0 0 15px rgb(118 74 188 / 40%);
   transform: translateY(-2px);
 }
 

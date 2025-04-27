@@ -226,13 +226,17 @@ $timing-functions: (
     &:hover {
       box-shadow: 0 0 15px rgba($highlight, 0.4);
     }
-  } @else if $trauma-type == 'fragmentation' {
+  }
+
+ @else if $trauma-type == 'fragmentation' {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), calc(100% - 10px) 100%, 0 100%);
 
     &:hover {
       clip-path: polygon(5px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
     }
-  } @else if $trauma-type == 'surveillance' {
+  }
+
+ @else if $trauma-type == 'surveillance' {
     &::after {
       animation: vb-scan 2s infinite linear;
       background-color: $highlight;
@@ -244,7 +248,9 @@ $timing-functions: (
       top: 0;
       width: 100%;
     }
-  } @else if $trauma-type == 'recursion' {
+  }
+
+ @else if $trauma-type == 'recursion' {
     &::before {
       background: repeating-linear-gradient(
         45deg,
@@ -254,13 +260,17 @@ $timing-functions: (
         rgba($accent, 0.1) 10px
       );
     }
-  } @else if $trauma-type == 'displacement' {
+  }
+
+ @else if $trauma-type == 'displacement' {
     transform: skew(-2deg);
 
     &:hover {
       transform: skew(2deg) scale(1.03);
     }
-  } @else if $trauma-type == 'dissolution' {
+  }
+
+ @else if $trauma-type == 'dissolution' {
     border: 1px solid;
     border-image: linear-gradient(to right, transparent, $accent, transparent) 1;
 
@@ -307,7 +317,9 @@ $timing-functions: (
     &::before {
       background: radial-gradient(circle at center, transparent 70%, $primary 100%);
     }
-  } @else if $trauma-type == 'fragmentation' {
+  }
+
+ @else if $trauma-type == 'fragmentation' {
     background: linear-gradient(135deg, $primary, $secondary);
 
     &::before {
@@ -319,7 +331,9 @@ $timing-functions: (
         transparent 55%
       );
     }
-  } @else if $trauma-type == 'surveillance' {
+  }
+
+ @else if $trauma-type == 'surveillance' {
     background: $primary;
     border: 1px solid $secondary;
 
@@ -332,7 +346,9 @@ $timing-functions: (
         rgba($accent, 0.05) 10px
       );
     }
-  } @else if $trauma-type == 'recursion' {
+  }
+
+ @else if $trauma-type == 'recursion' {
     background: $primary;
 
     &::before {
@@ -345,7 +361,9 @@ $timing-functions: (
       );
       background-size: 100% 100%;
     }
-  } @else if $trauma-type == 'displacement' {
+  }
+
+ @else if $trauma-type == 'displacement' {
     background: $primary;
     transform: translate(-2px, 2px);
 
@@ -353,7 +371,9 @@ $timing-functions: (
       background: linear-gradient(to right, $primary, transparent);
       transform: translate(4px, -4px);
     }
-  } @else if $trauma-type == 'dissolution' {
+  }
+
+ @else if $trauma-type == 'dissolution' {
     background: $primary;
     backdrop-filter: blur(var(--vb-reality-blur, 0));
 
@@ -548,14 +568,18 @@ $timing-functions: (
         rgba(map-get(map-get($trauma-colors, displacement), primary), 0.8)
       );
       animation: vb-phase-transition-cyber-to-flora 3s forwards;
-    } @else if $from-phase == 'alien-flora' and $to-phase == 'rolling-virus' {
+    }
+
+ @else if $from-phase == 'alien-flora' and $to-phase == 'rolling-virus' {
       background: linear-gradient(
         135deg,
         rgba(map-get(map-get($trauma-colors, dissolution), primary), 0.7),
         rgba(map-get(map-get($trauma-colors, fragmentation), accent), 0.7)
       );
       animation: vb-phase-transition-flora-to-virus 3s forwards;
-    } @else {
+    }
+
+ @else {
       background: rgb(0 0 0 / 50%);
       animation: vb-generic-phase-transition 2s forwards;
     }
@@ -993,7 +1017,6 @@ $timing-functions: (
 
       .vb-temporal-slider {
         appearance: none;
-        appearance: none;
         background: rgb(255 255 255 / 20%);
         height: 4px;
         margin: map-get($spacing-units, medium) 0;
@@ -1001,7 +1024,6 @@ $timing-functions: (
         width: 100%;
 
         &::-webkit-slider-thumb {
-          appearance: none;
           appearance: none;
           background: #fff;
           border-radius: 50%;

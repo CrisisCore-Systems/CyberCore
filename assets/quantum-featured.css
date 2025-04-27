@@ -24,7 +24,7 @@
   --vb-color-secondary-accessible: #1a90ff;
   --vb-color-foreground-accessible: #fff;
   --vb-color-error-accessible: #ff5a73;
-  --vb-color-success-accessible: #00cc66;
+  --vb-color-success-accessible: #0c6;
 
   /* Typography */
   --vb-font-family-primary: 'Syn Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -123,8 +123,8 @@
 /* VoidBloom Profile */
 .vb-profile-voidbloom,
 [data-profile='voidbloom'] {
-  --vb-color-primary: #9900ff;
-  --vb-color-secondary: #6600cc;
+  --vb-color-primary: #90f;
+  --vb-color-secondary: #60c;
   --vb-color-accent: #cc80ff;
   --vb-color-background: #0a0a14;
   --vb-color-foreground: #f7f2ff;
@@ -151,7 +151,7 @@
 [data-profile='obsidianbloom'] {
   --vb-color-primary: #242424;
   --vb-color-secondary: #363636;
-  --vb-color-accent: #bb00ff;
+  --vb-color-accent: #b0f;
   --vb-color-background: #080808;
   --vb-color-foreground: #e6e6e6;
   --vb-color-surface: rgb(8 8 8 / 90%);
@@ -175,11 +175,11 @@
 /* NeonVortex Profile */
 .vb-profile-neonvortex,
 [data-profile='neonvortex'] {
-  --vb-color-primary: #ff00cc;
-  --vb-color-secondary: #00eeff;
-  --vb-color-accent: #ffff00;
-  --vb-color-background: #000000;
-  --vb-color-foreground: #ffffff;
+  --vb-color-primary: #f0c;
+  --vb-color-secondary: #0ef;
+  --vb-color-accent: #ff0;
+  --vb-color-background: #000;
+  --vb-color-foreground: #fff;
   --vb-color-surface: rgb(0 0 0 / 90%);
 
   /* Trauma colors optimized for NeonVortex profile */
@@ -203,7 +203,7 @@
   background-color: transparent;
   border: var(--vb-border-width-normal) solid var(--vb-color-primary);
   border-radius: var(--vb-border-radius-md);
-  box-shadow: 0 0 var(--vb-glow-intensity) rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.3);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(var(--vb-color-primary-rgb, 0, 255, 255), 0.3);
   color: var(--vb-color-primary);
   cursor: pointer;
   font-family: var(--vb-font-family-primary);
@@ -219,7 +219,7 @@
 
 .vb-quantum-btn:hover,
 .vb-quantum-btn:focus {
-  box-shadow: 0 0 var(--vb-glow-intensity) rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.5);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(var(--vb-color-primary-rgb, 0, 255, 255), 0.5);
   transform: translateY(-2px);
 }
 
@@ -241,9 +241,9 @@
 /* Quantum Card */
 .vb-quantum-card {
   background-color: var(--vb-color-surface);
-  border: var(--vb-border-width-thin) solid rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.3);
+  border: var(--vb-border-width-thin) solid rgb(var(--vb-color-primary-rgb, 0, 255, 255), 0.3);
   border-radius: var(--vb-border-radius-lg);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
   overflow: hidden;
   position: relative;
   transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
@@ -252,8 +252,8 @@
 .vb-quantum-card::before {
   background: linear-gradient(
     135deg,
-    rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.15) 0%,
-    rgba(var(--vb-color-secondary-rgb, 0, 136, 255), 0.05) 100%
+    rgb(var(--vb-color-primary-rgb, 0, 255, 255), 0.15) 0%,
+    rgb(var(--vb-color-secondary-rgb, 0, 136, 255), 0.05) 100%
   );
   content: '';
   height: 100%;
@@ -264,7 +264,7 @@
 }
 
 .vb-quantum-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 30%);
   transform: translateY(-5px);
 }
 
@@ -298,10 +298,11 @@
 @keyframes vb-quantum-pulse {
   0%,
   100% {
-    opacity: 0.8;
+    opacity: 80%;
   }
+
   50% {
-    opacity: 0.4;
+    opacity: 40%;
   }
 }
 
@@ -310,24 +311,28 @@
   100% {
     transform: translate(0, 0);
   }
+
   20% {
     transform: translate(
       calc(var(--vb-quantum-jitter-distance) * 0.5),
       calc(var(--vb-quantum-jitter-distance) * -1)
     );
   }
+
   40% {
     transform: translate(
       calc(var(--vb-quantum-jitter-distance) * -0.5),
       calc(var(--vb-quantum-jitter-distance) * 0.5)
     );
   }
+
   60% {
     transform: translate(
       calc(var(--vb-quantum-jitter-distance) * 0.7),
       calc(var(--vb-quantum-jitter-distance) * 0.3)
     );
   }
+
   80% {
     transform: translate(
       calc(var(--vb-quantum-jitter-distance) * -0.2),
@@ -339,13 +344,14 @@
 @keyframes vb-quantum-aberration {
   0%,
   100% {
-    text-shadow: calc(var(--vb-quantum-aberration-distance) * -1) 0 rgba(255, 0, 0, 0.7),
-      0 0 rgba(0, 255, 0, 0.7), var(--vb-quantum-aberration-distance) 0 rgba(0, 0, 255, 0.7);
+    text-shadow: calc(var(--vb-quantum-aberration-distance) * -1) 0 rgb(255 0 0 / 70%),
+      0 0 rgb(0 255 0 / 70%), var(--vb-quantum-aberration-distance) 0 rgb(0 0 255 / 70%);
   }
+
   50% {
-    text-shadow: calc(var(--vb-quantum-aberration-distance) * -0.7) 0 rgba(255, 0, 0, 0.7),
-      0 0 rgba(0, 255, 0, 0.7),
-      calc(var(--vb-quantum-aberration-distance) * 0.7) 0 rgba(0, 0, 255, 0.7);
+    text-shadow: calc(var(--vb-quantum-aberration-distance) * -0.7) 0 rgb(255 0 0 / 70%),
+      0 0 rgb(0 255 0 / 70%),
+      calc(var(--vb-quantum-aberration-distance) * 0.7) 0 rgb(0 0 255 / 70%);
   }
 }
 

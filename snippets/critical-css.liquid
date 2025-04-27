@@ -8,266 +8,40 @@
   Only include the most essential styles needed for above-the-fold content rendering.
 {% endcomment %}
 
+<!-- Critical CSS inlined to eliminate render-blocking CSS -->
 <style>
-{% include 'critical.css' %}
-
-/* Template-specific critical styles */
-{% case template %}
-  {% when 'index' %}
-    /* Homepage specific critical styles */
-    .hero-banner {
-      position: relative;
-      height: calc(100vh - var(--header-height) - var(--announcement-height));
-      min-height: 500px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .hero-banner__content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      max-width: 800px;
-      padding: 0 var(--container-padding);
-    }
-
-    .hero-banner__title {
-      font-size: calc(3rem + 2vw);
-      margin-bottom: 2rem;
-      color: var(--text-color);
-    }
-
-    .hero-banner__text {
-      font-size: calc(1.6rem + 0.5vw);
-      margin-bottom: 3rem;
-      color: rgba(var(--text-color-rgb, 247, 247, 247), 0.9);
-    }
-
-    .hero-banner__cta {
-      display: inline-block;
-      padding: 1.5rem 3rem;
-      background-color: var(--accent-color);
-      color: #ffffff;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-
-    .hero-banner__cta:hover {
-      transform: translateY(-2px);
-      background-color: rgba(var(--accent-color-rgb, 110, 12, 247), 0.9);
-    }
-
-    .hero-banner__image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
-
-  {% when 'product' %}
-    /* Product page specific critical styles */
-    .product-hero {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .product-gallery {
-      position: relative;
-    }
-
-    .product-gallery__main {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      background-color: rgba(var(--primary-color-rgb, 26, 26, 26), 0.05);
-      margin-bottom: 1rem;
-      overflow: hidden;
-    }
-
-    .product-gallery__image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .product-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .product-info__title {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .product-info__price {
-      font-size: 2.4rem;
-      margin-bottom: 2rem;
-      color: var(--accent-color);
-    }
-
-    @media (min-width: 768px) {
-      .product-hero {
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-      }
-    }
-
-  {% when 'collection' %}
-    /* Collection page specific critical styles */
-    .collection-header {
-      text-align: center;
-      margin: 3rem 0;
-    }
-
-    .collection-header__title {
-      font-size: 3.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .collection-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
-    }
-
-    .collection-card {
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      background-color: rgba(var(--primary-color-rgb, 26, 26, 26), 0.05);
-      transition: transform 0.3s ease;
-    }
-
-    .collection-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .collection-card__image-container {
-      position: relative;
-      padding-bottom: 100%;
-      overflow: hidden;
-    }
-
-    .collection-card__image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.8s ease;
-    }
-
-    .collection-card:hover .collection-card__image {
-      transform: scale(1.05);
-    }
-
-  {% else %}
-    /* Default page critical styles */
-    .page-header {
-      padding: 4rem 0 2rem;
-      text-align: center;
-    }
-
-    .page-title {
-      font-size: 3.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .page-content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 0 4rem;
-    }
-{% endcase %}
-
-/* Phase-specific critical styles */
-.phase-cyber-lotus {
-  --phase-primary-color: #9D00FF;
-  --phase-secondary-color: #00FFEA;
-}
-
-.phase-alien-flora {
-  --phase-primary-color: #50FF40;
-  --phase-secondary-color: #FF00D6;
-}
-
-.phase-rolling-virus {
-  --phase-primary-color: #FF2150;
-  --phase-secondary-color: #00CAFF;
-}
-
-/* Basic loading indicator styles */
-.loading-indicator {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(var(--primary-color-rgb, 26, 26, 26), 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.loading-indicator.is-active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.loading-spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(var(--accent-color-rgb, 110, 12, 247), 0.2);
-  border-left-color: var(--accent-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+  {% render 'critical-css-content' %}
 </style>
 
-<!-- Non-critical CSS can be loaded asynchronously to prevent render-blocking -->
-<link rel="preload" href="{{ 'critical.css' | asset_url }}" as="style">
+<!-- Font loading optimization -->
 <script>
-  // This script loads CSS asynchronously
-  function loadCSS(src) {
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = src;
-    link.media = 'print';
-    document.head.appendChild(link);
+  (function() {
+    // Add 'fonts-not-loaded' class by default
+    document.documentElement.classList.add('fonts-not-loaded');
 
-    setTimeout(function() {
-      link.media = 'all';
-    }, 0);
-  }
-
-  // Load fonts if they aren't preloaded elsewhere
-  {% unless settings.preload_fonts %}
-    if ('fonts' in document) {
+    // Feature detect FontFace API
+    if ('FontFace' in window) {
+      // Mark when fonts are loaded
       Promise.all([
-        document.fonts.load('1rem "Syn Nova"'),
-        document.fonts.load('1rem "Quantum Blur"')
+        document.fonts.load('1em "Syn Nova"'),
+        document.fonts.load('1em "Quantum Blur"')
       ]).then(function() {
+        document.documentElement.classList.remove('fonts-not-loaded');
         document.documentElement.classList.add('fonts-loaded');
+
+        // Track font loading for performance monitoring
+        if (window.performance && window.performance.mark) {
+          window.performance.mark('fonts-loaded');
+        }
+      }).catch(function(err) {
+        console.warn('Font loading failed:', err);
       });
+    } else {
+      // Fallback for browsers without FontFace API
+      // Simply show text after a timeout to prevent FOIT
+      setTimeout(function() {
+        document.documentElement.classList.remove('fonts-not-loaded');
+      }, 300);
     }
-  {% endunless %}
+  })();
 </script>

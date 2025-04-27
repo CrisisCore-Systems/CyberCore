@@ -430,6 +430,7 @@
   100% {
     opacity: calc(var(--vb-bloom-intensity) * 30%);
   }
+
   50% {
     opacity: calc(var(--vb-bloom-intensity) * 80%);
   }
@@ -439,6 +440,7 @@
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 100% 100%;
   }
@@ -448,6 +450,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -457,6 +460,7 @@
   0% {
     background-position: 0 0;
   }
+
   100% {
     background-position: 0 100px;
   }
@@ -466,6 +470,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -476,6 +481,7 @@
     opacity: calc(var(--vb-bloom-intensity) * 30%);
     transform: scale(0.95);
   }
+
   100% {
     opacity: calc(var(--vb-bloom-intensity) * 80%);
     transform: scale(1.05);
@@ -487,6 +493,7 @@
   100% {
     opacity: 80%;
   }
+
   50% {
     opacity: 100%;
   }
@@ -497,6 +504,7 @@
   100% {
     filter: brightness(1);
   }
+
   50% {
     filter: brightness(1.2);
   }
@@ -507,6 +515,7 @@
   100% {
     opacity: 100%;
   }
+
   50% {
     opacity: 70%;
   }
@@ -516,18 +525,23 @@
   0% {
     transform: translate(0);
   }
+
   20% {
     transform: translate(-2px, 2px);
   }
+
   40% {
     transform: translate(2px, -2px);
   }
+
   60% {
     transform: translate(-1px, -2px);
   }
+
   80% {
     transform: translate(2px, 1px);
   }
+
   100% {
     transform: translate(0);
   }
@@ -538,6 +552,7 @@
   100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.01);
   }
@@ -547,9 +562,11 @@
   0% {
     box-shadow: 0 0 0 rgb(0 202 255 / 0%);
   }
+
   50% {
     box-shadow: 0 0 20px rgb(0 202 255 / 50%);
   }
+
   100% {
     box-shadow: 0 0 0 rgb(0 202 255 / 0%);
   }
@@ -559,12 +576,15 @@
   0% {
     transform: translateX(0);
   }
+
   25% {
     transform: translateX(-5px);
   }
+
   75% {
     transform: translateX(5px);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -574,9 +594,11 @@
   0% {
     filter: blur(0);
   }
+
   50% {
     filter: blur(1px);
   }
+
   100% {
     filter: blur(0);
   }
@@ -586,15 +608,19 @@
   0% {
     filter: brightness(1) contrast(1);
   }
+
   25% {
     filter: brightness(1.5) contrast(1.2);
   }
+
   50% {
     filter: brightness(0.8) contrast(1.5) hue-rotate(15deg);
   }
+
   75% {
     filter: brightness(1.2) contrast(0.9) hue-rotate(-15deg);
   }
+
   100% {
     filter: brightness(1) contrast(1);
   }
@@ -604,6 +630,7 @@
   0% {
     top: 0;
   }
+
   100% {
     top: 100%;
   }
