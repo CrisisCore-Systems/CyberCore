@@ -4,581 +4,363 @@
  *
  * @MutationCompatible: All Variants
  * @StrategyProfile: quantum-entangled
- * @Version: 2.0.0
+ * @Version: 2.1.0 (WCAG AA Compliance Update)
  */
 
 /* Base Theme Variables */
 :root {
   /* Core Colors */
-  --color-primary: #00ffff;
-  --color-secondary: #0088ff;
-  --color-accent: #80ffff;
-  --color-background: #001a33;
-  --color-foreground: #f0f8ff;
-  --color-surface: rgba(0, 26, 51, 0.9);
-  --color-error: #ff3c5a;
-  --color-success: #2de370;
+  --vb-color-primary: #0ff;
+  --vb-color-secondary: #08f;
+  --vb-color-accent: #80ffff;
+  --vb-color-background: #001a33;
+  --vb-color-foreground: #f0f8ff;
+  --vb-color-surface: rgb(0 26 51 / 90%);
+  --vb-color-error: #ff3c5a;
+  --vb-color-success: #2de370;
 
-  /* Commerce Colors */
-  --color-price-increase: #ff5277;
-  --color-price-decrease: #40f7b4;
-  --color-quantum-flux: #bd9aff;
-  --color-coherence-high: #40f7b4;
-  --color-coherence-medium: #ffcc66;
-  --color-coherence-low: #ff5277;
-
-  /* Trauma Commerce Effects */
-  --trauma-abandonment-glow: 0 0 15px rgba(0, 20, 51, 0.8);
-  --trauma-fragmentation-glow: 0 0 15px rgba(107, 35, 167, 0.8);
-  --trauma-surveillance-glow: 0 0 15px rgba(0, 117, 113, 0.8);
-  --trauma-recursion-glow: 0 0 15px rgba(178, 38, 19, 0.8);
-  --trauma-displacement-glow: 0 0 15px rgba(17, 110, 94, 0.8);
-  --trauma-dissolution-glow: 0 0 15px rgba(61, 10, 115, 0.8);
+  /* WCAG AA Compliant Colors (4.5:1 minimum contrast) */
+  --vb-color-primary-accessible: #00c8ff;
+  --vb-color-secondary-accessible: #1a90ff;
+  --vb-color-foreground-accessible: #fff;
+  --vb-color-error-accessible: #ff5a73;
+  --vb-color-success-accessible: #00cc66;
 
   /* Typography */
-  --font-family-primary: 'IBM Plex Mono', monospace;
-  --font-family-secondary: 'IBM Plex Sans', sans-serif;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-md: 1rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-2xl: 2rem;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 600;
+  --vb-font-family-primary: 'Syn Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, sans-serif;
+  --vb-font-family-display: 'Quantum Blur', serif;
+  --vb-font-family-mono: 'IBM Plex Mono', monospace;
+
+  /* Font Sizes */
+  --vb-font-size-xs: 0.75rem;
+  --vb-font-size-sm: 0.875rem;
+  --vb-font-size-md: 1rem;
+  --vb-font-size-lg: 1.25rem;
+  --vb-font-size-xl: 1.5rem;
+  --vb-font-size-2xl: 2rem;
+  --vb-font-weight-normal: 400;
+  --vb-font-weight-medium: 500;
+  --vb-font-weight-bold: 600;
 
   /* Animation */
-  --animation-speed-slow: 600ms;
-  --animation-speed-normal: 300ms;
-  --animation-speed-fast: 150ms;
-  --animation-timing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --animation-timing-entrance: cubic-bezier(0, 0, 0.2, 1);
-  --animation-timing-exit: cubic-bezier(0.4, 0, 1, 1);
-  --animation-timing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --vb-animation-speed-slow: 600ms;
+  --vb-animation-speed-normal: 300ms;
+  --vb-animation-speed-fast: 150ms;
+  --vb-animation-timing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --vb-animation-timing-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --vb-animation-timing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --vb-animation-timing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Effects */
-  --glow-intensity: 8px;
-  --glow-spread: 5px;
-  --glitch-intensity: 0.5;
-  --trauma-intensity: 0;
-  --bloom-intensity: 0.8;
+  --vb-glow-intensity: 8px;
+  --vb-glow-spread: 5px;
+  --vb-glitch-intensity: 0.5;
+  --vb-trauma-intensity: 0;
+  --vb-bloom-intensity: 0.8;
 
   /* Quantum effects */
-  --quantum-jitter-distance: 2px;
-  --quantum-glitch-interval: 300ms;
-  --quantum-aberration-distance: 3px;
+  --vb-quantum-jitter-distance: 2px;
+  --vb-quantum-glitch-interval: 300ms;
+  --vb-quantum-aberration-distance: 3px;
 
   /* Trauma-specific */
-  --trauma-color-abandonment: rgb(67, 134, 215);
-  --trauma-color-fragmentation: rgb(194, 76, 172);
-  --trauma-color-surveillance: rgb(124, 218, 156);
-  --trauma-color-recursion: rgb(240, 157, 65);
-  --trauma-color-displacement: rgb(218, 90, 103);
-  --trauma-color-dissolution: rgb(157, 106, 220);
+  --vb-trauma-color-abandonment: rgb(67 134 215);
+  --vb-trauma-color-fragmentation: rgb(194 76 172);
+  --vb-trauma-color-surveillance: rgb(124 218 156);
+  --vb-trauma-color-recursion: rgb(240 157 65);
+  --vb-trauma-color-displacement: rgb(218 90 103);
+  --vb-trauma-color-dissolution: rgb(157 106 220);
 
   /* UI Sizing */
-  --border-radius-sm: 2px;
-  --border-radius-md: 4px;
-  --border-radius-lg: 8px;
-  --border-radius-xl: 16px;
-  --border-width-thin: 1px;
-  --border-width-normal: 2px;
-  --border-width-thick: 4px;
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  --vb-border-radius-sm: 2px;
+  --vb-border-radius-md: 4px;
+  --vb-border-radius-lg: 8px;
+  --vb-border-radius-xl: 16px;
+  --vb-border-width-thin: 1px;
+  --vb-border-width-normal: 2px;
+  --vb-border-width-thick: 4px;
+  --vb-spacing-xs: 0.25rem;
+  --vb-spacing-sm: 0.5rem;
+  --vb-spacing-md: 1rem;
+  --vb-spacing-lg: 1.5rem;
+  --vb-spacing-xl: 2rem;
+  --vb-spacing-2xl: 3rem;
 
   /* Hologram Specific */
-  --hologram-intensity: 1;
-  --hologram-primary-color: var(--color-primary);
-  --hologram-secondary-color: var(--color-secondary);
-  --hologram-accent-color: var(--color-accent);
+  --vb-hologram-intensity: 1;
+  --vb-hologram-primary-color: var(--vb-color-primary);
+  --vb-hologram-secondary-color: var(--vb-color-secondary);
+  --vb-hologram-accent-color: var(--vb-color-accent);
 }
 
 /* CyberLotus Profile */
-.profile-cyberlotus,
+.vb-profile-cyberlotus,
 [data-profile='cyberlotus'] {
-  --color-primary: #00ffff;
-  --color-secondary: #0088ff;
-  --color-accent: #80ffff;
-  --color-background: #001a33;
-  --color-foreground: #f0f8ff;
-  --color-surface: rgba(0, 26, 51, 0.9);
+  --vb-color-primary: #0ff;
+  --vb-color-secondary: #08f;
+  --vb-color-accent: #80ffff;
+  --vb-color-background: #001a33;
+  --vb-color-foreground: #e6f7ff;
+  --vb-color-surface: rgb(0 26 51 / 90%);
 
-  --glow-intensity: 8px;
-  --animation-speed-normal: 300ms;
-  --glitch-intensity: 0.5;
-  --hologram-intensity: 1;
-}
+  /* Trauma colors optimized for CyberLotus profile */
+  --vb-trauma-color-abandonment: rgb(77 144 225);
+  --vb-trauma-color-fragmentation: rgb(204 86 182);
+  --vb-trauma-color-surveillance: rgb(134 228 166);
+  --vb-trauma-color-recursion: rgb(250 167 75);
+  --vb-trauma-color-displacement: rgb(228 100 113);
+  --vb-trauma-color-dissolution: rgb(167 116 230);
 
-/* ObsidianBloom Profile */
-.profile-obsidianbloom,
-[data-profile='obsidianbloom'] {
-  --color-primary: #ff00ff;
-  --color-secondary: #8800ff;
-  --color-accent: #ff80ff;
-  --color-background: #330033;
-  --color-foreground: #f8f0ff;
-  --color-surface: rgba(51, 0, 51, 0.9);
-
-  --glow-intensity: 8px;
-  --animation-speed-normal: 300ms;
-  --glitch-intensity: 0.7;
-  --hologram-intensity: 1.2;
+  /* Effect intensities */
+  --vb-bloom-intensity: 0.9;
+  --vb-glow-spread: 7px;
+  --vb-glow-intensity: 12px;
+  --vb-glitch-intensity: 0.3;
+  --vb-quantum-jitter-distance: 1.5px;
 }
 
 /* VoidBloom Profile */
-.profile-voidbloom,
+.vb-profile-voidbloom,
 [data-profile='voidbloom'] {
-  --color-primary: #9900ff;
-  --color-secondary: #6600cc;
-  --color-accent: #cc80ff;
-  --color-background: #1a0033;
-  --color-foreground: #f0f0ff;
-  --color-surface: rgba(26, 0, 51, 0.9);
+  --vb-color-primary: #9900ff;
+  --vb-color-secondary: #6600cc;
+  --vb-color-accent: #cc80ff;
+  --vb-color-background: #0a0a14;
+  --vb-color-foreground: #f7f2ff;
+  --vb-color-surface: rgb(10 10 20 / 90%);
 
-  --glow-intensity: 8px;
-  --animation-speed-normal: 300ms;
-  --glitch-intensity: 0.8;
-  --hologram-intensity: 0.9;
+  /* Trauma colors optimized for VoidBloom profile */
+  --vb-trauma-color-abandonment: rgb(255 85 128);
+  --vb-trauma-color-fragmentation: rgb(179 51 204);
+  --vb-trauma-color-surveillance: rgb(94 188 126);
+  --vb-trauma-color-recursion: rgb(255 177 25);
+  --vb-trauma-color-displacement: rgb(238 110 123);
+  --vb-trauma-color-dissolution: rgb(187 106 220);
+
+  /* Effect intensities */
+  --vb-bloom-intensity: 1.2;
+  --vb-glow-spread: 8px;
+  --vb-glow-intensity: 15px;
+  --vb-glitch-intensity: 0.7;
+  --vb-quantum-jitter-distance: 3px;
+}
+
+/* ObsidianBloom Profile */
+.vb-profile-obsidianbloom,
+[data-profile='obsidianbloom'] {
+  --vb-color-primary: #242424;
+  --vb-color-secondary: #363636;
+  --vb-color-accent: #bb00ff;
+  --vb-color-background: #080808;
+  --vb-color-foreground: #e6e6e6;
+  --vb-color-surface: rgb(8 8 8 / 90%);
+
+  /* Trauma colors optimized for ObsidianBloom profile */
+  --vb-trauma-color-abandonment: rgb(179 0 64);
+  --vb-trauma-color-fragmentation: rgb(153 0 204);
+  --vb-trauma-color-surveillance: rgb(77 153 102);
+  --vb-trauma-color-recursion: rgb(204 136 0);
+  --vb-trauma-color-displacement: rgb(179 51 64);
+  --vb-trauma-color-dissolution: rgb(153 102 204);
+
+  /* Effect intensities */
+  --vb-bloom-intensity: 0.5;
+  --vb-glow-spread: 4px;
+  --vb-glow-intensity: 8px;
+  --vb-glitch-intensity: 0.3;
+  --vb-quantum-jitter-distance: 1px;
 }
 
 /* NeonVortex Profile */
-.profile-neonvortex,
+.vb-profile-neonvortex,
 [data-profile='neonvortex'] {
-  --color-primary: #00ff66;
-  --color-secondary: #00cc44;
-  --color-accent: #80ffaa;
-  --color-background: #003319;
-  --color-foreground: #f0fff8;
-  --color-surface: rgba(0, 51, 25, 0.9);
+  --vb-color-primary: #ff00cc;
+  --vb-color-secondary: #00eeff;
+  --vb-color-accent: #ffff00;
+  --vb-color-background: #000000;
+  --vb-color-foreground: #ffffff;
+  --vb-color-surface: rgb(0 0 0 / 90%);
 
-  --glow-intensity: 8px;
-  --animation-speed-normal: 300ms;
-  --glitch-intensity: 0.6;
-  --hologram-intensity: 1.1;
+  /* Trauma colors optimized for NeonVortex profile */
+  --vb-trauma-color-abandonment: rgb(255 0 128);
+  --vb-trauma-color-fragmentation: rgb(200 0 255);
+  --vb-trauma-color-surveillance: rgb(0 255 200);
+  --vb-trauma-color-recursion: rgb(255 200 0);
+  --vb-trauma-color-displacement: rgb(255 50 100);
+  --vb-trauma-color-dissolution: rgb(200 100 255);
+
+  /* Effect intensities */
+  --vb-bloom-intensity: 1.5;
+  --vb-glow-spread: 10px;
+  --vb-glow-intensity: 20px;
+  --vb-glitch-intensity: 0.9;
+  --vb-quantum-jitter-distance: 5px;
 }
 
-/* Trauma State Modifiers */
-.trauma-state-glitch,
-[data-trauma='glitch'] {
-  --trauma-intensity: 0.8;
-  --glitch-intensity: 1;
-  --animation-speed-normal: calc(var(--animation-speed-normal) * 0.7);
-}
-
-.trauma-state-void,
-[data-trauma='void'] {
-  --trauma-intensity: 0.7;
-  --color-primary: color-mix(in srgb, var(--color-primary), black 40%);
-  --color-secondary: color-mix(in srgb, var(--color-secondary), black 40%);
-  --color-accent: color-mix(in srgb, var(--color-accent), black 40%);
-}
-
-.trauma-state-echo,
-[data-trauma='echo'] {
-  --trauma-intensity: 0.6;
-  --glow-intensity: calc(var(--glow-intensity) * 1.5);
-  --animation-speed-normal: calc(var(--animation-speed-normal) * 1.2);
-}
-
-.trauma-state-fracture,
-[data-trauma='fracture'] {
-  --trauma-intensity: 0.9;
-  --glitch-intensity: 0.9;
-  --glow-intensity: calc(var(--glow-intensity) * 0.7);
-}
-
-/* Common Components */
-
-/* Quantum Button */
-.quantum-btn {
-  background-color: var(--color-surface);
-  color: var(--color-primary);
-  border: var(--border-width-normal) solid var(--color-primary);
-  border-radius: var(--border-radius-md);
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-sm) var(--spacing-md);
-  transition: all var(--animation-speed-fast) var(--animation-timing-default);
-  position: relative;
+/* Quantum UI Components */
+.vb-quantum-btn {
+  background-color: transparent;
+  border: var(--vb-border-width-normal) solid var(--vb-color-primary);
+  border-radius: var(--vb-border-radius-md);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.3);
+  color: var(--vb-color-primary);
+  cursor: pointer;
+  font-family: var(--vb-font-family-primary);
+  font-size: var(--vb-font-size-md);
+  font-weight: var(--vb-font-weight-medium);
+  letter-spacing: 0.05em;
   overflow: hidden;
+  padding: var(--vb-spacing-sm) var(--vb-spacing-lg);
+  position: relative;
+  text-transform: uppercase;
+  transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
 }
 
-.quantum-btn:hover {
-  box-shadow: 0 0 var(--glow-intensity) var(--color-primary);
-  background-color: color-mix(in srgb, var(--color-surface), var(--color-primary) 10%);
+.vb-quantum-btn:hover,
+.vb-quantum-btn:focus {
+  box-shadow: 0 0 var(--vb-glow-intensity) rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.5);
+  transform: translateY(-2px);
 }
 
-.quantum-btn:active {
-  transform: translateY(2px);
+.vb-quantum-btn:active {
+  transform: translateY(1px);
 }
 
-.quantum-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--color-primary), transparent 70%),
-    transparent
-  );
-  transition: all var(--animation-speed-normal) var(--animation-timing-default);
+.vb-quantum-btn--primary {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
 }
 
-.quantum-btn:hover::before {
-  left: 100%;
+.vb-quantum-btn--secondary {
+  background-color: transparent;
+  border-color: var(--vb-color-secondary);
+  color: var(--vb-color-secondary);
 }
 
 /* Quantum Card */
-.quantum-card {
-  background-color: var(--color-surface);
-  border: var(--border-width-thin) solid var(--color-primary);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: 0 0 var(--glow-intensity) rgba(var(--color-primary), 0.2);
-  transition: all var(--animation-speed-normal) var(--animation-timing-default);
-}
-
-.quantum-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 calc(var(--glow-intensity) * 1.5)
-    color-mix(in srgb, var(--color-primary), transparent 40%);
-}
-
-/* Quantum Input */
-.quantum-input {
-  background-color: rgba(0, 0, 0, 0.2);
-  border: var(--border-width-thin) solid var(--color-secondary);
-  border-radius: var(--border-radius-md);
-  color: var(--color-foreground);
-  font-family: var(--font-family-primary);
-  padding: var(--spacing-sm) var(--spacing-md);
-  transition: all var(--animation-speed-fast) var(--animation-timing-default);
-}
-
-.quantum-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 var(--glow-intensity) color-mix(in srgb, var(--color-primary), transparent 70%);
-}
-
-/* Quantum Loader */
-.quantum-loader {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: var(--border-width-normal) solid rgba(var(--color-primary), 0.2);
-  border-top-color: var(--color-primary);
-  animation: quantum-spin var(--animation-speed-normal) linear infinite;
-}
-
-@keyframes quantum-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Quantum Glow Text */
-.quantum-glow-text {
-  color: var(--color-foreground);
-  text-shadow: 0 0 var(--glow-intensity) var(--color-primary);
-  transition: text-shadow var(--animation-speed-normal) var(--animation-timing-default);
-}
-
-.quantum-glow-text:hover {
-  text-shadow: 0 0 calc(var(--glow-intensity) * 1.5) var(--color-primary);
-}
-
-/* Glitch Animation */
-@keyframes quantum-glitch {
-  0% {
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(var(--quantum-jitter-distance), 0);
-  }
-  40% {
-    transform: translate(calc(var(--quantum-jitter-distance) * -1), 0);
-  }
-  60% {
-    transform: translate(0, var(--quantum-jitter-distance));
-  }
-  80% {
-    transform: translate(0, calc(var(--quantum-jitter-distance) * -1));
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-
-.quantum-glitch {
-  animation: quantum-glitch calc(var(--animation-speed-fast) * 0.8) step-end infinite;
-}
-
-/* Hologram Specific */
-.quantum-hologram {
-  --hologram-primary-color: var(--color-primary);
-  --hologram-secondary-color: var(--color-secondary);
-  --hologram-accent-color: var(--color-accent);
-  --hologram-glow-intensity: var(--glow-intensity);
-  --hologram-intensity: var(--hologram-intensity, 1);
-
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* Base quantum styles */
-.quantum-element {
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Quantum effect classes */
-.quantum-effect {
-  position: relative;
+.vb-quantum-card {
+  background-color: var(--vb-color-surface);
+  border: var(--vb-border-width-thin) solid rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.3);
+  border-radius: var(--vb-border-radius-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  position: relative;
+  transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
 }
 
-.quantum-effect::before,
-.quantum-effect::after {
+.vb-quantum-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--vb-color-primary-rgb, 0, 255, 255), 0.15) 0%,
+    rgba(var(--vb-color-secondary-rgb, 0, 136, 255), 0.05) 100%
+  );
   content: '';
+  height: 100%;
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--animation-speed-fast) ease;
 }
 
-.quantum-effect::before {
-  background: linear-gradient(45deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
-  mix-blend-mode: overlay;
+.vb-quantum-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
 }
 
-.quantum-effect::after {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0));
-  transform: translateX(-100%);
+.vb-quantum-card__content {
+  padding: var(--vb-spacing-lg);
+  position: relative;
+  z-index: 1;
 }
 
-.quantum-effect.active::before {
-  opacity: 1;
+.vb-quantum-card__title {
+  color: var(--vb-color-primary);
+  font-family: var(--vb-font-family-display);
+  font-size: var(--vb-font-size-xl);
+  margin-bottom: var(--vb-spacing-md);
 }
 
-.quantum-effect.active::after {
-  opacity: 1;
-  transform: translateX(100%);
-  transition: transform var(--animation-speed-normal) ease-out;
+.vb-quantum-card__text {
+  color: var(--vb-color-foreground);
+  font-family: var(--vb-font-family-primary);
+  line-height: 1.5;
+  margin-bottom: var(--vb-spacing-md);
 }
 
-/* Quantum effect classes */
-.quantum-effect {
-  animation: quantum-pulse 0.5s ease-in-out;
+.vb-quantum-card__action {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.quantum-entrance {
-  animation: quantum-glitch 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Trauma-specific shadows */
-.shadow-trauma-abandonment {
-  box-shadow: 0 0 var(--glow-intensity) var(--trauma-color-abandonment);
-}
-
-.shadow-trauma-fragmentation {
-  box-shadow: 0 0 var(--glow-intensity) var(--trauma-color-fragmentation);
-}
-
-.shadow-trauma-surveillance {
-  box-shadow: 0 0 var(--glow-intensity) var(--trauma-color-surveillance);
-}
-
-.shadow-trauma-recursion {
-  box-shadow: 0 0 var(--glow-intensity) var(--trauma-color-recursion);
-}
-
-.shadow-trauma-displacement {
-  box-shadow: 0 0 var(--glow-intensity) var(--trauma-color-displacement);
-}
-
-.shadow-trauma-dissolution {
-  box-shadow: 0 0 var(--glow-intensity) var(--trauma-color-dissolution);
-}
-
-/* Cart-specific styles */
-.cart-loading {
-  cursor: wait;
-  pointer-events: none;
-}
-
-.cart-loading:after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 999;
-}
-
-/* Cart drawer */
-#cart-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: 400px;
-  max-width: 90vw;
-  background: var(--color-background);
-  z-index: 1000;
-  transform: translateX(100%);
-  transition: transform var(--animation-speed-normal) var(--animation-timing-default);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-}
-
-#cart-drawer.open {
-  transform: translateX(0);
-}
-
-/* Mutation profile styles */
-#cart-drawer.profile-cyberlotus {
-  background: linear-gradient(135deg, #0f1c2a, #1a2a3a);
-  box-shadow: 0 0 20px rgba(67, 134, 215, 0.3);
-}
-
-#cart-drawer.profile-obsidianbloom {
-  background: linear-gradient(135deg, #1a0f1c, #2a1a2c);
-  box-shadow: 0 0 20px rgba(194, 76, 172, 0.3);
-}
-
-#cart-drawer.profile-voidbloom {
-  background: linear-gradient(135deg, #0f1a17, #192a26);
-  box-shadow: 0 0 20px rgba(124, 218, 156, 0.3);
-}
-
-#cart-drawer.profile-neonvortex {
-  background: linear-gradient(135deg, #1c190f, #2c281a);
-  box-shadow: 0 0 20px rgba(240, 157, 65, 0.3);
-}
-
-/* Profile-specific styles */
-.profile-cyberlotus {
-  --quantum-primary: rgba(64, 224, 208, 0.8);
-  --quantum-secondary: rgba(128, 0, 128, 0.6);
-  --quantum-accent: rgba(255, 215, 0, 0.9);
-}
-
-.profile-obsidianbloom {
-  --quantum-primary: rgba(30, 30, 30, 0.9);
-  --quantum-secondary: rgba(128, 0, 0, 0.7);
-  --quantum-accent: rgba(169, 169, 169, 0.8);
-}
-
-.profile-voidbloom {
-  --quantum-primary: rgba(25, 25, 112, 0.8);
-  --quantum-secondary: rgba(138, 43, 226, 0.6);
-  --quantum-accent: rgba(0, 191, 255, 0.7);
-}
-
-.profile-neonvortex {
-  --quantum-primary: rgba(255, 0, 255, 0.7);
-  --quantum-secondary: rgba(0, 255, 255, 0.7);
-  --quantum-accent: rgba(255, 255, 0, 0.8);
-}
-
-/* Animations */
-@keyframes quantum-pulse {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px) brightness(1);
-  }
-  25% {
+/* Keyframe Animations */
+@keyframes vb-quantum-pulse {
+  0%,
+  100% {
     opacity: 0.8;
-    transform: scale(1.02);
-    filter: blur(1px) brightness(1.2);
   }
   50% {
-    opacity: 0.9;
-    transform: scale(0.98);
-    filter: blur(0px) brightness(0.9);
+    opacity: 0.4;
   }
-  75% {
-    opacity: 1;
-    transform: scale(1.01);
-    filter: blur(0.5px) brightness(1.1);
-  }
+}
+
+@keyframes vb-quantum-jitter {
+  0%,
   100% {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px) brightness(1);
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(
+      calc(var(--vb-quantum-jitter-distance) * 0.5),
+      calc(var(--vb-quantum-jitter-distance) * -1)
+    );
+  }
+  40% {
+    transform: translate(
+      calc(var(--vb-quantum-jitter-distance) * -0.5),
+      calc(var(--vb-quantum-jitter-distance) * 0.5)
+    );
+  }
+  60% {
+    transform: translate(
+      calc(var(--vb-quantum-jitter-distance) * 0.7),
+      calc(var(--vb-quantum-jitter-distance) * 0.3)
+    );
+  }
+  80% {
+    transform: translate(
+      calc(var(--vb-quantum-jitter-distance) * -0.2),
+      calc(var(--vb-quantum-jitter-distance) * -0.5)
+    );
   }
 }
 
-@keyframes quantum-entrance {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-    filter: blur(3px);
-  }
+@keyframes vb-quantum-aberration {
+  0%,
   100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    text-shadow: calc(var(--vb-quantum-aberration-distance) * -1) 0 rgba(255, 0, 0, 0.7),
+      0 0 rgba(0, 255, 0, 0.7), var(--vb-quantum-aberration-distance) 0 rgba(0, 0, 255, 0.7);
+  }
+  50% {
+    text-shadow: calc(var(--vb-quantum-aberration-distance) * -0.7) 0 rgba(255, 0, 0, 0.7),
+      0 0 rgba(0, 255, 0, 0.7),
+      calc(var(--vb-quantum-aberration-distance) * 0.7) 0 rgba(0, 0, 255, 0.7);
   }
 }
 
-/* Hologram container styles */
-.quantum-hologram {
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-/* Cart quantum styles */
-.cart-drawer.quantum-effect {
-  box-shadow: 0 0 15px var(--quantum-primary, rgba(64, 224, 208, 0.8));
-}
-
-.cart-item[data-quantum='true'] {
-  position: relative;
-}
-
-.cart-item[data-quantum='true']::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    45deg,
-    var(--quantum-primary, rgba(64, 224, 208, 0.1)),
-    transparent,
-    var(--quantum-secondary, rgba(128, 0, 128, 0.1))
-  );
-  border: 1px solid var(--quantum-accent, rgba(255, 215, 0, 0.2));
-  border-radius: 4px;
-  opacity: 0.3;
-  transition: opacity 0.3s ease;
-}
-
-.cart-item[data-quantum='true']:hover::after {
-  opacity: 0.6;
+/* High Contrast Mode Override */
+@media (forced-colors: active) {
+  :root {
+    --vb-color-primary: CanvasText;
+    --vb-color-secondary: CanvasText;
+    --vb-color-accent: CanvasText;
+    --vb-color-background: Canvas;
+    --vb-color-foreground: CanvasText;
+    --vb-color-surface: Canvas;
+    --vb-glow-intensity: 0;
+    --vb-glow-spread: 0;
+    --vb-bloom-intensity: 0;
+    --vb-glitch-intensity: 0;
+  }
 }

@@ -135,6 +135,33 @@
         "Run Quantum Inspector"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "StyleLint: Check",
+      "type": "shell",
+      "command": "npm run lint:css",
+      "problemMatcher": ["$stylelint-stylish"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": "test"
+    },
+    {
+      "label": "StyleLint: Fix All",
+      "type": "shell",
+      "command": "npm run lint:css:fix",
+      "problemMatcher": ["$stylelint-stylish"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Lint All (ESLint + StyleLint)",
+      "dependsOrder": "sequence",
+      "dependsOn": ["ESLint: Fix All", "StyleLint: Fix All"],
+      "problemMatcher": []
     }
   ]
 }

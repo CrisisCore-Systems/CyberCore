@@ -2,36 +2,61 @@
  * CRITICAL.CSS
  * Contains only essential styles required for above-the-fold content
  * This file should be inlined in the <head> of the document
- * @Version: 2.1.0 (Post Phase 1 Optimization)
+ * @Version: 2.2.0 (Post WCAG AA Compliance Update)
  */
 
 /* Design tokens - Only those needed for above-the-fold */
 :root {
-  --primary-color: #1a1a1a;
-  --secondary-color: #333;
-  --accent-color: #6e0cf7;
-  --text-color: #f7f7f7;
-  --error-color: #ff3232;
-  --success-color: #00ff9d;
+  /* Primary colors */
+  --vb-color-primary-dark: #0a0a14;
+  --vb-color-primary: #171730;
+  --vb-color-primary-light: #2d2d5a;
 
-  /* Simplified font definitions */
-  --font-body: 'Syn Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Quantum Blur', serif;
+  /* Secondary colors */
+  --vb-color-secondary-dark: #00091a;
+  --vb-color-secondary: #001a33;
+  --vb-color-secondary-light: #00264d;
+
+  /* Accent colors */
+  --vb-color-accent-blue: #0cf;
+  --vb-color-accent-purple: #9f6cf9;
+  --vb-color-accent-cyan: #00ffff;
+
+  /* Text colors */
+  --vb-color-text: #f0f8ff;
+  --vb-color-text-secondary: rgba(240, 248, 255, 0.7);
+
+  /* Semantic colors */
+  --vb-color-error: #f36;
+  --vb-color-success: #0f9;
+  --vb-color-warning: #fc0;
+  --vb-color-info: #08f;
+
+  /* Accessibility colors */
+  --vb-a11y-text-light: #fff;
+  --vb-a11y-text-light-secondary: rgba(255, 255, 255, 0.7);
+  --vb-a11y-text-dark: #0a0a14;
+  --vb-a11y-accent-cyan: #00ffff;
+  --vb-a11y-focus-outline: #00ffff;
+
+  /* Font definitions */
+  --vb-font-body: 'Syn Nova', -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, sans-serif;
+  --vb-font-heading: 'Quantum Blur', serif;
 
   /* Layout tokens */
-  --header-height: 60px;
-  --announcement-height: 40px;
-  --container-max-width: 1440px;
-  --container-padding: 1.5rem;
+  --vb-header-height: 60px;
+  --vb-announcement-height: 40px;
+  --vb-container-max-width: 1440px;
+  --vb-container-padding: 1.5rem;
 }
 
 /* Reset - Only essential reset properties */
 html {
-  font-size: 62.5%; /* 10px base for rem calculation */
   box-sizing: border-box;
-  -webkit-text-size-adjust: 100%;
+  font-size: 62.5%; /* 10px base for rem calculation */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
 }
 
 *,
@@ -43,134 +68,194 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
-  font-size: 1.6rem;
-  line-height: 1.5;
-  color: var(--text-color);
-  background-color: var(--primary-color);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden; /* Prevent horizontal scroll */
-  min-height: 100vh;
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-text);
   display: flex;
   flex-direction: column;
+  font-family: var(--vb-font-body);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* Accessibility - Critical for initial interaction */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
+.vb-sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
   height: 1px;
   margin: -1px;
-  padding: 0;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  padding: 0;
+  position: absolute;
   white-space: nowrap;
-  border: 0;
+  width: 1px;
 }
 
-.skip-to-content-link {
+.vb-skip-to-content-link {
+  background-color: var(--vb-color-primary-dark);
+  color: var(--vb-a11y-accent-cyan);
+  font-weight: 700;
+  left: 0;
+  padding: 1rem;
   position: absolute;
   top: -60px;
-  left: 0;
-  z-index: 100;
-  padding: 1rem;
-  background-color: var(--primary-color);
-  color: var(--accent-color);
-  font-weight: bold;
   transition: top 0.15s ease;
+  z-index: 100;
 }
 
-.skip-to-content-link:focus {
+.vb-skip-to-content-link:focus {
+  outline: 2px solid var(--vb-a11y-focus-outline);
   top: 0;
-  outline: 2px solid var(--accent-color);
 }
 
 /* Header - Critical for first paint */
-.site-header {
+.vb-site-header {
+  align-items: center;
+  background-color: var(--vb-color-primary-dark);
+  border-bottom: 1px solid var(--vb-color-text-secondary);
+  display: flex;
+  height: var(--vb-header-height);
   position: sticky;
   top: 0;
+  width: 100%;
   z-index: 10;
-  background-color: var(--primary-color);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  width: 100%;
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
 }
 
-.site-header__container {
-  display: flex;
+.vb-site-header__container {
   align-items: center;
+  display: flex;
   justify-content: space-between;
-  padding: 0 var(--container-padding);
-  max-width: var(--container-max-width);
   margin: 0 auto;
+  max-width: var(--vb-container-max-width);
+  padding: 0 var(--vb-container-padding);
   width: 100%;
 }
 
-.site-header__logo-link {
+.vb-site-header__logo-link {
   display: block;
 }
 
-.site-header__logo-link img {
-  max-width: 150px;
+.vb-site-header__logo-link img {
   height: auto;
+  max-width: 150px;
 }
 
 /* Announcement bar - Usually above the fold */
-.announcement-bar {
-  background-color: var(--accent-color);
+.vb-announcement-bar {
+  background-color: var(--vb-color-accent-purple);
+  height: var(--vb-announcement-height);
   padding: 0.8rem 0;
   text-align: center;
-  height: var(--announcement-height);
 }
 
-.announcement-bar__content {
-  max-width: var(--container-max-width);
+.vb-announcement-bar__content {
   margin: 0 auto;
-  padding: 0 var(--container-padding);
+  max-width: var(--vb-container-max-width);
+  padding: 0 var(--vb-container-padding);
 }
 
 /* Critical container layout */
-.container {
-  width: 100%;
-  max-width: var(--container-max-width);
+.vb-container {
   margin: 0 auto;
-  padding: 0 var(--container-padding);
+  max-width: var(--vb-container-max-width);
+  padding: 0 var(--vb-container-padding);
+  width: 100%;
 }
 
 /* LCP optimization - Hero section placeholder dimensions */
-.hero-section {
-  width: 100%;
-  min-height: calc(100vh - var(--header-height) - var(--announcement-height));
+.vb-hero-section {
+  min-height: calc(100vh - var(--vb-header-height) - var(--vb-announcement-height));
   position: relative;
+  width: 100%;
 }
 
 /* Add space for the content to prevent layout shifts */
-.content-placeholder {
-  width: 100%;
+.vb-content-placeholder {
   height: 400px;
+  width: 100%;
 }
 
 /* Content area */
-.vb-main {
-  flex: 1;
+.vb-main-content {
+  flex: 1 0 auto;
 }
 
 /* Font display optimization */
 @font-face {
+  font-display: swap;
   font-family: 'Syn Nova';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
   src: url('fonts/syn-nova.woff2') format('woff2');
 }
 
 @font-face {
+  font-display: swap;
   font-family: 'Quantum Blur';
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
   src: url('fonts/quantum-blur.woff2') format('woff2');
+}
+
+/* Basic typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--vb-font-heading);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: var(--vb-color-accent-cyan);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--vb-color-accent-blue);
+}
+
+/* Base button styling */
+.vb-button {
+  background: none;
+  border: 1px solid var(--vb-color-accent-cyan);
+  border-radius: 4px;
+  color: var(--vb-color-accent-cyan);
+  cursor: pointer;
+  display: inline-block;
+  font-family: var(--vb-font-body);
+  font-size: 1.4rem;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.vb-button:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Fonts not loaded state */
+.fonts-not-loaded {
+  /* Fallback styling for when custom fonts are still loading */
+}
+
+/* Apply when fonts have successfully loaded */
+.fonts-loaded h1,
+.fonts-loaded h2,
+.fonts-loaded h3,
+.fonts-loaded h4,
+.fonts-loaded h5,
+.fonts-loaded h6 {
+  /* Fine-tuned typography once fonts are loaded */
+  letter-spacing: -0.02em;
 }

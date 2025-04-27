@@ -1,0 +1,337 @@
+/**
+ * VB-DYNAMIC.CSS
+ * Dynamic styling components for VoidBloom - Phase IX Uplift
+ * Contains variables & rules that can be modified at runtime via JavaScript
+ *
+ * @version: 2.0.0
+ * @updated: April 2025
+ * @MutationCompatible: All Variants
+ */
+
+/* ----------------------------------------
+   DYNAMIC STATE VARIABLES
+   ---------------------------------------- */
+:root {
+  /* JavaScript-modifiable variables */
+  --vb-quantum-jitter-distance: 2px;
+  --vb-glow-intensity: 1;
+  --vb-glitch-intensity: 0.5;
+  --vb-trauma-intensity: 0.7;
+  --vb-bloom-intensity: 0.8;
+  --vb-hologram-opacity: 0.85;
+
+  /* Animation control */
+  --vb-animation-easing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --vb-animation-easing-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --vb-animation-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --vb-animation-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Component interaction states */
+  --vb-hover-opacity: 0.8;
+  --vb-active-opacity: 0.6;
+  --vb-disabled-opacity: 0.5;
+  --vb-focus-ring-width: 2px;
+  --vb-focus-ring-color: var(--vb-color-accent);
+}
+
+/* ----------------------------------------
+   INTERACTION STATE HANDLING
+   ---------------------------------------- */
+
+/* Hover states */
+[data-vb-interaction='glow']:hover {
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * 8px)
+    var(--vb-profile-primary, var(--vb-color-primary));
+}
+
+[data-vb-interaction='pulse']:hover {
+  animation: vb-pulse var(--vb-animation-speed-medium) var(--vb-animation-easing-default);
+}
+
+[data-vb-interaction='scale']:hover {
+  transform: scale(1.05);
+}
+
+[data-vb-interaction='glitch']:hover {
+  animation: vb-glitch-horizontal
+    calc(var(--vb-animation-speed-fast) * var(--vb-glitch-intensity, 0.5)) steps(1);
+}
+
+/* Trauma reactive styling */
+[data-vb-trauma='fragmentation'] {
+  --vb-trauma-intensity: 0.8;
+  --vb-glitch-intensity: 0.7;
+}
+
+[data-vb-trauma='abandonment'] {
+  --vb-trauma-intensity: 0.7;
+  --vb-glow-intensity: 0.5;
+}
+
+[data-vb-trauma='surveillance'] {
+  --vb-trauma-intensity: 0.6;
+  --vb-quantum-jitter-distance: 1.5px;
+}
+
+[data-vb-trauma='recursion'] {
+  --vb-trauma-intensity: 0.9;
+  --vb-bloom-intensity: 1.2;
+}
+
+[data-vb-trauma='displacement'] {
+  --vb-trauma-intensity: 0.75;
+  --vb-hologram-opacity: 0.7;
+}
+
+[data-vb-trauma='dissolution'] {
+  --vb-trauma-intensity: 0.85;
+  --vb-glitch-intensity: 0.4;
+}
+
+[data-vb-trauma='echo'] {
+  --vb-trauma-intensity: 0.65;
+  --vb-glow-intensity: 1.2;
+}
+
+[data-vb-trauma='void'] {
+  --vb-trauma-intensity: 0.5;
+  --vb-glow-intensity: 0.3;
+  --vb-glitch-intensity: 0.2;
+}
+
+/* Focus states - a11y improvement */
+:focus-visible {
+  outline: var(--vb-focus-ring-width) solid var(--vb-focus-ring-color);
+  outline-offset: 2px;
+}
+
+[data-vb-interaction='glow']:focus-visible {
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * 12px)
+    var(--vb-profile-accent, var(--vb-color-accent));
+}
+
+/* Active states */
+[data-vb-interaction='glow']:active {
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * 4px)
+    var(--vb-profile-primary, var(--vb-color-primary));
+  transform: scale(0.98);
+}
+
+[data-vb-interaction='scale']:active {
+  transform: scale(0.98);
+}
+
+/* Disabled states */
+[disabled],
+.vb-disabled,
+[aria-disabled='true'] {
+  opacity: var(--vb-disabled-opacity);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ----------------------------------------
+   QUANTUM INTERACTIVE COMPONENTS
+   ---------------------------------------- */
+
+/* Quantum button */
+.vb-btn {
+  align-items: center;
+  background-color: transparent;
+  border: var(--vb-border-width-normal) solid var(--vb-profile-primary, var(--vb-color-primary));
+  border-radius: var(--vb-border-radius-md);
+  color: var(--vb-profile-primary, var(--vb-color-primary));
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  font-weight: var(--vb-font-weight-medium);
+  justify-content: center;
+  line-height: 1;
+  padding: var(--vb-space-sm) var(--vb-space-md);
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--vb-animation-speed-fast) var(--vb-animation-easing-default);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.vb-btn:hover {
+  background-color: rgb(var(--vb-color-primary-rgb), 0.1);
+}
+
+.vb-btn--primary {
+  background-color: var(--vb-profile-primary, var(--vb-color-primary));
+  color: var(--vb-color-background);
+}
+
+.vb-btn--primary:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--vb-profile-primary, var(--vb-color-primary)),
+    white 10%
+  );
+}
+
+.vb-btn--secondary {
+  background-color: transparent;
+  border-color: var(--vb-profile-secondary, var(--vb-color-secondary));
+  color: var(--vb-profile-secondary, var(--vb-color-secondary));
+}
+
+.vb-btn--secondary:hover {
+  background-color: rgb(var(--vb-color-secondary-rgb), 0.1);
+}
+
+.vb-btn--accent {
+  background-color: var(--vb-profile-accent, var(--vb-color-accent));
+  border-color: var(--vb-profile-accent, var(--vb-color-accent));
+  color: var(--vb-color-background);
+}
+
+.vb-btn--accent:hover {
+  background-color: color-mix(in srgb, var(--vb-profile-accent, var(--vb-color-accent)), white 10%);
+}
+
+.vb-btn--icon {
+  background-color: transparent;
+  border: none;
+  border-radius: var(--vb-border-radius-circle);
+  color: var(--vb-profile-primary, var(--vb-color-primary));
+  padding: var(--vb-space-xs);
+}
+
+/* Quantum Input */
+.vb-input {
+  background-color: rgb(var(--vb-color-surface-rgb), 0.8);
+  border: var(--vb-border-width-thin) solid var(--vb-profile-primary, var(--vb-color-primary));
+  border-radius: var(--vb-border-radius-md);
+  color: var(--vb-profile-text, var(--vb-color-text));
+  display: block;
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  line-height: 1.5;
+  padding: var(--vb-space-sm) var(--vb-space-md);
+  transition: all var(--vb-animation-speed-fast) var(--vb-animation-easing-default);
+  width: 100%;
+}
+
+.vb-input:focus {
+  border-color: var(--vb-profile-accent, var(--vb-color-accent));
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * 8px) rgb(var(--vb-color-primary-rgb), 0.3);
+  outline: none;
+}
+
+/* Quantum Card */
+.vb-card {
+  background-color: var(--vb-color-surface);
+  border: var(--vb-border-width-thin) solid var(--vb-profile-primary, var(--vb-color-primary));
+  border-radius: var(--vb-border-radius-md);
+  padding: var(--vb-space-md);
+  transition: all var(--vb-animation-speed-medium) var(--vb-animation-easing-default);
+}
+
+[data-vb-quantum='true'].vb-card:hover {
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * 12px) rgb(var(--vb-color-primary-rgb), 0.2);
+  transform: translateY(-2px);
+}
+
+/* ----------------------------------------
+   VISUAL EFFECTS FOR TRAUMA-REACTIVE INTERFACES
+   ---------------------------------------- */
+.vb-glitch-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.vb-glitch-layer {
+  background-color: rgb(var(--vb-color-primary-rgb), 0.2);
+  height: 100%;
+  left: 0;
+  mix-blend-mode: overlay;
+  opacity: calc(30% * var(--vb-glitch-intensity, 50%));
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.vb-hologram {
+  overflow: hidden;
+  position: relative;
+}
+
+.vb-hologram::before {
+  background: repeating-linear-gradient(
+    0deg,
+    rgb(var(--vb-color-primary-rgb), 0.05),
+    rgb(var(--vb-color-primary-rgb), 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: var(--vb-hologram-opacity);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.vb-trauma-pulse {
+  position: relative;
+}
+
+.vb-trauma-pulse::after {
+  animation: vb-phase-ripple 2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  border-radius: inherit;
+  box-shadow: 0 0 0 rgb(var(--vb-color-trauma-rgb, var(--vb-color-primary-rgb)), 0.4);
+  content: '';
+  height: 100%;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+/* ----------------------------------------
+   RESPONSIVE DYNAMIC ADAPTATIONS
+   ---------------------------------------- */
+@media (width <= 768px) {
+  :root {
+    --vb-glow-intensity: 0.7; /* Reduce glow on mobile for performance */
+    --vb-quantum-jitter-distance: 1.5px;
+  }
+
+  [data-vb-interaction='glow']:hover {
+    box-shadow: none; /* Disable glow on hover for mobile */
+  }
+}
+
+/* Reduced motion and data saver preferences */
+@media (prefers-reduced-motion), (prefers-reduced-data) {
+  :root {
+    --vb-glitch-intensity: 0.2;
+    --vb-trauma-intensity: 0.3;
+    --vb-bloom-intensity: 0.4;
+  }
+
+  .vb-hologram::before {
+    opacity: 30%;
+  }
+}
+
+/* High contrast mode improvements */
+@media (forced-colors: active) {
+  .vb-btn {
+    border: 2px solid currentcolor;
+  }
+
+  .vb-input,
+  .vb-card {
+    border: 1px solid currentcolor;
+  }
+}

@@ -14,19 +14,19 @@
  */
 :root {
   /* Phase colors for commerce elements */
-  --commerce-cyber-lotus: rgba(15, 230, 255, 0.7);
-  --commerce-alien-flora: rgba(4, 255, 89, 0.7);
-  --commerce-rolling-virus: rgba(255, 187, 56, 0.7);
-  --commerce-trauma-core: rgba(215, 33, 184, 0.7);
+  --commerce-cyber-lotus: rgb(15 230 255 / 70%);
+  --commerce-alien-flora: rgb(4 255 89 / 70%);
+  --commerce-rolling-virus: rgb(255 187 56 / 70%);
+  --commerce-trauma-core: rgb(215 33 184 / 70%);
 
   /* Current commerce phase color */
   --commerce-phase-color: var(--commerce-cyber-lotus);
 
   /* Narrative archetype colors */
-  --archetype-void-seeker: rgba(215, 33, 184, 0.7);
-  --archetype-bloom-weaver: rgba(4, 255, 89, 0.7);
-  --archetype-cipher-architect: rgba(15, 230, 255, 0.7);
-  --archetype-virus-vector: rgba(255, 187, 56, 0.7);
+  --archetype-void-seeker: rgb(215 33 184 / 70%);
+  --archetype-bloom-weaver: rgb(4 255 89 / 70%);
+  --archetype-cipher-architect: rgb(15 230 255 / 70%);
+  --archetype-virus-vector: rgb(255 187 56 / 70%);
 
   /* Trauma level variables */
   --commerce-trauma-low: 0.2;
@@ -84,10 +84,10 @@ body.high-trauma,
 .product-card,
 .product-item,
 [data-product-id] {
+  overflow: hidden;
   position: relative;
   transition: transform var(--commerce-transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow var(--commerce-transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1);
-  overflow: hidden;
 }
 
 /* Phase-specific card effects */
@@ -119,8 +119,8 @@ body.high-trauma,
 .product-card:hover,
 .product-item:hover,
 [data-product-id]:hover {
+  box-shadow: 0 5px 15px rgb(var(--commerce-phase-color), 0.3);
   transform: translateY(-4px);
-  box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.3);
 }
 
 /* Trauma level effects */
@@ -128,32 +128,32 @@ body.high-trauma,
 .product-item.high-trauma,
 [data-product-id][data-trauma-weight^='0.8'],
 [data-product-id][data-trauma-weight^='0.9'] {
-  box-shadow: 0 0 0 1px var(--commerce-phase-color), 0 0 10px rgba(var(--commerce-phase-color), 0.3);
+  box-shadow: 0 0 0 1px var(--commerce-phase-color), 0 0 10px rgb(var(--commerce-phase-color), 0.3);
 }
 
 /* Narrative fragment tooltip */
 .narrative-fragment-tooltip {
-  position: absolute;
+  background: rgb(0 0 0 / 80%);
   bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.8);
   color: #fff;
   font-size: 12px;
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0;
-  transition: opacity 0.3s ease;
   font-style: italic;
+  left: 0;
+  opacity: 0%;
+  padding: 8px;
+  pointer-events: none;
+  position: absolute;
   text-align: center;
+  transition: opacity 0.3s ease;
+  width: 100%;
+  z-index: 10;
 }
 
 /* Product page effects */
 .product-template .phase-cyber-lotus .product-single__title,
 .template-product .phase-cyber-lotus h1 {
   color: var(--commerce-cyber-lotus);
-  text-shadow: 0 0 5px rgba(var(--commerce-cyber-lotus), 0.3);
+  text-shadow: 0 0 5px rgb(var(--commerce-cyber-lotus), 0.3);
 }
 
 /* Adaptive animations based on trauma level */
@@ -170,25 +170,29 @@ body.high-trauma,
 
   @keyframes trauma-high-pulse {
     0% {
-      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.3);
+      box-shadow: 0 5px 15px rgb(var(--commerce-phase-color), 0.3);
     }
+
     50% {
-      box-shadow: 0 5px 25px rgba(var(--commerce-phase-color), 0.5);
+      box-shadow: 0 5px 25px rgb(var(--commerce-phase-color), 0.5);
     }
+
     100% {
-      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.3);
+      box-shadow: 0 5px 15px rgb(var(--commerce-phase-color), 0.3);
     }
   }
 
   @keyframes trauma-medium-pulse {
     0% {
-      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.2);
+      box-shadow: 0 5px 15px rgb(var(--commerce-phase-color), 0.2);
     }
+
     50% {
-      box-shadow: 0 5px 20px rgba(var(--commerce-phase-color), 0.4);
+      box-shadow: 0 5px 20px rgb(var(--commerce-phase-color), 0.4);
     }
+
     100% {
-      box-shadow: 0 5px 15px rgba(var(--commerce-phase-color), 0.2);
+      box-shadow: 0 5px 15px rgb(var(--commerce-phase-color), 0.2);
     }
   }
 }

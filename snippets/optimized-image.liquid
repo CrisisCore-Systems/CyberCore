@@ -1,0 +1,43 @@
+{% comment %}
+  Optimized Image Component - P1-07 Implementation
+  Improves performance by adding width/height attributes and proper loading attributes
+
+  Parameters:
+  - image: The image object from Shopify
+  - class: Optional CSS class
+  - sizes: Optional sizes attribute for responsive images
+  - loading: 'eager' for above-fold images, 'lazy' for below-fold (default)
+  - alt: Alt text for the image
+  - width: Optional custom width override
+  - height: Optional custom height override
+{% endcomment %}
+
+{%- if image != blank -%}
+  {%- assign img_url = image | image_url: width: 1 -%}
+  {%- assign img_alt = alt | default: image.alt | escape -%}
+  {%- assign img_width = width | default: image.width -%}
+  {%- assign img_height = height | default: image.height -%}
+  {%- assign img_loading = loading | default: 'lazy' -%}
+  {%- assign img_class = class | default: '' -%}
+
+  <img
+    src="{{ image | image_url: width: img_width }}"
+    srcset="
+      {%- if img_width >= 400 -%}{{ image | image_url: width: 400 }} 400w,{%- endif -%}
+      {%- if img_width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+      {%- if img_width >= 800 -%}{{ image | image_url: width: 800 }} 800w,{%- endif -%}
+      {%- if img_width >= 1200 -%}{{ image | image_url: width: 1200 }} 1200w,{%- endif -%}
+      {%- if img_width >= 1600 -%}{{ image | image_url: width: 1600 }} 1600w,{%- endif -%}
+      {{ image | image_url: width: img_width }} {{ img_width }}w
+    "
+    width="{{ img_width }}"
+    height="{{ img_height }}"
+    alt="{{ img_alt }}"
+    loading="{{ img_loading }}"
+    decoding="async"
+    {% if sizes %}sizes="{{ sizes }}"{% else %}sizes="(min-width: 1200px) {{img_width}}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)"{% endif %}
+    class="{{ img_class }}"
+  >
+{%- else -%}
+  <div style="background-color: #f0f0f0; aspect-ratio: 16/9; width: 100%;" class="{{ class }} placeholder-image" role="presentation" aria-hidden="true"></div>
+{%- endif -%}

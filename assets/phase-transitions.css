@@ -11,21 +11,18 @@
 
 :root {
   /* Phase colors */
-  --cyber-lotus-color: rgba(15, 230, 255, 0.7);
+  --cyber-lotus-color: rgb(15 230 255 / 70%);
   --cyber-lotus-color-rgb: 15, 230, 255;
-  --cyber-lotus-accent: rgba(9, 114, 232, 0.8);
-
-  --alien-flora-color: rgba(4, 255, 89, 0.7);
+  --cyber-lotus-accent: rgb(9 114 232 / 80%);
+  --alien-flora-color: rgb(4 255 89 / 70%);
   --alien-flora-color-rgb: 4, 255, 89;
-  --alien-flora-accent: rgba(12, 184, 64, 0.8);
-
-  --rolling-virus-color: rgba(255, 187, 56, 0.7);
+  --alien-flora-accent: rgb(12 184 64 / 80%);
+  --rolling-virus-color: rgb(255 187 56 / 70%);
   --rolling-virus-color-rgb: 255, 187, 56;
-  --rolling-virus-accent: rgba(226, 123, 15, 0.8);
-
-  --trauma-core-color: rgba(215, 33, 184, 0.7);
+  --rolling-virus-accent: rgb(226 123 15 / 80%);
+  --trauma-core-color: rgb(215 33 184 / 70%);
   --trauma-core-color-rgb: 215, 33, 184;
-  --trauma-core-accent: rgba(147, 20, 126, 0.8);
+  --trauma-core-accent: rgb(147 20 126 / 80%);
 
   /* Current phase */
   --phase-color: var(--cyber-lotus-color);
@@ -94,55 +91,56 @@ html.trauma-10 {
 
 /* Phase transition overlay */
 .phase-transition-overlay {
+  height: 100%;
+  left: 0;
+  opacity: 0%;
+  pointer-events: none;
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 10000;
-  opacity: 0;
   transition: opacity var(--transition-duration) var(--transition-easing);
+  width: 100%;
+  z-index: 10000;
 }
 
 body.phase-transitioning .phase-transition-overlay {
-  opacity: 1;
+  opacity: 100%;
 }
 
 /* Phase-specific transition effects */
 .phase-transition-overlay.to-cyber-lotus {
+  backdrop-filter: blur(calc(var(--trauma-level) * 5px));
   background: radial-gradient(
     circle at center,
-    rgba(var(--cyber-lotus-color-rgb), 0.9) 0%,
-    rgba(var(--cyber-lotus-color-rgb), 0.3) 70%,
+    rgb(var(--cyber-lotus-color-rgb), 0.9) 0%,
+    rgb(var(--cyber-lotus-color-rgb), 0.3) 70%,
     transparent 100%
   );
-  backdrop-filter: blur(calc(var(--trauma-level) * 5px));
 }
 
 /* Rolling Virus → Trauma Core specific protection */
 .phase-transition-overlay.from-rolling-virus.to-trauma-core::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  animation: collapse-protection 2s infinite linear;
   background: repeating-linear-gradient(
     45deg,
     transparent,
     transparent 20px,
-    rgba(0, 0, 0, 0.1) 20px,
-    rgba(0, 0, 0, 0.1) 40px
+    rgb(0 0 0 / 10%) 20px,
+    rgb(0 0 0 / 10%) 40px
   );
+  content: '';
+  height: 100%;
+  left: 0;
   mix-blend-mode: overlay;
-  animation: collapse-protection 2s infinite linear;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 @keyframes collapse-protection {
   0% {
     background-position: 0 0;
   }
+
   100% {
     background-position: 40px 40px;
   }

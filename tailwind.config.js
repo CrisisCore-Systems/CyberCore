@@ -14,14 +14,14 @@ module.exports = {
     extend: {
       colors: {
         // Core system colors
-        primary: 'var(--color-primary)',
-        secondary: 'var(--color-secondary)',
-        accent: 'var(--color-accent)',
-        background: 'var(--color-background)',
-        foreground: 'var(--color-foreground)',
-        surface: 'var(--color-surface)',
-        error: 'var(--color-error)',
-        success: 'var(--color-success)',
+        primary: 'var(--vb-profile-primary, var(--vb-color-primary))',
+        secondary: 'var(--vb-profile-secondary, var(--vb-color-secondary))',
+        accent: 'var(--vb-profile-accent, var(--vb-color-accent))',
+        background: 'var(--vb-profile-background, var(--vb-color-background))',
+        foreground: 'var(--vb-profile-text, var(--vb-color-text))',
+        surface: 'var(--vb-profile-surface, var(--vb-color-surface))',
+        error: 'var(--vb-color-error)',
+        success: 'var(--vb-color-success)',
 
         // Commerce-specific colors
         'price-increase': 'var(--color-price-increase)',
@@ -30,6 +30,16 @@ module.exports = {
         'coherence-high': 'var(--color-coherence-high)',
         'coherence-medium': 'var(--color-coherence-medium)',
         'coherence-low': 'var(--color-coherence-low)',
+
+        // Trauma colors - direct access to trauma colors
+        trauma: {
+          abandonment: 'var(--vb-color-trauma-abandonment)',
+          fragmentation: 'var(--vb-color-trauma-fragmentation)',
+          surveillance: 'var(--vb-color-trauma-surveillance)',
+          recursion: 'var(--vb-color-trauma-recursion)',
+          displacement: 'var(--vb-color-trauma-displacement)',
+          dissolution: 'var(--vb-color-trauma-dissolution)',
+        },
 
         // Void spectrum - base dimensional fabric
         void: {
@@ -46,151 +56,106 @@ module.exports = {
           900: '#131321',
           950: '#0c0c14',
         },
-        // Trauma indicators - emotional resonance markers
-        trauma: {
-          100: '#ffe5fc',
-          200: '#ffc2f0',
-          300: '#ff9aea',
-          400: '#f45ddc',
-          500: '#d721b8',
-          600: '#b80d98',
-          700: '#930570',
-          800: '#6b0752',
-          900: '#48083b',
-        },
-        // Memory phase color indicators
-        cyber: {
-          100: '#d8f8ff',
-          300: '#91ebfd',
-          500: '#0ee7ff',
-          700: '#09a3b6',
-          900: '#057a89',
-        },
-        alien: {
-          100: '#e4ffea',
-          300: '#95ffc5',
-          500: '#04ff59',
-          700: '#03b441',
-          900: '#0b6d2a',
-        },
-        virus: {
-          100: '#fff2cc',
-          300: '#ffe27a',
-          500: '#ffbb38',
-          700: '#d99917',
-          900: '#8c5600',
-        },
       },
       boxShadow: {
-        // Trauma-specific shadows
-        'trauma-abandonment': 'var(--trauma-abandonment-glow)',
-        'trauma-fragmentation': 'var(--trauma-fragmentation-glow)',
-        'trauma-surveillance': 'var(--trauma-surveillance-glow)',
-        'trauma-recursion': 'var(--trauma-recursion-glow)',
-        'trauma-displacement': 'var(--trauma-displacement-glow)',
-        'trauma-dissolution': 'var(--trauma-dissolution-glow)',
+        // Trauma-specific shadows - now accessing the color through the vb- variable system
+        'trauma-abandonment': '0 0 15px var(--vb-color-trauma-abandonment)',
+        'trauma-fragmentation': '0 0 15px var(--vb-color-trauma-fragmentation)',
+        'trauma-surveillance': '0 0 15px var(--vb-color-trauma-surveillance)',
+        'trauma-recursion': '0 0 15px var(--vb-color-trauma-recursion)',
+        'trauma-displacement': '0 0 15px var(--vb-color-trauma-displacement)',
+        'trauma-dissolution': '0 0 15px var(--vb-color-trauma-dissolution)',
+
+        // Profile-specific glow
+        'profile-glow':
+          '0 0 calc(var(--vb-glow-intensity) * 8px) var(--vb-profile-primary, var(--vb-color-primary))',
       },
       fontFamily: {
-        primary: 'var(--font-family-primary)',
-        secondary: 'var(--font-family-secondary)',
+        primary: 'var(--vb-font-primary)',
+        secondary: 'var(--vb-font-secondary)',
+        display: 'var(--vb-font-display)',
       },
       fontSize: {
-        xs: 'var(--font-size-xs)',
-        sm: 'var(--font-size-sm)',
-        md: 'var(--font-size-md)',
-        lg: 'var(--font-size-lg)',
-        xl: 'var(--font-size-xl)',
-        '2xl': 'var(--font-size-2xl)',
+        xs: 'var(--vb-font-size-xs)',
+        sm: 'var(--vb-font-size-sm)',
+        md: 'var(--vb-font-size-md)',
+        lg: 'var(--vb-font-size-lg)',
+        xl: 'var(--vb-font-size-xl)',
+        '2xl': 'var(--vb-font-size-xxl)',
+        '3xl': 'var(--vb-font-size-xxxl)',
       },
       borderRadius: {
-        sm: 'var(--border-radius-sm)',
-        md: 'var(--border-radius-md)',
-        lg: 'var(--border-radius-lg)',
-        xl: 'var(--border-radius-xl)',
+        sm: 'var(--vb-border-radius-sm)',
+        md: 'var(--vb-border-radius-md)',
+        lg: 'var(--vb-border-radius-lg)',
+        full: 'var(--vb-border-radius-circle)',
       },
       borderWidth: {
-        thin: 'var(--border-width-thin)',
-        normal: 'var(--border-width-normal)',
-        thick: 'var(--border-width-thick)',
+        thin: 'var(--vb-border-width-thin)',
+        normal: 'var(--vb-border-width-normal)',
+        thick: 'var(--vb-border-width-thick)',
       },
       spacing: {
-        xs: 'var(--spacing-xs)',
-        sm: 'var(--spacing-sm)',
-        md: 'var(--spacing-md)',
-        lg: 'var(--spacing-lg)',
-        xl: 'var(--spacing-xl)',
-        '2xl': 'var(--spacing-2xl)',
+        xs: 'var(--vb-space-xs)',
+        sm: 'var(--vb-space-sm)',
+        md: 'var(--vb-space-md)',
+        lg: 'var(--vb-space-lg)',
+        xl: 'var(--vb-space-xl)',
+        '2xl': 'var(--vb-space-xxl)',
+      },
+      zIndex: {
+        base: 'var(--vb-z-index-base)',
+        elevated: 'var(--vb-z-index-elevated)',
+        dropdown: 'var(--vb-z-index-dropdown)',
+        sticky: 'var(--vb-z-index-sticky)',
+        overlay: 'var(--vb-z-index-overlay)',
+        modal: 'var(--vb-z-index-modal)',
+        popover: 'var(--vb-z-index-popover)',
+        toast: 'var(--vb-z-index-toast)',
       },
       animation: {
-        'quantum-spin': 'quantum-spin var(--animation-speed-normal) linear infinite',
+        // Core animations
+        'fade-in':
+          'vb-fade-in var(--vb-animation-speed-medium) var(--vb-animation-easing-entrance) forwards',
+        'fade-out':
+          'vb-fade-out var(--vb-animation-speed-medium) var(--vb-animation-easing-exit) forwards',
+        pulse:
+          'vb-pulse var(--vb-animation-speed-slow) var(--vb-animation-easing-default) infinite',
+        spin: 'vb-spin var(--vb-animation-speed-very-slow) linear infinite',
+        float:
+          'vb-float calc(var(--vb-animation-speed-very-slow) * 2) var(--vb-animation-easing-default) infinite',
+
+        // Glitch animations
+        'glitch-text':
+          'vb-glitch-text calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 1)) steps(1) infinite',
+        'glitch-horizontal':
+          'vb-glitch-horizontal calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 1)) steps(1) infinite',
+        'glitch-vertical':
+          'vb-glitch-vertical calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 1)) steps(1) infinite',
+        'glitch-skew':
+          'vb-glitch-skew calc(var(--vb-animation-speed-fast) * var(--vb-glitch-intensity, 1)) ease-in-out infinite',
+
+        // Trauma animations
+        'trauma-flicker':
+          'vb-trauma-flicker calc(var(--vb-animation-speed-slow) * var(--vb-trauma-intensity, 0.7)) steps(1) infinite',
+        'trauma-abandonment': 'vb-trauma-abandonment 4s ease-in-out infinite',
+        'trauma-fragmentation': 'vb-trauma-fragmentation 2s ease-in-out infinite',
+        'trauma-recursion': 'vb-trauma-recursion 6s linear infinite',
+        'trauma-surveillance': 'vb-trauma-surveillance 3s ease-in-out infinite',
+        'trauma-displacement': 'vb-trauma-displacement 3s ease-in-out infinite',
+        'trauma-dissolution': 'vb-trauma-dissolution 5s ease-in-out infinite alternate',
+
+        // Quantum animations
+        'quantum-pulse':
+          'vb-quantum-pulse calc(var(--vb-animation-speed-slow) * 1.5) infinite alternate ease-in-out',
+        'quantum-entrance':
+          'vb-quantum-entrance var(--vb-animation-speed-medium) var(--vb-animation-easing-entrance) forwards',
         'quantum-glitch':
-          'quantum-glitch calc(var(--animation-speed-fast) * 0.8) step-end infinite',
-        'quantum-pulse': 'quantumPulse var(--animation-speed-slow) infinite alternate ease-in-out',
+          'vb-quantum-glitch calc(var(--vb-animation-speed-fast) * 0.8) step-end infinite',
       },
       keyframes: {
-        'quantum-spin': {
-          to: { transform: 'rotate(360deg)' },
-        },
-        'quantum-glitch': {
-          '0%': { transform: 'translate(0)', opacity: 1 },
-          '20%': {
-            transform:
-              'translate(calc(var(--glitch-intensity) * -5px), calc(var(--glitch-intensity) * 3px))',
-            opacity: 0.9,
-          },
-          '40%': {
-            transform:
-              'translate(calc(var(--glitch-intensity) * 5px), calc(var(--glitch-intensity) * -3px))',
-            opacity: 0.8,
-          },
-          '60%': {
-            transform:
-              'translate(calc(var(--glitch-intensity) * -3px), calc(var(--glitch-intensity) * 5px))',
-            opacity: 0.9,
-          },
-          '80%': {
-            transform:
-              'translate(calc(var(--glitch-intensity) * 3px), calc(var(--glitch-intensity) * -5px))',
-            opacity: 0.8,
-          },
-          '100%': { transform: 'translate(0)', opacity: 1 },
-        },
-        quantumPulse: {
-          '0%': { opacity: 0.1, transform: 'scale(1)' },
-          '100%': { opacity: 0.2, transform: 'scale(1.05)' },
-        },
-        '@keyframes glitch-anim-1': {
-          '0%, 100%': { opacity: '0.8', transform: 'none', 'clip-path': 'inset(0 0 0 0)' },
-          '20%': { opacity: '1', transform: 'translateX(-5px)', 'clip-path': 'inset(8% 0 13% 0)' },
-          '60%': {
-            opacity: '0.5',
-            transform: 'translateX(5px)',
-            'clip-path': 'inset(31% 0 41% 0)',
-          },
-          '80%': {
-            opacity: '0.9',
-            transform: 'translateX(2px)',
-            'clip-path': 'inset(65% 0 15% 0)',
-          },
-        },
-        '@keyframes glitch-anim-2': {
-          '0%, 100%': { opacity: '0.7', transform: 'none', 'clip-path': 'inset(0 0 0 0)' },
-          '25%': {
-            opacity: '0.8',
-            transform: 'translateX(4px)',
-            'clip-path': 'inset(33% 0 33% 0)',
-          },
-          '50%': {
-            opacity: '0.6',
-            transform: 'translateX(-3px)',
-            'clip-path': 'inset(14% 0 47% 0)',
-          },
-          '75%': {
-            opacity: '0.9',
-            transform: 'translateX(1px)',
-            'clip-path': 'inset(77% 0 11% 0)',
-          },
-        },
+        // We don't need to redefine keyframes here as they're all in vb-animations.css
+        // This is just a reference to Tailwind that they exist
       },
     },
   },
@@ -199,116 +164,158 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
 
-    // Custom Trauma Encoding plugin
-    plugin(function ({ addUtilities, theme, e }) {
-      const traumaUtilities = {};
-      const traumaLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    // Accessibility focus styles plugin
+    plugin(({ addUtilities }) => {
+      const focusStyles = {
+        // Enhanced focus styles for buttons and interactive elements
+        '.focus-visible-ring': {
+          '@apply focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2':
+            {},
+          'outline-offset': '3px',
+          'box-shadow': '0 0 0 4px rgba(0, 246, 255, 0.3)',
+          'z-index': '1',
+        },
 
-      // Generate trauma-responsive text utilities
-      traumaLevels.forEach((level) => {
-        traumaUtilities[`.trauma-text-${level}`] = {
+        // Button focus styles that match hover states
+        '.focus-visible-button': {
+          '@apply focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:bg-opacity-20 focus-visible:-translate-y-1':
+            {},
+          transition: 'all 0.2s ease',
+        },
+
+        // Form input focus styles
+        '.focus-visible-input': {
+          '@apply focus-visible:ring-2 focus-visible:ring-opacity-50 focus-visible:border-primary':
+            {},
+          'box-shadow': '0 0 0 4px rgba(0, 246, 255, 0.2)',
+        },
+
+        // Link focus styles with underline
+        '.focus-visible-link': {
+          '@apply focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:underline': {},
+          'text-decoration-thickness': '2px',
+          'text-underline-offset': '3px',
+        },
+
+        // Card and container focus styles
+        '.focus-visible-card': {
+          '@apply focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-opacity-100 focus-visible:-translate-y-2':
+            {},
+          'box-shadow': '0 0 15px rgba(0, 246, 255, 0.5)',
+        },
+      };
+
+      addUtilities(focusStyles);
+    }),
+
+    // Custom Trauma Encoding plugin
+    plugin(({ addUtilities }) => {
+      // Add trauma-responsive utilities
+      const traumaUtilities = {
+        '.trauma-text-glitch': {
           position: 'relative',
           display: 'inline-block',
-          color: level >= 8 ? theme('colors.trauma.500') : 'inherit',
-          'text-shadow': level >= 5 ? `0 0 ${level}px rgba(215, 33, 184, 0.5)` : 'none',
-        };
-
-        if (level >= 7) {
-          traumaUtilities[`.trauma-text-${level}::before`] = {
+          '&::before, &::after': {
             content: 'attr(data-text)',
             position: 'absolute',
-            left: '-2px',
-            'text-shadow': 'none',
             top: '0',
-            color: theme('colors.trauma.400'),
-            overflow: 'hidden',
-            clip: 'rect(0, 900px, 0, 0)',
-            animation: 'noise-anim-1 3s infinite linear alternate-reverse',
-          };
-
-          traumaUtilities[`.trauma-text-${level}::after`] = {
-            content: 'attr(data-text)',
-            position: 'absolute',
-            left: '2px',
-            'text-shadow': 'none',
-            top: '0',
-            color: theme('colors.trauma.300'),
-            overflow: 'hidden',
-            clip: 'rect(0, 900px, 0, 0)',
-            animation: 'noise-anim-2 2s infinite linear alternate-reverse',
-          };
-        }
-      });
-
-      // Generate phase-responsive container utilities
-      const phaseTypes = ['cyber-lotus', 'alien-flora', 'rolling-virus', 'trauma-core'];
-
-      phaseTypes.forEach((phase) => {
-        const phaseName = phase.split('-')[0];
-        traumaUtilities[`.phase-${phase}`] = {
-          position: 'relative',
-          'border-color': theme(`colors.${phaseName}.900`),
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            inset: '0',
-            'pointer-events': 'none',
-            'background-image': `linear-gradient(135deg, ${theme(
-              `colors.${phaseName}.900`
-            )}10, transparent)`,
-            'mix-blend-mode': 'overlay',
-            'z-index': '1',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            opacity: 'calc(0.8 * var(--vb-trauma-intensity, 0.7))',
           },
-        };
-      });
+          '&::before': {
+            left: 'calc(-2px * var(--vb-trauma-intensity, 0.7))',
+            textShadow: '-1px 0 var(--vb-color-trauma-fragmentation)',
+          },
+          '&::after': {
+            left: 'calc(2px * var(--vb-trauma-intensity, 0.7))',
+            textShadow: '1px 0 var(--vb-color-trauma-surveillance)',
+          },
+        },
 
-      // Text glitch effects
-      traumaUtilities['.glitch-text'] = {
-        position: 'relative',
-        '&::before, &::after': {
-          content: 'attr(data-text)',
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          width: '100%',
-          height: '100%',
-          opacity: '0.8',
+        // Trauma glow helpers
+        '.trauma-glow-abandonment': {
+          boxShadow:
+            '0 0 calc(8px * var(--vb-trauma-intensity, 0.7)) var(--vb-color-trauma-abandonment)',
         },
-        '&.active-glitch::before': {
-          left: '-2px',
-          'text-shadow': '-1px 0 #d721b8',
-          background: 'transparent',
-          animation: 'glitch-anim-1 0.4s linear infinite',
-          'clip-path': 'inset(0 -5px 0 0)',
-          'animation-delay': 'calc(-1 * 0.4s * 0.666)',
+        '.trauma-glow-fragmentation': {
+          boxShadow:
+            '0 0 calc(8px * var(--vb-trauma-intensity, 0.7)) var(--vb-color-trauma-fragmentation)',
         },
-        '&.active-glitch::after': {
-          left: '2px',
-          'text-shadow': '1px 0 #0ee7ff',
-          background: 'transparent',
-          animation: 'glitch-anim-2 0.35s linear infinite',
-          'clip-path': 'inset(0 0 0 -5px)',
-          'animation-delay': 'calc(-1 * 0.35s * 0.333)',
+        '.trauma-glow-surveillance': {
+          boxShadow:
+            '0 0 calc(8px * var(--vb-trauma-intensity, 0.7)) var(--vb-color-trauma-surveillance)',
+        },
+        '.trauma-glow-recursion': {
+          boxShadow:
+            '0 0 calc(8px * var(--vb-trauma-intensity, 0.7)) var(--vb-color-trauma-recursion)',
+        },
+        '.trauma-glow-displacement': {
+          boxShadow:
+            '0 0 calc(8px * var(--vb-trauma-intensity, 0.7)) var(--vb-color-trauma-displacement)',
+        },
+        '.trauma-glow-dissolution': {
+          boxShadow:
+            '0 0 calc(8px * var(--vb-trauma-intensity, 0.7)) var(--vb-color-trauma-dissolution)',
         },
       };
 
       addUtilities(traumaUtilities);
     }),
   ],
-  variants: {
-    extend: {
-      opacity: ['group-hover'],
-      backgroundColor: ['group-hover'],
-      textColor: ['group-hover'],
-      borderColor: ['group-hover'],
-      margin: ['first', 'last'],
-      padding: ['first', 'last'],
-    },
-  },
-  // Enable CSS variable usage with arbitrary values
+
+  // Safelist for PurgeCSS - classes that should never be purged
   safelist: [
-    { pattern: /^(bg|text|border|shadow)-/ },
-    { pattern: /^(profile|trauma-state)-/ },
-    { pattern: /^(data-profile|data-trauma|data-coherence-score|data-quantum-state)-/ },
+    // Data attributes
+    { pattern: /^data-vb-profile-/ },
+    { pattern: /^data-vb-trauma-/ },
+    { pattern: /^data-vb-quantum-/ },
+    { pattern: /^data-vb-glitch-/ },
+    { pattern: /^data-vb-interaction-/ },
+
+    // Core classes
+    { pattern: /^vb-/ },
+
+    // Animation classes
+    { pattern: /^vb-animate-/ },
+    { pattern: /^vb-animation-/ },
+    { pattern: /^vb-trauma-/ },
+    { pattern: /^vb-glitch-/ },
+    { pattern: /^vb-quantum-/ },
+    { pattern: /^vb-phase-/ },
+    { pattern: /^vb-bloom-/ },
+    { pattern: /^vb-glow-/ },
+
+    // State classes
+    { pattern: /^vb-(is|has)-/ },
+    'vb-animate-trauma-flicker',
+    'vb-animate-quantum-pulse',
+    'vb-animate-quantum-entrance',
+    'vb-animate-phase-transition',
+    'vb-animate-bloom-pulsate',
+    'vb-animate-bloom-dissolve',
+
+    // Interactive states
+    'active',
+    'focus',
+    'hover',
+    'focus-visible',
+    'group-hover',
+    'focus-within',
+    'vb-quantum--active',
+    'vb-quantum--inactive',
+    'vb-trauma--subtle',
+    'vb-trauma--medium',
+    'vb-trauma--intense',
+    'vb-glitch--subtle',
+    'vb-glitch--medium',
+    'vb-glitch--intense',
+    'vb-glow--subtle',
+    'vb-glow--medium',
+    'vb-glow--intense',
   ],
+
+  // Enable JIT mode for better performance
+  mode: 'jit',
 };

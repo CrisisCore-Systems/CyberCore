@@ -1,7 +1,7 @@
 /**
  * LAZY-LOAD.JS
  * Performance optimizations for non-critical assets
- * @Version: 1.0.0
+ * @Version: 1.1.0
  * @Optimized: April 2025
  */
 
@@ -40,6 +40,35 @@ function loadImage(imageElement) {
   const srcset = imageElement.dataset.srcset;
   const sizes = imageElement.dataset.sizes;
 
+  // Add loading="lazy" if not already set
+  if (!imageElement.hasAttribute('loading')) {
+    // Skip adding lazy loading if the image should be eagerly loaded
+    const isAboveFold = isAboveFoldImage(imageElement);
+    imageElement.setAttribute('loading', isAboveFold ? 'eager' : 'lazy');
+
+    // Add fetchpriority for critical images
+    if (isAboveFold && isCriticalImage(imageElement)) {
+      imageElement.setAttribute('fetchpriority', 'high');
+    }
+  }
+
+  // Add width and height if missing (to prevent CLS)
+  if (!imageElement.hasAttribute('width') || !imageElement.hasAttribute('height')) {
+    // For already loaded images
+    if (imageElement.complete && imageElement.naturalWidth > 0) {
+      setImageDimensions(imageElement);
+    } else {
+      // For images still loading
+      imageElement.addEventListener(
+        'load',
+        () => {
+          setImageDimensions(imageElement);
+        },
+        { once: true }
+      );
+    }
+  }
+
   if (src) imageElement.src = src;
   if (srcset) imageElement.srcset = srcset;
   if (sizes) imageElement.sizes = sizes;
@@ -55,6 +84,39 @@ function loadImage(imageElement) {
     };
     highResImage.src = imageElement.dataset.highRes;
   }
+}
+
+// Helper to set image dimensions
+function setImageDimensions(img) {
+  if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+    if (!img.hasAttribute('width')) {
+      img.setAttribute('width', img.naturalWidth);
+    }
+
+    if (!img.hasAttribute('height')) {
+      img.setAttribute('height', img.naturalHeight);
+    }
+  }
+}
+
+// Helper to check if image is above the fold
+function isAboveFoldImage(img) {
+  return (
+    img.closest('.hero-section') ||
+    img.closest('.featured-product__image') ||
+    img.closest('.site-header__logo') ||
+    img.dataset.priority === 'high' ||
+    img.hasAttribute('data-priority')
+  );
+}
+
+// Helper to check if image is critical (LCP candidate)
+function isCriticalImage(img) {
+  return (
+    img.closest('.hero-section') ||
+    img.closest('.featured-product__image') ||
+    img.dataset.priority === 'high'
+  );
 }
 
 // Helper function to load background images
@@ -107,7 +169,13 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     // Lazy load images
     document.querySelectorAll('img[data-src]').forEach((img) => {
-      lazyLoadObserver.observe(img);
+      // Only observe non-eager images
+      if (!img.hasAttribute('loading') || img.getAttribute('loading') !== 'eager') {
+        lazyLoadObserver.observe(img);
+      } else if (img.hasAttribute('loading') && img.getAttribute('loading') === 'eager') {
+        // For eager images, load immediately
+        loadImage(img);
+      }
     });
 
     // Lazy load background images

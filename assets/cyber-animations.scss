@@ -17,16 +17,18 @@ $ease-glitch: steps(3, end);
 // Reusable animation keyframes
 @keyframes pulse {
   0% {
+    opacity: 80%;
     transform: scale(1);
-    opacity: 0.8;
   }
+
   50% {
+    opacity: 100%;
     transform: scale(1.05);
-    opacity: 1;
   }
+
   100% {
+    opacity: 80%;
     transform: scale(1);
-    opacity: 0.8;
   }
 }
 
@@ -35,22 +37,27 @@ $ease-glitch: steps(3, end);
     clip-path: inset(40% 0 61% 0);
     transform: skew(0.15deg);
   }
+
   20% {
     clip-path: inset(75% 0 23% 0);
     transform: skew(-0.25deg);
   }
+
   40% {
     clip-path: inset(9% 0 61% 0);
     transform: skew(0.75deg);
   }
+
   60% {
     clip-path: inset(33% 0 47% 0);
     transform: skew(-0.55deg);
   }
+
   80% {
     clip-path: inset(66% 0 43% 0);
     transform: skew(0.35deg);
   }
+
   100% {
     clip-path: inset(40% 0 61% 0);
     transform: skew(0.15deg);
@@ -59,40 +66,51 @@ $ease-glitch: steps(3, end);
 
 @keyframes neon-flicker {
   0% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   7% {
-    opacity: 0.8;
+    opacity: 80%;
   }
+
   8% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   9% {
-    opacity: 0.8;
+    opacity: 80%;
   }
+
   10% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   25% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   26% {
-    opacity: 0.4;
+    opacity: 40%;
   }
+
   27% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   90% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   91% {
-    opacity: 0.6;
+    opacity: 60%;
   }
+
   92% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   100% {
-    opacity: 1;
+    opacity: 100%;
   }
 }
 
@@ -101,6 +119,7 @@ $ease-glitch: steps(3, end);
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 0% 100%;
   }
@@ -110,6 +129,7 @@ $ease-glitch: steps(3, end);
   0% {
     transform: translateY(-100%);
   }
+
   100% {
     transform: translateY(100%);
   }
@@ -120,30 +140,39 @@ $ease-glitch: steps(3, end);
   100% {
     background-position: 0 0;
   }
+
   10% {
     background-position: -5% -10%;
   }
+
   20% {
     background-position: -15% 5%;
   }
+
   30% {
     background-position: 7% -25%;
   }
+
   40% {
     background-position: 20% 25%;
   }
+
   50% {
     background-position: -25% 10%;
   }
+
   60% {
     background-position: 15% 5%;
   }
+
   70% {
     background-position: 0% 15%;
   }
+
   80% {
     background-position: 25% 35%;
   }
+
   90% {
     background-position: -10% 10%;
   }
@@ -153,6 +182,7 @@ $ease-glitch: steps(3, end);
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -161,12 +191,13 @@ $ease-glitch: steps(3, end);
 @keyframes quantum-pulse {
   0%,
   100% {
+    box-shadow: 0 0 0 rgb(153 0 255 / 70%);
     transform: scale(1);
-    box-shadow: 0 0 0px rgba(153, 0, 255, 0.7);
   }
+
   50% {
+    box-shadow: 0 0 15px rgb(153 0 255 / 90%);
     transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(153, 0, 255, 0.9);
   }
 }
 
@@ -189,8 +220,8 @@ $ease-glitch: steps(3, end);
 }
 
 @mixin animate-data-stream($duration: 15s, $timing: linear, $iteration: infinite) {
-  background-size: 100% 50px;
   animation: data-stream $duration $timing $iteration;
+  background-size: 100% 50px;
 }
 
 @mixin animate-scan-line(

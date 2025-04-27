@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://monorail-edge.shopifysvc.com" crossorigin>
     <link rel="preconnect" href="https://v.shopify.com" crossorigin>
     <link rel="preconnect" href="https://analytics.shopify.com" crossorigin>
-    
+
     <!-- DNS-prefetch as fallback for browsers that don't support preconnect -->
     <link rel="dns-prefetch" href="https://fonts.shopify.com">
     <link rel="dns-prefetch" href="https://cdn.shopify.com">
@@ -21,15 +21,22 @@
     <!-- Preload critical fonts - High priority resources needed right away -->
     <link rel="preload" href="{{ settings.type_body_font | font_url }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ settings.type_header_font | font_url }}" as="font" type="font/woff2" crossorigin>
-    
+
     <!-- Preload critical CSS identified in P1-01 -->
     <link rel="preload" href="{{ 'critical.css' | asset_url }}" as="style">
     <link rel="preload" href="{{ 'reset.css' | asset_url }}" as="style">
     <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style">
-    
+
+    <!-- External CSS Resources (with SRI integrity validation) -->
+    {% if settings.use_external_css_resources %}
+      {% for css_resource in settings.external_css %}
+        {% render 'load-external-css' with css_name: css_resource, preload: true %}
+      {% endfor %}
+    {% endif %}
+
     <!-- Preload critical above-the-fold images -->
     <link rel="preload" href="{{ 'logo.png' | asset_url }}" as="image" type="image/png">
-    
+
     <!-- Preload critical JS needed for initial interactions -->
     <link rel="preload" href="{{ 'performance-manager.js' | asset_url }}" as="script">
     <link rel="preload" href="{{ 'cart-system.js' | asset_url }}" as="script">
@@ -119,6 +126,7 @@
     <!-- Critical scripts loaded with defer -->
     <script src="{{ 'performance-manager.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
     <script src="{{ 'cart-system.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+    <script src="{{ 'image-loading-attributes.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
 
     <!-- Non-critical scripts loaded with defer -->
     <script src="{{ 'quantum-webgl.js' | asset_url }}{{ asset_version }}" defer="defer"></script>

@@ -9,66 +9,66 @@
 /* CyberLotus-specific base variables */
 :root {
   /* CyberLotus-specific color palette */
-  --cyberlotus-primary: #00ffff;
-  --cyberlotus-secondary: #0088ff;
-  --cyberlotus-accent: #80ffff;
-  --cyberlotus-background: #001a33;
-  --cyberlotus-foreground: #f0f8ff;
-  --cyberlotus-surface: rgba(0, 26, 51, 0.9);
+  --vb-cyberlotus-primary: #0ff;
+  --vb-cyberlotus-secondary: #08f;
+  --vb-cyberlotus-accent: #80ffff;
+  --vb-cyberlotus-background: #001a33;
+  --vb-cyberlotus-foreground: #f0f8ff;
+  --vb-cyberlotus-surface: rgb(0 26 51 / 90%);
 
   /* Trauma Type Colors - CyberLotus variation */
-  --trauma-abandonment-color-lotus: rgba(0, 157, 255, 0.7);
-  --trauma-fragmentation-color-lotus: rgba(0, 255, 234, 0.7);
-  --trauma-recursion-color-lotus: rgba(64, 200, 255, 0.7);
-  --trauma-surveillance-color-lotus: rgba(0, 234, 255, 0.7);
-  --trauma-displacement-color-lotus: rgba(0, 179, 255, 0.7);
-  --trauma-dissolution-color-lotus: rgba(0, 128, 214, 0.7);
+  --vb-trauma-abandonment-color-lotus: rgb(0 157 255 / 70%);
+  --vb-trauma-fragmentation-color-lotus: rgb(0 255 234 / 70%);
+  --vb-trauma-recursion-color-lotus: rgb(64 200 255 / 70%);
+  --vb-trauma-surveillance-color-lotus: rgb(0 234 255 / 70%);
+  --vb-trauma-displacement-color-lotus: rgb(0 179 255 / 70%);
+  --vb-trauma-dissolution-color-lotus: rgb(0 128 214 / 70%);
 
   /* CyberLotus Theme Settings */
-  --cyberlotus-bloom-intensity: 0.7;
-  --cyberlotus-bloom-spread: 20px;
-  --cyberlotus-bloom-radius: 10px;
-  --cyberlotus-animation-speed: 1.2s;
-  --cyberlotus-recursion-depth: 5;
-  --cyberlotus-hologram-layer: rgba(0, 255, 255, 0.15);
+  --vb-cyberlotus-bloom-intensity: 0.7;
+  --vb-cyberlotus-bloom-spread: 20px;
+  --vb-cyberlotus-bloom-radius: 10px;
+  --vb-cyberlotus-animation-speed: 1.2s;
+  --vb-cyberlotus-recursion-depth: 5;
+  --vb-cyberlotus-hologram-layer: rgb(0 255 255 / 15%);
 }
 
 /* CyberLotus Profile Class */
 .cyberlotus-theme {
   /* Apply Cyberlotus color variables */
-  --color-primary: var(--cyberlotus-primary);
-  --color-secondary: var(--cyberlotus-secondary);
-  --color-accent: var(--cyberlotus-accent);
-  --color-background: var(--cyberlotus-background);
-  --color-foreground: var(--cyberlotus-foreground);
-  --color-surface: var(--cyberlotus-surface);
+  --vb-color-primary: var(--vb-cyberlotus-primary);
+  --vb-color-secondary: var(--vb-cyberlotus-secondary);
+  --vb-color-accent: var(--vb-cyberlotus-accent);
+  --vb-color-background: var(--vb-cyberlotus-background);
+  --vb-color-foreground: var(--vb-cyberlotus-foreground);
+  --vb-color-surface: var(--vb-cyberlotus-surface);
 
   /* Override trauma colors with CyberLotus variants */
-  --trauma-abandonment-color: var(--trauma-abandonment-color-lotus);
-  --trauma-fragmentation-color: var(--trauma-fragmentation-color-lotus);
-  --trauma-recursion-color: var(--trauma-recursion-color-lotus);
-  --trauma-surveillance-color: var(--trauma-surveillance-color-lotus);
-  --trauma-displacement-color: var(--trauma-displacement-color-lotus);
-  --trauma-dissolution-color: var(--trauma-dissolution-color-lotus);
+  --vb-trauma-abandonment-color: var(--vb-trauma-abandonment-color-lotus);
+  --vb-trauma-fragmentation-color: var(--vb-trauma-fragmentation-color-lotus);
+  --vb-trauma-recursion-color: var(--vb-trauma-recursion-color-lotus);
+  --vb-trauma-surveillance-color: var(--vb-trauma-surveillance-color-lotus);
+  --vb-trauma-displacement-color: var(--vb-trauma-displacement-color-lotus);
+  --vb-trauma-dissolution-color: var(--vb-trauma-dissolution-color-lotus);
 
   /* Effect intensities */
-  --bloom-intensity: var(--cyberlotus-bloom-intensity);
-  --bloom-spread: var(--cyberlotus-bloom-spread);
-  --bloom-radius: var(--cyberlotus-bloom-radius);
-  --animation-speed: var(--cyberlotus-animation-speed);
-  --recursion-depth: var(--cyberlotus-recursion-depth);
+  --vb-bloom-intensity: var(--vb-cyberlotus-bloom-intensity);
+  --vb-bloom-spread: var(--vb-cyberlotus-bloom-spread);
+  --vb-bloom-radius: var(--vb-cyberlotus-bloom-radius);
+  --vb-animation-speed: var(--vb-cyberlotus-animation-speed);
+  --vb-recursion-depth: var(--vb-cyberlotus-recursion-depth);
 
   /* Override phase styles */
-  --phase-accent: var(--cyberlotus-accent);
-  --phase-gradient: linear-gradient(135deg, #00ffff 0%, #0088ff 100%);
+  --vb-phase-accent: var(--vb-cyberlotus-accent);
+  --vb-phase-gradient: linear-gradient(135deg, #0ff 0%, #08f 100%);
 }
 
 /* CyberLotus Memory Node */
 .cyberlotus-memory-node {
+  overflow: hidden;
+  perspective: 1000px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  perspective: 1000px;
-  overflow: hidden;
 }
 
 .cyberlotus-memory-node:hover {
@@ -78,69 +78,71 @@
 
 /* CyberLotus-specific Card Styles */
 .cyberlotus-card {
-  background-color: var(--cyberlotus-surface);
+  background-color: var(--vb-cyberlotus-surface);
+  border: 1px solid rgb(0 255 255 / 30%);
   border-radius: 8px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgb(0 128 255 / 20%);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 128, 255, 0.2);
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .cyberlotus-card:hover {
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3), 0 0 15px rgba(0, 255, 255, 0.5);
-  border-color: rgba(0, 255, 255, 0.6);
+  border-color: rgb(0 255 255 / 60%);
+  box-shadow: 0 10px 30px rgb(0 255 255 / 30%), 0 0 15px rgb(0 255 255 / 50%);
 }
 
 .cyberlotus-card__inner {
-  position: relative;
   overflow: hidden;
   padding: 1.5rem;
+  position: relative;
 }
 
 .cyberlotus-card::before {
+  background: linear-gradient(135deg, rgb(0 128 255 / 10%), rgb(0 255 255 / 10%));
   content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0%;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(0, 128, 255, 0.1), rgba(0, 255, 255, 0.1));
-  opacity: 0;
   transition: opacity 0.5s ease;
+  width: 100%;
   z-index: 1;
 }
 
 .cyberlotus-card:hover::before {
-  opacity: 1;
+  opacity: 100%;
 }
 
 /* CyberLotus Header */
 .cyberlotus-header {
-  display: flex;
   align-items: center;
+  border-bottom: 1px solid rgb(0 255 255 / 20%);
+  display: flex;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
   padding-bottom: 1rem;
 }
 
+/* Enhanced title contrast */
 .cyberlotus-title {
+  color: var(--vb-a11y-accent-cyan);
   font-size: 1.25rem;
-  margin: 0;
-  color: var(--cyberlotus-primary);
   font-weight: 600;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  margin: 0;
+  text-shadow: 0 0 5px rgb(0 0 0 / 50%);
 }
 
+/* Improve badge contrast */
 .cyberlotus-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: rgba(0, 26, 51, 0.8);
-  border: 1px solid var(--cyberlotus-accent);
+  background-color: rgb(0 26 51 / 90%);
+  border: 1px solid var(--vb-a11y-accent-cyan);
   border-radius: 4px;
+  color: var(--vb-a11y-accent-cyan);
+  display: inline-block;
   font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--cyberlotus-primary);
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
 }
 
 /* CyberLotus Content */
@@ -148,27 +150,29 @@
   margin-bottom: 1.5rem;
 }
 
+/* Fix contrast in metrics labels and descriptions */
 .cyberlotus-description {
+  color: var(--vb-a11y-text-light-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
-  color: rgba(240, 248, 255, 0.9);
   margin-bottom: 1.5rem;
+  opacity: 100%;
 }
 
 /* CyberLotus Image Container */
 .cyberlotus-image {
-  position: relative;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
   aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  position: relative;
 }
 
 .cyberlotus-image img {
-  width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
+  width: 100%;
 }
 
 .cyberlotus-image:hover img {
@@ -184,38 +188,40 @@
 }
 
 .cyberlotus-metric {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 0.75rem;
 }
 
+/* Fix contrast in metrics labels */
 .cyberlotus-metric-label {
-  font-size: 0.8rem;
-  color: rgba(240, 248, 255, 0.7);
-  width: 100px;
+  color: var(--vb-a11y-text-light-secondary);
   flex-shrink: 0;
+  font-size: 0.8rem;
+  opacity: 100%;
+  width: 100px;
 }
 
 .cyberlotus-metric-bar {
+  background-color: rgb(0 26 51 / 50%);
+  border-radius: 2px;
   flex-grow: 1;
   height: 4px;
-  background-color: rgba(0, 26, 51, 0.5);
-  border-radius: 2px;
   overflow: hidden;
 }
 
 .cyberlotus-metric-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--cyberlotus-secondary), var(--cyberlotus-primary));
+  background: linear-gradient(90deg, var(--vb-cyberlotus-secondary), var(--vb-cyberlotus-primary));
   border-radius: 2px;
+  height: 100%;
   transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .cyberlotus-metric-value {
+  color: var(--vb-cyberlotus-primary);
   font-size: 0.8rem;
-  color: var(--cyberlotus-primary);
-  text-align: right;
   min-width: 30px;
+  text-align: right;
 }
 
 /* CyberLotus Footer */
@@ -225,87 +231,91 @@
   margin-top: 1rem;
 }
 
+/* Enhance button contrast */
 .cyberlotus-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  background-color: rgba(0, 26, 51, 0.7);
-  border: 1px solid var(--cyberlotus-primary);
+  background-color: rgb(0 0 0 / 70%);
+  border: 1px solid var(--vb-cyberlotus-primary);
   border-radius: 4px;
-  color: var(--cyberlotus-primary);
-  font-size: 0.9rem;
-  text-align: center;
+  color: var(--vb-cyberlotus-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  font-family: inherit;
   display: inline-block;
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .cyberlotus-button:hover {
-  background-color: rgba(0, 255, 255, 0.2);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  background-color: rgb(0 255 255 / 20%);
+  box-shadow: 0 0 15px rgb(0 255 255 / 40%);
+  color: var(--vb-a11y-text-light);
 }
 
 .cyberlotus-button--primary {
-  background-color: rgba(0, 128, 255, 0.3);
+  background-color: rgb(0 128 255 / 50%);
 }
 
 .cyberlotus-button--primary:hover {
-  background-color: rgba(0, 128, 255, 0.5);
+  background-color: rgb(0 128 255 / 70%);
 }
 
 /* CyberLotus Hologram Layer */
 .cyberlotus-hologram-layer {
+  background: linear-gradient(135deg, var(--vb-cyberlotus-hologram-layer), transparent 70%);
+  height: 100%;
+  left: 0;
+  mix-blend-mode: screen;
+  opacity: 0%;
+  pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--cyberlotus-hologram-layer), transparent 70%);
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0;
   transition: opacity 0.5s ease;
+  width: 100%;
 }
 
 .cyberlotus-card:hover .cyberlotus-hologram-layer {
-  opacity: 1;
+  opacity: 100%;
 }
 
 /* CyberLotus Recursion Effect */
 .cyberlotus-recursion-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
+  left: 0;
   overflow: hidden;
   pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
   z-index: -1;
 }
 
 .cyberlotus-recursion-echo {
+  border: 1px solid rgb(0 255 255 / calc(0.6 / var(--vb-echo-index, 1)));
+  border-radius: 8px;
+  height: 100%;
+  left: 0;
+  opacity: calc(70% / var(--vb-echo-index, 100%));
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 1px solid rgba(0, 255, 255, calc(0.6 / var(--echo-index, 1)));
-  border-radius: 8px;
-  transform: scale(calc(1 + (0.05 * var(--echo-index, 1))))
-    translateY(calc(var(--echo-index, 1) * 4px));
-  opacity: calc(0.7 / var(--echo-index, 1));
+  transform: scale(calc(1 + (0.05 * var(--vb-echo-index, 1))))
+    translateY(calc(var(--vb-echo-index, 1) * 4px));
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 /* Animations */
 @keyframes cyberlotus-pulse {
   0%,
   100% {
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgb(0 255 255 / 50%);
   }
+
   50% {
-    box-shadow: 0 0 25px rgba(0, 128, 255, 0.7);
+    box-shadow: 0 0 25px rgb(0 128 255 / 70%);
   }
 }
 
@@ -314,13 +324,14 @@
   100% {
     background-position: 0% 0%;
   }
+
   50% {
     background-position: 100% 100%;
   }
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .cyberlotus-card__inner {
     padding: 1rem;
   }
@@ -338,7 +349,7 @@
   }
 }
 
-@media (min-width: 992px) {
+@media (width >= 992px) {
   .cyberlotus-card:hover {
     transform: translateY(-10px);
   }
@@ -350,37 +361,37 @@
 
 /* Integration with core trauma system */
 .trauma-card.cyberlotus-enhanced {
-  border-color: var(--cyberlotus-primary);
+  border-color: var(--vb-cyberlotus-primary);
 }
 
 .trauma-card.cyberlotus-enhanced::before {
-  background-color: var(--cyberlotus-background);
+  background-color: var(--vb-cyberlotus-background);
 }
 
 .trauma-card.cyberlotus-enhanced .trauma-card__header {
-  border-bottom-color: var(--cyberlotus-primary);
+  border-bottom-color: var(--vb-cyberlotus-primary);
 }
 
 .trauma-card.cyberlotus-enhanced .trauma-card__title {
-  color: var(--cyberlotus-primary);
+  color: var(--vb-cyberlotus-primary);
 }
 
 /* Integrate with main quantum system */
 .quantum-btn.cyberlotus-variant {
-  border-color: var(--cyberlotus-primary);
-  color: var(--cyberlotus-primary);
+  border-color: var(--vb-cyberlotus-primary);
+  color: var(--vb-cyberlotus-primary);
 }
 
 .quantum-btn.cyberlotus-variant:hover {
-  box-shadow: 0 0 var(--cyberlotus-bloom-spread) var(--cyberlotus-primary);
+  box-shadow: 0 0 var(--vb-cyberlotus-bloom-spread) var(--vb-cyberlotus-primary);
 }
 
 .quantum-card.cyberlotus-variant {
-  border-color: var(--cyberlotus-primary);
+  border-color: var(--vb-cyberlotus-primary);
 }
 
 .quantum-card.cyberlotus-variant:hover {
-  box-shadow: 0 0 var(--cyberlotus-bloom-spread) rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 var(--vb-cyberlotus-bloom-spread) rgb(0 255 255 / 40%);
 }
 
 /* Trauma visualization overrides for CyberLotus */
@@ -389,6 +400,6 @@
 }
 
 .cyberlotus-theme .trauma-surveillance::before {
-  background-size: 300% 300%;
   animation: cyberlotus-scan 3s linear infinite;
+  background-size: 300% 300%;
 }

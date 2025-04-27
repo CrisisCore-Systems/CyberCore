@@ -229,5 +229,6 @@
   "telemetry.telemetryLevel": "off",
   "diffEditor.ignoreTrimWhitespace": false,
   "terminal.integrated.defaultProfile.windows": "PowerShell",
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "cmake.sourceDirectory": "C:/Users/user/Documents/Projects/CyberCore/node_modules/nan"
 }

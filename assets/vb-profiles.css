@@ -1,0 +1,309 @@
+/**
+ * VB-PROFILES.CSS
+ * Theme profiles for VoidBloom - Phase IX Uplift
+ *
+ * @version: 2.0.0
+ * @updated: April 2025
+ * @MutationCompatible: All Variants
+ *
+ * THEME PROFILES: Dynamic theming system for customizing the appearance
+ * Profiles are applied via data attributes (data-vb-profile="cyberlotus")
+ * This replaces the previous approach of separate CSS files for each profile
+ */
+
+/* ----------------------------------------------
+   DEFAULT PROFILE VALUES - Fallback if no profile is set
+   ---------------------------------------------- */
+:root {
+  /* Profile-specific variables with default values */
+  --vb-profile-primary: var(--vb-color-primary);
+  --vb-profile-secondary: var(--vb-color-secondary);
+  --vb-profile-tertiary: var(--vb-color-tertiary);
+  --vb-profile-accent: var(--vb-color-accent);
+  --vb-profile-background: var(--vb-color-background);
+  --vb-profile-surface: var(--vb-color-surface);
+  --vb-profile-text: var(--vb-color-text);
+
+  /* RGB versions for opacity operations */
+  --vb-profile-primary-rgb: var(--vb-color-primary-rgb);
+  --vb-profile-secondary-rgb: var(--vb-color-secondary-rgb);
+  --vb-profile-accent-rgb: var(--vb-color-accent-rgb);
+
+  /* Profile-specific intensity values */
+  --vb-profile-glow-intensity: 1;
+  --vb-profile-glitch-intensity: 0.5;
+  --vb-profile-trauma-intensity: 0.7;
+  --vb-profile-bloom-intensity: 0.8;
+}
+
+/* ----------------------------------------------
+   CYBERLOTUS PROFILE - Signature cyberpunk aesthetic
+   ---------------------------------------------- */
+[data-vb-profile='cyberlotus'],
+.vb-profile-cyberlotus {
+  /* Colors */
+  --vb-profile-primary: #0ff; /* Cyan */
+  --vb-profile-primary-rgb: 0, 255, 255;
+  --vb-profile-secondary: #f0f; /* Magenta */
+  --vb-profile-secondary-rgb: 255, 0, 255;
+  --vb-profile-tertiary: #08f; /* Blue */
+  --vb-profile-accent: #fc0; /* Gold */
+  --vb-profile-accent-rgb: 255, 204, 0;
+  --vb-profile-background: #080818; /* Dark blue-black */
+  --vb-profile-surface: #121225; /* Dark blue-gray */
+  --vb-profile-text: rgb(255 255 255 / 90%);
+
+  /* Effect intensities */
+  --vb-profile-glow-intensity: 1.2;
+  --vb-profile-glitch-intensity: 0.6;
+  --vb-profile-trauma-intensity: 0.7;
+  --vb-profile-bloom-intensity: 0.9;
+
+  /* Trauma colors */
+  --vb-color-trauma-abandonment: rgb(255 0 255 / 50%);
+  --vb-color-trauma-fragmentation: rgb(0 255 255 / 50%);
+  --vb-color-trauma-surveillance: rgb(255 204 0 / 50%);
+}
+
+/* ----------------------------------------------
+   ALIENFLORA PROFILE - Organic alien bioluminescence
+   ---------------------------------------------- */
+[data-vb-profile='alienflora'],
+.vb-profile-alienflora {
+  /* Colors */
+  --vb-profile-primary: #0f9; /* Neon green */
+  --vb-profile-primary-rgb: 0, 255, 153;
+  --vb-profile-secondary: #70f; /* Purple */
+  --vb-profile-secondary-rgb: 119, 0, 255;
+  --vb-profile-tertiary: #f37; /* Pink */
+  --vb-profile-accent: #cf0; /* Lime */
+  --vb-profile-accent-rgb: 204, 255, 0;
+  --vb-profile-background: #071a07; /* Very dark green */
+  --vb-profile-surface: #0f2a10; /* Dark green */
+  --vb-profile-text: rgb(230 255 230 / 90%);
+
+  /* Effect intensities */
+  --vb-profile-glow-intensity: 1.4;
+  --vb-profile-glitch-intensity: 0.4;
+  --vb-profile-trauma-intensity: 0.8;
+  --vb-profile-bloom-intensity: 1.2;
+
+  /* Trauma colors */
+  --vb-color-trauma-abandonment: rgb(119 0 255 / 50%);
+  --vb-color-trauma-fragmentation: rgb(0 255 153 / 50%);
+  --vb-color-trauma-surveillance: rgb(255 51 119 / 50%);
+}
+
+/* ----------------------------------------------
+   VOIDBLOOM PROFILE - Dark ethereal void aesthetic
+   ---------------------------------------------- */
+[data-vb-profile='voidbloom'],
+.vb-profile-voidbloom {
+  /* Colors */
+  --vb-profile-primary: #90f; /* Violet */
+  --vb-profile-primary-rgb: 153, 0, 255;
+  --vb-profile-secondary: #0cf; /* Sky blue */
+  --vb-profile-secondary-rgb: 0, 204, 255;
+  --vb-profile-tertiary: #f06; /* Red-pink */
+  --vb-profile-accent: #fa0; /* Amber */
+  --vb-profile-accent-rgb: 255, 170, 0;
+  --vb-profile-background: #0a0014; /* Very dark purple */
+  --vb-profile-surface: #170029; /* Dark purple */
+  --vb-profile-text: rgb(245 240 255 / 90%);
+
+  /* Effect intensities */
+  --vb-profile-glow-intensity: 1.1;
+  --vb-profile-glitch-intensity: 0.7;
+  --vb-profile-trauma-intensity: 0.9;
+  --vb-profile-bloom-intensity: 0.8;
+
+  /* Trauma colors */
+  --vb-color-trauma-abandonment: rgb(153 0 255 / 50%);
+  --vb-color-trauma-fragmentation: rgb(255 0 102 / 50%);
+  --vb-color-trauma-surveillance: rgb(0 204 255 / 50%);
+}
+
+/* ----------------------------------------------
+   FROSTEDCHROME PROFILE - Sleek minimalist aesthetic
+   ---------------------------------------------- */
+[data-vb-profile='frostedchrome'],
+.vb-profile-frostedchrome {
+  /* Colors */
+  --vb-profile-primary: #3d5afe; /* Bright blue */
+  --vb-profile-primary-rgb: 61, 90, 254;
+  --vb-profile-secondary: #00c853; /* Green */
+  --vb-profile-secondary-rgb: 0, 200, 83;
+  --vb-profile-tertiary: #ff6d00; /* Orange */
+  --vb-profile-accent: #a0f; /* Purple */
+  --vb-profile-accent-rgb: 170, 0, 255;
+  --vb-profile-background: #fafafa; /* Off-white */
+  --vb-profile-surface: #fff; /* White */
+  --vb-profile-text: rgb(33 33 33 / 90%);
+
+  /* Effect intensities */
+  --vb-profile-glow-intensity: 0.8;
+  --vb-profile-glitch-intensity: 0.3;
+  --vb-profile-trauma-intensity: 0.5;
+  --vb-profile-bloom-intensity: 0.6;
+
+  /* Trauma colors */
+  --vb-color-trauma-abandonment: rgb(61 90 254 / 50%);
+  --vb-color-trauma-fragmentation: rgb(0 200 83 / 50%);
+  --vb-color-trauma-surveillance: rgb(170 0 255 / 50%);
+}
+
+/* ----------------------------------------------
+   NEONOIR PROFILE - Dystopian dark retro future
+   ---------------------------------------------- */
+[data-vb-profile='neonoir'],
+.vb-profile-neonoir {
+  /* Colors */
+  --vb-profile-primary: #ff2b4a; /* Red */
+  --vb-profile-primary-rgb: 255, 43, 74;
+  --vb-profile-secondary: #2196f3; /* Blue */
+  --vb-profile-secondary-rgb: 33, 150, 243;
+  --vb-profile-tertiary: #ffeb3b; /* Yellow */
+  --vb-profile-accent: #64ffda; /* Teal */
+  --vb-profile-accent-rgb: 100, 255, 218;
+  --vb-profile-background: #121212; /* Very dark gray */
+  --vb-profile-surface: #1e1e1e; /* Dark gray */
+  --vb-profile-text: rgb(255 255 255 / 87%);
+
+  /* Effect intensities */
+  --vb-profile-glow-intensity: 1;
+  --vb-profile-glitch-intensity: 0.8;
+  --vb-profile-trauma-intensity: 0.9;
+  --vb-profile-bloom-intensity: 0.7;
+
+  /* Trauma colors */
+  --vb-color-trauma-abandonment: rgb(255 43 74 / 50%);
+  --vb-color-trauma-fragmentation: rgb(33 150 243 / 50%);
+  --vb-color-trauma-surveillance: rgb(100 255 218 / 50%);
+}
+
+/* ----------------------------------------------
+   PROFILE-SPECIFIC COMPONENT OVERRIDES
+   ---------------------------------------------- */
+
+/* CyberLotus specific styles */
+[data-vb-profile='cyberlotus'] .vb-btn--primary,
+.vb-profile-cyberlotus .vb-btn--primary {
+  text-shadow: 0 0 5px rgb(var(--vb-profile-primary-rgb), 0.7);
+}
+
+[data-vb-profile='cyberlotus'] .vb-card,
+.vb-profile-cyberlotus .vb-card {
+  background: linear-gradient(
+    145deg,
+    var(--vb-profile-surface),
+    color-mix(in srgb, var(--vb-profile-surface), var(--vb-profile-primary) 5%)
+  );
+}
+
+/* AlienFlora specific styles */
+[data-vb-profile='alienflora'] .vb-card,
+.vb-profile-alienflora .vb-card {
+  background: linear-gradient(
+    to bottom,
+    var(--vb-profile-surface),
+    color-mix(in srgb, var(--vb-profile-surface), var(--vb-profile-primary) 8%)
+  );
+  border-radius: calc(var(--vb-border-radius-md) * 1.5);
+}
+
+[data-vb-profile='alienflora'] .vb-btn,
+.vb-profile-alienflora .vb-btn {
+  border-radius: var(--vb-border-radius-lg);
+}
+
+/* VoidBloom specific styles */
+[data-vb-profile='voidbloom'] .vb-btn,
+.vb-profile-voidbloom .vb-btn {
+  backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  background-color: transparent;
+}
+
+[data-vb-profile='voidbloom'] .vb-card,
+.vb-profile-voidbloom .vb-card {
+  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: rgb(var(--vb-color-surface-rgb), 0.7);
+}
+
+/* FrostedChrome specific styles - light theme */
+[data-vb-profile='frostedchrome'],
+.vb-profile-frostedchrome {
+  /* Override for light theme */
+  color-scheme: light;
+}
+
+[data-vb-profile='frostedchrome'] .vb-card,
+.vb-profile-frostedchrome .vb-card {
+  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: rgb(255 255 255 / 70%);
+  border: none;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
+}
+
+/* NeoNoir specific styles */
+[data-vb-profile='neonoir'] .vb-btn,
+.vb-profile-neonoir .vb-btn {
+  border-width: calc(var(--vb-border-width-normal) * 1.5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+[data-vb-profile='neonoir'] .vb-card,
+.vb-profile-neonoir .vb-card {
+  border-left-width: calc(var(--vb-border-width-normal) * 3);
+}
+
+/* ----------------------------------------------
+   DARK/LIGHT MODE PROFILES
+   ---------------------------------------------- */
+
+/* Dark mode preference - make FrostedChrome dark */
+@media (prefers-color-scheme: dark) {
+  [data-vb-profile='frostedchrome'],
+  .vb-profile-frostedchrome {
+    /* Override for dark theme */
+    color-scheme: dark;
+
+    --vb-profile-background: #121212;
+    --vb-profile-surface: #1e1e1e;
+    --vb-profile-text: rgb(255 255 255 / 87%);
+  }
+
+  [data-vb-profile='frostedchrome'] .vb-card,
+  .vb-profile-frostedchrome .vb-card {
+    background-color: rgb(30 30 30 / 70%);
+  }
+}
+
+/* Light mode preference - make NeoNoir lighter */
+@media (prefers-color-scheme: light) {
+  [data-vb-profile='neonoir'],
+  .vb-profile-neonoir {
+    --vb-profile-background: #f5f5f5;
+    --vb-profile-surface: #fff;
+    --vb-profile-text: rgb(33 33 33 / 90%);
+  }
+}
+
+/* ----------------------------------------------
+   HIGH CONTRAST MODE ADJUSTMENTS
+   ---------------------------------------------- */
+@media (forced-colors: active) {
+  /* Ensure all profiles have sufficient contrast for accessibility */
+  [data-vb-profile],
+  [class*='vb-profile-'] {
+    --vb-profile-primary: CanvasText;
+    --vb-profile-secondary: CanvasText;
+    --vb-profile-accent: Highlight;
+    --vb-profile-background: Canvas;
+    --vb-profile-surface: Canvas;
+    --vb-profile-text: CanvasText;
+  }
+}

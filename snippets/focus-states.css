@@ -1,67 +1,166 @@
 /**
  * VoidBloom Focus States
  * Enhanced focus styles for accessibility
- * @version 1.0.0
+ * @version 2.0.0 (WCAG Compliance Update)
  */
 
 /* Global focus styles */
 :focus-visible {
-  outline: 2px solid var(--vb-color-accent);
+  border-radius: var(--vb-border-radius-sm, 2px);
+  box-shadow: 0 0 0 4px rgb(0 246 255 / 30%);
+  outline: 3px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(0, 246, 255, 0.25);
-  border-radius: var(--vb-border-radius-sm);
-  transition: outline-offset var(--vb-animation-speed-fast) ease;
+  transition: outline-offset var(--vb-animation-speed-fast, 150ms) ease;
+  z-index: 1; /* Ensure focused elements are above others */
 }
 
-/* Button focus states */
+/* Button focus states - Match hover states */
 button:focus-visible,
 .button:focus-visible,
 [role='button']:focus-visible,
 input[type='submit']:focus-visible,
-input[type='button']:focus-visible {
-  outline: 2px solid var(--vb-color-accent);
+input[type='button']:focus-visible,
+.quantum-btn:focus-visible,
+.vb-btn:focus-visible,
+.memory-archive-button:focus-visible,
+.cyberlotus-button:focus-visible,
+.obsidianbloom-button:focus-visible,
+.tab-button:focus-visible,
+.vb-trauma-card__action-button:focus-visible,
+.newsletter-form button:focus-visible,
+.ritual-button:focus-visible,
+.header-action:focus-visible {
+  background-color: var(--vb-a11y-hover-overlay, rgb(255 255 255 / 10%));
+  box-shadow: 0 0 0 4px rgb(0 246 255 / 40%);
+  outline: 3px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(0, 246, 255, 0.3);
+  text-decoration: none;
+  transform: translateY(-2px);
 }
 
 /* Form field focus */
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--vb-color-accent);
-  border-color: var(--vb-color-accent);
-  box-shadow: 0 0 0 4px rgba(0, 246, 255, 0.2);
+textarea:focus-visible,
+.quantum-input:focus-visible,
+.variant-selector:focus-visible,
+.newsletter-form input[type='email']:focus-visible {
+  background-color: rgb(0 0 0 / 50%); /* Darken background for better contrast */
+  border-color: var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
+  box-shadow: 0 0 0 4px rgb(0 246 255 / 30%);
+  outline: 3px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
 }
 
-/* Links focus */
-a:focus-visible {
-  outline: 2px solid var(--vb-color-accent);
+/* Links focus - Improved visibility */
+a:focus-visible,
+.vb-header__nav-link:focus-visible,
+.nav-link:focus-visible,
+.cyberlotus-card:focus-visible,
+.obsidianbloom-card:focus-visible,
+.trauma-card:focus-visible,
+.vb-footer__nav-link:focus-visible,
+.footer-nav li a:focus-visible,
+.gallery-thumbnail:focus-visible,
+.footer-legal-links a:focus-visible {
+  box-shadow: 0 0 8px rgb(0 246 255 / 40%);
+  outline: 3px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
 }
 
-/* Skip to content link - visible on focus */
-.skip-to-content {
-  position: absolute;
-  top: -9999px;
+/* Card and interactive container focus */
+.quantum-card:focus-visible,
+.vb-product-card:focus-visible,
+.memory-node:focus-visible,
+.cyberlotus-memory-node:focus-visible,
+.obsidianbloom-memory-node:focus-visible,
+.phase-card:focus-visible,
+.vb-feature:focus-visible,
+.protocol-step:focus-visible {
+  box-shadow: 0 0 15px rgb(0 246 255 / 50%);
+  outline: 3px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
+  outline-offset: 5px;
+  transform: translateY(-5px);
+}
+
+/* High contrast mode focus styles */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid CanvasText;
+    outline-offset: 3px;
+  }
+}
+
+/* Skip to content link - Enhanced visibility on focus */
+.skip-to-content,
+.skip-to-content-link {
+  background: var(--vb-color-surface, rgb(0 26 51 / 90%));
+  border: 2px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 50%);
+  color: var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
+  font-weight: 700;
   left: 50%;
-  transform: translateX(-50%);
-  background: var(--vb-color-surface);
-  color: var(--vb-color-text);
-  padding: var(--vb-space-sm) var(--vb-space-md);
-  z-index: 9999;
+  padding: 1rem 1.5rem;
+  position: absolute;
   text-decoration: none;
-  border-radius: 0 0 var(--vb-border-radius-md) var(--vb-border-radius-md);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  transition: top var(--vb-animation-speed-medium) ease;
+  top: -9999px;
+  transform: translateX(-50%);
+  transition: top 0.2s ease;
+  z-index: 9999;
 }
 
-.skip-to-content:focus {
+.skip-to-content:focus-visible,
+.skip-to-content-link:focus-visible {
+  box-shadow: 0 4px 12px rgb(0 246 255 / 50%);
+  outline: none;
   top: 0;
 }
 
-/* Remove focus for mouse users while keeping it for keyboard */
+/* Remove focus for mouse users while keeping it for keyboard - Focus visible polyfill */
 .js-focus-visible :focus:not(.focus-visible) {
+  box-shadow: none;
   outline: none;
+}
+
+/* Special elements focus styles */
+
+/* Gallery controls */
+.gallery-prev:focus-visible,
+.gallery-next:focus-visible {
+  background-color: rgb(0 0 0 / 70%);
+  color: var(--vb-a11y-text-light, #fff);
+  outline: 3px solid var(--vb-a11y-focus-outline, var(--vb-color-accent, #0ff));
+  outline-offset: 2px;
+}
+
+/* Profile-specific focus styles */
+.cyberlotus-theme :focus-visible {
+  box-shadow: 0 0 0 4px rgb(0 255 255 / 30%);
+  outline-color: var(--vb-cyberlotus-primary, #0ff);
+}
+
+.obsidianbloom-theme :focus-visible {
+  box-shadow: 0 0 0 4px rgb(255 0 255 / 30%);
+  outline-color: var(--vb-obsidianbloom-primary, #f0f);
+}
+
+/* Animate focus transitions */
+:focus-visible {
+  animation: focus-pulse 1s ease-in-out;
+}
+
+@keyframes focus-pulse {
+  0% {
+    outline-offset: 2px;
+  }
+
+  50% {
+    outline-offset: 5px;
+  }
+
+  100% {
+    outline-offset: 3px;
+  }
 }

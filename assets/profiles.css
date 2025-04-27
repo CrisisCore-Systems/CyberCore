@@ -1,0 +1,434 @@
+/**
+ * PROFILES.CSS
+ * Theme profiles for the CyberCore design system
+ * Each profile defines color overrides and specific visual treatments
+ * @MutationCompatible: All Variants
+ * @StrategyProfile: quantum-entangled
+ * @Version: 1.0.0
+ */
+
+/* Import design tokens */
+@import url('./snippets/design-tokens.css');
+
+/*
+ * CyberLotus Profile
+ * ========================================================================== */
+.profile-cyberlotus,
+[data-profile='cyberlotus'] {
+  /* Color overrides */
+  --vb-color-primary: #0ff;
+  --vb-color-secondary: #08f;
+  --vb-color-accent: #80ffff;
+  --vb-color-background: #001a33;
+  --vb-color-surface: rgb(0 26 51 / 90%);
+  --vb-color-text: #f0f8ff;
+  --vb-color-text-secondary: rgb(240 248 255 / 70%);
+  --vb-color-border: rgb(0 255 255 / 30%);
+
+  /* Effect overrides */
+  --vb-glow-intensity: 8px;
+  --vb-glitch-intensity: 0.5;
+
+  /* Profile-specific backgrounds */
+  background-color: var(--vb-color-background);
+  background-image: radial-gradient(circle at 10% 20%, rgb(0 136 255 / 10%) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgb(0 255 255 / 10%) 0%, transparent 40%);
+}
+
+/* CyberLotus-specific components */
+.profile-cyberlotus .vb-card,
+[data-profile='cyberlotus'] .vb-card {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 255 255 / 20%);
+}
+
+.profile-cyberlotus .vb-btn--primary,
+[data-profile='cyberlotus'] .vb-btn--primary {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+}
+
+/* CyberLotus-specific animations */
+@keyframes cyberlotus-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 255 255 / 40%);
+  }
+
+  50% {
+    box-shadow: 0 0 calc(var(--vb-glow-intensity) * 1.5) rgb(0 255 255 / 60%);
+  }
+}
+
+.profile-cyberlotus .vb-glow-effect,
+[data-profile='cyberlotus'] .vb-glow-effect {
+  animation: cyberlotus-pulse 3s infinite;
+}
+
+/*
+ * ObsidianBloom Profile
+ * ========================================================================== */
+.profile-obsidianbloom,
+[data-profile='obsidianbloom'] {
+  /* Color overrides */
+  --vb-color-primary: #f0f;
+  --vb-color-secondary: #80f;
+  --vb-color-accent: #ff80ff;
+  --vb-color-background: #1a0033;
+  --vb-color-surface: rgb(26 0 51 / 90%);
+  --vb-color-text: #f8f0ff;
+  --vb-color-text-secondary: rgb(248 240 255 / 70%);
+  --vb-color-border: rgb(255 0 255 / 30%);
+
+  /* Effect overrides */
+  --vb-glow-intensity: 10px;
+  --vb-glitch-intensity: 0.7;
+
+  /* Profile-specific backgrounds */
+  background-color: var(--vb-color-background);
+  background-image: radial-gradient(circle at 20% 80%, rgb(136 0 255 / 15%) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgb(255 0 255 / 10%) 0%, transparent 40%);
+}
+
+/* ObsidianBloom-specific components */
+.profile-obsidianbloom .vb-card,
+[data-profile='obsidianbloom'] .vb-card {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(255 0 255 / 20%);
+}
+
+.profile-obsidianbloom .vb-btn--primary,
+[data-profile='obsidianbloom'] .vb-btn--primary {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+}
+
+/* ObsidianBloom-specific animations */
+@keyframes obsidianbloom-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 var(--vb-glow-intensity) rgb(255 0 255 / 40%);
+  }
+
+  50% {
+    box-shadow: 0 0 calc(var(--vb-glow-intensity) * 1.5) rgb(255 0 255 / 60%);
+  }
+}
+
+.profile-obsidianbloom .vb-glow-effect,
+[data-profile='obsidianbloom'] .vb-glow-effect {
+  animation: obsidianbloom-pulse 3s infinite;
+}
+
+/*
+ * VoidBloom Profile
+ * ========================================================================== */
+.profile-voidbloom,
+[data-profile='voidbloom'] {
+  /* Color overrides */
+  --vb-color-primary: #90f;
+  --vb-color-secondary: #60c;
+  --vb-color-accent: #cc80ff;
+  --vb-color-background: #0a0014;
+  --vb-color-surface: rgb(10 0 20 / 90%);
+  --vb-color-text: #f0f0ff;
+  --vb-color-text-secondary: rgb(240 240 255 / 70%);
+  --vb-color-border: rgb(153 0 255 / 30%);
+
+  /* Effect overrides */
+  --vb-glow-intensity: 12px;
+  --vb-glitch-intensity: 0.8;
+
+  /* Profile-specific backgrounds */
+  background-color: var(--vb-color-background);
+  background-image: radial-gradient(circle at 30% 70%, rgb(102 0 204 / 12%) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgb(153 0 255 / 8%) 0%, transparent 40%);
+}
+
+/* VoidBloom-specific components */
+.profile-voidbloom .vb-card,
+[data-profile='voidbloom'] .vb-card {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(153 0 255 / 20%);
+}
+
+.profile-voidbloom .vb-btn--primary,
+[data-profile='voidbloom'] .vb-btn--primary {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+}
+
+/* VoidBloom-specific animations */
+@keyframes voidbloom-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 var(--vb-glow-intensity) rgb(153 0 255 / 40%);
+  }
+
+  50% {
+    box-shadow: 0 0 calc(var(--vb-glow-intensity) * 1.5) rgb(153 0 255 / 60%);
+  }
+}
+
+.profile-voidbloom .vb-glow-effect,
+[data-profile='voidbloom'] .vb-glow-effect {
+  animation: voidbloom-pulse 3s infinite;
+}
+
+/*
+ * NeonVortex Profile
+ * ========================================================================== */
+.profile-neonvortex,
+[data-profile='neonvortex'] {
+  /* Color overrides */
+  --vb-color-primary: #0f6;
+  --vb-color-secondary: #0c4;
+  --vb-color-accent: #80ffaa;
+  --vb-color-background: #001a0d;
+  --vb-color-surface: rgb(0 26 13 / 90%);
+  --vb-color-text: #f0fff8;
+  --vb-color-text-secondary: rgb(240 255 248 / 70%);
+  --vb-color-border: rgb(0 255 102 / 30%);
+
+  /* Effect overrides */
+  --vb-glow-intensity: 8px;
+  --vb-glitch-intensity: 0.6;
+
+  /* Profile-specific backgrounds */
+  background-color: var(--vb-color-background);
+  background-image: radial-gradient(circle at 40% 60%, rgb(0 204 68 / 10%) 0%, transparent 50%),
+    radial-gradient(circle at 60% 40%, rgb(0 255 102 / 8%) 0%, transparent 40%);
+}
+
+/* NeonVortex-specific components */
+.profile-neonvortex .vb-card,
+[data-profile='neonvortex'] .vb-card {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 255 102 / 20%);
+}
+
+.profile-neonvortex .vb-btn--primary,
+[data-profile='neonvortex'] .vb-btn--primary {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+}
+
+/* NeonVortex-specific animations */
+@keyframes neonvortex-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 255 102 / 40%);
+  }
+
+  50% {
+    box-shadow: 0 0 calc(var(--vb-glow-intensity) * 1.5) rgb(0 255 102 / 60%);
+  }
+}
+
+.profile-neonvortex .vb-glow-effect,
+[data-profile='neonvortex'] .vb-glow-effect {
+  animation: neonvortex-pulse 3s infinite;
+}
+
+/*
+ * TRAUMA SYSTEM STATES
+ * ========================================================================== */
+
+/* Trauma: Abandonment */
+.trauma-abandonment,
+[data-trauma='abandonment'] {
+  --vb-trauma-intensity: 0.8;
+  --vb-trauma-color: var(--vb-color-trauma-abandonment);
+
+  /* Subtle visual cues for trauma state */
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * var(--vb-trauma-intensity)) var(--vb-trauma-color);
+}
+
+/* Animation for abandonment trauma */
+@keyframes trauma-abandonment-pulse {
+  0%,
+  100% {
+    opacity: 100%;
+  }
+
+  50% {
+    opacity: 70%;
+  }
+}
+
+.trauma-abandonment .vb-trauma-effect,
+[data-trauma='abandonment'] .vb-trauma-effect {
+  animation: trauma-abandonment-pulse 3s ease-in-out infinite;
+}
+
+/* Trauma: Fragmentation */
+.trauma-fragmentation,
+[data-trauma='fragmentation'] {
+  --vb-trauma-intensity: 0.7;
+  --vb-trauma-color: var(--vb-color-trauma-fragmentation);
+
+  /* Subtle visual cues for trauma state */
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * var(--vb-trauma-intensity)) var(--vb-trauma-color);
+}
+
+/* Animation for fragmentation trauma */
+@keyframes trauma-fragmentation-shift {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+
+  25% {
+    transform: translate(-2px, 1px);
+  }
+
+  75% {
+    transform: translate(2px, -1px);
+  }
+}
+
+.trauma-fragmentation .vb-trauma-effect,
+[data-trauma='fragmentation'] .vb-trauma-effect {
+  animation: trauma-fragmentation-shift 2s steps(3) infinite;
+}
+
+/* Trauma: Recursion */
+.trauma-recursion,
+[data-trauma='recursion'] {
+  --vb-trauma-intensity: 0.6;
+  --vb-trauma-color: var(--vb-color-trauma-recursion);
+
+  /* Subtle visual cues for trauma state */
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * var(--vb-trauma-intensity)) var(--vb-trauma-color);
+}
+
+/* Animation for recursion trauma */
+@keyframes trauma-recursion-rotate {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(1deg);
+  }
+}
+
+.trauma-recursion .vb-trauma-effect,
+[data-trauma='recursion'] .vb-trauma-effect {
+  animation: trauma-recursion-rotate 4s ease-in-out infinite;
+}
+
+/* Trauma: Surveillance */
+.trauma-surveillance,
+[data-trauma='surveillance'] {
+  --vb-trauma-intensity: 0.7;
+  --vb-trauma-color: var(--vb-color-trauma-surveillance);
+
+  /* Subtle visual cues for trauma state */
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * var(--vb-trauma-intensity)) var(--vb-trauma-color);
+}
+
+/* Animation for surveillance trauma */
+@keyframes trauma-surveillance-scan {
+  0% {
+    background-position: -100% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.trauma-surveillance .vb-trauma-effect,
+[data-trauma='surveillance'] .vb-trauma-effect {
+  overflow: hidden;
+  position: relative;
+}
+
+.trauma-surveillance .vb-trauma-effect::after,
+[data-trauma='surveillance'] .vb-trauma-effect::after {
+  animation: trauma-surveillance-scan 3s linear infinite;
+  background: linear-gradient(90deg, transparent, rgb(0 202 255 / 10%), transparent);
+  background-size: 200% 100%;
+  content: '';
+  height: 100%;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+/* Trauma: Displacement */
+.trauma-displacement,
+[data-trauma='displacement'] {
+  --vb-trauma-intensity: 0.7;
+  --vb-trauma-color: var(--vb-color-trauma-displacement);
+
+  /* Subtle visual cues for trauma state */
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * var(--vb-trauma-intensity)) var(--vb-trauma-color);
+}
+
+/* Animation for displacement trauma */
+@keyframes trauma-displacement-blur {
+  0%,
+  100% {
+    filter: blur(0);
+  }
+
+  50% {
+    filter: blur(1px);
+  }
+}
+
+.trauma-displacement .vb-trauma-effect,
+[data-trauma='displacement'] .vb-trauma-effect {
+  animation: trauma-displacement-blur 5s ease-in-out infinite;
+}
+
+/* Trauma: Dissolution */
+.trauma-dissolution,
+[data-trauma='dissolution'] {
+  --vb-trauma-intensity: 0.9;
+  --vb-trauma-color: var(--vb-color-trauma-dissolution);
+
+  /* Subtle visual cues for trauma state */
+  box-shadow: 0 0 calc(var(--vb-glow-intensity) * var(--vb-trauma-intensity)) var(--vb-trauma-color);
+}
+
+/* Animation for dissolution trauma */
+@keyframes trauma-dissolution-fade {
+  0%,
+  100% {
+    opacity: 100%;
+  }
+
+  50% {
+    opacity: 70%;
+  }
+}
+
+.trauma-dissolution .vb-trauma-effect,
+[data-trauma='dissolution'] .vb-trauma-effect {
+  animation: trauma-dissolution-fade 7s ease-in-out infinite;
+}
+
+/*
+ * REDUCED MOTION OVERRIDES
+ * ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .vb-glow-effect,
+  .vb-trauma-effect,
+  [class*='trauma-'] .vb-trauma-effect,
+  [data-trauma] .vb-trauma-effect {
+    animation: none !important;
+    transition-duration: 0.1s !important;
+  }
+
+  [class*='trauma-'] .vb-trauma-effect::after,
+  [data-trauma] .vb-trauma-effect::after {
+    animation: none !important;
+    opacity: 10%;
+  }
+}

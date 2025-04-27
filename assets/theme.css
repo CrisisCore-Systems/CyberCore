@@ -18,9 +18,9 @@
 }
 
 html {
-  font-family: 'Rajdhani', sans-serif;
   background-color: var(--phase-background);
   color: var(--phase-text);
+  font-family: Rajdhani, sans-serif;
   scroll-behavior: smooth;
 }
 
@@ -29,14 +29,14 @@ body {
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
 
 img,
 picture {
-  max-width: 100%;
   display: block;
+  max-width: 100%;
 }
 
 /* ----------------------------------------
@@ -45,9 +45,15 @@ picture {
 :root {
   --phase-background: #0a0a0a;
   --phase-text: #e1e1e1;
-  --phase-primary: #00ff00;
+  --phase-primary: #0f0;
   --phase-secondary: #1a0014;
-  --phase-tertiary: #111111;
+  --phase-tertiary: #111;
+  --a11y-text-light: #fff;
+  --a11y-text-light-secondary: #ccc;
+  --a11y-accent-cyan: #0ff;
+  --a11y-text-dark: #000;
+  --a11y-accent-magenta: #f0f;
+  --a11y-accent-green: #0f0;
 }
 
 /* =============================================================================
@@ -55,24 +61,24 @@ picture {
    ============================================================================= */
 .voidbloom-header {
   background: var(--phase-tertiary);
+  border-bottom: 1px solid #222;
   position: sticky;
   top: 0;
   z-index: 900;
-  border-bottom: 1px solid #222;
 }
 
 .header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1200px;
   padding: 1rem 2rem;
 }
 
 .header-logo .logo-link img {
-  max-width: 150px;
   height: auto;
+  max-width: 150px;
 }
 
 .header-navigation {
@@ -81,73 +87,71 @@ picture {
 }
 
 .nav-menu {
-  list-style: none;
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 1.5rem;
+  list-style: none;
 }
 
 .nav-link {
-  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  color: var(--a11y-text-light);
+  display: flex;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--phase-text);
+  gap: 0.5rem;
+  opacity: 100%;
   transition: color 0.2s;
 }
 
 .nav-link:hover {
-  color: var(--phase-primary);
+  color: var(--a11y-accent-cyan);
+  text-decoration: underline;
 }
 
 .header-actions {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 1rem;
 }
 
 .header-action {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
   background: none;
   border: none;
-  color: var(--phase-text);
+  color: var(--a11y-text-light);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
   transition: color 0.2s;
 }
 
 .header-action:hover {
-  color: var(--phase-primary);
+  color: var(--a11y-accent-cyan);
 }
 
 .header-action svg {
-  width: 24px;
   height: 24px;
+  width: 24px;
 }
 
 /* =============================================================================
    HERO: RITUAL ENTRY
    ============================================================================= */
 .ritual-entry-section {
-  position: relative;
+  color: var(--phase-text);
   overflow: hidden;
   padding: 6rem 2rem 4rem;
+  position: relative;
   text-align: center;
-  color: var(--phase-text);
 }
 
 .entry-backdrop {
-  position: absolute;
+  background: linear-gradient(160deg, rgb(25 0 50 / 90%), rgb(0 0 0 / 80%)) no-repeat
+    center/cover;
   inset: 0;
-  background: linear-gradient(
-      160deg,
-      rgba(25, 0, 50, 0.9),
-      rgba(0, 0, 0, 0.8)
-    )
-    no-repeat center/cover;
+  position: absolute;
   z-index: -1;
 }
 
@@ -158,87 +162,88 @@ picture {
 }
 
 .entry-content .ritual-subtitle {
+  color: var(--a11y-text-light-secondary);
   font-size: 1.125rem;
   margin-bottom: 1.5rem;
-  opacity: 0.8;
+  opacity: 100%;
 }
 
 .entry-content p {
-  max-width: 600px;
-  margin: 0 auto 2rem;
   line-height: 1.6;
+  margin: 0 auto 2rem;
+  max-width: 600px;
 }
 
 .entry-actions .ritual-button {
-  border: 2px solid var(--phase-primary);
-  background: none;
-  color: var(--phase-primary);
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  background-color: rgb(0 0 0 / 60%);
+  border: 2px solid var(--a11y-accent-cyan);
+  color: var(--a11y-text-light);
   cursor: pointer;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
   transition: background 0.2s, color 0.2s;
 }
 
 .entry-actions .ritual-button:hover {
-  background: var(--phase-primary);
-  color: var(--phase-background);
+  background-color: var(--a11y-accent-cyan);
+  color: var(--a11y-text-dark);
 }
 
 /* =============================================================================
    SECTION: BLOOM PROTOCOL
    ============================================================================= */
 .bloom-protocol-section {
-  padding: 4rem 2rem;
   background: var(--phase-secondary);
+  padding: 4rem 2rem;
 }
 
 .section-header {
-  text-align: center;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .section-title {
+  color: var(--phase-primary);
+  display: inline-block;
   font-size: 2rem;
   font-weight: 600;
-  color: var(--phase-primary);
   position: relative;
-  display: inline-block;
 }
 
 .section-line {
-  height: 4px;
-  width: 50px;
   background: var(--phase-primary);
+  height: 4px;
   margin: 0.5rem auto 0;
+  width: 50px;
 }
 
 .protocol-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 2rem;
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   margin: 0 auto;
+  max-width: 1000px;
 }
 
 .protocol-step {
   background: var(--phase-tertiary);
-  padding: 2rem;
   border-radius: 8px;
-  text-align: center;
   color: var(--phase-text);
+  padding: 2rem;
+  text-align: center;
 }
 
 .step-number {
-  width: 2.5rem;
-  height: 2.5rem;
+  align-items: center;
   border: 2px solid var(--phase-primary);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  margin: 0 auto 1rem;
   color: var(--phase-primary);
+  display: flex;
+  font-weight: 700;
+  height: 2.5rem;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  width: 2.5rem;
 }
 
 .step-title {
@@ -248,9 +253,10 @@ picture {
 }
 
 .step-description {
+  color: var(--a11y-text-light-secondary);
   font-size: 1rem;
   line-height: 1.5;
-  opacity: 0.9;
+  opacity: 100%;
 }
 
 /* =============================================================================
@@ -266,38 +272,38 @@ picture {
 
 .signal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1.5rem;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   margin: 0 auto;
+  max-width: 1200px;
 }
 
 .trauma-card {
   background: var(--phase-secondary);
-  padding: 1rem;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 1rem;
 }
 
 .trauma-image {
   background: #111;
+  margin-bottom: 1rem;
+  padding-top: 75%; /* 4:3 ratio */
   position: relative;
   width: 100%;
-  padding-top: 75%; /* 4:3 ratio */
-  margin-bottom: 1rem;
 }
 
 .trauma-title {
+  color: var(--phase-text);
   font-size: 1rem;
   margin-bottom: 0.5rem;
-  color: var(--phase-text);
 }
 
 .trauma-price {
-  font-size: 0.95rem;
   color: var(--phase-primary);
+  font-size: 0.95rem;
 }
 
 /* Hide the entire section if no real products are rendered */
@@ -309,14 +315,14 @@ picture {
    SECTION: NEURAL TESTIMONIALS
    ============================================================================= */
 .neural-testimonials-section {
-  padding: 4rem 2rem;
   background: var(--phase-tertiary);
+  padding: 4rem 2rem;
 }
 
 .testimonial-grid--empty {
-  text-align: center;
   color: #777;
   font-size: 1rem;
+  text-align: center;
 }
 
 /* Hide if no blocks */
@@ -330,28 +336,28 @@ picture {
 .voidbloom-footer {
   background: var(--phase-tertiary);
   color: var(--phase-text);
-  padding: 4rem 2rem;
   font-size: 0.9rem;
   line-height: 1.5;
+  padding: 4rem 2rem;
 }
 
 .footer-grid-container {
-  max-width: 1200px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 2fr;
   gap: 2.5rem 2rem;
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .footer-brand h2 {
-  font-size: 1.5rem;
   color: var(--phase-primary);
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .footer-tagline {
-  opacity: 0.8;
   line-height: 1.4;
+  opacity: 80%;
 }
 
 .footer-nav-section,
@@ -360,12 +366,12 @@ picture {
 }
 
 .footer-heading {
+  color: var(--a11y-accent-cyan);
   font-size: 1.1rem;
   font-weight: 600;
+  letter-spacing: 0.05em;
   margin-bottom: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--phase-primary);
 }
 
 .footer-nav,
@@ -381,14 +387,15 @@ picture {
 }
 
 .footer-nav li a {
-  color: var(--phase-text);
-  opacity: 0.85;
+  color: var(--a11y-text-light-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
   transition: color 0.2s, padding-left 0.2s;
 }
 
 .footer-nav li a:hover {
   color: var(--phase-primary);
-  opacity: 1;
+  opacity: 100%;
   padding-left: 5px;
 }
 
@@ -399,27 +406,29 @@ picture {
   gap: 0.5rem;
 }
 
-.newsletter-form input[type="email"] {
+.newsletter-form input[type='email'] {
+  background-color: rgb(0 0 0 / 60%);
+  border: 1px solid var(--a11y-text-light-secondary);
+  border-radius: 4px;
+  color: var(--a11y-text-light);
   flex: 1 1 200px;
   padding: 0.75rem;
-  border: 1px solid var(--phase-secondary);
-  border-radius: 4px;
-  background: var(--phase-background);
-  color: var(--phase-text);
 }
 
-.newsletter-form input[type="email"]:focus {
-  border-color: var(--phase-primary);
+.newsletter-form input[type='email']:focus {
+  border-color: var(--a11y-accent-cyan);
+  outline: 2px solid var(--a11y-accent-cyan);
+  outline-offset: 2px;
 }
 
 .newsletter-form button {
-  padding: 0.75rem 1.5rem;
-  background: var(--phase-primary);
-  color: var(--phase-background);
+  background-color: var(--a11y-accent-cyan);
   border: none;
   border-radius: 4px;
-  font-weight: 600;
+  color: var(--a11y-text-dark);
   cursor: pointer;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
   transition: background 0.2s;
 }
 
@@ -428,30 +437,30 @@ picture {
 }
 
 .form-message {
-  margin-top: 0.75rem;
   font-size: 0.85em;
+  margin-top: 0.75rem;
 }
 
 .form-message--error {
-  color: red;
+  color: var(--a11y-accent-magenta);
 }
 
 .form-message--success {
-  color: var(--phase-primary);
+  color: var(--a11y-accent-green);
 }
 
 /* Footer bottom bar */
 .footer-bottom {
+  align-items: center;
   border-top: 1px solid var(--phase-tertiary);
-  margin-top: 3rem;
-  padding-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  opacity: 0.7;
   font-size: 0.8rem;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 3rem;
+  opacity: 70%;
+  padding-top: 2rem;
 }
 
 .footer-bottom .footer-legal-links {
@@ -474,45 +483,53 @@ picture {
 }
 
 .list-payment__item svg {
+  fill: currentcolor;
   height: 24px;
-  fill: currentColor;
 }
 
 /* =============================================================================
    RESPONSIVE LAYOUT
    ============================================================================= */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .header-container {
     flex-wrap: wrap;
   }
+
   .header-navigation {
+    justify-content: center;
+    margin: 1rem 0;
     order: 2;
     width: 100%;
-    margin: 1rem 0;
-    justify-content: center;
   }
+
   .nav-menu {
-    justify-content: center;
     gap: 1rem;
+    justify-content: center;
   }
+
   .entry-content {
     margin-top: 2rem;
   }
+
   .protocol-grid {
     grid-template-columns: 1fr;
     text-align: center;
   }
+
   .signal-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
+
   .footer-grid-container {
     grid-template-columns: 1fr;
     text-align: center;
   }
+
   .footer-nav-section,
   .footer-newsletter {
     margin: 0 auto;
   }
+
   .footer-bottom {
     flex-direction: column;
     gap: 1.5rem;

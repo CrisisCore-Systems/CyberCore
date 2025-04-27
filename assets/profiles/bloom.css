@@ -1,7 +1,7 @@
 /**
  * VoidBloom Luminous Glow System
  * CSS effects for trauma visualization
- * Version: 3.7.1
+ * Version: 3.7.2
  *
  * @Strategy: quantum-entangled-css
  */
@@ -9,531 +9,632 @@
 /* Core Variables */
 :root {
   /* Trauma Type Colors */
-  --trauma-abandonment-color: rgba(157, 0, 255, 0.7);
-  --trauma-fragmentation-color: rgba(255, 0, 102, 0.7);
-  --trauma-recursion-color: rgba(80, 255, 64, 0.7);
-  --trauma-surveillance-color: rgba(0, 202, 255, 0.7);
-  --trauma-displacement-color: rgba(255, 179, 0, 0.7);
-  --trauma-dissolution-color: rgba(255, 0, 214, 0.7);
-  
+  --vb-trauma-abandonment-color: rgb(157 0 255 / 70%);
+  --vb-trauma-fragmentation-color: rgb(255 0 102 / 70%);
+  --vb-trauma-recursion-color: rgb(80 255 64 / 70%);
+  --vb-trauma-surveillance-color: rgb(0 202 255 / 70%);
+  --vb-trauma-displacement-color: rgb(255 179 0 / 70%);
+  --vb-trauma-dissolution-color: rgb(255 0 214 / 70%);
+
   /* Trauma Default Settings */
-  --bloom-color: var(--trauma-recursion-color);
-  --bloom-intensity: 0.5;
-  --bloom-spread: 15px;
-  --bloom-radius: 8px;
-  --animation-speed: 1s;
-  --recursion-depth: 3;
+  --vb-bloom-color: var(--vb-trauma-recursion-color);
+  --vb-bloom-intensity: 0.5;
+  --vb-bloom-spread: 15px;
+  --vb-bloom-radius: 8px;
+  --vb-animation-speed: 1s;
+  --vb-recursion-depth: 3;
+  --vb-recursion-echo-level: 0;
 }
 
 /* Base Memory Node Styles */
-.memory-node {
+.vb-memory-node {
+  perspective: 1000px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  perspective: 1000px;
 }
 
-.memory-node:hover {
+.vb-memory-node:hover {
   transform: translateY(-5px);
   z-index: 10;
 }
 
 /* Trauma Card Component */
-.trauma-card {
-  background-color: rgba(20, 20, 28, 0.9);
+.vb-trauma-card {
+  background-color: rgb(20 20 28 / 90%);
   border-radius: 12px;
-  overflow: hidden;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 20%);
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
-.trauma-card__inner {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
+.vb-trauma-card__inner {
   height: 100%;
-}
-
-.trauma-card__glitch-wrapper {
-  position: relative;
   overflow: hidden;
-}
-
-.trauma-card__image-container {
   position: relative;
   width: 100%;
-  padding-top: 75%;
-  overflow: hidden;
 }
 
-.trauma-card__image {
+.vb-trauma-card__glitch-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+.vb-trauma-card__image-container {
+  overflow: hidden;
+  padding-top: 75%;
+  position: relative;
+  width: 100%;
+}
+
+.vb-trauma-card__image {
+  height: 100%;
+  left: 0;
+  object-fit: cover;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   transition: transform 0.5s ease;
+  width: 100%;
 }
 
-.trauma-card:hover .trauma-card__image {
+.vb-trauma-card:hover .vb-trauma-card__image {
   transform: scale(1.05);
 }
 
-.trauma-card__overlay {
+.vb-trauma-card__overlay {
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 80%) 100%);
+  height: 100%;
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
 }
 
-.trauma-card__bloom-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.vb-trauma-card__bloom-layer {
   height: 100%;
-  pointer-events: none;
+  left: 0;
   mix-blend-mode: screen;
-  opacity: calc(var(--bloom-intensity) * 0.8);
+  opacity: calc(var(--vb-bloom-intensity) * 80%);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
-.trauma-card__content {
-  position: relative;
-  padding: 1.5rem;
+.vb-trauma-card__content {
   color: #fff;
+  padding: 1.5rem;
+  position: relative;
 }
 
-.trauma-card__title {
-  margin: 0 0 1rem;
+.vb-trauma-card__title {
   font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: 0.05em;
+  margin: 0 0 1rem;
 }
 
-.trauma-card__trauma-info {
-  display: flex;
+.vb-trauma-card__trauma-info {
   align-items: center;
+  display: flex;
   margin-bottom: 1rem;
 }
 
-.trauma-card__trauma-type {
-  text-transform: uppercase;
+.vb-trauma-card__trauma-type {
   font-size: 0.8rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
   margin-right: 1rem;
-  font-weight: 600;
+  text-transform: uppercase;
 }
 
-.trauma-card__intensity-meter {
+.vb-trauma-card__intensity-meter {
+  background-color: rgb(255 255 255 / 20%);
+  border-radius: 2px;
   flex: 1;
   height: 4px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
   overflow: hidden;
 }
 
-.trauma-card__intensity-fill {
+.vb-trauma-card__intensity-fill {
+  background-color: currentcolor;
   height: 100%;
-  background-color: currentColor;
 }
 
-.trauma-card__poem {
+.vb-trauma-card__poem {
+  border-left: 2px solid currentcolor;
+  font-style: italic;
   margin: 1rem 0;
   padding: 0.5rem;
-  border-left: 2px solid currentColor;
-  font-style: italic;
 }
 
-.trauma-card__poem-text {
+.vb-trauma-card__poem-text {
   font-size: 0.9rem;
   line-height: 1.4;
 }
 
-.trauma-card__meta {
+.vb-trauma-card__meta {
   display: flex;
-  justify-content: space-between;
   font-size: 0.8rem;
+  justify-content: space-between;
   margin-bottom: 1rem;
-  opacity: 0.7;
+  opacity: 70%;
 }
 
-.trauma-card__connections {
+.vb-trauma-card__connections {
+  background-color: rgb(255 255 255 / 5%);
+  border-radius: 4px;
   margin: 1rem 0;
   padding: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
 }
 
-.trauma-card__connections-title {
+.vb-trauma-card__connections-title {
   font-size: 0.9rem;
+  font-weight: 400;
   margin: 0 0 0.5rem;
-  font-weight: normal;
 }
 
-.trauma-card__connections-list {
+.vb-trauma-card__connections-list {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
-.trauma-card__connection {
+.vb-trauma-card__connection {
   font-size: 0.8rem;
   margin-bottom: 0.25rem;
 }
 
-.trauma-card__connection-link {
-  color: rgba(255, 255, 255, 0.8);
+.vb-trauma-card__connection-link {
+  color: rgb(255 255 255 / 80%);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.trauma-card__connection-link:hover {
+.vb-trauma-card__connection-link:hover {
   color: #fff;
 }
 
-.trauma-card__actions {
+.vb-trauma-card__actions {
   display: flex;
   margin-top: 1rem;
 }
 
-.trauma-card__action-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: none;
+.vb-trauma-card__action-button {
+  background-color: rgb(255 255 255 / 10%);
+  border: 0;
   border-radius: 4px;
   color: #fff;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
   text-align: center;
   text-decoration: none;
-  font-family: inherit;
+  transition: all 0.2s ease;
 }
 
-.trauma-card__action-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.vb-trauma-card__action-button:hover {
+  background-color: rgb(255 255 255 / 20%);
 }
 
-.trauma-card__memory-button {
+.vb-trauma-card__memory-button {
   margin-right: 0.5rem;
 }
 
-.trauma-card__recursion-echoes {
+.vb-trauma-card__recursion-echoes {
+  height: 100%;
+  left: 0;
+  pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
   z-index: -1;
 }
 
-.trauma-card__recursion-echo {
+.vb-trauma-card__recursion-echo {
+  background-color: rgb(0 0 0 / 50%);
+  border-radius: 12px;
+  height: 100%;
+  left: 0;
+  opacity: calc(60% - (var(--vb-recursion-echo-level) * 15%));
   position: absolute;
   top: 0;
-  left: 0;
+  transform: scale(calc(1 + (0.05 * var(--vb-recursion-echo-level))))
+    translateY(calc(var(--vb-recursion-echo-level) * 5px));
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  transform: scale(calc(1 + (0.05 * var(--echo-level)))) 
-             translateY(calc(var(--echo-level) * 5px));
-  opacity: calc(0.6 - (var(--echo-level) * 0.15));
-  z-index: calc(-1 * var(--echo-level));
+  z-index: calc(-1 * var(--vb-recursion-echo-level));
 }
 
 /* Trauma Type Specific Styling */
-.trauma-abandonment {
-  --bloom-color: var(--trauma-abandonment-color);
-  color: var(--trauma-abandonment-color);
+.vb-trauma-abandonment {
+  --vb-bloom-color: var(--vb-trauma-abandonment-color);
+
+  color: var(--vb-trauma-abandonment-color);
 }
 
-.trauma-abandonment .trauma-card__bloom-layer {
+.vb-trauma-abandonment .vb-trauma-card__bloom-layer {
+  animation: vb-pulse-abandonment calc(var(--vb-animation-speed) * 2) ease-in-out infinite;
   background: radial-gradient(
     circle at center,
-    var(--trauma-abandonment-color) 0%,
+    var(--vb-trauma-abandonment-color) 0%,
     transparent 70%
   );
-  animation: pulse-abandonment calc(var(--animation-speed) * 2) ease-in-out infinite;
 }
 
-.trauma-fragmentation {
-  --bloom-color: var(--trauma-fragmentation-color);
-  color: var(--trauma-fragmentation-color);
+.vb-trauma-fragmentation {
+  --vb-bloom-color: var(--vb-trauma-fragmentation-color);
+
+  color: var(--vb-trauma-fragmentation-color);
 }
 
-.trauma-fragmentation .trauma-card__bloom-layer {
+.vb-trauma-fragmentation .vb-trauma-card__bloom-layer {
+  animation: vb-shift-fragmentation calc(var(--vb-animation-speed) * 1.5) ease infinite;
   background: linear-gradient(
     45deg,
-    var(--trauma-fragmentation-color) 0%,
+    var(--vb-trauma-fragmentation-color) 0%,
     transparent 40%,
-    var(--trauma-fragmentation-color) 60%,
+    var(--vb-trauma-fragmentation-color) 60%,
     transparent 100%
   );
-  animation: shift-fragmentation calc(var(--animation-speed) * 1.5) ease infinite;
 }
 
-.trauma-recursion {
-  --bloom-color: var(--trauma-recursion-color);
-  color: var(--trauma-recursion-color);
+.vb-trauma-recursion {
+  --vb-bloom-color: var(--vb-trauma-recursion-color);
+
+  color: var(--vb-trauma-recursion-color);
 }
 
-.trauma-recursion .trauma-card__bloom-layer {
+.vb-trauma-recursion .vb-trauma-card__bloom-layer {
+  animation: vb-rotate-recursion calc(var(--vb-animation-speed) * 3) linear infinite;
   background: repeating-radial-gradient(
     circle at center,
-    var(--trauma-recursion-color) 0%,
+    var(--vb-trauma-recursion-color) 0%,
     transparent 10%,
-    var(--trauma-recursion-color) 20%
+    var(--vb-trauma-recursion-color) 20%
   );
-  animation: rotate-recursion calc(var(--animation-speed) * 3) linear infinite;
 }
 
-.trauma-surveillance {
-  --bloom-color: var(--trauma-surveillance-color);
-  color: var(--trauma-surveillance-color);
+.vb-trauma-surveillance {
+  --vb-bloom-color: var(--vb-trauma-surveillance-color);
+
+  color: var(--vb-trauma-surveillance-color);
 }
 
-.trauma-surveillance .trauma-card__bloom-layer {
+.vb-trauma-surveillance .vb-trauma-card__bloom-layer {
+  animation: vb-scan-surveillance calc(var(--vb-animation-speed) * 1) linear infinite;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--trauma-surveillance-color) 50%,
+    var(--vb-trauma-surveillance-color) 50%,
     transparent 100%
   );
   background-size: 100% 10px;
-  animation: scan-surveillance calc(var(--animation-speed) * 1) linear infinite;
 }
 
-.trauma-displacement {
-  --bloom-color: var(--trauma-displacement-color);
-  color: var(--trauma-displacement-color);
+.vb-trauma-displacement {
+  --vb-bloom-color: var(--vb-trauma-displacement-color);
+
+  color: var(--vb-trauma-displacement-color);
 }
 
-.trauma-displacement .trauma-card__bloom-layer {
+.vb-trauma-displacement .vb-trauma-card__bloom-layer {
+  animation: vb-rotate-displacement calc(var(--vb-animation-speed) * 2) linear infinite;
   background: conic-gradient(
     from 0deg,
-    var(--trauma-displacement-color) 0%,
+    var(--vb-trauma-displacement-color) 0%,
     transparent 25%,
-    var(--trauma-displacement-color) 50%,
+    var(--vb-trauma-displacement-color) 50%,
     transparent 75%,
-    var(--trauma-displacement-color) 100%
+    var(--vb-trauma-displacement-color) 100%
   );
-  animation: rotate-displacement calc(var(--animation-speed) * 2) linear infinite;
 }
 
-.trauma-dissolution {
-  --bloom-color: var(--trauma-dissolution-color);
-  color: var(--trauma-dissolution-color);
+.vb-trauma-dissolution {
+  --vb-bloom-color: var(--vb-trauma-dissolution-color);
+
+  color: var(--vb-trauma-dissolution-color);
 }
 
-.trauma-dissolution .trauma-card__bloom-layer {
+.vb-trauma-dissolution .vb-trauma-card__bloom-layer {
+  animation: vb-dissolve-dissolution calc(var(--vb-animation-speed) * 4) ease-in-out infinite
+    alternate;
   background: radial-gradient(
     ellipse at center,
-    var(--trauma-dissolution-color) 0%,
+    var(--vb-trauma-dissolution-color) 0%,
     transparent 50%,
-    var(--trauma-dissolution-color) 100%
+    var(--vb-trauma-dissolution-color) 100%
   );
-  animation: dissolve-dissolution calc(var(--animation-speed) * 4) ease-in-out infinite alternate;
 }
 
 /* Bloom Text Effect */
-.bloom-text {
+.vb-bloom-text {
+  animation: vb-pulsate calc(var(--vb-animation-speed) * 2) ease-in-out infinite;
+  color: #fff; /* Changed from #ffffff to shorter form */
   position: relative;
-  color: white;
-  text-shadow: 0 0 calc(var(--bloom-spread) * var(--bloom-intensity)) var(--bloom-color);
-  animation: pulsate calc(var(--animation-speed) * 2) ease-in-out infinite;
+  text-shadow: 0 0 calc(var(--vb-bloom-spread) * var(--vb-bloom-intensity)) var(--vb-bloom-color);
 }
 
 /* Global Trauma Effects */
-.trauma-visualization-active {
-  animation: trauma-pulse 3s ease-in-out infinite;
+.vb-trauma-visualization-active {
+  animation: vb-trauma-pulse 3s ease-in-out infinite;
 }
 
-.trauma-active-abandonment {
-  animation: trauma-fade 3s ease-in-out infinite;
+.vb-trauma-active-abandonment {
+  animation: vb-trauma-fade 3s ease-in-out infinite;
 }
 
-.trauma-active-fragmentation {
-  animation: trauma-shatter 0.5s ease-in-out;
+.vb-trauma-active-fragmentation {
+  animation: vb-trauma-shatter 0.5s ease-in-out;
 }
 
-.trauma-active-recursion {
-  animation: trauma-loop 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+.vb-trauma-active-recursion {
+  animation: vb-trauma-loop 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.trauma-active-surveillance {
-  animation: trauma-scan 1s linear infinite;
+.vb-trauma-active-surveillance {
+  animation: vb-trauma-scan 1s linear infinite;
 }
 
-.trauma-active-displacement {
-  animation: trauma-shift 3s ease-in-out infinite;
+.vb-trauma-active-displacement {
+  animation: vb-trauma-shift 3s ease-in-out infinite;
 }
 
-.trauma-active-dissolution {
-  animation: trauma-dissolve 5s ease-in-out infinite alternate;
+.vb-trauma-active-dissolution {
+  animation: vb-trauma-dissolve 5s ease-in-out infinite alternate;
 }
 
-.phase-transitioning {
-  animation: phase-transition 1s ease-in-out;
+.vb-phase-transitioning {
+  animation: vb-phase-transition 1s ease-in-out;
 }
 
 /* Scan Effect */
-.scan-effect {
+.vb-scan-effect {
   position: relative;
 }
 
-.scan-effect::before {
+.vb-scan-effect::before {
+  animation: vb-scan-line 2s linear infinite;
+  background-color: var(--vb-trauma-surveillance-color);
   content: '';
+  height: 3px;
+  left: 0;
+  opacity: 70%;
+  pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 3px;
-  background-color: var(--trauma-surveillance-color);
-  opacity: 0.7;
   z-index: 10;
-  animation: scan-line 2s linear infinite;
-  pointer-events: none;
 }
 
 /* Recursion Container */
-.recursion-container {
-  position: absolute;
-  width: 100%;
+.vb-recursion-container {
   height: 100%;
-  top: 0;
   left: 0;
-  z-index: -1;
-  pointer-events: none;
   perspective: 1000px;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -1;
 }
 
-.recursion-echo {
+.vb-recursion-echo {
   transition: all 0.3s ease;
 }
 
 /* Animations */
-@keyframes pulse-abandonment {
-  0%, 100% { opacity: calc(var(--bloom-intensity) * 0.3); }
-  50% { opacity: calc(var(--bloom-intensity) * 0.8); }
+@keyframes vb-pulse-abandonment {
+  0%,
+  100% {
+    opacity: calc(var(--vb-bloom-intensity) * 30%);
+  }
+  50% {
+    opacity: calc(var(--vb-bloom-intensity) * 80%);
+  }
 }
 
-@keyframes shift-fragmentation {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
+@keyframes vb-shift-fragmentation {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
 }
 
-@keyframes rotate-recursion {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes vb-rotate-recursion {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes scan-surveillance {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100px; }
+@keyframes vb-scan-surveillance {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100px;
+  }
 }
 
-@keyframes rotate-displacement {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes vb-rotate-displacement {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes dissolve-dissolution {
-  0% { opacity: calc(var(--bloom-intensity) * 0.3); transform: scale(0.95); }
-  100% { opacity: calc(var(--bloom-intensity) * 0.8); transform: scale(1.05); }
+@keyframes vb-dissolve-dissolution {
+  0% {
+    opacity: calc(var(--vb-bloom-intensity) * 30%);
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: calc(var(--vb-bloom-intensity) * 80%);
+    transform: scale(1.05);
+  }
 }
 
-@keyframes pulsate {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
+@keyframes vb-pulsate {
+  0%,
+  100% {
+    opacity: 80%;
+  }
+  50% {
+    opacity: 100%;
+  }
 }
 
-@keyframes trauma-pulse {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.2); }
+@keyframes vb-trauma-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
 }
 
-@keyframes trauma-fade {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+@keyframes vb-trauma-fade {
+  0%,
+  100% {
+    opacity: 100%;
+  }
+  50% {
+    opacity: 70%;
+  }
 }
 
-@keyframes trauma-shatter {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(2px, -2px); }
-  60% { transform: translate(-1px, -2px); }
-  80% { transform: translate(2px, 1px); }
-  100% { transform: translate(0); }
+@keyframes vb-trauma-shatter {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(2px, -2px);
+  }
+  60% {
+    transform: translate(-1px, -2px);
+  }
+  80% {
+    transform: translate(2px, 1px);
+  }
+  100% {
+    transform: translate(0);
+  }
 }
 
-@keyframes trauma-loop {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.01); }
+@keyframes vb-trauma-loop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
 }
 
-@keyframes trauma-scan {
-  0% { box-shadow: 0 0 0 rgba(0, 202, 255, 0); }
-  50% { box-shadow: 0 0 20px rgba(0, 202, 255, 0.5); }
-  100% { box-shadow: 0 0 0 rgba(0, 202, 255, 0); }
+@keyframes vb-trauma-scan {
+  0% {
+    box-shadow: 0 0 0 rgb(0 202 255 / 0%);
+  }
+  50% {
+    box-shadow: 0 0 20px rgb(0 202 255 / 50%);
+  }
+  100% {
+    box-shadow: 0 0 0 rgb(0 202 255 / 0%);
+  }
 }
 
-@keyframes trauma-shift {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-  100% { transform: translateX(0); }
+@keyframes vb-trauma-shift {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
-@keyframes trauma-dissolve {
-  0% { filter: blur(0); }
-  50% { filter: blur(1px); }
-  100% { filter: blur(0); }
+@keyframes vb-trauma-dissolve {
+  0% {
+    filter: blur(0);
+  }
+  50% {
+    filter: blur(1px);
+  }
+  100% {
+    filter: blur(0);
+  }
 }
 
-@keyframes phase-transition {
-  0% { filter: brightness(1) contrast(1); }
-  25% { filter: brightness(1.5) contrast(1.2); }
-  50% { filter: brightness(0.8) contrast(1.5) hue-rotate(15deg); }
-  75% { filter: brightness(1.2) contrast(0.9) hue-rotate(-15deg); }
-  100% { filter: brightness(1) contrast(1); }
+@keyframes vb-phase-transition {
+  0% {
+    filter: brightness(1) contrast(1);
+  }
+  25% {
+    filter: brightness(1.5) contrast(1.2);
+  }
+  50% {
+    filter: brightness(0.8) contrast(1.5) hue-rotate(15deg);
+  }
+  75% {
+    filter: brightness(1.2) contrast(0.9) hue-rotate(-15deg);
+  }
+  100% {
+    filter: brightness(1) contrast(1);
+  }
 }
 
-@keyframes scan-line {
-  0% { top: 0; }
-  100% { top: 100%; }
+@keyframes vb-scan-line {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
 }
 
 /* Media Queries */
-@media (max-width: 768px) {
-  .trauma-card__title {
+@media (width <= 768px) {
+  .vb-trauma-card__title {
     font-size: 1.2rem;
   }
-  
-  .trauma-card__content {
+
+  .vb-trauma-card__content {
     padding: 1rem;
   }
-  
-  .trauma-card__action-button {
-    padding: 0.6rem 0.8rem;
+
+  .vb-trauma-card__action-button {
     font-size: 0.8rem;
+    padding: 0.6rem 0.8rem;
   }
 }
 
-@media (min-width: 992px) {
-  .trauma-card:hover {
+@media (width >= 992px) {
+  .vb-trauma-card:hover {
+    box-shadow: 0 15px 30px rgb(0 0 0 / 30%),
+      0 0 calc(var(--vb-bloom-spread) * var(--vb-bloom-intensity)) var(--vb-bloom-color);
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 
-                0 0 calc(var(--bloom-spread) * var(--bloom-intensity)) var(--bloom-color);
   }
 }
 
 /* Interactive States */
-.memory-node:focus-within {
-  outline: 2px solid var(--bloom-color);
+.vb-memory-node:focus-within {
+  outline: 2px solid var(--vb-bloom-color);
   outline-offset: 2px;
 }

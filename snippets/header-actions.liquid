@@ -1,18 +1,136 @@
-<div class="site-header__actions">
-  <button type="button" class="site-header__search-toggle" aria-label="{{ 'general.search.toggle_search' | t }}" data-action="toggle-search">
+<div class="site-header__actions vb-actions-container vb-flex vb-gap-sm vb-items-center">
+  <!-- Search button with improved accessibility and aria-expanded state -->
+  <button type="button"
+          class="site-header__search-toggle vb-btn vb-btn--icon"
+          aria-label="{{ 'general.search.toggle_search' | t }}"
+          aria-expanded="false"
+          data-action="toggle-search"
+          data-vb-quantum="true"
+          data-vb-interaction="glow">
     {% render 'icon-search' %}
+    <span class="vb-sr-only">{{ 'general.search.toggle_search' | t }}</span>
   </button>
 
-  <a href="{{ routes.cart_url }}" class="site-header__cart" aria-label="{{ 'general.cart.title' | t }}">
+  <!-- Cart link with enhanced accessibility, trauma-reactive styles, and quantum effects -->
+  <a href="{{ routes.cart_url }}"
+     class="site-header__cart vb-btn vb-btn--icon vb-relative"
+     aria-label="{{ 'general.cart.title' | t }}: {{ cart.item_count }} {{ 'general.cart.items' | t }}"
+     data-cart-toggle
+     data-cart-item-count="{{ cart.item_count }}"
+     data-vb-quantum="true"
+     data-vb-interaction="glow"
+     data-vb-trauma="{% if cart.item_count > 5 %}fragmentation{% elsif cart.item_count > 0 %}echo{% else %}void{% endif %}">
     {% render 'icon-cart' %}
-    <span class="site-header__cart-count" data-cart-count>
+    <span class="site-header__cart-count vb-cart-count vb-flex vb-items-center vb-justify-center vb-absolute"
+          data-cart-count
+          aria-hidden="true"
+          {% if cart.item_count == 0 %}hidden{% endif %}>
       {{ cart.item_count }}
+    </span>
+    <span class="vb-pulse-indicator vb-absolute"
+          aria-hidden="true"
+          {% if cart.item_count == 0 %}hidden{% endif %}></span>
+
+    <!-- Hidden live region for screen readers to announce cart updates -->
+    <span class="vb-sr-only"
+          aria-live="polite"
+          data-cart-announce>
+      {% if cart.item_count == 0 %}
+        {{ 'cart.general.empty' | t }}
+      {% else %}
+        {{ 'cart.general.contains_items' | t: count: cart.item_count }}
+      {% endif %}
     </span>
   </a>
 
+  <!-- Account link with improved accessibility and profile-aware styling -->
   {% if shop.customer_accounts_enabled %}
-    <a href="{{ routes.account_url }}" class="site-header__account" aria-label="{{ 'customer.account.title' | t }}">
+    <a href="{{ routes.account_url }}"
+       class="site-header__account vb-btn vb-btn--icon"
+       aria-label="{{ 'customer.account.title' | t }}"
+       data-vb-quantum="true"
+       data-vb-interaction="glow">
       {% render 'icon-account' %}
+      <span class="vb-sr-only">{{ 'customer.account.title' | t }}</span>
     </a>
   {% endif %}
 </div>
+
+{% comment %}
+  Styles have been moved to the centralized CSS architecture.
+  This component uses classes from:
+  - vb-core.css (utilities, accessibility)
+  - vb-dynamic.css (trauma effects, interaction states)
+  - vb-animations.css (animations)
+  - vb-profiles.css (profile-specific styling)
+
+  Only component-specific styles remain here.
+{% endcomment %}
+<style>
+  /* Component-specific styles that aren't generic enough for the core files */
+  .vb-cart-count {
+    top: -8px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 10px;
+    border-radius: var(--vb-border-radius-circle);
+    background-color: var(--vb-profile-accent, var(--vb-color-accent));
+    color: var(--vb-color-background);
+    line-height: 1;
+  }
+
+  .vb-pulse-indicator {
+    top: -3px;
+    right: -3px;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--vb-border-radius-circle);
+    background-color: var(--vb-profile-accent, var(--vb-color-accent));
+  }
+
+  /* Let the animation system handle these effects */
+  [data-vb-trauma="fragmentation"] .vb-pulse-indicator {
+    animation: vb-trauma-fragmentation 2s ease-in-out infinite;
+  }
+
+  [data-vb-trauma="echo"] .vb-pulse-indicator {
+    animation: vb-pulse var(--vb-animation-speed-medium) infinite;
+  }
+
+  /* Cart animation on update - uses the shared animation system */
+  .vb-cart-count[data-animate] {
+    animation: vb-pulse var(--vb-animation-speed-medium) ease-in-out;
+  }
+</style>
+
+<script>
+  // Enhance cart accessibility with ARIA live regions
+  document.addEventListener('DOMContentLoaded', function() {
+    const cartToggle = document.querySelector('[data-cart-toggle]');
+    const cartAnnounce = document.querySelector('[data-cart-announce]');
+
+    // Listen for cart updates from the system
+    document.addEventListener('cart:updated', function(event) {
+      if (!event.detail || !cartAnnounce) return;
+
+      const count = event.detail.item_count || 0;
+      // Update the live region for screen readers
+      if (count === 0) {
+        cartAnnounce.textContent = {{ 'cart.general.empty' | t | json }};
+      } else {
+        cartAnnounce.textContent = {{ 'cart.general.contains_items' | t | json }}.replace('{count}', count);
+      }
+
+      // Add animation trigger
+      const countElement = document.querySelector('[data-cart-count]');
+      if (countElement) {
+        countElement.setAttribute('data-animate', '');
+        // Remove animation trigger after animation completes
+        setTimeout(() => {
+          countElement.removeAttribute('data-animate');
+        }, 300); // Match animation duration
+      }
+    });
+  });
+</script>

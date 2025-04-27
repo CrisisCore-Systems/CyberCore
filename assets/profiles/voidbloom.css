@@ -3,503 +3,503 @@
  * A recursive styling system for memory artifacts
  * @MutationCompatible: All Profiles
  * @StrategyProfile: quantum-entangled
- * @Version: 3.7.1
+ * @Version: 3.7.2
  */
 
 /* Trauma-encoded elements */
-.trauma-card {
-  position: relative;
-  overflow: hidden;
+.vb-trauma-card {
+  background-color: var(--vb-phase-background);
   border-radius: 4px;
-  background-color: var(--phase-background);
+  overflow: hidden;
+  position: relative;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.trauma-card::before {
+.vb-trauma-card::before {
   content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0%;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  opacity: 0;
   transition: opacity 0.5s ease;
+  width: 100%;
+  z-index: 1;
 }
 
 /* Trauma-type specific styles */
-.trauma-abandonment::before {
+.vb-trauma-abandonment::before {
+  animation: vb-voidbloom-pulse 4s ease-in-out infinite;
   background: radial-gradient(
     ellipse at center,
-    var(--trauma-abandonment-color) 0%,
+    var(--vb-trauma-abandonment-color) 0%,
     transparent 70%
   );
-  animation: pulse-abandonment 4s ease-in-out infinite;
 }
 
-.trauma-fragmentation::before {
+.vb-trauma-fragmentation::before {
+  animation: vb-voidbloom-glow 2s linear infinite;
   background: repeating-linear-gradient(
     45deg,
-    var(--trauma-fragmentation-color) 0%,
+    var(--vb-trauma-fragmentation-color) 0%,
     transparent 10%,
-    var(--trauma-fragmentation-color) 20%
+    var(--vb-trauma-fragmentation-color) 20%
   );
-  animation: shift-fragmentation 2s linear infinite;
 }
 
-.trauma-recursion::before {
+.vb-trauma-recursion::before {
+  animation: vb-rotate-recursion 6s linear infinite;
   background: repeating-radial-gradient(
     circle at center,
-    var(--trauma-recursion-color) 0%,
+    var(--vb-trauma-recursion-color) 0%,
     transparent 10%,
-    var(--trauma-recursion-color) 20%
+    var(--vb-trauma-recursion-color) 20%
   );
-  animation: rotate-recursion 6s linear infinite;
 }
 
-.trauma-surveillance::before {
+.vb-trauma-surveillance::before {
+  animation: vb-scan-surveillance 3s linear infinite;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--trauma-surveillance-color) 50%,
+    var(--vb-trauma-surveillance-color) 50%,
     transparent 100%
   );
   background-size: 100% 10px;
-  animation: scan-surveillance 3s linear infinite;
 }
 
-.trauma-displacement::before {
+.vb-trauma-displacement::before {
+  animation: vb-shift-displacement 4s ease-in-out infinite;
   background: repeating-conic-gradient(
-    var(--trauma-displacement-color) 0%,
+    var(--vb-trauma-displacement-color) 0%,
     transparent 5%,
-    var(--trauma-displacement-color) 10%
+    var(--vb-trauma-displacement-color) 10%
   );
-  animation: shift-displacement 4s ease-in-out infinite;
 }
 
-.trauma-dissolution::before {
+.vb-trauma-dissolution::before {
+  animation: vb-dissolve-dissolution 8s ease-in-out infinite;
   background: radial-gradient(
     ellipse at center,
-    var(--trauma-dissolution-color) 0%,
+    var(--vb-trauma-dissolution-color) 0%,
     transparent 50%,
-    var(--trauma-dissolution-color) 100%
+    var(--vb-trauma-dissolution-color) 100%
   );
-  animation: dissolve-dissolution 8s ease-in-out infinite;
 }
 
 /* Hover states */
-.trauma-card:hover::before {
-  opacity: 0.5;
+.vb-trauma-card:hover::before {
+  opacity: 50%;
 }
 
 /* Memory Phase Base Styles */
-.phase-cyber-lotus {
-  --phase-accent: var(--phase-primary-color, #50ff40);
-  --phase-gradient: linear-gradient(135deg, #50ff40 0%, #9000ff 100%);
+.vb-phase-cyber-lotus {
+  --vb-phase-accent: var(--vb-phase-primary-color, #50ff40);
+  --vb-phase-gradient: linear-gradient(135deg, #50ff40 0%, #9000ff 100%);
 }
 
-.phase-alien-flora {
-  --phase-accent: var(--phase-primary-color, #ff9900);
-  --phase-gradient: linear-gradient(135deg, #ff9900 0%, #00ddaa 100%);
+.vb-phase-alien-flora {
+  --vb-phase-accent: var(--vb-phase-primary-color, #f90);
+  --vb-phase-gradient: linear-gradient(135deg, #f90 0%, #0da 100%);
 }
 
-.phase-rolling-virus {
-  --phase-accent: var(--phase-primary-color, #ff2150);
-  --phase-gradient: linear-gradient(135deg, #ff2150 0%, #00caff 100%);
+.vb-phase-rolling-virus {
+  --vb-phase-accent: var(--vb-phase-primary-color, #ff2150);
+  --vb-phase-gradient: linear-gradient(135deg, #ff2150 0%, #00caff 100%);
 }
 
 /* Product Grid Styles */
-.product-grid {
+.vb-product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   margin-bottom: 2rem;
 }
 
 /* Compatibility Grid */
-.compatibility-grid {
+.vb-compatibility-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
   margin: 1.5rem 0;
 }
 
-.compatibility-item {
+.vb-compatibility-item {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.compatibility-label {
+.vb-compatibility-label {
   font-size: 0.85rem;
-  opacity: 0.8;
+  opacity: 80%;
 }
 
-.compatibility-indicator {
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.1);
+.vb-compatibility-indicator {
+  background-color: rgb(255 255 255 / 10%);
   border-radius: 2px;
+  height: 4px;
   overflow: hidden;
 }
 
-.indicator-fill {
-  height: 100%;
+.vb-indicator-fill {
   border-radius: 2px;
+  height: 100%;
   transition: width 0.5s ease;
 }
 
-.trauma-abandonment .indicator-fill {
-  background-color: var(--trauma-abandonment-color);
+.vb-trauma-abandonment .vb-indicator-fill {
+  background-color: var(--vb-trauma-abandonment-color);
 }
 
-.trauma-fragmentation .indicator-fill {
-  background-color: var(--trauma-fragmentation-color);
+.vb-trauma-fragmentation .vb-indicator-fill {
+  background-color: var(--vb-trauma-fragmentation-color);
 }
 
-.trauma-recursion .indicator-fill {
-  background-color: var(--trauma-recursion-color);
+.vb-trauma-recursion .vb-indicator-fill {
+  background-color: var(--vb-trauma-recursion-color);
 }
 
-.trauma-surveillance .indicator-fill {
-  background-color: var(--trauma-surveillance-color);
+.vb-trauma-surveillance .vb-indicator-fill {
+  background-color: var(--vb-trauma-surveillance-color);
 }
 
-.trauma-displacement .indicator-fill {
-  background-color: var(--trauma-displacement-color);
+.vb-trauma-displacement .vb-indicator-fill {
+  background-color: var(--vb-trauma-displacement-color);
 }
 
-.trauma-dissolution .indicator-fill {
-  background-color: var(--trauma-dissolution-color);
+.vb-trauma-dissolution .vb-indicator-fill {
+  background-color: var(--vb-trauma-dissolution-color);
 }
 
 /* Buttons with trauma encoding */
-.memory-archive-button {
-  position: relative;
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  border: none;
+.vb-memory-archive-button {
+  background-color: rgb(255 255 255 / 10%);
+  border: 0;
   border-radius: 4px;
+  color: var(--vb-phase-text-color);
+  cursor: pointer;
+  display: inline-block;
   font-size: 1rem;
   font-weight: 600;
-  text-align: center;
-  cursor: pointer;
   overflow: hidden;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  text-align: center;
   transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--phase-text-color);
 }
 
-.memory-archive-button::before {
+.vb-memory-archive-button::before {
   content: '';
+  height: 100%;
+  left: 0;
+  opacity: 70%;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  opacity: 0.7;
   transition: opacity 0.3s ease;
+  width: 100%;
+  z-index: -1;
 }
 
-.memory-archive-button.trauma-abandonment::before {
-  background: var(--trauma-abandonment-color);
+.vb-memory-archive-button.vb-trauma-abandonment::before {
+  background: var(--vb-trauma-abandonment-color);
 }
 
-.memory-archive-button.trauma-fragmentation::before {
-  background: var(--trauma-fragmentation-color);
+.vb-memory-archive-button.vb-trauma-fragmentation::before {
+  background: var(--vb-trauma-fragmentation-color);
 }
 
-.memory-archive-button.trauma-recursion::before {
-  background: var(--trauma-recursion-color);
+.vb-memory-archive-button.vb-trauma-recursion::before {
+  background: var(--vb-trauma-recursion-color);
 }
 
-.memory-archive-button.trauma-surveillance::before {
-  background: var(--trauma-surveillance-color);
+.vb-memory-archive-button.vb-trauma-surveillance::before {
+  background: var(--vb-trauma-surveillance-color);
 }
 
-.memory-archive-button.trauma-displacement::before {
-  background: var(--trauma-displacement-color);
+.vb-memory-archive-button.vb-trauma-displacement::before {
+  background: var(--vb-trauma-displacement-color);
 }
 
-.memory-archive-button.trauma-dissolution::before {
-  background: var(--trauma-dissolution-color);
+.vb-memory-archive-button.vb-trauma-dissolution::before {
+  background: var(--vb-trauma-dissolution-color);
 }
 
-.memory-archive-button:hover::before {
-  opacity: 1;
+.vb-memory-archive-button:hover::before {
+  opacity: 100%;
 }
 
-.memory-archive-button:disabled {
-  opacity: 0.5;
+.vb-memory-archive-button:disabled {
   cursor: not-allowed;
+  opacity: 50%;
 }
 
 /* Metric bars for encoding displays */
-.encoding-metrics {
+.vb-encoding-metrics {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin: 1.5rem 0;
 }
 
-.encoding-metric {
-  display: flex;
+.vb-encoding-metric {
   align-items: center;
+  display: flex;
   gap: 1rem;
 }
 
-.metric-label {
+.vb-metric-label {
   font-size: 0.85rem;
   width: 100px;
 }
 
-.metric-bar {
+.vb-metric-bar {
+  background-color: rgb(255 255 255 / 10%);
+  border-radius: 3px;
   flex-grow: 1;
   height: 6px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
   overflow: hidden;
 }
 
-.metric-fill {
-  height: 100%;
+.vb-metric-fill {
+  background-color: var(--vb-phase-accent);
   border-radius: 3px;
-  background-color: var(--phase-accent);
+  height: 100%;
   transition: width 0.5s ease;
 }
 
-.trauma-intensity .metric-fill {
-  background: var(--phase-gradient);
+.vb-trauma-intensity .vb-metric-fill {
+  background: var(--vb-phase-gradient);
 }
 
-.metric-value {
+.vb-metric-value {
   font-size: 0.85rem;
-  width: 40px;
   text-align: right;
+  width: 40px;
 }
 
 /* Badge styles */
-.trauma-badge,
-.phase-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
+.vb-trauma-badge,
+.vb-phase-badge {
   border-radius: 4px;
+  display: inline-block;
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  text-transform: uppercase;
 }
 
-.trauma-badge {
-  background-color: rgba(0, 0, 0, 0.5);
+.vb-trauma-badge {
+  background-color: rgb(0 0 0 / 50%);
 }
 
-.trauma-badge.abandonment {
-  color: var(--trauma-abandonment-color);
-  border: 1px solid var(--trauma-abandonment-color);
+.vb-trauma-badge.abandonment {
+  border: 1px solid var(--vb-trauma-abandonment-color);
+  color: var(--vb-trauma-abandonment-color);
 }
 
-.trauma-badge.fragmentation {
-  color: var(--trauma-fragmentation-color);
-  border: 1px solid var(--trauma-fragmentation-color);
+.vb-trauma-badge.fragmentation {
+  border: 1px solid var(--vb-trauma-fragmentation-color);
+  color: var(--vb-trauma-fragmentation-color);
 }
 
-.trauma-badge.recursion {
-  color: var(--trauma-recursion-color);
-  border: 1px solid var(--trauma-recursion-color);
+.vb-trauma-badge.recursion {
+  border: 1px solid var(--vb-trauma-recursion-color);
+  color: var(--vb-trauma-recursion-color);
 }
 
-.trauma-badge.surveillance {
-  color: var(--trauma-surveillance-color);
-  border: 1px solid var(--trauma-surveillance-color);
+.vb-trauma-badge.surveillance {
+  border: 1px solid var(--vb-trauma-surveillance-color);
+  color: var(--vb-trauma-surveillance-color);
 }
 
-.trauma-badge.displacement {
-  color: var(--trauma-displacement-color);
-  border: 1px solid var(--trauma-displacement-color);
+.vb-trauma-badge.displacement {
+  border: 1px solid var(--vb-trauma-displacement-color);
+  color: var(--vb-trauma-displacement-color);
 }
 
-.trauma-badge.dissolution {
-  color: var(--trauma-dissolution-color);
-  border: 1px solid var(--trauma-dissolution-color);
+.vb-trauma-badge.dissolution {
+  border: 1px solid var(--vb-trauma-dissolution-color);
+  color: var(--vb-trauma-dissolution-color);
 }
 
-.phase-badge {
-  margin-left: 0.5rem;
+.vb-phase-badge {
   background-color: transparent;
+  margin-left: 0.5rem;
 }
 
-.phase-badge.cyber-lotus {
-  color: var(--phase-primary-color, #50ff40);
-  border: 1px solid var(--phase-primary-color, #50ff40);
+.vb-phase-badge.cyber-lotus {
+  border: 1px solid var(--vb-phase-primary-color, #50ff40);
+  color: var(--vb-phase-primary-color, #50ff40);
 }
 
-.phase-badge.alien-flora {
-  color: var(--phase-primary-color, #ff9900);
-  border: 1px solid var(--phase-primary-color, #ff9900);
+.vb-phase-badge.alien-flora {
+  border: 1px solid var(--vb-phase-primary-color, #f90);
+  color: var(--vb-phase-primary-color, #f90);
 }
 
-.phase-badge.rolling-virus {
-  color: var(--phase-primary-color, #ff2150);
-  border: 1px solid var(--phase-primary-color, #ff2150);
+.vb-phase-badge.rolling-virus {
+  border: 1px solid var(--vb-phase-primary-color, #ff2150);
+  color: var(--vb-phase-primary-color, #ff2150);
 }
 
 /* Memory tabs */
-.memory-tabs {
+.vb-memory-tabs {
   margin-top: 2rem;
 }
 
-.tabs-navigation {
+.vb-tabs-navigation {
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
   display: flex;
   gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 1rem;
 }
 
-.tab-button {
-  padding: 0.5rem 1rem;
+.vb-tab-button {
   background: none;
-  border: none;
-  color: var(--phase-text-color);
-  opacity: 0.7;
+  border: 0;
+  color: var(--vb-phase-text-color);
   cursor: pointer;
+  opacity: 70%;
+  padding: 0.5rem 1rem;
   position: relative;
   transition: opacity 0.3s ease;
 }
 
-.tab-button::after {
-  content: '';
-  position: absolute;
+.vb-tab-button::after {
+  background-color: var(--vb-phase-accent);
   bottom: -1px;
-  left: 0;
-  width: 100%;
+  content: '';
   height: 2px;
-  background-color: var(--phase-accent);
+  left: 0;
+  position: absolute;
   transform: scaleX(0);
   transition: transform 0.3s ease;
+  width: 100%;
 }
 
-.tab-button:hover {
-  opacity: 1;
+.vb-tab-button:hover {
+  opacity: 100%;
 }
 
-.tab-button.active {
-  opacity: 1;
+.vb-tab-button.active {
+  opacity: 100%;
 }
 
-.tab-button.active::after {
+.vb-tab-button.active::after {
   transform: scaleX(1);
 }
 
-.tab-panel {
+.vb-tab-panel {
   display: none;
   padding: 1rem 0;
 }
 
-.tab-panel.active {
+.vb-tab-panel.active {
   display: block;
 }
 
 /* Loading indicators */
-.loading-indicator {
+.vb-loading-indicator {
+  color: var(--vb-phase-text-color);
+  opacity: 70%;
   padding: 2rem;
   text-align: center;
-  color: var(--phase-text-color);
-  opacity: 0.7;
 }
 
 /* Product page styles */
-.memory-artifact-container {
+.vb-memory-artifact-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 2rem;
+  grid-template-columns: 1fr 1fr;
   margin-bottom: 3rem;
 }
 
-.artifact-gallery {
+.vb-artifact-gallery {
   position: relative;
 }
 
-.gallery-container {
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
+.vb-gallery-container {
   aspect-ratio: 1 / 1;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgb(0 0 0 / 20%);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
 }
 
-.gallery-item {
+.vb-gallery-item {
+  height: 100%;
+  left: 0;
+  opacity: 0%;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
   transition: opacity 0.5s ease;
+  width: 100%;
 }
 
-.gallery-item.active {
-  opacity: 1;
+.vb-gallery-item.active {
+  opacity: 100%;
 }
 
-.image-container,
-.video-container,
-.model-container {
+.vb-image-container,
+.vb-video-container,
+.vb-model-container {
+  height: 100%;
   position: relative;
   width: 100%;
-  height: 100%;
 }
 
-.artifact-image {
-  width: 100%;
+.vb-artifact-image {
   height: 100%;
   object-fit: contain;
+  width: 100%;
 }
 
-.trauma-overlay {
+.vb-trauma-overlay {
+  height: 100%;
+  left: 0;
+  mix-blend-mode: screen;
+  opacity: 50%;
+  pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.5;
 }
 
-.gallery-controls {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
+.vb-gallery-controls {
   display: flex;
   justify-content: space-between;
+  left: 0;
   padding: 0 1rem;
+  position: absolute;
+  top: 50%;
   transform: translateY(-50%);
+  width: 100%;
 }
 
-.gallery-prev,
-.gallery-next {
-  background-color: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
+.vb-gallery-prev,
+.vb-gallery-next {
   align-items: center;
-  justify-content: center;
-  color: var(--phase-text-color);
+  background-color: rgb(0 0 0 / 50%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 50%;
+  color: var(--vb-phase-text-color);
   cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
   transition: all 0.3s ease;
+  width: 40px;
 }
 
-.gallery-prev:hover,
-.gallery-next:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-  border-color: var(--phase-accent);
+.vb-gallery-prev:hover,
+.vb-gallery-next:hover {
+  background-color: rgb(0 0 0 / 70%);
+  border-color: var(--vb-phase-accent);
 }
 
-.gallery-thumbnails {
+.vb-gallery-thumbnails {
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
@@ -507,240 +507,250 @@
   scrollbar-width: thin;
 }
 
-.gallery-thumbnail {
-  width: 60px;
-  height: 60px;
+.vb-gallery-thumbnail {
   border-radius: 4px;
-  overflow: hidden;
-  opacity: 0.5;
   cursor: pointer;
+  height: 60px;
+  opacity: 50%;
+  overflow: hidden;
   transition: opacity 0.3s ease;
+  width: 60px;
 }
 
-.gallery-thumbnail img {
-  width: 100%;
+.vb-gallery-thumbnail img {
   height: 100%;
   object-fit: cover;
+  width: 100%;
 }
 
-.gallery-thumbnail.active {
-  opacity: 1;
-  box-shadow: 0 0 0 2px var(--phase-accent);
+.vb-gallery-thumbnail.active {
+  box-shadow: 0 0 0 2px var(--vb-phase-accent);
+  opacity: 100%;
 }
 
-.artifact-meta {
-  display: flex;
+.vb-artifact-meta {
   align-items: center;
+  display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.artifact-vendor {
+.vb-artifact-vendor {
   font-size: 0.85rem;
-  opacity: 0.7;
+  opacity: 70%;
 }
 
-.trauma-indicators {
+.vb-trauma-indicators {
   display: flex;
 }
 
-.artifact-title {
-  margin: 0 0 1rem;
+.vb-artifact-title {
   font-size: 2rem;
   line-height: 1.2;
+  margin: 0 0 1rem;
 }
 
-.artifact-price {
-  margin-bottom: 1.5rem;
+.vb-artifact-price {
   font-size: 1.5rem;
   font-weight: 600;
-}
-
-.price-item--regular {
-  text-decoration: line-through;
-  opacity: 0.7;
-  margin-right: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.artifact-description {
-  margin: 2rem 0;
-  line-height: 1.6;
-}
-
-.variant-selectors {
   margin-bottom: 1.5rem;
 }
 
-.selector-wrapper {
+.vb-price-item--regular {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  opacity: 70%;
+  text-decoration: line-through;
+}
+
+.vb-artifact-description {
+  line-height: 1.6;
+  margin: 2rem 0;
+}
+
+.vb-variant-selectors {
+  margin-bottom: 1.5rem;
+}
+
+.vb-selector-wrapper {
   margin-bottom: 1rem;
 }
 
-.selector-wrapper label {
+.vb-selector-wrapper label {
   display: block;
-  margin-bottom: 0.5rem;
   font-size: 0.9rem;
+  margin-bottom: 0.5rem;
 }
 
-.variant-selector {
-  width: 100%;
-  padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.vb-variant-selector {
+  background-color: rgb(0 0 0 / 20%);
+  border: 1px solid rgb(255 255 255 / 10%);
   border-radius: 4px;
-  color: var(--phase-text-color);
+  color: var(--vb-phase-text-color);
+  padding: 0.5rem;
+  width: 100%;
 }
 
-.product-form-buttons {
+.vb-product-form-buttons {
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
 }
 
-.memory-archive-button {
+.vb-memory-archive-button {
   width: 100%;
 }
 
 /* Memory tabs styling */
-.memory-narrative {
+.vb-memory-narrative {
   margin-bottom: 2rem;
 }
 
-.memory-narrative h3 {
+.vb-memory-narrative h3 {
   margin-bottom: 1rem;
 }
 
-.narrative-content {
-  line-height: 1.6;
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.2);
+.vb-narrative-content {
+  background-color: rgb(0 0 0 / 20%);
   border-radius: 4px;
-  position: relative;
+  line-height: 1.6;
   overflow: hidden;
+  padding: 1rem;
+  position: relative;
 }
 
-.narrative-content::before {
+.vb-narrative-content::before {
+  background: linear-gradient(to bottom, var(--vb-phase-tertiary-color) 0%, transparent 100%);
   content: '';
+  height: 100%;
+  left: 0;
+  opacity: 30%;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--phase-tertiary-color) 0%, transparent 100%);
-  opacity: 0.3;
   z-index: -1;
 }
 
-.narrative-content.generated {
+.vb-narrative-content.generated {
   font-style: italic;
 }
 
-.narrative-content p {
+.vb-narrative-content p {
   margin-bottom: 1rem;
 }
 
-.related-memories-section {
+.vb-related-memories-section {
   margin-top: 4rem;
 }
 
-.related-memories-section h2 {
+.vb-related-memories-section h2 {
   margin-bottom: 2rem;
   text-align: center;
 }
 
 /* Media queries for responsive design */
-@media (max-width: 768px) {
-  .memory-artifact-container {
+@media (width <= 768px) {
+  .vb-memory-artifact-container {
     grid-template-columns: 1fr;
   }
 
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  .vb-product-grid {
     gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
-  .compatibility-grid {
+  .vb-compatibility-grid {
     grid-template-columns: 1fr;
   }
 
-  .gallery-thumbnails {
+  .vb-gallery-thumbnails {
     justify-content: center;
   }
 }
 
 /* Animation keyframes (shared with quantum-layer) */
-@keyframes pulse-abandonment {
+@keyframes vb-voidbloom-pulse {
   0%,
   100% {
+    opacity: 60%;
     transform: scale(1);
-    opacity: 0.6;
   }
+
   50% {
+    opacity: 80%;
     transform: scale(1.2);
-    opacity: 0.8;
   }
 }
 
-@keyframes shift-fragmentation {
+@keyframes vb-voidbloom-glow {
   0% {
     transform: translate(0);
   }
+
   25% {
     transform: translate(-5px, 5px);
   }
+
   50% {
     transform: translate(5px, -5px);
   }
+
   75% {
     transform: translate(-5px, -5px);
   }
+
   100% {
     transform: translate(0);
   }
 }
 
-@keyframes rotate-recursion {
+@keyframes vb-rotate-recursion {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
-@keyframes scan-surveillance {
+@keyframes vb-scan-surveillance {
   0% {
+    opacity: 40%;
     transform: translateY(-10px);
-    opacity: 0.4;
   }
+
   50% {
+    opacity: 80%;
     transform: translateY(10px);
-    opacity: 0.8;
   }
+
   100% {
+    opacity: 40%;
     transform: translateY(-10px);
-    opacity: 0.4;
   }
 }
 
-@keyframes shift-displacement {
+@keyframes vb-shift-displacement {
   0%,
   100% {
     transform: translateX(0);
   }
+
   50% {
     transform: translateX(10px);
   }
 }
 
-@keyframes dissolve-dissolution {
+@keyframes vb-dissolve-dissolution {
   0%,
   100% {
-    opacity: 0.6;
     filter: blur(10px);
+    opacity: 60%;
   }
+
   50% {
-    opacity: 0.3;
     filter: blur(15px);
+    opacity: 30%;
   }
 }

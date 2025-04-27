@@ -15,6 +15,9 @@ class ImageHandler {
     // Set up intersection observer for lazy loading
     this.setupIntersectionObserver();
 
+    // Apply appropriate loading attributes to images
+    this.applyLoadingAttributes();
+
     // Listen for resize events to adjust image sizes
     window.addEventListener('resize', this.debounce(this.updateImageSizes.bind(this), 200));
   }
@@ -51,7 +54,10 @@ class ImageHandler {
       );
 
       this.images.forEach((image) => {
-        observer.observe(image);
+        // Only observe images that don't have loading="eager"
+        if (!image.loading || image.loading !== 'eager') {
+          observer.observe(image);
+        }
       });
     } else {
       // Fallback for browsers that don't support IntersectionObserver
@@ -61,6 +67,75 @@ class ImageHandler {
           delete image.dataset.src;
         }
       });
+    }
+  }
+
+  applyLoadingAttributes() {
+    this.images.forEach((image) => {
+      // Skip images that already have loading attributes
+      if (image.hasAttribute('loading')) return;
+
+      // Check if it's a critical above-the-fold image
+      const isAboveTheFold = this.isAboveTheFoldImage(image);
+
+      if (isAboveTheFold) {
+        // Add eager loading for critical LCP images
+        image.setAttribute('loading', 'eager');
+
+        // Add additional priority hint for truly critical images
+        if (this.isCriticalImage(image)) {
+          image.setAttribute('fetchpriority', 'high');
+        }
+      } else {
+        // Add lazy loading for below-the-fold images
+        image.setAttribute('loading', 'lazy');
+      }
+
+      // Ensure width and height are set to prevent layout shifts
+      this.ensureDimensions(image);
+    });
+  }
+
+  isAboveTheFoldImage(image) {
+    // Check if image is likely to be above the fold
+    return (
+      image.closest('.hero-section') ||
+      image.closest('.featured-product__image') ||
+      image.closest('.site-header__logo') ||
+      image.hasAttribute('data-priority') ||
+      image.dataset.priority === 'high'
+    );
+  }
+
+  isCriticalImage(image) {
+    // Hero images and featured product images are usually critical
+    return (
+      image.closest('.hero-section') ||
+      image.closest('.featured-product__image') ||
+      image.dataset.priority === 'high'
+    );
+  }
+
+  ensureDimensions(image) {
+    // Only set dimensions if they're not already present
+    if (!image.hasAttribute('width') && !image.hasAttribute('height')) {
+      // For already loaded images
+      if (image.complete && image.naturalWidth > 0) {
+        image.setAttribute('width', image.naturalWidth);
+        image.setAttribute('height', image.naturalHeight);
+      } else {
+        // For images still loading
+        image.addEventListener(
+          'load',
+          () => {
+            if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+              image.setAttribute('width', image.naturalWidth);
+              image.setAttribute('height', image.naturalHeight);
+            }
+          },
+          { once: true }
+        );
+      }
     }
   }
 

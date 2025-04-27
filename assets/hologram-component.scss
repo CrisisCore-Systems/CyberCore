@@ -4,36 +4,30 @@
  * VERSION: 1.0.0
  */
 
-@import 'cyber-colors';
-@import 'cyber-animations';
+@import url('cyber-colors');
+@import url('cyber-animations');
 
 .hologram {
+  perspective: 1000px;
   position: relative;
   transform-style: preserve-3d;
-  perspective: 1000px;
 
   &__container {
-    position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-    background-color: rgba($primary-dark, 0.6);
     backdrop-filter: blur(4px);
+    background-color: rgba($primary-dark, 0.6);
+    border-radius: 4px;
     box-shadow: $glow-shadow;
+    overflow: hidden;
+    position: relative;
   }
 
   &__content {
+    color: $secondary-accent;
+    padding: 1.5rem;
     position: relative;
     z-index: 2;
-    padding: 1.5rem;
-    color: $secondary-accent;
 
     &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       background: repeating-linear-gradient(
         0deg,
         rgba($neutral-darkest, 0.1),
@@ -41,80 +35,79 @@
         transparent 2px,
         transparent 4px
       );
+      content: '';
+      height: 100%;
+      left: 0;
+      opacity: 30%;
       pointer-events: none;
-      opacity: 0.3;
+      position: absolute;
+      top: 0;
+      width: 100%;
       z-index: -1;
     }
   }
 
   &__edge {
-    position: absolute;
     border: 1px solid $primary-accent;
     pointer-events: none;
+    position: absolute;
     transition: all $animation-medium $ease-cybernetic;
 
     &--top-left {
-      top: 0;
-      left: 0;
-      width: 20px;
-      height: 20px;
-      border-right: none;
       border-bottom: none;
+      border-right: none;
+      height: 20px;
+      left: 0;
+      top: 0;
+      width: 20px;
     }
 
     &--top-right {
-      top: 0;
-      right: 0;
-      width: 20px;
-      height: 20px;
-      border-left: none;
       border-bottom: none;
+      border-left: none;
+      height: 20px;
+      right: 0;
+      top: 0;
+      width: 20px;
     }
 
     &--bottom-left {
-      bottom: 0;
-      left: 0;
-      width: 20px;
-      height: 20px;
       border-right: none;
       border-top: none;
+      bottom: 0;
+      height: 20px;
+      left: 0;
+      width: 20px;
     }
 
     &--bottom-right {
-      bottom: 0;
-      right: 0;
-      width: 20px;
-      height: 20px;
       border-left: none;
       border-top: none;
+      bottom: 0;
+      height: 20px;
+      right: 0;
+      width: 20px;
     }
   }
 
   &:hover &__edge {
-    width: 30px;
-    height: 30px;
     border-color: $secondary-accent;
     box-shadow: 0 0 8px rgba($secondary-accent, 0.6);
+    height: 30px;
+    width: 30px;
   }
 
   &__glow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    animation: neon-flicker 8s infinite;
     background: radial-gradient(circle at 50% 50%, rgba($primary-accent, 0.2), transparent 70%);
+    inset: 0;
     mix-blend-mode: screen;
     pointer-events: none;
-    animation: neon-flicker 8s infinite;
+    position: absolute;
   }
 
   &__scan-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
+    animation: scan-line 2s linear infinite;
     background: linear-gradient(
       to right,
       transparent,
@@ -123,9 +116,13 @@
       rgba($secondary-accent, 0.5),
       transparent
     );
-    z-index: 3;
+    height: 2px;
+    left: 0;
     pointer-events: none;
-    animation: scan-line 2s linear infinite;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 3;
   }
 
   &--interactive {
@@ -146,18 +143,15 @@
 
   &--quantum {
     &::after {
-      content: '';
-      position: absolute;
-      top: -10%;
-      left: -10%;
-      right: -10%;
-      bottom: -10%;
+      animation: hex-rotation 60s linear infinite;
       background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%239900ff" stroke-width="0.5" fill="none" /></svg>');
       background-size: 100px 100px;
-      opacity: 0.1;
+      inset: -10%;
+      content: '';
+      opacity: 10%;
       pointer-events: none;
+      position: absolute;
       z-index: 0;
-      animation: hex-rotation 60s linear infinite;
     }
   }
 }
@@ -201,8 +195,8 @@
   }
 
   .hologram__glow {
-    background: radial-gradient(circle at 50% 50%, rgba($error, 0.2), transparent 70%);
     animation: neon-flicker 4s infinite;
+    background: radial-gradient(circle at 50% 50%, rgba($error, 0.2), transparent 70%);
   }
 }
 
@@ -213,13 +207,13 @@
   }
 
   .hologram__edge {
-    width: 12px;
     height: 12px;
+    width: 12px;
   }
 
   &:hover .hologram__edge {
-    width: 18px;
     height: 18px;
+    width: 18px;
   }
 }
 
@@ -229,12 +223,12 @@
   }
 
   .hologram__edge {
-    width: 30px;
     height: 30px;
+    width: 30px;
   }
 
   &:hover .hologram__edge {
-    width: 40px;
     height: 40px;
+    width: 40px;
   }
 }

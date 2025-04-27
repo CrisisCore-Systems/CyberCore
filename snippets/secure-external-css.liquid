@@ -1,0 +1,38 @@
+{% comment %}
+  SECURE-EXTERNAL-CSS.LIQUID
+  Loads external CSS with Subresource Integrity (SRI) hash verification
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+  @Date: April 26, 2025
+
+  Usage:
+  {% render 'secure-external-css' with
+    url: 'https://example.com/style.css',
+    integrity: 'sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC',
+    crossorigin: 'anonymous'
+  %}
+{% endcomment %}
+
+{% if url != blank and integrity != blank %}
+  <link rel="stylesheet"
+        href="{{ url }}"
+        integrity="{{ integrity }}"
+        crossorigin="{{ crossorigin | default: 'anonymous' }}"
+        {% if media %}media="{{ media }}"{% endif %}
+        {% if preload %}
+          media="print"
+          onload="this.media='{{ media | default: 'all' }}'; this.onload=null;"
+        {% endif %}>
+
+  {% if preload %}
+    <noscript>
+      <link rel="stylesheet"
+            href="{{ url }}"
+            integrity="{{ integrity }}"
+            crossorigin="{{ crossorigin | default: 'anonymous' }}"
+            {% if media %}media="{{ media }}"{% endif %}>
+    </noscript>
+  {% endif %}
+{% endif %}

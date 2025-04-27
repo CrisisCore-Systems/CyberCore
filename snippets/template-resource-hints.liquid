@@ -2,81 +2,81 @@
   Template-specific resource hints
   @MutationCompatible: All Profiles
   @StrategyProfile: quantum-optimized
-  @Version: 1.0.0
+  @Version: 1.1.0 (SRI Support Added)
 
-  This snippet contains template-specific resource hints that 
+  This snippet contains template-specific resource hints that
   preload only what's needed for each page type.
 {% endcomment %}
 
 {% case template.name %}
   {% when 'index' %}
     <!-- Home page specific preloads -->
-    <link rel="preload" 
-          href="{{ 'hero-banner.jpg' | asset_url }}" 
-          as="image" 
+    <link rel="preload"
+          href="{{ 'hero-banner.jpg' | asset_url }}"
+          as="image"
           type="image/jpeg"
           fetchpriority="high">
-    <link rel="preload" 
-          href="{{ 'motion-interactions.js' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'motion-interactions.js' | asset_url }}"
           as="script">
 
   {% when 'product' %}
     <!-- Product page specific preloads -->
     {% if product.featured_image %}
-      <link rel="preload" 
-            href="{{ product.featured_image | image_url: width: 800 }}" 
-            as="image" 
+      <link rel="preload"
+            href="{{ product.featured_image | image_url: width: 800 }}"
+            as="image"
             type="image/jpeg"
             fetchpriority="high">
     {% endif %}
-    <link rel="preload" 
-          href="{{ 'enhanced-cart-system.js' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'enhanced-cart-system.js' | asset_url }}"
           as="script">
-    <link rel="preload" 
-          href="{{ 'components.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'components.css' | asset_url }}"
           as="style">
 
   {% when 'collection' %}
     <!-- Collection page specific preloads -->
     {% if collection.image %}
-      <link rel="preload" 
-            href="{{ collection.image | image_url: width: 1200 }}" 
-            as="image" 
+      <link rel="preload"
+            href="{{ collection.image | image_url: width: 1200 }}"
+            as="image"
             type="image/jpeg"
             fetchpriority="high">
     {% endif %}
-    <link rel="preload" 
-          href="{{ 'layouts.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'layouts.css' | asset_url }}"
           as="style">
 
   {% when 'cart' %}
     <!-- Cart page specific preloads -->
-    <link rel="preload" 
-          href="{{ 'enhanced-cart.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'enhanced-cart.css' | asset_url }}"
           as="style">
-    <link rel="preload" 
-          href="{{ 'cart-error-handler.js' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'cart-error-handler.js' | asset_url }}"
           as="script">
 
   {% when 'page' %}
     <!-- Generic page specific preloads -->
     {% if page.metafields.custom.featured_image %}
-      <link rel="preload" 
-            href="{{ page.metafields.custom.featured_image | image_url: width: 1000 }}" 
-            as="image" 
+      <link rel="preload"
+            href="{{ page.metafields.custom.featured_image | image_url: width: 1000 }}"
+            as="image"
             type="image/jpeg">
     {% endif %}
 
   {% when 'blog' or 'article' %}
     <!-- Blog/article page specific preloads -->
-    <link rel="preload" 
-          href="{{ 'narrative-commerce-styles.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'narrative-commerce-styles.css' | asset_url }}"
           as="style">
-    
+
     {% if article.image %}
-      <link rel="preload" 
-            href="{{ article.image | image_url: width: 1200 }}" 
-            as="image" 
+      <link rel="preload"
+            href="{{ article.image | image_url: width: 1200 }}"
+            as="image"
             type="image/jpeg"
             fetchpriority="high">
     {% endif %}
@@ -88,17 +88,48 @@
 
 {% case current_profile %}
   {% when 'cyber-lotus' %}
-    <link rel="preload" 
-          href="{{ 'cyber-lotus-effects.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'cyber-lotus-effects.css' | asset_url }}"
+          as="style">
+
+  {% when 'obsidian-bloom' %}
+    <link rel="preload"
+          href="{{ 'obsidian-bloom-effects.css' | asset_url }}"
           as="style">
 
   {% when 'alien-flora' %}
-    <link rel="preload" 
-          href="{{ 'alien-flora-effects.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'alien-flora-effects.css' | asset_url }}"
           as="style">
 
   {% when 'rolling-virus' %}
-    <link rel="preload" 
-          href="{{ 'rolling-virus-effects.css' | asset_url }}" 
+    <link rel="preload"
+          href="{{ 'rolling-virus-effects.css' | asset_url }}"
           as="style">
 {% endcase %}
+
+{% comment %}External CSS resources specific to template{% endcomment %}
+{% if settings.use_template_specific_external_css %}
+  {% case template.name %}
+    {% when 'product' %}
+      {% if settings.use_product_page_external_resources %}
+        {% for resource in settings.product_page_external_css %}
+          {% render 'load-external-css' with css_name: resource, preload: true %}
+        {% endfor %}
+      {% endif %}
+
+    {% when 'collection' %}
+      {% if settings.use_collection_page_external_resources %}
+        {% for resource in settings.collection_page_external_css %}
+          {% render 'load-external-css' with css_name: resource, preload: true %}
+        {% endfor %}
+      {% endif %}
+
+    {% when 'cart' %}
+      {% if settings.use_cart_page_external_resources %}
+        {% for resource in settings.cart_page_external_css %}
+          {% render 'load-external-css' with css_name: resource, preload: true %}
+        {% endfor %}
+      {% endif %}
+  {% endcase %}
+{% endif %}

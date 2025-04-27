@@ -4,7 +4,14 @@
 @tailwind utilities;
 
 /* Import existing quantum styles */
-@import './quantum-featured.css';
+@import url('./quantum-featured.css');
+
+/* Import cart drawer animations optimized for GPU acceleration */
+@import url('./cart-drawer-animations.css');
+
+/* Import accessibility styles for WCAG compliance */
+@import url('./accessibility.css');
+@import url('./accessibility-color-contrast.css');
 
 /* Custom Tailwind Components */
 @layer components {
@@ -12,11 +19,13 @@
   .tw-quantum-btn {
     @apply bg-surface text-primary border-normal border-primary rounded-md
            font-primary font-medium px-md py-sm relative overflow-hidden
-           transition duration-[var(--animation-speed-fast)] ease-[var(--animation-timing-default)];
+           transition duration-[var(--animation-speed-fast)] ease-[var(--animation-timing-default)]
+           focus-visible-ring focus-visible-button;
   }
 
   .tw-quantum-btn:hover {
     @apply shadow-[0_0_var(--glow-intensity)_var(--color-primary)];
+
     background-color: color-mix(in srgb, var(--color-surface), var(--color-primary) 10%);
   }
 
@@ -24,11 +33,13 @@
   .tw-quantum-card {
     @apply bg-surface border-thin border-primary rounded-lg p-lg
            shadow-[0_0_var(--glow-intensity)_rgba(var(--color-primary),0.2)]
-           transition duration-[var(--animation-speed-normal)] ease-[var(--animation-timing-default)];
+           transition duration-[var(--animation-speed-normal)] ease-[var(--animation-timing-default)]
+           focus-visible-card;
   }
 
   .tw-quantum-card:hover {
     @apply transform -translate-y-[5px];
+
     box-shadow: 0 0 calc(var(--glow-intensity) * 1.5)
       color-mix(in srgb, var(--color-primary), transparent 40%);
   }
@@ -62,11 +73,12 @@
   .tw-quantum-input {
     @apply bg-opacity-20 bg-black border-thin border-secondary rounded-md text-foreground
            font-primary px-md py-sm transition duration-[var(--animation-speed-fast)]
-           ease-[var(--animation-timing-default)];
+           ease-[var(--animation-timing-default)] focus-visible-input;
   }
 
   .tw-quantum-input:focus {
     @apply outline-none border-primary;
+
     box-shadow: 0 0 var(--glow-intensity) color-mix(in srgb, var(--color-primary), transparent 70%);
   }
 
@@ -113,7 +125,7 @@
   .tw-ritual-button {
     @apply font-secondary text-sm font-bold tracking-wider uppercase
            py-sm px-lg rounded-md cursor-pointer transition duration-[var(--animation-speed-fast)]
-           ease-linear inline-flex items-center justify-center;
+           ease-linear inline-flex items-center justify-center focus-visible-button;
   }
 
   .tw-ritual-button-primary {

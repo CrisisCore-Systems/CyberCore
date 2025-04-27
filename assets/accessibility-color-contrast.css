@@ -1,0 +1,105 @@
+/**
+ * ACCESSIBILITY-COLOR-CONTRAST.CSS
+ *
+ * Fixes for WCAG AA compliance (4.5:1 contrast ratio requirement)
+ * This file provides enhanced color variables with proper contrast ratios
+ * and utility classes to improve accessibility throughout the application.
+ *
+ * @version 1.0.0
+ */
+
+/* Enhanced contrast color variables - To be used instead of low-contrast originals */
+:root {
+  /* High contrast text colors - For use on dark backgrounds */
+  --a11y-text-light: #fff; /* Use for primary text on dark backgrounds */
+  --a11y-text-light-secondary: #ddd; /* Use for secondary text on dark backgrounds - 4.5:1 ratio */
+
+  /* High contrast text colors - For use on light backgrounds */
+  --a11y-text-dark: #121212; /* Use for primary text on light backgrounds */
+  --a11y-text-dark-secondary: #535353; /* Use for secondary text on light backgrounds - 4.5:1 ratio */
+
+  /* High contrast accent colors - Adjusted for 4.5:1 against backgrounds */
+  --a11y-accent-cyan: #00c8ff; /* Enhanced cyan with better contrast */
+  --a11y-accent-magenta: #ff00d6; /* Enhanced magenta with better contrast */
+  --a11y-accent-green: #00d463; /* Enhanced green with better contrast */
+
+  /* Trauma type colors with better contrast against dark backgrounds */
+  --a11y-trauma-abandonment: #bb7eff; /* Enhanced trauma abandonment color */
+  --a11y-trauma-fragmentation: #ff5cb2; /* Enhanced trauma fragmentation color */
+  --a11y-trauma-recursion: #80ff64; /* Enhanced trauma recursion color */
+  --a11y-trauma-surveillance: #40d8ff; /* Enhanced trauma surveillance color */
+  --a11y-trauma-displacement: #ffae40; /* Enhanced trauma displacement color */
+  --a11y-trauma-dissolution: #ff70e0; /* Enhanced trauma dissolution color */
+
+  /* Contrast ratios for interactive states */
+  --a11y-focus-outline: #fff; /* High contrast focus outline */
+  --a11y-hover-overlay: rgb(255 255 255 / 20%); /* Better hover state contrast */
+
+  /* Badge backgrounds with improved contrast */
+  --a11y-badge-bg-dark: rgb(0 0 0 / 70%); /* Darker badge background for light text */
+  --a11y-badge-bg-light: rgb(255 255 255 / 90%); /* Lighter badge background for dark text */
+}
+
+/* High contrast mode overrides */
+@media (forced-colors: active) {
+  :root {
+    --a11y-text-light: CanvasText;
+    --a11y-text-light-secondary: CanvasText;
+    --a11y-text-dark: CanvasText;
+    --a11y-text-dark-secondary: CanvasText;
+    --a11y-trauma-abandonment: Highlight;
+    --a11y-trauma-fragmentation: Highlight;
+    --a11y-trauma-recursion: Highlight;
+    --a11y-trauma-surveillance: Highlight;
+    --a11y-trauma-displacement: Highlight;
+    --a11y-trauma-dissolution: Highlight;
+  }
+}
+
+/* Utility classes for high contrast */
+.a11y-text-high-contrast {
+  color: var(--a11y-text-light) !important;
+  text-shadow: 0 0 2px rgb(0 0 0 / 80%) !important; /* Text shadow for better readability on varied backgrounds */
+}
+
+.a11y-bg-high-contrast {
+  background-color: var(--a11y-badge-bg-dark) !important;
+  border: 1px solid var(--a11y-text-light) !important;
+}
+
+/* Helper classes for badges and indicators */
+.a11y-badge {
+  background-color: var(--a11y-badge-bg-dark);
+  border: 1px solid var(--a11y-text-light);
+  color: var(--a11y-text-light);
+  font-weight: 600;
+}
+
+/* Improved focus styles */
+.a11y-focus:focus-visible {
+  outline: 3px solid var(--a11y-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Interactive elements with improved contrast */
+.a11y-button {
+  background-color: rgb(0 0 0 / 70%);
+  border: 1px solid var(--a11y-text-light);
+  color: var(--a11y-text-light);
+}
+
+.a11y-button:hover {
+  background-color: var(--a11y-hover-overlay);
+}
+
+/* High contrast link styles */
+.a11y-link {
+  color: var(--a11y-accent-cyan);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.a11y-link:hover {
+  color: var(--a11y-accent-cyan);
+  text-decoration-thickness: 2px;
+}

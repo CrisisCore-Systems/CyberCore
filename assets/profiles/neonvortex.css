@@ -9,324 +9,332 @@
 /* NeonVortex-specific base variables */
 :root {
   /* NeonVortex-specific color palette */
-  --neonvortex-primary: #00ff66;
-  --neonvortex-secondary: #00cc44;
-  --neonvortex-accent: #80ffaa;
-  --neonvortex-background: #003319;
-  --neonvortex-foreground: #f0fff8;
-  --neonvortex-surface: rgba(0, 51, 25, 0.9);
+  --vb-profile-neonvortex-primary: #0f6;
+  --vb-profile-neonvortex-secondary: #0c4;
+  --vb-profile-neonvortex-accent: #80ffaa;
+  --vb-profile-neonvortex-background: #003319;
+  --vb-profile-neonvortex-foreground: #f0fff8;
+  --vb-profile-neonvortex-surface: rgb(0 51 25 / 90%);
 
   /* Trauma Type Colors - NeonVortex variation */
-  --trauma-abandonment-color-neon: rgba(0, 255, 157, 0.7);
-  --trauma-fragmentation-color-neon: rgba(0, 255, 106, 0.7);
-  --trauma-recursion-color-neon: rgba(64, 255, 166, 0.7);
-  --trauma-surveillance-color-neon: rgba(0, 255, 183, 0.7);
-  --trauma-displacement-color-neon: rgba(0, 255, 179, 0.7);
-  --trauma-dissolution-color-neon: rgba(0, 214, 128, 0.7);
+  --vb-trauma-abandonment-color-neon: rgb(0 255 157 / 70%);
+  --vb-trauma-fragmentation-color-neon: rgb(0 255 106 / 70%);
+  --vb-trauma-recursion-color-neon: rgb(64 255 166 / 70%);
+  --vb-trauma-surveillance-color-neon: rgb(0 255 183 / 70%);
+  --vb-trauma-displacement-color-neon: rgb(0 255 179 / 70%);
+  --vb-trauma-dissolution-color-neon: rgb(0 214 128 / 70%);
 
   /* NeonVortex Theme Settings */
-  --neonvortex-bloom-intensity: 0.9;
-  --neonvortex-bloom-spread: 22px;
-  --neonvortex-bloom-radius: 8px;
-  --neonvortex-animation-speed: 0.8s;
-  --neonvortex-recursion-depth: 6;
-  --neonvortex-hologram-layer: rgba(0, 255, 102, 0.15);
+  --vb-bloom-intensity-neonvortex: 0.9;
+  --vb-bloom-spread-neonvortex: 22px;
+  --vb-bloom-radius-neonvortex: 8px;
+  --vb-animation-speed-neonvortex: 0.8s;
+  --vb-recursion-depth-neonvortex: 6;
+  --vb-phase-accent: var(--vb-profile-neonvortex-accent);
+  --vb-phase-gradient: linear-gradient(135deg, #0f6 0%, #0c4 100%);
 }
 
 /* NeonVortex Profile Class */
-.neonvortex-theme {
+.vb-profile-neonvortex,
+[data-profile='neonvortex'] {
   /* Apply NeonVortex color variables */
-  --color-primary: var(--neonvortex-primary);
-  --color-secondary: var(--neonvortex-secondary);
-  --color-accent: var(--neonvortex-accent);
-  --color-background: var(--neonvortex-background);
-  --color-foreground: var(--neonvortex-foreground);
-  --color-surface: var(--neonvortex-surface);
+  --vb-color-primary: var(--vb-profile-neonvortex-primary);
+  --vb-color-secondary: var(--vb-profile-neonvortex-secondary);
+  --vb-color-accent: var(--vb-profile-neonvortex-accent);
+  --vb-color-background: var(--vb-profile-neonvortex-background);
+  --vb-color-foreground: var(--vb-profile-neonvortex-foreground);
+  --vb-color-surface: var(--vb-profile-neonvortex-surface);
 
   /* Override trauma colors with NeonVortex variants */
-  --trauma-abandonment-color: var(--trauma-abandonment-color-neon);
-  --trauma-fragmentation-color: var(--trauma-fragmentation-color-neon);
-  --trauma-recursion-color: var(--trauma-recursion-color-neon);
-  --trauma-surveillance-color: var(--trauma-surveillance-color-neon);
-  --trauma-displacement-color: var(--trauma-displacement-color-neon);
-  --trauma-dissolution-color: var(--trauma-dissolution-color-neon);
+  --vb-trauma-abandonment-color: var(--vb-trauma-abandonment-color-neon);
+  --vb-trauma-fragmentation-color: var(--vb-trauma-fragmentation-color-neon);
+  --vb-trauma-recursion-color: var(--vb-trauma-recursion-color-neon);
+  --vb-trauma-surveillance-color: var(--vb-trauma-surveillance-color-neon);
+  --vb-trauma-displacement-color: var(--vb-trauma-displacement-color-neon);
+  --vb-trauma-dissolution-color: var(--vb-trauma-dissolution-color-neon);
 
   /* Effect intensities */
-  --bloom-intensity: var(--neonvortex-bloom-intensity);
-  --bloom-spread: var(--neonvortex-bloom-spread);
-  --bloom-radius: var(--neonvortex-bloom-radius);
-  --animation-speed: var(--neonvortex-animation-speed);
-  --recursion-depth: var(--neonvortex-recursion-depth);
+  --vb-bloom-intensity: var(--vb-bloom-intensity-neonvortex);
+  --vb-bloom-spread: var(--vb-bloom-spread-neonvortex);
+  --vb-bloom-radius: var(--vb-bloom-radius-neonvortex);
+  --vb-animation-speed: var(--vb-animation-speed-neonvortex);
+  --vb-recursion-depth: var(--vb-recursion-depth-neonvortex);
 
   /* Override phase styles */
-  --phase-accent: var(--neonvortex-accent);
-  --phase-gradient: linear-gradient(135deg, #00ff66 0%, #00cc44 100%);
+  --vb-phase-accent: var(--vb-profile-neonvortex-accent);
+  --vb-phase-gradient: linear-gradient(135deg, #0f6 0%, #0c4 100%);
 }
 
 /* NeonVortex Memory Node */
-.neonvortex-memory-node {
+.vb-neonvortex-memory-node {
+  overflow: hidden;
+  perspective: 800px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  perspective: 800px;
-  overflow: hidden;
 }
 
-.neonvortex-memory-node:hover {
+.vb-neonvortex-memory-node:hover {
   transform: translateY(-5px) scale(1.02) rotateX(2deg);
   z-index: 10;
 }
 
 /* NeonVortex-specific Card Styles */
-.neonvortex-card {
-  background-color: var(--neonvortex-surface);
+.vb-neonvortex-card {
+  background-color: var(--vb-profile-neonvortex-surface);
+  border: 1px solid rgb(0 255 102 / 30%);
   border-radius: 6px;
-  border: 1px solid rgba(0, 255, 102, 0.3);
+  box-shadow: 0 4px 20px rgb(0 204 68 / 20%);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 204, 68, 0.2);
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.neonvortex-card:hover {
-  box-shadow: 0 10px 30px rgba(0, 255, 102, 0.3), 0 0 15px rgba(0, 255, 102, 0.5);
-  border-color: rgba(0, 255, 102, 0.6);
+.vb-neonvortex-card:hover {
+  border-color: rgb(0 255 102 / 60%);
+  box-shadow: 0 10px 30px rgb(0 255 102 / 30%), 0 0 15px rgb(0 255 102 / 50%);
 }
 
-.neonvortex-card__inner {
-  position: relative;
+.vb-neonvortex-card__inner {
   overflow: hidden;
   padding: 1.5rem;
+  position: relative;
 }
 
-.neonvortex-card::before {
+.vb-neonvortex-card::before {
+  background: linear-gradient(135deg, rgb(0 255 102 / 10%), rgb(0 204 68 / 10%));
   content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0%;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(0, 255, 102, 0.1), rgba(0, 204, 68, 0.1));
-  opacity: 0;
   transition: opacity 0.5s ease;
+  width: 100%;
   z-index: 1;
 }
 
-.neonvortex-card:hover::before {
-  opacity: 1;
+.vb-neonvortex-card:hover::before {
+  opacity: 100%;
 }
 
 /* NeonVortex Header */
-.neonvortex-header {
-  display: flex;
+.vb-neonvortex-header {
   align-items: center;
+  border-bottom: 1px solid rgb(0 255 102 / 20%);
+  display: flex;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(0, 255, 102, 0.2);
   padding-bottom: 1rem;
 }
 
-.neonvortex-title {
+.vb-neonvortex-title {
+  color: var(--vb-profile-neonvortex-primary);
   font-size: 1.25rem;
-  margin: 0;
-  color: var(--neonvortex-primary);
   font-weight: 600;
-  text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+  margin: 0;
+  text-shadow: 0 0 10px rgb(0 255 102 / 50%);
 }
 
-.neonvortex-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: rgba(0, 51, 25, 0.8);
-  border: 1px solid var(--neonvortex-accent);
+.vb-neonvortex-badge {
+  background-color: rgb(0 51 25 / 80%);
+  border: 1px solid var(--vb-profile-neonvortex-accent);
   border-radius: 4px;
+  color: var(--vb-profile-neonvortex-primary);
+  display: inline-block;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--neonvortex-primary);
+  padding: 0.25rem 0.5rem;
 }
 
 /* NeonVortex Content */
-.neonvortex-content {
+.vb-neonvortex-content {
   margin-bottom: 1.5rem;
 }
 
-.neonvortex-description {
+.vb-neonvortex-description {
+  color: rgb(240 255 248 / 90%);
   font-size: 0.9rem;
   line-height: 1.6;
-  color: rgba(240, 255, 248, 0.9);
   margin-bottom: 1.5rem;
 }
 
 /* NeonVortex Image Container */
-.neonvortex-image {
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
+.vb-neonvortex-image {
   aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  position: relative;
 }
 
-.neonvortex-image img {
-  width: 100%;
+.vb-neonvortex-image img {
+  filter: brightness(1.1) saturate(1.2);
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
-  filter: brightness(1.1) saturate(1.2);
+  width: 100%;
 }
 
-.neonvortex-image:hover img {
-  transform: scale(1.05);
+.vb-neonvortex-image:hover img {
   filter: brightness(1.2) saturate(1.4);
+  transform: scale(1.05);
 }
 
 /* NeonVortex Metrics */
-.neonvortex-metrics {
+.vb-neonvortex-metrics {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin: 1rem 0;
 }
 
-.neonvortex-metric {
-  display: flex;
+.vb-neonvortex-metric {
   align-items: center;
+  display: flex;
   gap: 0.75rem;
 }
 
-.neonvortex-metric-label {
-  font-size: 0.8rem;
-  color: rgba(240, 255, 248, 0.7);
-  width: 100px;
+.vb-neonvortex-metric-label {
+  color: rgb(240 255 248 / 70%);
   flex-shrink: 0;
+  font-size: 0.8rem;
+  width: 100px;
 }
 
-.neonvortex-metric-bar {
+.vb-neonvortex-metric-bar {
+  background-color: rgb(0 51 25 / 50%);
+  border-radius: 2px;
   flex-grow: 1;
   height: 4px;
-  background-color: rgba(0, 51, 25, 0.5);
-  border-radius: 2px;
   overflow: hidden;
 }
 
-.neonvortex-metric-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--neonvortex-secondary), var(--neonvortex-primary));
+.vb-neonvortex-metric-fill {
+  background: linear-gradient(
+    90deg,
+    var(--vb-profile-neonvortex-secondary),
+    var(--vb-profile-neonvortex-primary)
+  );
   border-radius: 2px;
+  height: 100%;
   transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.neonvortex-metric-value {
+.vb-neonvortex-metric-value {
+  color: var(--vb-profile-neonvortex-primary);
   font-size: 0.8rem;
-  color: var(--neonvortex-primary);
-  text-align: right;
   min-width: 30px;
+  text-align: right;
 }
 
 /* NeonVortex Footer */
-.neonvortex-footer {
+.vb-neonvortex-footer {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.neonvortex-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  background-color: rgba(0, 51, 25, 0.7);
-  border: 1px solid var(--neonvortex-primary);
+.vb-neonvortex-button {
+  background-color: rgb(0 51 25 / 70%);
+  border: 1px solid var(--vb-profile-neonvortex-primary);
   border-radius: 4px;
-  color: var(--neonvortex-primary);
-  font-size: 0.9rem;
-  text-align: center;
+  color: var(--vb-profile-neonvortex-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  font-family: inherit;
   display: inline-block;
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.neonvortex-button:hover {
-  background-color: rgba(0, 255, 102, 0.2);
-  box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+.vb-neonvortex-button:hover {
+  background-color: rgb(0 255 102 / 20%);
+  box-shadow: 0 0 15px rgb(0 255 102 / 40%);
 }
 
-.neonvortex-button--primary {
-  background-color: rgba(0, 204, 68, 0.3);
+.vb-neonvortex-button--primary {
+  background-color: rgb(0 204 68 / 30%);
 }
 
-.neonvortex-button--primary:hover {
-  background-color: rgba(0, 204, 68, 0.5);
+.vb-neonvortex-button--primary:hover {
+  background-color: rgb(0 204 68 / 50%);
 }
 
 /* NeonVortex Pulse Effect */
-.neonvortex-pulse-container {
+.vb-neonvortex-pulse-container {
+  height: 100%;
+  left: 0;
+  opacity: 0%;
+  pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
   transition: opacity 0.3s ease;
+  width: 100%;
+  z-index: 1;
 }
 
-.neonvortex-card:hover .neonvortex-pulse-container {
-  opacity: 1;
+.vb-neonvortex-card:hover .vb-neonvortex-pulse-container {
+  opacity: 100%;
 }
 
-.neonvortex-pulse {
+.vb-neonvortex-pulse {
+  animation: vb-neonvortex-pulse 2s infinite;
+  background: radial-gradient(circle, rgb(0 255 102 / 20%) 0%, transparent 70%);
+  border-radius: 50%;
+  height: 100%;
+  left: 50%;
   position: absolute;
   top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 255, 102, 0.2) 0%, transparent 70%);
-  animation: neonvortex-pulse 2s infinite;
 }
 
 /* NeonVortex Data Grid */
-.neonvortex-data-grid {
+.vb-neonvortex-data-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
+  grid-template-columns: repeat(4, 1fr);
   margin: 1rem 0;
 }
 
-.neonvortex-data-cell {
-  padding: 0.5rem;
-  background-color: rgba(0, 51, 25, 0.4);
-  border: 1px solid rgba(0, 255, 102, 0.2);
+.vb-neonvortex-data-cell {
+  background-color: rgb(0 51 25 / 40%);
+  border: 1px solid rgb(0 255 102 / 20%);
   border-radius: 4px;
+  color: var(--vb-profile-neonvortex-accent);
   font-size: 0.8rem;
+  padding: 0.5rem;
   text-align: center;
-  color: var(--neonvortex-accent);
 }
 
-.neonvortex-data-cell--active {
-  background-color: rgba(0, 255, 102, 0.2);
-  border-color: rgba(0, 255, 102, 0.6);
-  color: var(--neonvortex-primary);
-  box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+.vb-neonvortex-data-cell--active {
+  background-color: rgb(0 255 102 / 20%);
+  border-color: rgb(0 255 102 / 60%);
+  box-shadow: 0 0 10px rgb(0 255 102 / 30%);
+  color: var(--vb-profile-neonvortex-primary);
 }
 
 /* Animations */
-@keyframes neonvortex-pulse {
+@keyframes vb-neonvortex-pulse {
   0% {
+    opacity: 80%;
     transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0.8;
   }
+
   50% {
+    opacity: 40%;
     transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.4;
   }
+
   100% {
+    opacity: 80%;
     transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0.8;
   }
 }
 
-@keyframes neonvortex-flicker {
+@keyframes vb-neonvortex-flicker {
   0%,
   19%,
   21%,
@@ -335,136 +343,138 @@
   54%,
   56%,
   100% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   20%,
   24%,
   55% {
-    opacity: 0.8;
+    opacity: 80%;
   }
 }
 
 /* Matrix Effect */
-.neonvortex-matrix-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.vb-neonvortex-matrix-container {
   height: 100%;
+  left: 0;
+  opacity: 0%;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.neonvortex-card:hover .neonvortex-matrix-container {
-  opacity: 0.3;
-}
-
-.neonvortex-matrix-column {
   position: absolute;
-  top: -100%;
-  width: 2px;
-  height: 200%;
+  top: 0;
+  transition: opacity 0.5s ease;
+  width: 100%;
+}
+
+.vb-neonvortex-card:hover .vb-neonvortex-matrix-container {
+  opacity: 30%;
+}
+
+.vb-neonvortex-matrix-column {
+  animation: vb-neonvortex-matrix-fall 3s linear infinite;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--neonvortex-primary) 50%,
+    var(--vb-profile-neonvortex-primary) 50%,
     transparent 100%
   );
-  animation: neonvortex-matrix-fall 3s linear infinite;
+  height: 200%;
+  position: absolute;
+  top: -100%;
+  width: 2px;
 }
 
-@keyframes neonvortex-matrix-fall {
+@keyframes vb-neonvortex-matrix-fall {
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(100%);
   }
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
-  .neonvortex-card__inner {
+@media (width <= 768px) {
+  .vb-neonvortex-card__inner {
     padding: 1rem;
   }
 
-  .neonvortex-title {
+  .vb-neonvortex-title {
     font-size: 1.1rem;
   }
 
-  .neonvortex-footer {
+  .vb-neonvortex-footer {
     flex-direction: column;
   }
 
-  .neonvortex-button {
+  .vb-neonvortex-button {
     width: 100%;
   }
 
-  .neonvortex-data-grid {
+  .vb-neonvortex-data-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 992px) {
-  .neonvortex-card:hover {
+@media (width >= 992px) {
+  .vb-neonvortex-card:hover {
     transform: translateY(-10px) rotateX(2deg);
   }
 
-  .neonvortex-image {
+  .vb-neonvortex-image {
     aspect-ratio: 4 / 3;
   }
 }
 
 /* Integration with core trauma system */
-.trauma-card.neonvortex-enhanced {
-  border-color: var(--neonvortex-primary);
+.vb-trauma-card.vb-neonvortex-enhanced {
+  border-color: var(--vb-profile-neonvortex-primary);
 }
 
-.trauma-card.neonvortex-enhanced::before {
-  background-color: var(--neonvortex-background);
+.vb-trauma-card.vb-neonvortex-enhanced::before {
+  background-color: var(--vb-profile-neonvortex-background);
 }
 
-.trauma-card.neonvortex-enhanced .trauma-card__header {
-  border-bottom-color: var(--neonvortex-primary);
+.vb-trauma-card.vb-neonvortex-enhanced .vb-trauma-card__header {
+  border-bottom-color: var(--vb-profile-neonvortex-primary);
 }
 
-.trauma-card.neonvortex-enhanced .trauma-card__title {
-  color: var(--neonvortex-primary);
+.vb-trauma-card.vb-neonvortex-enhanced .vb-trauma-card__title {
+  color: var(--vb-profile-neonvortex-primary);
 }
 
 /* Integrate with main quantum system */
-.quantum-btn.neonvortex-variant {
-  border-color: var(--neonvortex-primary);
-  color: var(--neonvortex-primary);
+.vb-quantum-btn.vb-neonvortex-variant {
+  border-color: var(--vb-profile-neonvortex-primary);
+  color: var(--vb-profile-neonvortex-primary);
 }
 
-.quantum-btn.neonvortex-variant:hover {
-  box-shadow: 0 0 var(--neonvortex-bloom-spread) var(--neonvortex-primary);
+.vb-quantum-btn.vb-neonvortex-variant:hover {
+  box-shadow: 0 0 var(--vb-bloom-spread-neonvortex) var(--vb-profile-neonvortex-primary);
 }
 
-.quantum-card.neonvortex-variant {
-  border-color: var(--neonvortex-primary);
+.vb-quantum-card.vb-neonvortex-variant {
+  border-color: var(--vb-profile-neonvortex-primary);
 }
 
-.quantum-card.neonvortex-variant:hover {
-  box-shadow: 0 0 var(--neonvortex-bloom-spread) rgba(0, 255, 102, 0.4);
+.vb-quantum-card.vb-neonvortex-variant:hover {
+  box-shadow: 0 0 var(--vb-bloom-spread-neonvortex) rgb(0 255 102 / 40%);
 }
 
 /* Trauma visualization overrides for NeonVortex */
-.neonvortex-theme .trauma-recursion::before {
-  animation: neonvortex-pulse 3s ease-in-out infinite;
+.vb-profile-neonvortex .vb-trauma-recursion::before {
+  animation: vb-neonvortex-pulse 3s ease-in-out infinite;
 }
 
-.neonvortex-theme .trauma-surveillance::before {
-  animation: neonvortex-flicker 1.5s ease-in-out infinite;
+.vb-profile-neonvortex .vb-trauma-surveillance::before {
+  animation: vb-neonvortex-flicker 1.5s ease-in-out infinite;
   background-size: 100% 5px; /* Smaller scan lines for neon effect */
 }
 
 /* Generate matrix columns programmatically with JS:
 document.addEventListener('DOMContentLoaded', () => {
-  const matrixContainers = document.querySelectorAll('.neonvortex-matrix-container');
+  const matrixContainers = document.querySelectorAll('.vb-neonvortex-matrix-container');
 
   matrixContainers.forEach(container => {
     // Add 10-20 matrix columns at random positions
@@ -472,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 0; i < columnCount; i++) {
       const column = document.createElement('div');
-      column.classList.add('neonvortex-matrix-column');
+      column.classList.add('vb-neonvortex-matrix-column');
 
       // Random position, width, and animation delay
       column.style.left = `${Math.random() * 100}%`;

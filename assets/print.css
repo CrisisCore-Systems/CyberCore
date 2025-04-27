@@ -11,15 +11,15 @@
   *,
   *::before,
   *::after {
-    background: transparent !important;
-    color: #000 !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
     animation: none !important;
-    transition: none !important;
-    transform: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #000 !important;
     filter: none !important;
-    opacity: 1 !important;
+    opacity: 100% !important;
+    text-shadow: none !important;
+    transform: none !important;
+    transition: none !important;
   }
 
   /* Hide navigation, interactive elements, etc. */
@@ -52,15 +52,15 @@
   main,
   article,
   section {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    float: none !important;
     background: #fff !important;
     color: #000 !important;
+    float: none !important;
+    font-family: Helvetica, Arial, sans-serif !important;
     font-size: 11pt !important;
     line-height: 1.3 !important;
-    font-family: 'Helvetica', 'Arial', sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
   }
 
   /* Ensure images print properly */
@@ -71,10 +71,10 @@
 
   /* Display URLs for links */
   a[href]::after {
+    color: #666 !important;
     content: ' (' attr(href) ')';
     font-size: 0.8em;
-    font-weight: normal;
-    color: #666 !important;
+    font-weight: 400;
   }
 
   /* Don't display URLs for internal or javascript links */
@@ -109,8 +109,8 @@
   .trauma-encoded,
   .trauma-card,
   [data-trauma-encoded='true'] {
-    border: 1px solid #ddd !important;
     background-color: #fff !important;
+    border: 1px solid #ddd !important;
   }
 
   /* Special print styles for memory artifacts */
@@ -136,11 +136,11 @@
   /* Format the trauma badges for print */
   .trauma-badge,
   .phase-badge {
-    border: 1px solid #000 !important;
-    padding: 2px 5px !important;
-    margin-right: 5px !important;
     background: none !important;
+    border: 1px solid #000 !important;
     font-size: 9pt !important;
+    margin-right: 5px !important;
+    padding: 2px 5px !important;
   }
 
   /* Format metrics and compatibility indicators */
@@ -151,8 +151,8 @@
 
   .metric-bar,
   .compatibility-indicator {
-    height: 2px !important;
     background-color: #eee !important;
+    height: 2px !important;
   }
 
   .metric-fill,
@@ -163,11 +163,11 @@
 
   /* Footer for printed pages */
   main::after {
+    color: #666 !important;
     content: 'Printed from VoidBloom Memory Archive on ' attr(data-print-date);
     display: block;
-    text-align: center;
     font-size: 9pt;
     margin-top: 2cm;
-    color: #666 !important;
+    text-align: center;
   }
 }

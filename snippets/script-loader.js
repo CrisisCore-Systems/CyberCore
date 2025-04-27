@@ -1,7 +1,7 @@
 /**
  * SCRIPT-LOADER.JS
- * Optimized script loading for improved performance
- * @Version: 1.0.0
+ * Optimized script loading for improved performance and security
+ * @Version: 1.1.0
  * @Optimized: April 2025
  */
 
@@ -55,6 +55,8 @@ function loadScript(script) {
     if (script.options.defer) scriptElement.defer = true;
     if (script.options.module) scriptElement.type = 'module';
     if (script.options.nomodule) scriptElement.nomodule = true;
+
+    // Add SRI attributes if provided
     if (script.options.integrity) scriptElement.integrity = script.options.integrity;
     if (script.options.crossOrigin) scriptElement.crossOrigin = script.options.crossOrigin;
 
@@ -76,10 +78,13 @@ function loadScript(script) {
 async function loadScriptsByPriority(priority) {
   const scripts = scriptRegistry[priority];
 
-  // Load scripts in parallel
-  const promises = scripts.filter((script) => !script.loaded).map((script) => loadScript(script));
+  if (!scripts.length) return;
 
-  return Promise.all(promises);
+  try {
+    await Promise.all(scripts.filter((script) => !script.loaded).map(loadScript));
+  } catch (error) {
+    console.error(`Error loading ${priority} scripts:`, error);
+  }
 }
 
 // Initialize script loading

@@ -1,0 +1,31 @@
+{% comment %}
+  LOAD-EXTERNAL-CSS.LIQUID
+  Helper to load external CSS with SRI validation
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+  @Date: April 26, 2025
+
+  Usage:
+  {% render 'load-external-css' with css_name: 'bootstrap', preload: true %}
+{% endcomment %}
+
+{% if css_name != blank %}
+  {% comment %}Get resource information from registry{% endcomment %}
+  {% render 'external-resource-registry' with external_css_name: css_name %}
+
+  {% if resource_url != blank and resource_integrity != blank %}
+    {% comment %}Load the CSS with SRI hashes{% endcomment %}
+    {% render 'secure-external-css' with
+      url: resource_url,
+      integrity: resource_integrity,
+      crossorigin: crossorigin | default: 'anonymous',
+      media: media,
+      preload: preload
+    %}
+  {% else %}
+    {% comment %}Resource not found in registry - output error as HTML comment{% endcomment %}
+    <!-- Error: External CSS resource "{{ css_name }}" not found in registry or missing integrity hash -->
+  {% endif %}
+{% endif %}

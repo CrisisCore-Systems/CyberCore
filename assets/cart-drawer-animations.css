@@ -1,0 +1,270 @@
+/**
+ * CART-DRAWER-ANIMATIONS.CSS
+ * Optimized animations for cart drawer with GPU acceleration and reduced-motion support
+ *
+ * @MutationCompatible: All Variants
+ * @StrategyProfile: quantum-entangled
+ * @Version: 1.0.0
+ * @Date: April 26, 2025
+ */
+
+/* ====== Cart Drawer Animation Variables ====== */
+:root {
+  /* Animation speeds */
+  --cart-animation-speed-slow: 600ms;
+  --cart-animation-speed-normal: 300ms;
+  --cart-animation-speed-fast: 150ms;
+
+  /* Animation timing functions */
+  --cart-animation-timing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --cart-animation-timing-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --cart-animation-timing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --cart-animation-timing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Effects */
+  --cart-shadow-intensity: 20px;
+  --cart-overlay-opacity: 0.5;
+}
+
+/* ====== Cart Drawer Base Styles ====== */
+.cart-drawer {
+  /* Other styles */
+  background-color: var(--color-background, #001a33);
+  box-shadow: -5px 0 var(--cart-shadow-intensity) rgb(0 0 0 / 25%);
+  height: 100vh;
+  max-width: 90vw;
+  overflow: hidden auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+
+  /* Use transform for GPU acceleration */
+  transform: translateX(100%);
+
+  /* Optimized transition for hardware acceleration */
+  transition: transform var(--cart-animation-speed-normal) var(--cart-animation-timing-entrance);
+  width: 400px;
+  will-change: transform;
+  z-index: 1000;
+}
+
+/* Open state using transform for GPU acceleration */
+.cart-drawer.open,
+.cart-drawer.active {
+  transform: translateX(0);
+}
+
+/* Cart Overlay - using opacity for GPU acceleration */
+.cart-overlay {
+  background-color: rgb(0 0 0 / var(--cart-overlay-opacity));
+  height: 100%;
+  left: 0;
+
+  /* Use opacity for GPU acceleration */
+  opacity: 0%;
+
+  /* Initially hidden */
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: opacity var(--cart-animation-speed-normal) var(--cart-animation-timing-default);
+  width: 100%;
+  will-change: opacity;
+  z-index: 999;
+}
+
+/* Active overlay state */
+.cart-overlay.active {
+  opacity: 100%;
+  pointer-events: all;
+}
+
+/* Cart item transitions when added or removed */
+.cart-item {
+  transition: opacity var(--cart-animation-speed-fast) var(--cart-animation-timing-default),
+    transform var(--cart-animation-speed-fast) var(--cart-animation-timing-default);
+}
+
+.cart-item.adding {
+  opacity: 0%;
+  transform: translateX(-10px);
+}
+
+.cart-item.removing {
+  opacity: 0%;
+  transform: translateX(10px);
+}
+
+/* Cart count animation */
+.cart-count {
+  transition: transform var(--cart-animation-speed-fast) var(--cart-animation-timing-bounce);
+}
+
+.cart-count[data-animate] {
+  animation: cart-count-pulse var(--cart-animation-speed-normal) var(--cart-animation-timing-bounce);
+}
+
+@keyframes cart-count-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Cart item quantity transitions */
+.cart-item__quantity-input {
+  transition: background-color var(--cart-animation-speed-fast) var(--cart-animation-timing-default);
+}
+
+/* Profile-specific animations - using transform modifications */
+.cart-drawer.profile-cyberlotus {
+  box-shadow: -5px 0 var(--cart-shadow-intensity) rgb(67 134 215 / 30%);
+}
+
+.cart-drawer.profile-obsidianbloom {
+  box-shadow: -5px 0 var(--cart-shadow-intensity) rgb(194 76 172 / 30%);
+}
+
+.cart-drawer.profile-voidbloom {
+  box-shadow: -5px 0 var(--cart-shadow-intensity) rgb(124 218 156 / 30%);
+}
+
+.cart-drawer.profile-neonvortex {
+  box-shadow: -5px 0 var(--cart-shadow-intensity) rgb(240 157 65 / 30%);
+}
+
+/* ====== Accessibility: Reduced Motion Support ====== */
+@media (prefers-reduced-motion: reduce) {
+  .cart-drawer {
+    transition-duration: 0.1s !important;
+  }
+
+  .cart-overlay {
+    transition-duration: 0.1s !important;
+  }
+
+  .cart-item {
+    transition-duration: 0.1s !important;
+  }
+
+  .cart-count[data-animate] {
+    animation: none !important;
+    transition-duration: 0.1s !important;
+  }
+
+  /* Disable all unnecessary animations */
+  .cart-animation,
+  .cart-item.adding,
+  .cart-item.removing {
+    animation: none !important;
+    transform: none !important;
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* ====== Trauma Visual Effects - Using GPU Accelerated Properties ====== */
+.cart-drawer[data-trauma='glitch'] {
+  animation: cart-trauma-glitch 0.8s steps(1) infinite;
+}
+
+.cart-drawer[data-trauma='echo'] {
+  animation: cart-trauma-echo 2s ease-in-out infinite;
+}
+
+.cart-drawer[data-trauma='fragmentation'] {
+  animation: cart-trauma-fragmentation 1s ease-in-out;
+}
+
+/* Keyframes optimized for GPU acceleration */
+@keyframes cart-trauma-glitch {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(2px);
+  }
+
+  50% {
+    transform: translateX(0);
+  }
+
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+@keyframes cart-trauma-echo {
+  0%,
+  100% {
+    opacity: 100%;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 92%;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes cart-trauma-fragmentation {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-3px);
+  }
+
+  40% {
+    transform: translateX(3px);
+  }
+
+  60% {
+    transform: translateX(-2px);
+  }
+
+  80% {
+    transform: translateX(2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ====== Quantum Profile Specific Animations ====== */
+.cart-drawer.quantum-effect {
+  will-change: transform, opacity, box-shadow;
+}
+
+.cart-drawer.quantum-effect::after {
+  background: linear-gradient(45deg, rgb(64 224 208 / 10%), transparent, rgb(128 0 128 / 10%));
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transition: opacity var(--cart-animation-speed-normal) var(--cart-animation-timing-default);
+  width: 100%;
+}
+
+.cart-drawer.quantum-effect.active::after {
+  opacity: 30%;
+}
+
+/* Remove any expensive blur effects for better performance */
+.cart-drawer::before,
+.cart-drawer::after {
+  backdrop-filter: none !important;
+}

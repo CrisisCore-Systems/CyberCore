@@ -1,0 +1,468 @@
+/**
+ * BASE.CSS
+ * Base styles for the CyberCore design system
+ * Foundational styling that builds upon reset.css
+ * @MutationCompatible: All Variants
+ * @StrategyProfile: quantum-entangled
+ * @Version: 1.0.0
+ */
+
+/* Import design tokens */
+@import url('./snippets/design-tokens.css');
+
+/*
+ * Base Typography
+ * ========================================================================== */
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--vb-color-background);
+  color: var(--vb-color-text);
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  line-height: var(--vb-line-height-normal);
+}
+
+/* Headings with proper typographic scale */
+h1 {
+  font-size: var(--vb-font-size-4xl);
+  font-weight: var(--vb-font-weight-bold);
+  letter-spacing: var(--vb-letter-spacing-tight);
+  margin-bottom: var(--vb-space-6);
+}
+
+h2 {
+  font-size: var(--vb-font-size-3xl);
+  font-weight: var(--vb-font-weight-bold);
+  letter-spacing: var(--vb-letter-spacing-tight);
+  margin-bottom: var(--vb-space-5);
+}
+
+h3 {
+  font-size: var(--vb-font-size-2xl);
+  font-weight: var(--vb-font-weight-bold);
+  margin-bottom: var(--vb-space-4);
+}
+
+h4 {
+  font-size: var(--vb-font-size-xl);
+  font-weight: var(--vb-font-weight-bold);
+  margin-bottom: var(--vb-space-3);
+}
+
+h5 {
+  font-size: var(--vb-font-size-lg);
+  font-weight: var(--vb-font-weight-medium);
+  margin-bottom: var(--vb-space-2);
+}
+
+h6 {
+  font-size: var(--vb-font-size-md);
+  font-weight: var(--vb-font-weight-medium);
+  letter-spacing: var(--vb-letter-spacing-wide);
+  margin-bottom: var(--vb-space-2);
+  text-transform: uppercase;
+}
+
+/* Paragraph styles */
+p {
+  margin-bottom: var(--vb-space-4);
+}
+
+/* Small text */
+small {
+  font-size: var(--vb-font-size-sm);
+}
+
+/* Strong and emphasis */
+strong,
+b {
+  font-weight: var(--vb-font-weight-bold);
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+/* Links */
+a {
+  color: var(--vb-color-primary);
+  text-decoration: none;
+  transition: color var(--vb-animation-speed-fast) var(--vb-animation-timing-default),
+    box-shadow var(--vb-animation-speed-fast) var(--vb-animation-timing-default);
+}
+
+a:hover {
+  box-shadow: 0 1px 0 0 currentcolor;
+  color: var(--vb-color-accent);
+  text-decoration: none;
+}
+
+a:focus {
+  outline: 2px solid var(--vb-color-primary);
+  outline-offset: 2px;
+}
+
+/* Text selection */
+::selection {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+}
+
+/*
+ * Lists
+ * ========================================================================== */
+
+ul,
+ol {
+  margin: 0 0 var(--vb-space-4) var(--vb-space-6);
+}
+
+ul li,
+ol li {
+  margin-bottom: var(--vb-space-2);
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+/*
+ * Base Form Elements
+ * ========================================================================== */
+
+/* Form elements */
+input,
+textarea,
+select,
+button {
+  background-color: var(--vb-color-surface);
+  border: var(--vb-border-width-thin) solid var(--vb-color-border);
+  border-radius: var(--vb-border-radius-md);
+  color: var(--vb-color-text);
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  padding: var(--vb-space-2) var(--vb-space-3);
+  transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
+}
+
+/* Focus states for form elements */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 0 2px rgb(0 255 255 / 30%);
+  outline: none;
+}
+
+/* Button base */
+button,
+.vb-btn {
+  align-items: center;
+  background-color: var(--vb-color-primary);
+  border: var(--vb-border-width-thin) solid transparent;
+  color: var(--vb-color-background);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: var(--vb-font-weight-medium);
+  justify-content: center;
+  padding: var(--vb-space-2) var(--vb-space-4);
+  text-align: center;
+  transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+button:hover,
+.vb-btn:hover {
+  background-color: var(--vb-color-accent);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 255 255 / 50%);
+}
+
+button:disabled,
+.vb-btn:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 60%;
+}
+
+/*
+ * Base Tables
+ * ========================================================================== */
+
+table {
+  border-collapse: collapse;
+  margin-bottom: var(--vb-space-6);
+  width: 100%;
+}
+
+th {
+  border-bottom: var(--vb-border-width-normal) solid var(--vb-color-border);
+  color: var(--vb-color-primary);
+  font-weight: var(--vb-font-weight-bold);
+  padding: var(--vb-space-2) var(--vb-space-3);
+  text-align: left;
+}
+
+td {
+  border-bottom: var(--vb-border-width-thin) solid var(--vb-color-border);
+  padding: var(--vb-space-2) var(--vb-space-3);
+}
+
+tr:hover {
+  background-color: rgb(0 255 255 / 5%);
+}
+
+/*
+ * Base Images & Media
+ * ========================================================================== */
+
+img,
+video {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+figure {
+  margin: 0 0 var(--vb-space-6) 0;
+}
+
+figcaption {
+  color: var(--vb-color-text-secondary);
+  font-size: var(--vb-font-size-sm);
+  padding-top: var(--vb-space-2);
+}
+
+/*
+ * Base Code & Preformatted Text
+ * ========================================================================== */
+
+code,
+pre,
+kbd,
+samp {
+  color: var(--vb-color-primary);
+  font-family: var(--vb-font-primary);
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: rgb(0 0 0 / 20%);
+  border: var(--vb-border-width-thin) solid var(--vb-color-border);
+  border-radius: var(--vb-border-radius-md);
+  margin-bottom: var(--vb-space-4);
+  overflow-x: auto;
+  padding: var(--vb-space-3);
+}
+
+code {
+  background-color: rgb(0 0 0 / 20%);
+  border-radius: var(--vb-border-radius-sm);
+  padding: var(--vb-space-1) var(--vb-space-2);
+  word-break: break-word;
+}
+
+pre > code {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  word-break: normal;
+}
+
+kbd {
+  background-color: var(--vb-color-surface);
+  border: var(--vb-border-width-thin) solid var(--vb-color-border);
+  border-radius: var(--vb-border-radius-sm);
+  box-shadow: 0 2px 0 rgb(0 0 0 / 20%);
+  font-size: 0.85em;
+  padding: var(--vb-space-1) var(--vb-space-2);
+}
+
+/*
+ * Base Blockquote
+ * ========================================================================== */
+
+blockquote {
+  background-color: rgb(0 255 255 / 5%);
+  border-left: var(--vb-border-width-thick) solid var(--vb-color-primary);
+  margin: 0 0 var(--vb-space-6) 0;
+  padding: var(--vb-space-4);
+}
+
+blockquote p:last-of-type {
+  margin-bottom: 0;
+}
+
+blockquote cite {
+  color: var(--vb-color-text-secondary);
+  display: block;
+  font-size: var(--vb-font-size-sm);
+  margin-top: var(--vb-space-3);
+}
+
+/*
+ * Base Horizontal Rule
+ * ========================================================================== */
+
+hr {
+  background-color: var(--vb-color-border);
+  border: 0;
+  height: var(--vb-border-width-thin);
+  margin: var(--vb-space-6) 0;
+}
+
+/*
+ * Misc Elements
+ * ========================================================================== */
+
+address {
+  font-style: normal;
+  margin-bottom: var(--vb-space-4);
+}
+
+abbr,
+abbr[title] {
+  border-bottom: var(--vb-border-width-thin) dotted var(--vb-color-text-secondary);
+  cursor: help;
+  text-decoration: none;
+}
+
+mark {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+  padding: 0 var(--vb-space-1);
+}
+
+/*
+ * Base Layout
+ * ========================================================================== */
+
+/* Set the base layout for the site */
+.vb-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.vb-main {
+  flex: 1 0 auto;
+}
+
+/* Basic container */
+.vb-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--vb-container-xl);
+  padding-left: var(--vb-space-4);
+  padding-right: var(--vb-space-4);
+  width: 100%;
+}
+
+@media (width >= 768px) {
+  .vb-container {
+    padding-left: var(--vb-space-6);
+    padding-right: var(--vb-space-6);
+  }
+}
+
+/*
+ * Accessibility Base
+ * ========================================================================== */
+
+/* Visually hidden elements that are still accessible to screen readers */
+.vb-visually-hidden,
+.visually-hidden {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* Skip link for keyboard navigation */
+.vb-skip-link {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-background);
+  left: 0;
+  padding: var(--vb-space-2) var(--vb-space-3);
+  position: absolute;
+  top: -40px;
+  transition: top 0.2s ease;
+  z-index: var(--vb-z-index-fixed);
+}
+
+.vb-skip-link:focus {
+  outline: none;
+  top: 0;
+}
+
+/*
+ * Responsive Base
+ * ========================================================================== */
+
+@media (width <= 576px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: var(--vb-font-size-3xl);
+  }
+
+  h2 {
+    font-size: var(--vb-font-size-2xl);
+  }
+
+  h3 {
+    font-size: var(--vb-font-size-xl);
+  }
+}
+
+/*
+ * Print Styles
+ * ========================================================================== */
+
+@media print {
+  body {
+    background-color: #fff;
+    color: #000;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.9em;
+  }
+
+  img {
+    max-width: 100% !important;
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  .vb-no-print {
+    display: none !important;
+  }
+}

@@ -2,9 +2,9 @@
 
 // Responsive images
 .responsive-image {
-  max-width: 100%;
-  height: auto;
   display: block;
+  height: auto;
+  max-width: 100%;
 
   &.image-load-error {
     background-color: #f8f8f8;
@@ -12,25 +12,25 @@
     position: relative;
 
     &::after {
+      color: #888;
       content: 'Image unavailable';
+      font-size: 14px;
+      left: 50%;
       position: absolute;
       top: 50%;
-      left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 14px;
-      color: #888;
     }
   }
 }
 
 // Placeholder images
 .placeholder-svg {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
   background-color: #f4f4f4;
+  display: block;
   fill: #888;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
 }
 
 // ...existing code...

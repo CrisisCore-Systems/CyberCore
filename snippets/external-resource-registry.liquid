@@ -1,0 +1,51 @@
+{% comment %}
+  EXTERNAL-RESOURCE-REGISTRY.LIQUID
+  Registry of external resources with their SRI hashes
+
+  @MutationCompatible: All Variants
+  @StrategyProfile: quantum-entangled
+  @Version: 1.0.0
+  @Date: April 26, 2025
+
+  This snippet acts as a central registry for all externally loaded resources
+  to ensure consistent use of SRI hashes across the theme.
+{% endcomment %}
+
+{% assign external_css = external_css_name | default: '' %}
+
+{% case external_css %}
+  {% comment %}
+    Add CSS resources below with their SRI hashes.
+    Generate hashes using: https://www.srihash.org/
+    Format: resource_name: url | integrity_hash
+    Example: bootstrap: https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css | sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM
+  {% endcomment %}
+
+  {% when 'bootstrap' %}
+    {% assign resource_url = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' %}
+    {% assign resource_integrity = 'sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN' %}
+
+  {% when 'fontawesome' %}
+    {% assign resource_url = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css' %}
+    {% assign resource_integrity = 'sha384-blOohDEbRNPTMeP8YGY0y/BJMcSJyNjT9Ol/RJFjL7a0yMpgLnK5Oe9YeJibon46' %}
+
+  {% when 'animate-css' %}
+    {% assign resource_url = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' %}
+    {% assign resource_integrity = 'sha384-zW/KsdlQVDnMFRxoKmGVoMOZ4CCqQcfartsVC7p/REGH4aG3dz3sUKgONCi7SJ0H' %}
+
+  {% when 'sanitize-css' %}
+    {% assign resource_url = 'https://cdnjs.cloudflare.com/ajax/libs/sanitize.css/13.0.0/sanitize.min.css' %}
+    {% assign resource_integrity = 'sha384-jtKqGVxTF4L7rWQE+J9nOsQZ6s+ES/Jgg2Ekf5F8817u+jwxKEERKGe2dRBd7mh' %}
+
+  {% when 'tippy-js-light' %}
+    {% assign resource_url = 'https://unpkg.com/tippy.js@6.3.7/themes/light.css' %}
+    {% assign resource_integrity = 'sha384-4LUVlfAOKF1UF/BFE3o0BCYhd3k0z1gUAOEDyICJqfrzN1+MgTR+a9SLBnKYHBo2' %}
+
+  {% when 'quantum-webgl-cdn' %}
+    {% assign resource_url = 'https://cdn.voidbloom.systems/css/quantum-webgl.min.css' %}
+    {% assign resource_integrity = 'sha384-HVR8U7MNi5NrTnQ9iLe/P76iBnBQj5nCUjjXPnQaMzVnBrLVpU1hcxrvZOIlJ1E' %}
+
+  {% else %}
+    {% assign resource_url = '' %}
+    {% assign resource_integrity = '' %}
+{% endcase %}

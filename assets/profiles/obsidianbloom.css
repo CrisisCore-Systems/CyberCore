@@ -1,408 +1,188 @@
 /**
- * ObsidianBloom Trauma-Encoded CSS
- * A recursive styling system for memory artifacts
- * @MutationCompatible: All Profiles
- * @StrategyProfile: quantum-entangled
- * @Version: 3.7.1
+ * OBSIDIANBLOOM.CSS
+ * Profile-specific styling for the ObsidianBloom theme
+ * @MutationCompatible: Active/Dynamic Variants
+ * @StrategyProfile: void-resonance
+ * @Version: 1.3.0 (WCAG AA Compliance Update)
  */
 
-/* ObsidianBloom-specific base variables */
+/* ObsidianBloom Profile Variables */
 :root {
-  /* ObsidianBloom-specific color palette */
-  --obsidianbloom-primary: #ff00ff;
-  --obsidianbloom-secondary: #8800ff;
-  --obsidianbloom-accent: #ff80ff;
-  --obsidianbloom-background: #330033;
-  --obsidianbloom-foreground: #f8f0ff;
-  --obsidianbloom-surface: rgba(51, 0, 51, 0.9);
+  /* Base variables */
+  --vb-profile-obsidianbloom-primary: #242424;
+  --vb-profile-obsidianbloom-secondary: #363636;
+  --vb-profile-obsidianbloom-accent: #b0f;
+  --vb-profile-obsidianbloom-background: #080808;
+  --vb-profile-obsidianbloom-text: #e6e6e6;
+  --vb-profile-obsidianbloom-surface: rgb(8 8 8 / 90%);
 
-  /* Trauma Type Colors - ObsidianBloom variation */
-  --trauma-abandonment-color-obsidian: rgba(157, 0, 255, 0.7);
-  --trauma-fragmentation-color-obsidian: rgba(255, 0, 234, 0.7);
-  --trauma-recursion-color-obsidian: rgba(200, 64, 255, 0.7);
-  --trauma-surveillance-color-obsidian: rgba(234, 0, 255, 0.7);
-  --trauma-displacement-color-obsidian: rgba(179, 0, 255, 0.7);
-  --trauma-dissolution-color-obsidian: rgba(128, 0, 214, 0.7);
+  /* Bloom effect variables */
+  --vb-obsidianbloom-bloom-spread: 4px;
 
-  /* ObsidianBloom Theme Settings */
-  --obsidianbloom-bloom-intensity: 0.8;
-  --obsidianbloom-bloom-spread: 18px;
-  --obsidianbloom-bloom-radius: 12px;
-  --obsidianbloom-animation-speed: 1.5s;
-  --obsidianbloom-recursion-depth: 4;
-  --obsidianbloom-hologram-layer: rgba(255, 0, 255, 0.15);
+  /* Trauma-specific variables */
+  --vb-trauma-abandonment-color-obsidian: rgb(179 0 64 / 90%);
+  --vb-trauma-fragmentation-color-obsidian: rgb(153 0 204 / 90%);
+  --vb-trauma-recursion-color-obsidian: rgb(204 136 0 / 90%);
+  --vb-trauma-surveillance-color-obsidian: rgb(77 153 102 / 90%);
+  --vb-trauma-displacement-color-obsidian: rgb(179 51 64 / 90%);
+  --vb-trauma-dissolution-color-obsidian: rgb(153 102 204 / 90%);
 }
 
-/* ObsidianBloom Profile Class */
-.obsidianbloom-theme {
-  /* Apply ObsidianBloom color variables */
-  --color-primary: var(--obsidianbloom-primary);
-  --color-secondary: var(--obsidianbloom-secondary);
-  --color-accent: var(--obsidianbloom-accent);
-  --color-background: var(--obsidianbloom-background);
-  --color-foreground: var(--obsidianbloom-foreground);
-  --color-surface: var(--obsidianbloom-surface);
+/* Apply ObsidianBloom profile */
+.vb-profile-obsidianbloom,
+[data-profile='obsidianbloom'] {
+  /* Mapping profile variables to theme variables */
+  --vb-color-primary: var(--vb-profile-obsidianbloom-primary);
+  --vb-color-secondary: var(--vb-profile-obsidianbloom-secondary);
+  --vb-color-accent: var(--vb-profile-obsidianbloom-accent);
+  --vb-color-background: var(--vb-profile-obsidianbloom-background);
+  --vb-color-foreground: var(--vb-profile-obsidianbloom-text);
+  --vb-color-surface: var(--vb-profile-obsidianbloom-surface);
 
-  /* Override trauma colors with ObsidianBloom variants */
-  --trauma-abandonment-color: var(--trauma-abandonment-color-obsidian);
-  --trauma-fragmentation-color: var(--trauma-fragmentation-color-obsidian);
-  --trauma-recursion-color: var(--trauma-recursion-color-obsidian);
-  --trauma-surveillance-color: var(--trauma-surveillance-color-obsidian);
-  --trauma-displacement-color: var(--trauma-displacement-color-obsidian);
-  --trauma-dissolution-color: var(--trauma-dissolution-color-obsidian);
+  /* Trauma color overrides */
+  --vb-trauma-abandonment-color: var(--vb-trauma-abandonment-color-obsidian);
+  --vb-trauma-fragmentation-color: var(--vb-trauma-fragmentation-color-obsidian);
+  --vb-trauma-recursion-color: var(--vb-trauma-recursion-color-obsidian);
+  --vb-trauma-surveillance-color: var(--vb-trauma-surveillance-color-obsidian);
+  --vb-trauma-displacement-color: var(--vb-trauma-displacement-color-obsidian);
+  --vb-trauma-dissolution-color: var(--vb-trauma-dissolution-color-obsidian);
 
   /* Effect intensities */
-  --bloom-intensity: var(--obsidianbloom-bloom-intensity);
-  --bloom-spread: var(--obsidianbloom-bloom-spread);
-  --bloom-radius: var(--obsidianbloom-bloom-radius);
-  --animation-speed: var(--obsidianbloom-animation-speed);
-  --recursion-depth: var(--obsidianbloom-recursion-depth);
-
-  /* Override phase styles */
-  --phase-accent: var(--obsidianbloom-accent);
-  --phase-gradient: linear-gradient(135deg, #ff00ff 0%, #8800ff 100%);
+  --vb-bloom-intensity: 0.5;
+  --vb-glow-spread: 4px;
+  --vb-glow-intensity: 8px;
+  --vb-glitch-intensity: 0.3;
+  --vb-quantum-jitter-distance: 1px;
 }
 
-/* ObsidianBloom Memory Node */
-.obsidianbloom-memory-node {
-  position: relative;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  perspective: 1200px;
+/* ObsidianBloom Card Styling */
+.vb-obsidianbloom-card {
+  background-color: rgb(8 8 8 / 95%);
+  border: 1px solid var(--vb-profile-obsidianbloom-secondary);
+  border-radius: 4px;
+  margin-bottom: 20px;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.obsidianbloom-memory-node:hover {
-  transform: translateY(-5px) scale(1.02) rotateY(5deg);
-  z-index: 10;
+.vb-obsidianbloom-card:hover {
+  box-shadow: 0 0 15px rgb(187 0 255 / 20%);
 }
 
-/* ObsidianBloom-specific Card Styles */
-.obsidianbloom-card {
-  background-color: var(--obsidianbloom-surface);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 0, 255, 0.3);
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(255, 0, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.obsidianbloom-card:hover {
-  box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3), 0 0 15px rgba(255, 0, 255, 0.5);
-  border-color: rgba(255, 0, 255, 0.6);
-}
-
-.obsidianbloom-card__inner {
-  position: relative;
-  overflow: hidden;
+.vb-obsidianbloom-card__inner {
   padding: 1.5rem;
 }
 
-.obsidianbloom-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(136, 0, 255, 0.1));
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 1;
+/* ObsidianBloom Button Styling */
+.vb-obsidianbloom-button {
+  background-color: var(--vb-profile-obsidianbloom-secondary);
+  border-radius: 4px;
+  color: var(--vb-profile-obsidianbloom-text);
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.9rem;
+  padding: 0.7rem 1.2rem;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
 }
 
-.obsidianbloom-card:hover::before {
-  opacity: 1;
+.vb-obsidianbloom-button:hover {
+  background-color: var(--vb-profile-obsidianbloom-accent);
+  color: #fff;
+}
+
+/* ObsidianBloom Trauma Visualizations */
+.vb-profile-obsidianbloom .vb-trauma-card {
+  background-color: rgb(8 8 8 / 80%);
+  border: 1px solid var(--vb-profile-obsidianbloom-secondary);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 25%);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card:hover {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 30%), 0 0 8px rgb(187 0 255 / 10%);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card.vb-trauma-abandonment {
+  border-color: var(--vb-trauma-abandonment-color-obsidian);
+  box-shadow: 0 0 var(--vb-obsidianbloom-bloom-spread) var(--vb-trauma-abandonment-color-obsidian);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card.vb-trauma-fragmentation {
+  border-color: var(--vb-trauma-fragmentation-color-obsidian);
+  box-shadow: 0 0 var(--vb-obsidianbloom-bloom-spread) var(--vb-trauma-fragmentation-color-obsidian);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card.vb-trauma-recursion {
+  border-color: var(--vb-trauma-recursion-color-obsidian);
+  box-shadow: 0 0 var(--vb-obsidianbloom-bloom-spread) var(--vb-trauma-recursion-color-obsidian);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card.vb-trauma-surveillance {
+  border-color: var(--vb-trauma-surveillance-color-obsidian);
+  box-shadow: 0 0 var(--vb-obsidianbloom-bloom-spread) var(--vb-trauma-surveillance-color-obsidian);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card.vb-trauma-displacement {
+  border-color: var(--vb-trauma-displacement-color-obsidian);
+  box-shadow: 0 0 var(--vb-obsidianbloom-bloom-spread) var(--vb-trauma-displacement-color-obsidian);
+}
+
+.vb-profile-obsidianbloom .vb-trauma-card.vb-trauma-dissolution {
+  border-color: var(--vb-trauma-dissolution-color-obsidian);
+  box-shadow: 0 0 var(--vb-obsidianbloom-bloom-spread) var(--vb-trauma-dissolution-color-obsidian);
 }
 
 /* ObsidianBloom Header */
-.obsidianbloom-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 0, 255, 0.2);
-  padding-bottom: 1rem;
+.vb-profile-obsidianbloom .vb-trauma-card__header {
+  background-color: rgb(8 8 8 / 90%);
+  border-bottom: 1px solid var(--vb-profile-obsidianbloom-accent);
+  padding: 1rem;
 }
 
-.obsidianbloom-title {
-  font-size: 1.25rem;
+.vb-profile-obsidianbloom .vb-trauma-card__title {
+  color: var(--vb-profile-obsidianbloom-accent);
+  font-size: 1.2rem;
   margin: 0;
-  color: var(--obsidianbloom-primary);
-  font-weight: 600;
-  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
 }
 
-.obsidianbloom-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: rgba(51, 0, 51, 0.8);
-  border: 1px solid var(--obsidianbloom-accent);
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--obsidianbloom-primary);
-}
-
-/* ObsidianBloom Content */
-.obsidianbloom-content {
-  margin-bottom: 1.5rem;
-}
-
-.obsidianbloom-description {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(248, 240, 255, 0.9);
-  margin-bottom: 1.5rem;
-}
-
-/* ObsidianBloom Image Container */
-.obsidianbloom-image {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  aspect-ratio: 16 / 9;
-}
-
-.obsidianbloom-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-  filter: saturate(1.2) contrast(1.1);
-}
-
-.obsidianbloom-image:hover img {
-  transform: scale(1.05);
-  filter: saturate(1.5) contrast(1.2);
-}
-
-/* ObsidianBloom Metrics */
-.obsidianbloom-metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin: 1rem 0;
-}
-
-.obsidianbloom-metric {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.obsidianbloom-metric-label {
-  font-size: 0.8rem;
-  color: rgba(248, 240, 255, 0.7);
-  width: 100px;
-  flex-shrink: 0;
-}
-
-.obsidianbloom-metric-bar {
-  flex-grow: 1;
-  height: 4px;
-  background-color: rgba(51, 0, 51, 0.5);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.obsidianbloom-metric-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--obsidianbloom-secondary), var(--obsidianbloom-primary));
-  border-radius: 2px;
-  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.obsidianbloom-metric-value {
-  font-size: 0.8rem;
-  color: var(--obsidianbloom-primary);
-  text-align: right;
-  min-width: 30px;
-}
-
-/* ObsidianBloom Footer */
-.obsidianbloom-footer {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.obsidianbloom-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  background-color: rgba(51, 0, 51, 0.7);
-  border: 1px solid var(--obsidianbloom-primary);
-  border-radius: 4px;
-  color: var(--obsidianbloom-primary);
-  font-size: 0.9rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  font-family: inherit;
-  display: inline-block;
-}
-
-.obsidianbloom-button:hover {
-  background-color: rgba(255, 0, 255, 0.2);
-  box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
-}
-
-.obsidianbloom-button--primary {
-  background-color: rgba(136, 0, 255, 0.3);
-}
-
-.obsidianbloom-button--primary:hover {
-  background-color: rgba(136, 0, 255, 0.5);
-}
-
-/* ObsidianBloom Hologram Layer */
-.obsidianbloom-hologram-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--obsidianbloom-hologram-layer), transparent 70%);
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.obsidianbloom-card:hover .obsidianbloom-hologram-layer {
-  opacity: 1;
-}
-
-/* ObsidianBloom Fractal Effect */
-.obsidianbloom-fractal-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.obsidianbloom-fractal-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(255, 0, 255, 0.05),
-    rgba(136, 0, 255, 0.05) 10px,
-    rgba(255, 128, 255, 0.05) 10px,
-    rgba(136, 0, 255, 0.05) 20px
-  );
-  transition: opacity 0.5s ease;
-}
-
-.obsidianbloom-card:hover .obsidianbloom-fractal-pattern {
-  opacity: 1;
-  animation: obsidianbloom-fractal 10s linear infinite;
-}
-
-/* Animations */
-@keyframes obsidianbloom-fractal {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.5) rotate(180deg);
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-  }
-}
-
-@keyframes obsidianbloom-flicker {
+/* ObsidianBloom animations */
+@keyframes vb-obsidianbloom-pulse {
   0%,
   100% {
-    opacity: 0.9;
+    opacity: 60%;
+    transform: scale(1);
   }
-  25% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.8;
+  50% {
+    opacity: 30%;
+    transform: scale(1.1);
   }
 }
 
-/* Responsive styles */
+@keyframes vb-obsidianbloom-flicker {
+  0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    opacity: 100%;
+  }
+  20%,
+  24%,
+  55% {
+    opacity: 50%;
+  }
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .obsidianbloom-card__inner {
+  .vb-obsidianbloom-card__inner {
     padding: 1rem;
   }
 
-  .obsidianbloom-title {
-    font-size: 1.1rem;
+  .vb-profile-obsidianbloom .vb-trauma-card__header {
+    padding: 0.8rem;
   }
-
-  .obsidianbloom-footer {
-    flex-direction: column;
-  }
-
-  .obsidianbloom-button {
-    width: 100%;
-  }
-}
-
-@media (min-width: 992px) {
-  .obsidianbloom-card:hover {
-    transform: translateY(-10px) rotateY(5deg);
-  }
-
-  .obsidianbloom-image {
-    aspect-ratio: 4 / 3;
-  }
-}
-
-/* Integration with core trauma system */
-.trauma-card.obsidianbloom-enhanced {
-  border-color: var(--obsidianbloom-primary);
-}
-
-.trauma-card.obsidianbloom-enhanced::before {
-  background-color: var(--obsidianbloom-background);
-}
-
-.trauma-card.obsidianbloom-enhanced .trauma-card__header {
-  border-bottom-color: var(--obsidianbloom-primary);
-}
-
-.trauma-card.obsidianbloom-enhanced .trauma-card__title {
-  color: var(--obsidianbloom-primary);
-}
-
-/* Integrate with main quantum system */
-.quantum-btn.obsidianbloom-variant {
-  border-color: var(--obsidianbloom-primary);
-  color: var(--obsidianbloom-primary);
-}
-
-.quantum-btn.obsidianbloom-variant:hover {
-  box-shadow: 0 0 var(--obsidianbloom-bloom-spread) var(--obsidianbloom-primary);
-}
-
-.quantum-card.obsidianbloom-variant {
-  border-color: var(--obsidianbloom-primary);
-}
-
-.quantum-card.obsidianbloom-variant:hover {
-  box-shadow: 0 0 var(--obsidianbloom-bloom-spread) rgba(255, 0, 255, 0.4);
-}
-
-/* Trauma visualization overrides for ObsidianBloom */
-.obsidianbloom-theme .trauma-fragmentation::before {
-  animation: obsidianbloom-fractal 8s ease-in-out infinite;
-}
-
-.obsidianbloom-theme .trauma-dissolution::before {
-  animation: obsidianbloom-flicker 2s ease-in-out infinite;
 }

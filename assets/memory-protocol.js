@@ -86,9 +86,57 @@ window.MemoryProtocol.enhancedMethods = {
       imageElement.setAttribute('src', imageElement.getAttribute('data-src'));
     }
 
+    // Add loading attribute for better browser loading performance
+    if (!imageElement.hasAttribute('loading')) {
+      // Check if this is a featured or primary product image (LCP candidate)
+      const isFeatured =
+        imageElement.closest('.featured-product__image') ||
+        imageElement.closest('.product__image--primary') ||
+        imageElement.closest('.product-featured-media') ||
+        imageElement.dataset.priority === 'high';
+
+      if (isFeatured) {
+        // Add eager loading for above-the-fold product images
+        imageElement.setAttribute('loading', 'eager');
+        // Add fetchpriority for critical above-the-fold images
+        imageElement.setAttribute('fetchpriority', 'high');
+      } else {
+        // Add lazy loading for product gallery or related product images
+        imageElement.setAttribute('loading', 'lazy');
+      }
+    }
+
+    // Add width and height if missing to prevent CLS
+    if (!imageElement.hasAttribute('width') || !imageElement.hasAttribute('height')) {
+      if (imageElement.complete && imageElement.naturalWidth > 0) {
+        // For already loaded images
+        if (!imageElement.hasAttribute('width')) {
+          imageElement.setAttribute('width', imageElement.naturalWidth);
+        }
+        if (!imageElement.hasAttribute('height')) {
+          imageElement.setAttribute('height', imageElement.naturalHeight);
+        }
+      } else {
+        // For images still loading
+        imageElement.addEventListener(
+          'load',
+          () => {
+            if (!imageElement.hasAttribute('width') && imageElement.naturalWidth > 0) {
+              imageElement.setAttribute('width', imageElement.naturalWidth);
+            }
+            if (!imageElement.hasAttribute('height') && imageElement.naturalHeight > 0) {
+              imageElement.setAttribute('height', imageElement.naturalHeight);
+            }
+          },
+          { once: true }
+        );
+      }
+    }
+
     // Ensure srcset is properly formatted
     if (imageElement.hasAttribute('data-srcset')) {
       const srcset = imageElement.getAttribute('data-srcset');
+
       // Clean up any malformed srcset values including undefined
       const cleanSrcset = srcset
         .replace(/undefined\s+\d+w,?\s*/g, '')

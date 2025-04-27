@@ -1,0 +1,712 @@
+/* VB-ANIMATIONS.CSS
+ * Animation system for VoidBloom - Phase IX Uplift
+ * @version: 2.0.0
+ * @updated: April 2025
+ *
+ * ANIMATION SYSTEM: Centralized keyframes & animation utilities
+ * Load after vb-core.css and before vb-profiles.css
+ */
+
+/* ---------- BASIC ANIMATIONS ---------- */
+@keyframes vb-fade-in {
+  from {
+    opacity: 0%;
+  }
+
+  to {
+    opacity: 100%;
+  }
+}
+
+@keyframes vb-fade-out {
+  from {
+    opacity: 100%;
+  }
+
+  to {
+    opacity: 0%;
+  }
+}
+
+@keyframes vb-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes vb-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes vb-float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ---------- GLITCH ANIMATIONS ---------- */
+@keyframes vb-glitch-text-1 {
+  0% {
+    clip-path: inset(8% 0 89% 0);
+  }
+
+  5% {
+    clip-path: inset(26% 0 63% 0);
+  }
+
+  10% {
+    clip-path: inset(83% 0 5% 0);
+  }
+
+  15% {
+    clip-path: inset(30% 0 61% 0);
+  }
+
+  20% {
+    clip-path: inset(35% 0 59% 0);
+  }
+
+  25% {
+    clip-path: inset(89% 0 6% 0);
+  }
+
+  30% {
+    clip-path: inset(69% 0 29% 0);
+  }
+
+  35% {
+    clip-path: inset(3% 0 73% 0);
+  }
+
+  40% {
+    clip-path: inset(43% 0 31% 0);
+  }
+
+  45% {
+    clip-path: inset(28% 0 72% 0);
+  }
+
+  50% {
+    clip-path: inset(75% 0 19% 0);
+  }
+
+  55% {
+    clip-path: inset(67% 0 32% 0);
+  }
+
+  60% {
+    clip-path: inset(17% 0 76% 0);
+  }
+
+  65% {
+    clip-path: inset(63% 0 34% 0);
+  }
+
+  70% {
+    clip-path: inset(23% 0 73% 0);
+  }
+
+  75% {
+    clip-path: inset(55% 0 36% 0);
+  }
+
+  80% {
+    clip-path: inset(4% 0 76% 0);
+  }
+
+  85% {
+    clip-path: inset(83% 0 12% 0);
+  }
+
+  90% {
+    clip-path: inset(53% 0 31% 0);
+  }
+
+  95% {
+    clip-path: inset(24% 0 58% 0);
+  }
+
+  100% {
+    clip-path: inset(74% 0 23% 0);
+  }
+}
+
+@keyframes vb-glitch-text-2 {
+  0% {
+    clip-path: inset(83% 0 1% 0);
+  }
+
+  5% {
+    clip-path: inset(13% 0 74% 0);
+  }
+
+  10% {
+    clip-path: inset(56% 0 22% 0);
+  }
+
+  15% {
+    clip-path: inset(22% 0 76% 0);
+  }
+
+  20% {
+    clip-path: inset(64% 0 33% 0);
+  }
+
+  25% {
+    clip-path: inset(31% 0 45% 0);
+  }
+
+  30% {
+    clip-path: inset(49% 0 29% 0);
+  }
+
+  35% {
+    clip-path: inset(88% 0 12% 0);
+  }
+
+  40% {
+    clip-path: inset(16% 0 84% 0);
+  }
+
+  45% {
+    clip-path: inset(41% 0 18% 0);
+  }
+
+  50% {
+    clip-path: inset(82% 0 11% 0);
+  }
+
+  55% {
+    clip-path: inset(44% 0 51% 0);
+  }
+
+  60% {
+    clip-path: inset(23% 0 61% 0);
+  }
+
+  65% {
+    clip-path: inset(71% 0 22% 0);
+  }
+
+  70% {
+    clip-path: inset(46% 0 51% 0);
+  }
+
+  75% {
+    clip-path: inset(11% 0 71% 0);
+  }
+
+  80% {
+    clip-path: inset(77% 0 17% 0);
+  }
+
+  85% {
+    clip-path: inset(21% 0 69% 0);
+  }
+
+  90% {
+    clip-path: inset(61% 0 12% 0);
+  }
+
+  95% {
+    clip-path: inset(83% 0 14% 0);
+  }
+
+  100% {
+    clip-path: inset(36% 0 58% 0);
+  }
+}
+
+@keyframes vb-glitch-horizontal {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(calc(-1 * var(--vb-quantum-jitter-distance)));
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(var(--vb-quantum-jitter-distance));
+  }
+}
+
+@keyframes vb-glitch-vertical {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateY(calc(-1 * var(--vb-quantum-jitter-distance)));
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateY(var(--vb-quantum-jitter-distance));
+  }
+}
+
+@keyframes vb-glitch-skew {
+  0%,
+  100% {
+    transform: skew(0deg);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: skew(-1deg);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: skew(1deg);
+  }
+}
+
+/* ---------- TRAUMA ANIMATIONS ---------- */
+@keyframes vb-trauma-flicker {
+  0%,
+  100% {
+    opacity: 100%;
+  }
+
+  10%,
+  30%,
+  70%,
+  90% {
+    opacity: 75%;
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    opacity: 50%;
+  }
+
+  50% {
+    opacity: 25%;
+  }
+}
+
+@keyframes vb-trauma-abandonment {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes vb-trauma-fragmentation {
+  0% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+
+  25% {
+    clip-path: polygon(5% 5%, 95% 0%, 100% 90%, 0% 100%);
+  }
+
+  50% {
+    clip-path: polygon(0% 10%, 100% 5%, 95% 95%, 5% 95%);
+  }
+
+  75% {
+    clip-path: polygon(5% 0%, 95% 5%, 100% 100%, 0% 90%);
+  }
+
+  100% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+@keyframes vb-trauma-recursion {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(90deg) scale(0.95);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(0.9);
+  }
+
+  75% {
+    transform: rotate(270deg) scale(0.95);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes vb-trauma-surveillance {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+@keyframes vb-trauma-displacement {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes vb-trauma-dissolution {
+  0% {
+    filter: blur(0);
+    opacity: 100%;
+  }
+
+  50% {
+    filter: blur(calc(var(--vb-trauma-intensity, 0.7) * 5px));
+    opacity: 70%;
+  }
+
+  100% {
+    filter: blur(0);
+    opacity: 100%;
+  }
+}
+
+/* ---------- QUANTUM ANIMATIONS ---------- */
+@keyframes vb-quantum-pulse {
+  0% {
+    box-shadow: 0 0 0 rgb(var(--vb-color-primary-rgb), 0);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 calc(var(--vb-glow-intensity) * 15px) rgb(var(--vb-color-primary-rgb), 0.5);
+    transform: scale(1.05);
+  }
+
+  100% {
+    box-shadow: 0 0 0 rgb(var(--vb-color-primary-rgb), 0);
+    transform: scale(1);
+  }
+}
+
+@keyframes vb-quantum-entrance {
+  0% {
+    opacity: 0%;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 100%;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vb-quantum-glitch {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+
+  34% {
+    transform: translate(
+      calc(var(--vb-quantum-jitter-distance) * -1),
+      calc(var(--vb-quantum-jitter-distance) * -1)
+    );
+  }
+
+  66% {
+    transform: translate(var(--vb-quantum-jitter-distance), var(--vb-quantum-jitter-distance));
+  }
+}
+
+/* ---------- BLOOM ANIMATIONS ---------- */
+@keyframes vb-bloom-pulsate {
+  0%,
+  100% {
+    filter: brightness(1) blur(0);
+  }
+
+  50% {
+    filter: brightness(1.2) blur(calc(var(--vb-bloom-intensity) * 2px));
+  }
+}
+
+@keyframes vb-bloom-dissolve {
+  0% {
+    opacity: 100%;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 50%;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 0%;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes vb-bloom-appear {
+  0% {
+    opacity: 0%;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 100%;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 100%;
+    transform: scale(1);
+  }
+}
+
+/* ---------- PHASE TRANSITION ANIMATIONS ---------- */
+@keyframes vb-phase-transition {
+  0% {
+    filter: brightness(1) blur(0);
+    transform: scale(1);
+  }
+
+  25% {
+    filter: brightness(1.3) blur(3px);
+    transform: scale(1.05);
+  }
+
+  50% {
+    filter: brightness(0.8) blur(5px);
+    transform: scale(0.95);
+  }
+
+  75% {
+    filter: brightness(1.2) blur(2px);
+    transform: scale(1.02);
+  }
+
+  100% {
+    filter: brightness(1) blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes vb-phase-ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgb(var(--vb-color-primary-rgb), 0.5);
+  }
+
+  100% {
+    box-shadow: 0 0 0 20px rgb(var(--vb-color-primary-rgb), 0);
+  }
+}
+
+/* ---------- ANIMATION CLASSES ---------- */
+
+/* Basic animation utilities */
+.vb-animate-fade-in {
+  animation: vb-fade-in var(--vb-animation-speed-medium) var(--vb-animation-easing-entrance)
+    forwards;
+}
+
+.vb-animate-fade-out {
+  animation: vb-fade-out var(--vb-animation-speed-medium) var(--vb-animation-easing-exit) forwards;
+}
+
+.vb-animate-pulse {
+  animation: vb-pulse var(--vb-animation-speed-slow) var(--vb-animation-easing-default) infinite;
+}
+
+.vb-animate-spin {
+  animation: vb-spin var(--vb-animation-speed-very-slow) linear infinite;
+}
+
+.vb-animate-float {
+  animation: vb-float calc(var(--vb-animation-speed-very-slow) * 2)
+    var(--vb-animation-easing-default) infinite;
+}
+
+/* Glitch animations */
+.vb-animate-glitch-text {
+  position: relative;
+}
+
+.vb-animate-glitch-text::before,
+.vb-animate-glitch-text::after {
+  content: attr(data-text);
+  height: 100%;
+  left: 0;
+  opacity: calc(80% * var(--vb-glitch-intensity, 50%));
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.vb-animate-glitch-text::before {
+  animation: vb-glitch-text-1
+    calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 0.5)) steps(1) infinite;
+  left: calc(-2px * var(--vb-glitch-intensity, 0.5));
+  text-shadow: -1px 0 var(--vb-color-primary);
+}
+
+.vb-animate-glitch-text::after {
+  animation: vb-glitch-text-2
+    calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 0.5)) steps(1) infinite;
+  left: calc(2px * var(--vb-glitch-intensity, 0.5));
+  text-shadow: 1px 0 var(--vb-color-secondary);
+}
+
+.vb-animate-glitch-horizontal {
+  animation: vb-glitch-horizontal
+    calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 0.5)) steps(1) infinite;
+}
+
+.vb-animate-glitch-vertical {
+  animation: vb-glitch-vertical
+    calc(var(--vb-animation-speed-medium) * var(--vb-glitch-intensity, 0.5)) steps(1) infinite;
+}
+
+.vb-animate-glitch-skew {
+  animation: vb-glitch-skew calc(var(--vb-animation-speed-fast) * var(--vb-glitch-intensity, 0.5))
+    ease-in-out infinite;
+}
+
+/* Trauma animations */
+.vb-animate-trauma-flicker {
+  animation: vb-trauma-flicker
+    calc(var(--vb-animation-speed-slow) * var(--vb-trauma-intensity, 0.7)) steps(1) infinite;
+}
+
+.vb-animate-trauma-abandonment {
+  animation: vb-trauma-abandonment 4s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, var(--vb-color-trauma-abandonment), transparent);
+  background-size: 200% 100%;
+}
+
+.vb-animate-trauma-fragmentation {
+  animation: vb-trauma-fragmentation 2s ease-in-out infinite;
+}
+
+.vb-animate-trauma-recursion {
+  animation: vb-trauma-recursion 6s linear infinite;
+}
+
+.vb-animate-trauma-surveillance {
+  animation: vb-trauma-surveillance 3s ease-in-out infinite;
+  background: linear-gradient(0deg, transparent, var(--vb-color-trauma-surveillance), transparent);
+  background-size: 100% 200%;
+}
+
+.vb-animate-trauma-displacement {
+  animation: vb-trauma-displacement 3s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, var(--vb-color-trauma-displacement), transparent);
+  background-size: 200% 100%;
+}
+
+.vb-animate-trauma-dissolution {
+  animation: vb-trauma-dissolution 5s ease-in-out infinite alternate;
+}
+
+/* Quantum animations */
+.vb-animate-quantum-pulse {
+  animation: vb-quantum-pulse calc(var(--vb-animation-speed-slow) * 1.5) infinite alternate
+    ease-in-out;
+}
+
+.vb-animate-quantum-entrance {
+  animation: vb-quantum-entrance var(--vb-animation-speed-medium)
+    var(--vb-animation-easing-entrance) forwards;
+}
+
+.vb-animate-quantum-glitch {
+  animation: vb-quantum-glitch calc(var(--vb-animation-speed-fast) * 0.8) step-end infinite;
+}
+
+/* Bloom animations */
+.vb-animate-bloom-pulsate {
+  animation: vb-bloom-pulsate 3s infinite alternate ease-in-out;
+}
+
+.vb-animate-bloom-dissolve {
+  animation: vb-bloom-dissolve var(--vb-animation-speed-slow) var(--vb-animation-easing-exit)
+    forwards;
+}
+
+.vb-animate-bloom-appear {
+  animation: vb-bloom-appear var(--vb-animation-speed-medium) var(--vb-animation-easing-entrance)
+    forwards;
+}
+
+/* Phase transition animations */
+.vb-animate-phase-transition {
+  animation: vb-phase-transition 1.5s ease-in-out;
+}
+
+.vb-animate-phase-ripple {
+  animation: vb-phase-ripple 1.5s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+/* Reduce motion preference handling */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

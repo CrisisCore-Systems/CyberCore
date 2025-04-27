@@ -7,19 +7,21 @@
 /* Base animations */
 @keyframes vb-fade-in {
   from {
-    opacity: 0;
+    opacity: 0%;
   }
+
   to {
-    opacity: 1;
+    opacity: 100%;
   }
 }
 
 @keyframes vb-fade-out {
   from {
-    opacity: 1;
+    opacity: 100%;
   }
+
   to {
-    opacity: 0;
+    opacity: 0%;
   }
 }
 
@@ -27,9 +29,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
+
   100% {
     transform: scale(1);
   }
@@ -39,15 +43,19 @@
   0% {
     transform: translateX(0);
   }
+
   25% {
-    transform: translateX(var(--glitch-offset, 5px));
+    transform: translateX(var(--vb-glitch-offset, 5px));
   }
+
   50% {
     transform: translateX(0);
   }
+
   75% {
-    transform: translateX(calc(var(--glitch-offset, 5px) * -1));
+    transform: translateX(calc(var(--vb-glitch-offset, 5px) * -1));
   }
+
   100% {
     transform: translateX(0);
   }
@@ -57,15 +65,19 @@
   0% {
     transform: translateY(0);
   }
+
   25% {
-    transform: translateY(var(--glitch-offset, 5px));
+    transform: translateY(var(--vb-glitch-offset, 5px));
   }
+
   50% {
     transform: translateY(0);
   }
+
   75% {
-    transform: translateY(calc(var(--glitch-offset, 5px) * -1));
+    transform: translateY(calc(var(--vb-glitch-offset, 5px) * -1));
   }
+
   100% {
     transform: translateY(0);
   }
@@ -75,15 +87,19 @@
   0% {
     text-shadow: none;
   }
+
   25% {
     text-shadow: -1px 0 var(--vb-color-accent), 0 1px var(--vb-color-tertiary);
   }
+
   50% {
     text-shadow: none;
   }
+
   75% {
     text-shadow: 1px 0 var(--vb-color-tertiary), 0 -1px var(--vb-color-accent);
   }
+
   100% {
     text-shadow: none;
   }
@@ -91,37 +107,47 @@
 
 @keyframes vb-trauma-flicker {
   0% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   10% {
-    opacity: 0.8;
+    opacity: 80%;
   }
+
   20% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   30% {
-    opacity: 0.6;
+    opacity: 60%;
   }
+
   40% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   50% {
-    opacity: 0.9;
+    opacity: 90%;
   }
+
   60% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   70% {
-    opacity: 0.7;
+    opacity: 70%;
   }
+
   80% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   90% {
-    opacity: 0.8;
+    opacity: 80%;
   }
+
   100% {
-    opacity: 1;
+    opacity: 100%;
   }
 }
 
@@ -129,6 +155,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -138,9 +165,11 @@
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-15px);
   }
+
   100% {
     transform: translateY(0);
   }
@@ -226,9 +255,9 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
   }
 }

@@ -1,0 +1,429 @@
+/**
+ * COMPONENTS.CSS
+ * Core component styles for the CyberCore design system
+ * @MutationCompatible: All Variants
+ * @StrategyProfile: quantum-entangled
+ * @Version: 1.0.1
+ */
+
+/* Import design tokens */
+@import url('./snippets/design-tokens.css');
+
+/*
+ * Button Components
+ * ========================================================================== */
+
+/* Base button styles */
+.vb-btn {
+  align-items: center;
+  background-color: transparent;
+  border: var(--vb-border-width-normal) solid var(--vb-color-primary);
+  border-radius: var(--vb-border-radius-md);
+  color: var(--vb-color-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  font-weight: var(--vb-font-weight-medium);
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--vb-space-2) var(--vb-space-4);
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--vb-animation-speed-fast) var(--vb-animation-timing-default);
+}
+
+.vb-btn:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface), var(--vb-color-primary) 10%);
+  box-shadow: 0 0 var(--vb-glow-intensity) var(--vb-color-primary);
+}
+
+.vb-btn:active {
+  transform: translateY(2px);
+}
+
+.vb-btn:focus-visible {
+  outline: 2px solid var(--vb-color-primary);
+  outline-offset: 2px;
+}
+
+/* Button variants */
+.vb-btn--primary {
+  background-color: var(--vb-color-primary);
+  border-color: var(--vb-color-primary);
+  color: var(--vb-color-black);
+}
+
+.vb-btn--primary:hover {
+  background-color: color-mix(in srgb, var(--vb-color-primary), #fff 20%);
+  border-color: color-mix(in srgb, var(--vb-color-primary), #fff 20%);
+}
+
+.vb-btn--secondary {
+  background-color: transparent;
+  border-color: var(--vb-color-secondary);
+  color: var(--vb-color-secondary);
+}
+
+.vb-btn--secondary:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface), var(--vb-color-secondary) 10%);
+  box-shadow: 0 0 var(--vb-glow-intensity) var(--vb-color-secondary);
+}
+
+/* Button sizes */
+.vb-btn--sm {
+  font-size: var(--vb-font-size-sm);
+  padding: var(--vb-space-1) var(--vb-space-3);
+}
+
+.vb-btn--lg {
+  font-size: var(--vb-font-size-lg);
+  padding: var(--vb-space-3) var(--vb-space-6);
+}
+
+/* Button with glow effect */
+.vb-btn--glow::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--vb-color-primary), transparent 70%),
+    transparent
+  );
+  content: '';
+  height: 100%;
+  left: -100%;
+  position: absolute;
+  top: 0;
+  transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
+  width: 100%;
+}
+
+.vb-btn--glow:hover::before {
+  left: 100%;
+}
+
+/*
+ * Card Components
+ * ========================================================================== */
+
+/* Base card styles */
+.vb-card {
+  background-color: var(--vb-color-surface);
+  border: var(--vb-border-width-thin) solid var(--vb-color-border);
+  border-radius: var(--vb-border-radius-lg);
+  overflow: hidden;
+  padding: var(--vb-space-6);
+  position: relative;
+  transition: all var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
+}
+
+.vb-card:hover {
+  box-shadow: 0 var(--vb-space-4) var(--vb-space-8) rgb(0 0 0 / 30%);
+  transform: translateY(-5px);
+}
+
+.vb-card__header {
+  margin-bottom: var(--vb-space-4);
+}
+
+.vb-card__title {
+  color: var(--vb-color-text);
+  font-size: var(--vb-font-size-xl);
+  font-weight: var(--vb-font-weight-bold);
+  margin-bottom: var(--vb-space-2);
+}
+
+.vb-card__subtitle {
+  color: var(--vb-color-text-secondary);
+  font-size: var(--vb-font-size-md);
+}
+
+.vb-card__content {
+  margin-bottom: var(--vb-space-4);
+}
+
+.vb-card__footer {
+  align-items: center;
+  display: flex;
+  gap: var(--vb-space-2);
+  justify-content: flex-end;
+}
+
+/* Card variants */
+.vb-card--primary {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 255 255 / 20%);
+}
+
+.vb-card--secondary {
+  border-color: var(--vb-color-secondary);
+  box-shadow: 0 0 var(--vb-glow-intensity) rgb(0 136 255 / 20%);
+}
+
+/* Card sizes */
+.vb-card--sm {
+  padding: var(--vb-space-4);
+}
+
+.vb-card--lg {
+  padding: var(--vb-space-8);
+}
+
+/*
+ * Form Components
+ * ========================================================================== */
+
+/* Form group */
+.vb-form-group {
+  margin-bottom: var(--vb-space-4);
+}
+
+.vb-form-label {
+  color: var(--vb-color-text);
+  display: block;
+  font-size: var(--vb-font-size-sm);
+  font-weight: var(--vb-font-weight-medium);
+  margin-bottom: var(--vb-space-2);
+}
+
+.vb-form-input {
+  background-color: rgb(0 0 0 / 20%);
+  border: var(--vb-border-width-thin) solid var(--vb-color-border);
+  border-radius: var(--vb-border-radius-md);
+  color: var(--vb-color-text);
+  font-family: var(--vb-font-primary);
+  font-size: var(--vb-font-size-md);
+  padding: var(--vb-space-2) var(--vb-space-3);
+  transition: all var(--vb-animation-speed-fast) var(--vb-animation-timing-default);
+  width: 100%;
+}
+
+.vb-form-input:focus {
+  border-color: var(--vb-color-primary);
+  box-shadow: 0 0 var(--vb-glow-intensity)
+    color-mix(in srgb, var(--vb-color-primary), transparent 70%);
+  outline: none;
+}
+
+.vb-form-input::placeholder {
+  color: var(--vb-color-text-secondary);
+  opacity: 70%;
+}
+
+/* Form validation */
+.vb-form-input.is-invalid {
+  border-color: var(--vb-color-error);
+}
+
+.vb-form-error {
+  color: var(--vb-color-error);
+  display: block;
+  font-size: var(--vb-font-size-sm);
+  margin-top: var(--vb-space-1);
+}
+
+/* Form select */
+.vb-form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23f0f8ff' viewBox='0 0 16 16'%3E%3Cpath d='M8 12l-6-6 1.5-1.5L8 9l4.5-4.5L14 6l-6 6z'/%3E%3C/svg%3E");
+  background-position: right var(--vb-space-3) center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: var(--vb-space-8);
+}
+
+/*
+ * Badge Components
+ * ========================================================================== */
+
+.vb-badge {
+  align-items: center;
+  background-color: var(--vb-color-surface);
+  border: 1px solid var(--vb-color-primary);
+  border-radius: var(--vb-border-radius-full);
+  color: var(--vb-color-primary);
+  display: inline-flex;
+  font-size: var(--vb-font-size-xs);
+  font-weight: var(--vb-font-weight-medium);
+  padding: var(--vb-space-1) var(--vb-space-2);
+}
+
+.vb-badge--primary {
+  background-color: var(--vb-color-primary);
+  color: var(--vb-color-black);
+}
+
+.vb-badge--secondary {
+  background-color: var(--vb-color-secondary);
+  color: var(--vb-color-black);
+}
+
+/* Trauma-specific badges */
+.vb-badge--trauma-abandonment {
+  border-color: var(--vb-color-trauma-abandonment);
+  color: var(--vb-color-trauma-abandonment);
+}
+
+.vb-badge--trauma-fragmentation {
+  border-color: var(--vb-color-trauma-fragmentation);
+  color: var(--vb-color-trauma-fragmentation);
+}
+
+.vb-badge--trauma-recursion {
+  border-color: var(--vb-color-trauma-recursion);
+  color: var(--vb-color-trauma-recursion);
+}
+
+.vb-badge--trauma-surveillance {
+  border-color: var(--vb-color-trauma-surveillance);
+  color: var(--vb-color-trauma-surveillance);
+}
+
+.vb-badge--trauma-displacement {
+  border-color: var(--vb-color-trauma-displacement);
+  color: var(--vb-color-trauma-displacement);
+}
+
+.vb-badge--trauma-dissolution {
+  border-color: var(--vb-color-trauma-dissolution);
+  color: var(--vb-color-trauma-dissolution);
+}
+
+/*
+ * Alert Components
+ * ========================================================================== */
+
+.vb-alert {
+  background-color: color-mix(in srgb, var(--vb-color-primary), var(--vb-color-surface) 90%);
+  border-left: var(--vb-border-width-thick) solid var(--vb-color-primary);
+  border-radius: var(--vb-border-radius-md);
+  margin-bottom: var(--vb-space-4);
+  padding: var(--vb-space-4);
+}
+
+.vb-alert--success {
+  background-color: color-mix(in srgb, var(--vb-color-success), var(--vb-color-surface) 90%);
+  border-left-color: var(--vb-color-success);
+}
+
+.vb-alert--error {
+  background-color: color-mix(in srgb, var(--vb-color-error), var(--vb-color-surface) 90%);
+  border-left-color: var(--vb-color-error);
+}
+
+.vb-alert--warning {
+  background-color: color-mix(in srgb, var(--vb-color-warning), var(--vb-color-surface) 90%);
+  border-left-color: var(--vb-color-warning);
+}
+
+.vb-alert--info {
+  background-color: color-mix(in srgb, var(--vb-color-info), var(--vb-color-surface) 90%);
+  border-left-color: var(--vb-color-info);
+}
+
+.vb-alert__title {
+  font-weight: var(--vb-font-weight-bold);
+  margin-bottom: var(--vb-space-2);
+}
+
+.vb-alert__content {
+  margin-bottom: 0;
+}
+
+/*
+ * Modal Components
+ * ========================================================================== */
+
+.vb-modal {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  opacity: 0%;
+  padding: var(--vb-space-4);
+  position: fixed;
+  transition: visibility 0s linear var(--vb-animation-speed-normal),
+    opacity var(--vb-animation-speed-normal) var(--vb-animation-timing-default);
+  visibility: hidden;
+  z-index: var(--vb-z-index-modal);
+}
+
+.vb-modal.is-active {
+  opacity: 100%;
+  transition-delay: 0s;
+  visibility: visible;
+}
+
+.vb-modal__backdrop {
+  background-color: rgb(0 0 0 / 70%);
+  backdrop-filter: blur(4px);
+  inset: 0;
+  position: absolute;
+}
+
+.vb-modal__container {
+  background-color: var(--vb-color-surface);
+  border: var(--vb-border-width-thin) solid var(--vb-color-border);
+  border-radius: var(--vb-border-radius-lg);
+  box-shadow: 0 var(--vb-space-6) var(--vb-space-8) rgb(0 0 0 / 30%);
+  max-height: 90vh;
+  max-width: 500px;
+  overflow-y: auto;
+  position: relative;
+  width: 100%;
+}
+
+.vb-modal__header {
+  align-items: center;
+  border-bottom: var(--vb-border-width-thin) solid var(--vb-color-border);
+  display: flex;
+  justify-content: space-between;
+  padding: var(--vb-space-4) var(--vb-space-6);
+}
+
+.vb-modal__title {
+  font-size: var(--vb-font-size-xl);
+  font-weight: var(--vb-font-weight-bold);
+  margin-bottom: 0;
+}
+
+.vb-modal__close {
+  background: none;
+  border: 0;
+  color: var(--vb-color-text-secondary);
+  cursor: pointer;
+  font-size: var(--vb-font-size-xl);
+  padding: var(--vb-space-1);
+  transition: color var(--vb-animation-speed-fast) var(--vb-animation-timing-default);
+}
+
+.vb-modal__close:hover {
+  color: var(--vb-color-text);
+}
+
+.vb-modal__content {
+  padding: var(--vb-space-6);
+}
+
+.vb-modal__footer {
+  border-top: var(--vb-border-width-thin) solid var(--vb-color-border);
+  display: flex;
+  gap: var(--vb-space-3);
+  justify-content: flex-end;
+  padding: var(--vb-space-4) var(--vb-space-6);
+}
+
+/* Responsive modals */
+@media (width <= 768px) {
+  .vb-modal__container {
+    margin: var(--vb-space-2);
+    max-width: 100%;
+  }
+
+  .vb-modal__header,
+  .vb-modal__content,
+  .vb-modal__footer {
+    padding: var(--vb-space-4);
+  }
+}

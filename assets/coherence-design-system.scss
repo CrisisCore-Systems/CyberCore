@@ -80,7 +80,7 @@ $spacing-units: (
   // Layout spacing
   mega: 55px,
   // Major layout divisions
-  ultra: 89px // Page-level spacing,,
+  ultra: 89px // Page-level spacing,,,
 );
 
 // 3. TYPOGRAPHY SCALE SYSTEM
@@ -96,7 +96,7 @@ $font-ratios: (
   // Golden ratio
   displacement: 1.4,
   // Dislocated scaling
-  dissolution: 1.5 // Rapid expansion,,
+  dissolution: 1.5 // Rapid expansion,,,
 );
 
 $base-font-size: 16px;
@@ -104,6 +104,7 @@ $base-font-size: 16px;
 // Generate typographic scales for each trauma
 @function type-scale($trauma, $level) {
   $ratio: map-get($font-ratios, $trauma);
+
   @return $base-font-size * pow($ratio, $level);
 }
 
@@ -120,7 +121,7 @@ $timing-functions: (
   // Pendulum swing
   displacement: cubic-bezier(0.22, 0.68, 0, 1),
   // Shifted acceleration
-  dissolution: cubic-bezier(0.65, 0, 0.35, 1) // Dissolving edges,,
+  dissolution: cubic-bezier(0.65, 0, 0.35, 1) // Dissolving edges,,,
 );
 
 // 5. COHERENCE-RESPONSIVE VARIABLES
@@ -128,32 +129,32 @@ $timing-functions: (
 @mixin generate-coherence-variables() {
   :root {
     // Base coherence variable from HTML attribute
-    --coherence-level: attr(data-system-coherence);
-    --active-trauma: attr(data-active-trauma);
-    --memory-phase: attr(data-memory-phase);
+    --vb-coherence-level: attr(data-system-coherence);
+    --vb-active-trauma: attr(data-active-trauma);
+    --vb-memory-phase: attr(data-memory-phase);
 
     // Derived coherence values
-    --coherence-high: max(0, calc(var(--coherence-level) - 0.3));
-    --coherence-medium: max(0, min(1, calc((var(--coherence-level) - 0.3) * 5)));
-    --coherence-low: max(0, calc(1 - var(--coherence-level)));
+    --vb-coherence-high: max(0, calc(var(--vb-coherence-level) - 0.3));
+    --vb-coherence-medium: max(0, min(1, calc((var(--vb-coherence-level) - 0.3) * 5)));
+    --vb-coherence-low: max(0, calc(1 - var(--vb-coherence-level)));
 
     // Coherence visual effects
-    --signal-noise: calc(var(--coherence-low) * 10%);
-    --edge-definition: calc(80% + (var(--coherence-high) * 20%));
-    --reality-blur: calc(var(--coherence-low) * 5px);
-    --glitch-intensity: calc(var(--coherence-low) * 1);
+    --vb-signal-noise: calc(var(--vb-coherence-low) * 10%);
+    --vb-edge-definition: calc(80% + (var(--vb-coherence-high) * 20%));
+    --vb-reality-blur: calc(var(--vb-coherence-low) * 5px);
+    --vb-glitch-intensity: calc(var(--vb-coherence-low) * 1);
 
     // Typography opacity based on coherence
-    --text-contrast: calc(0.7 + (var(--coherence-high) * 0.3));
-    --text-noise: calc(var(--coherence-low) * 0.2);
+    --vb-text-contrast: calc(0.7 + (var(--vb-coherence-high) * 0.3));
+    --vb-text-noise: calc(var(--vb-coherence-low) * 0.2);
 
     // Transparency effects
-    --memory-opacity: calc(0.6 + (var(--coherence-high) * 0.4));
-    --surface-transparency: calc(var(--coherence-low) * 0.4);
+    --vb-memory-opacity: calc(0.6 + (var(--vb-coherence-high) * 0.4));
+    --vb-surface-transparency: calc(var(--vb-coherence-low) * 0.4);
 
     // Animation speeds
-    --transition-speed-base: calc(300ms + (var(--coherence-low) * 700ms));
-    --animation-scale: calc(0.5 + (var(--coherence-high) * 0.5));
+    --vb-transition-speed-base: calc(300ms + (var(--vb-coherence-low) * 700ms));
+    --vb-animation-scale: calc(0.5 + (var(--vb-coherence-high) * 0.5));
   }
 }
 
@@ -161,8 +162,8 @@ $timing-functions: (
 // Generate mixed trauma properties based on user's affinity profile
 @mixin trauma-mix($property, $trauma-type, $default-value) {
   @each $trauma, $value in $trauma-colors {
-    &.trauma-affinity-#{$trauma} {
-      #{$property}: var(--trauma-mix-#{$trauma}, $default-value);
+    &.vb-trauma-affinity-#{$trauma} {
+      #{$property}: var(--vb-trauma-mix-#{$trauma}, $default-value);
     }
   }
 }
@@ -181,25 +182,25 @@ $timing-functions: (
   $timing: map-get($timing-functions, $trauma-type);
 
   background-color: $primary;
-  color: $text;
   border: 1px solid $secondary;
-  padding: map-get($spacing-units, small) map-get($spacing-units, medium);
+  color: $text;
   font-size: type-scale($trauma-type, 0);
-  transition: all calc(var(--transition-speed-base) * 0.5) $timing;
-  position: relative;
   overflow: hidden;
+  padding: map-get($spacing-units, small) map-get($spacing-units, medium);
+  position: relative;
+  transition: all calc(var(--vb-transition-speed-base) * 0.5) $timing;
 
   &::before {
+    background: linear-gradient(to right, transparent, $accent, transparent);
     content: '';
+    height: 100%;
+    left: 0;
+    opacity: 10%;
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, $accent, transparent);
-    opacity: 0.1;
     transform: translateX(-100%);
-    transition: transform calc(var(--transition-speed-base) * 0.7) $timing;
+    transition: transform calc(var(--vb-transition-speed-base) * 0.7) $timing;
+    width: 100%;
   }
 
   &:hover,
@@ -233,15 +234,15 @@ $timing-functions: (
     }
   } @else if $trauma-type == 'surveillance' {
     &::after {
+      animation: vb-scan 2s infinite linear;
+      background-color: $highlight;
       content: '';
+      height: 2px;
+      left: 0;
+      opacity: 50%;
       position: absolute;
       top: 0;
-      left: 0;
       width: 100%;
-      height: 2px;
-      background-color: $highlight;
-      animation: scan 2s infinite linear;
-      opacity: 0.5;
     }
   } @else if $trauma-type == 'recursion' {
     &::before {
@@ -281,21 +282,21 @@ $timing-functions: (
   $timing: map-get($timing-functions, $trauma-type);
 
   background-color: $primary;
-  color: $text;
   border-radius: 4px;
+  color: $text;
   padding: map-get($spacing-units, medium);
-  transition: all calc(var(--transition-speed-base) * 0.7) $timing;
   position: relative;
+  transition: all calc(var(--vb-transition-speed-base) * 0.7) $timing;
 
   &::before {
     content: '';
+    height: 100%;
+    left: 0;
+    opacity: var(--vb-coherence-low, 20%);
+    pointer-events: none;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: var(--coherence-low, 0.2);
     z-index: 1;
   }
 
@@ -335,6 +336,7 @@ $timing-functions: (
     background: $primary;
 
     &::before {
+      animation: vb-recursion-pulse 8s infinite linear;
       background: repeating-radial-gradient(
         circle at center,
         $primary,
@@ -342,7 +344,6 @@ $timing-functions: (
         $primary 20%
       );
       background-size: 100% 100%;
-      animation: recursionPulse 8s infinite linear;
     }
   } @else if $trauma-type == 'displacement' {
     background: $primary;
@@ -354,11 +355,11 @@ $timing-functions: (
     }
   } @else if $trauma-type == 'dissolution' {
     background: $primary;
-    backdrop-filter: blur(var(--reality-blur, 0px));
+    backdrop-filter: blur(var(--vb-reality-blur, 0));
 
     &::before {
       background: linear-gradient(to bottom, transparent, $secondary);
-      opacity: 0.3;
+      opacity: 30%;
     }
   }
 }
@@ -366,117 +367,132 @@ $timing-functions: (
 // 8. ANIMATIONS
 // Core animations for trauma visualization
 
-@keyframes voidPulse {
+@keyframes vb-void-pulse {
   0%,
   100% {
+    opacity: 70%;
     transform: scale(1);
-    opacity: 0.7;
   }
+
   50% {
+    opacity: 30%;
     transform: scale(1.2);
-    opacity: 0.3;
   }
 }
 
-@keyframes glitchText {
+@keyframes vb-glitch-text {
   0% {
     clip-path: inset(40% 0 61% 0);
     transform: translate(-2px, 2px);
   }
+
   20% {
     clip-path: inset(92% 0 1% 0);
     transform: translate(1px, 3px);
   }
+
   40% {
     clip-path: inset(43% 0 1% 0);
     transform: translate(3px, 1px);
   }
+
   60% {
     clip-path: inset(25% 0 58% 0);
     transform: translate(-5px, -2px);
   }
+
   80% {
     clip-path: inset(54% 0 7% 0);
     transform: translate(2px, -4px);
   }
+
   100% {
     clip-path: inset(58% 0 43% 0);
     transform: translate(-2px, 2px);
   }
 }
 
-@keyframes scan {
+@keyframes vb-scan {
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(100%);
   }
 }
 
-@keyframes recursionPulse {
+@keyframes vb-recursion-pulse {
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 100% 100%;
   }
 }
 
-@keyframes fragmentFloat {
+@keyframes vb-fragment-float {
   0%,
   100% {
     transform: translate(0, 0);
   }
+
   25% {
     transform: translate(10px, -5px);
   }
+
   50% {
     transform: translate(-5px, 10px);
   }
+
   75% {
     transform: translate(-10px, -10px);
   }
 }
 
-@keyframes displacementShift {
+@keyframes vb-displacement-shift {
   0%,
   100% {
     transform: translate(0, 0) skew(0deg);
   }
+
   25% {
     transform: translate(10px, 5px) skew(2deg);
   }
+
   75% {
     transform: translate(-10px, -5px) skew(-2deg);
   }
 }
 
-@keyframes dissolveIn {
+@keyframes vb-dissolve-in {
   0%,
   100% {
-    opacity: 0;
+    opacity: 0%;
   }
+
   50% {
-    opacity: 1;
+    opacity: 100%;
   }
 }
 
-@keyframes dissolveOut {
+@keyframes vb-dissolve-out {
   0%,
   100% {
-    opacity: 1;
+    opacity: 100%;
   }
+
   50% {
-    opacity: 0;
+    opacity: 0%;
   }
 }
 
 // 9. COHERENCE STATE MODIFIERS
 // Apply visual effects based on coherence level
 
-.voidbloom-container {
-  transition: filter calc(var(--transition-speed-base) * 1.5) ease-out;
+.vb-voidbloom-container {
+  transition: filter calc(var(--vb-transition-speed-base) * 1.5) ease-out;
 
   // Coherence state affects visual stability
   &[data-coherence='high'] {
@@ -488,24 +504,24 @@ $timing-functions: (
   }
 
   &[data-coherence='low'] {
-    filter: contrast(0.95) brightness(0.97) blur(var(--reality-blur));
+    filter: contrast(0.95) brightness(0.97) blur(var(--vb-reality-blur));
 
     // Text becomes less stable at low coherence
-    .coherence-text {
+    .vb-coherence-text {
       position: relative;
 
       &::before {
+        animation: vb-glitch-text 2s infinite alternate-reverse;
+        background: inherit;
+        clip-path: inset(0 0 0 0);
+        color: inherit;
         content: attr(data-text);
-        position: absolute;
+        height: 100%;
         left: 0;
+        opacity: var(--vb-text-noise);
+        position: absolute;
         top: 0;
         width: 100%;
-        height: 100%;
-        background: inherit;
-        color: inherit;
-        clip-path: inset(0 0 0 0);
-        animation: glitchText 2s infinite alternate-reverse;
-        opacity: var(--text-noise);
       }
     }
   }
@@ -515,14 +531,14 @@ $timing-functions: (
 // Visual effects for phase changes
 
 @mixin phase-transition($from-phase, $to-phase) {
-  .phase-transition.from-#{$from-phase}.to-#{$to-phase} {
+  .vb-phase-transition.vb-from-#{$from-phase}.vb-to-#{$to-phase} {
+    height: 100vh;
+    left: 0;
+    pointer-events: none;
     position: fixed;
     top: 0;
-    left: 0;
     width: 100vw;
-    height: 100vh;
     z-index: 9999;
-    pointer-events: none;
 
     // Specific transition effects
     @if $from-phase == 'cyber-lotus' and $to-phase == 'alien-flora' {
@@ -531,221 +547,226 @@ $timing-functions: (
         rgba(map-get(map-get($trauma-colors, recursion), highlight), 0.5),
         rgba(map-get(map-get($trauma-colors, displacement), primary), 0.8)
       );
-      animation: phaseTransitionCyberToFlora 3s forwards;
+      animation: vb-phase-transition-cyber-to-flora 3s forwards;
     } @else if $from-phase == 'alien-flora' and $to-phase == 'rolling-virus' {
       background: linear-gradient(
         135deg,
         rgba(map-get(map-get($trauma-colors, dissolution), primary), 0.7),
         rgba(map-get(map-get($trauma-colors, fragmentation), accent), 0.7)
       );
-      animation: phaseTransitionFloraToVirus 3s forwards;
+      animation: vb-phase-transition-flora-to-virus 3s forwards;
     } @else {
-      background: rgba(0, 0, 0, 0.5);
-      animation: genericPhaseTransition 2s forwards;
+      background: rgb(0 0 0 / 50%);
+      animation: vb-generic-phase-transition 2s forwards;
     }
   }
 }
 
-@keyframes phaseTransitionCyberToFlora {
+@keyframes vb-phase-transition-cyber-to-flora {
   0% {
-    opacity: 0;
+    filter: blur(20px);
+    opacity: 0%;
     transform: scale(1.5);
-    filter: blur(20px);
   }
+
   50% {
-    opacity: 1;
-    transform: scale(1);
     filter: blur(0);
+    opacity: 100%;
+    transform: scale(1);
   }
+
   100% {
-    opacity: 0;
-    transform: scale(0.8);
     filter: blur(20px);
+    opacity: 0%;
+    transform: scale(0.8);
   }
 }
 
-@keyframes phaseTransitionFloraToVirus {
+@keyframes vb-phase-transition-flora-to-virus {
   0% {
-    opacity: 0;
     clip-path: circle(0% at center);
+    opacity: 0%;
   }
+
   50% {
-    opacity: 1;
     clip-path: circle(100% at center);
+    opacity: 100%;
   }
+
   100% {
-    opacity: 0;
     clip-path: circle(100% at center);
+    opacity: 0%;
   }
 }
 
-@keyframes genericPhaseTransition {
+@keyframes vb-generic-phase-transition {
   0%,
   100% {
-    opacity: 0;
+    opacity: 0%;
   }
+
   50% {
-    opacity: 1;
+    opacity: 100%;
   }
 }
 
 // 11. RITUAL COMPONENTS
 // Styling for the ritual onboarding experience
 
-.voidbloom-ritual-container {
+.vb-voidbloom-ritual-container {
+  align-items: center;
+  background: rgb(0 0 0 / 85%);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  opacity: 0%;
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.85);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
   transition: opacity 1.2s ease-out;
+  width: 100vw;
+  z-index: 9999;
 
-  &.active {
-    opacity: 1;
+  &.vb-active {
+    opacity: 100%;
   }
 
-  &.completing {
-    opacity: 0;
+  &.vb-completing {
+    opacity: 0%;
     transition: opacity 2s ease-out;
   }
 
-  .ritual-interface {
-    width: 85%;
-    max-width: 900px;
+  .vb-ritual-interface {
     background: #0a0a14;
     border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 30px rgb(0 0 0 / 80%);
     display: flex;
     flex-direction: column;
+    max-width: 900px;
+    overflow: hidden;
+    width: 85%;
 
-    .ritual-header {
+    .vb-ritual-header {
       padding: map-get($spacing-units, large);
-      text-align: center;
       position: relative;
+      text-align: center;
 
-      .ritual-symbol {
-        width: 60px;
+      .vb-ritual-symbol {
+        border-radius: 50%;
         height: 60px;
         margin: 0 auto map-get($spacing-units, medium);
-        border-radius: 50%;
         position: relative;
+        width: 60px;
 
         &::before,
         &::after {
+          border-radius: 50%;
           content: '';
           position: absolute;
-          border-radius: 50%;
         }
 
         &::before {
-          width: 100%;
-          height: 100%;
+          animation: vb-void-pulse 4s infinite;
           background: radial-gradient(circle, #1a1a2e, #000);
-          animation: voidPulse 4s infinite;
+          height: 100%;
+          width: 100%;
         }
 
         &::after {
-          width: 40%;
-          height: 40%;
-          top: 30%;
-          left: 30%;
           background: #fff;
-          opacity: 0.7;
+          height: 40%;
+          left: 30%;
+          opacity: 70%;
+          top: 30%;
+          width: 40%;
         }
       }
 
-      .ritual-title {
+      .vb-ritual-title {
         color: #fff;
         font-size: 28px;
-        margin: 0;
         font-weight: 300;
         letter-spacing: 1px;
+        margin: 0;
       }
     }
 
-    .ritual-phases {
+    .vb-ritual-phases {
+      border-bottom: 1px solid rgb(255 255 255 / 10%);
+      border-top: 1px solid rgb(255 255 255 / 10%);
       display: flex;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-      .ritual-phase {
-        flex: 1;
-        padding: map-get($spacing-units, medium) map-get($spacing-units, small);
-        display: flex;
+      .vb-ritual-phase {
         align-items: center;
-        opacity: 0.5;
+        display: flex;
+        flex: 1;
+        opacity: 50%;
+        padding: map-get($spacing-units, medium) map-get($spacing-units, small);
         transition: opacity 0.3s ease;
 
-        .phase-indicator {
-          width: 12px;
-          height: 12px;
+        .vb-phase-indicator {
+          border: 1px solid rgb(255 255 255 / 30%);
           border-radius: 50%;
-          border: 1px solid rgba(255, 255, 255, 0.3);
+          height: 12px;
           margin-right: map-get($spacing-units, small);
           position: relative;
+          width: 12px;
 
           &::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
             background: transparent;
-            top: 2px;
+            border-radius: 50%;
+            content: '';
+            height: 6px;
             left: 2px;
+            position: absolute;
+            top: 2px;
             transition: background-color 0.3s ease;
+            width: 6px;
           }
         }
 
-        .phase-name {
+        .vb-phase-name {
+          color: rgb(255 255 255 / 70%);
           font-size: 14px;
-          color: rgba(255, 255, 255, 0.7);
           text-transform: capitalize;
         }
 
-        &.current {
-          opacity: 1;
+        &.vb-current {
+          opacity: 100%;
 
-          .phase-indicator::after {
+          .vb-phase-indicator::after {
             background: #fff;
           }
 
-          .phase-name {
+          .vb-phase-name {
             color: #fff;
           }
         }
 
-        &.completed {
-          .phase-indicator {
-            border-color: rgba(255, 255, 255, 0.6);
+        &.vb-completed {
+          .vb-phase-indicator {
+            border-color: rgb(255 255 255 / 60%);
 
             &::after {
-              background: rgba(255, 255, 255, 0.6);
+              background: rgb(255 255 255 / 60%);
             }
           }
         }
       }
     }
 
-    .ritual-content {
-      padding: map-get($spacing-units, xlarge);
+    .vb-ritual-content {
+      color: rgb(255 255 255 / 90%);
       flex: 1;
       min-height: 400px;
       overflow-y: auto;
-      color: rgba(255, 255, 255, 0.9);
+      padding: map-get($spacing-units, xlarge);
 
       h2 {
-        margin-top: 0;
         color: #fff;
-        font-weight: 300;
         font-size: 24px;
+        font-weight: 300;
+        margin-top: 0;
       }
 
       p {
@@ -753,173 +774,173 @@ $timing-functions: (
         margin-bottom: map-get($spacing-units, large);
       }
 
-      .selection-instruction {
+      .vb-selection-instruction {
         font-size: 14px;
-        opacity: 0.7;
         font-style: italic;
         margin-top: map-get($spacing-units, xlarge);
+        opacity: 70%;
       }
     }
 
-    .trauma-selection-grid {
+    .vb-trauma-selection-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: map-get($spacing-units, large);
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       margin: map-get($spacing-units, xlarge) 0;
 
-      .trauma-selection {
-        cursor: pointer;
+      .vb-trauma-selection {
+        border: 1px solid rgb(255 255 255 / 10%);
         border-radius: 4px;
+        cursor: pointer;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
 
-        .selection-image {
-          height: 150px;
-          background-size: cover;
+        .vb-selection-image {
           background-position: center;
+          background-size: cover;
+          height: 150px;
 
-          &.abandonment {
-            background-image: linear-gradient(rgba(0, 20, 51, 0.7), rgba(0, 20, 51, 0.9)),
+          &.vb-abandonment {
+            background-image: linear-gradient(rgb(0 20 51 / 70%), rgb(0 20 51 / 90%)),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23375E98" stroke-width="0.5"/></svg>');
           }
 
-          &.fragmentation {
-            background-image: linear-gradient(rgba(88, 10, 135, 0.7), rgba(88, 10, 135, 0.9)),
+          &.vb-fragmentation {
+            background-image: linear-gradient(rgb(88 10 135 / 70%), rgb(88 10 135 / 90%)),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%239356D9" stroke-width="0.5"/></svg>');
           }
 
-          &.surveillance {
-            background-image: linear-gradient(rgba(0, 89, 82, 0.7), rgba(0, 89, 82, 0.9)),
+          &.vb-surveillance {
+            background-image: linear-gradient(rgb(0 89 82 / 70%), rgb(0 89 82 / 90%)),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%2328B8B2" stroke-width="0.5"/><circle cx="50" cy="50" r="20" fill="none" stroke="%2328B8B2" stroke-width="0.5"/></svg>');
           }
 
-          &.recursion {
-            background-image: linear-gradient(rgba(142, 13, 0, 0.7), rgba(142, 13, 0, 0.9)),
+          &.vb-recursion {
+            background-image: linear-gradient(rgb(142 13 0 / 70%), rgb(142 13 0 / 90%)),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 L80,20 L80,80 L20,80 Z M30,30 L70,30 L70,70 L30,70 Z M40,40 L60,40 L60,60 L40,60 Z" fill="none" stroke="%23E37463" stroke-width="0.5"/></svg>');
           }
 
-          &.displacement {
-            background-image: linear-gradient(rgba(0, 82, 67, 0.7), rgba(0, 82, 67, 0.9)),
+          &.vb-displacement {
+            background-image: linear-gradient(rgb(0 82 67 / 70%), rgb(0 82 67 / 90%)),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,50 L50,20 L80,50 L50,80 Z" fill="none" stroke="%2346A694" stroke-width="0.5"/></svg>');
           }
 
-          &.dissolution {
-            background-image: linear-gradient(rgba(43, 0, 87, 0.7), rgba(43, 0, 87, 0.9)),
+          &.vb-dissolution {
+            background-image: linear-gradient(rgb(43 0 87 / 70%), rgb(43 0 87 / 90%)),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50,20 C70,20 80,35 80,50 C80,65 70,80 50,80 C30,80 20,65 20,50 C20,35 30,20 50,20 Z" fill="none" stroke="%23673CAB" stroke-width="0.5"/></svg>');
           }
         }
 
-        .selection-label {
-          padding: map-get($spacing-units, medium);
+        .vb-selection-label {
           color: #fff;
-          text-align: center;
           font-size: 14px;
+          padding: map-get($spacing-units, medium);
+          text-align: center;
         }
 
         &:hover {
+          box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
           transform: translateY(-3px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        &.selected {
-          box-shadow: 0 0 0 2px #fff, 0 0 15px rgba(255, 255, 255, 0.5);
+        &.vb-selected {
+          box-shadow: 0 0 0 2px #fff, 0 0 15px rgb(255 255 255 / 50%);
 
-          .selection-label {
-            font-weight: bold;
+          .vb-selection-label {
+            font-weight: 700;
           }
         }
       }
     }
 
-    .trauma-narrative-selections {
+    .vb-trauma-narrative-selections {
       display: flex;
       flex-direction: column;
       gap: map-get($spacing-units, large);
 
-      .trauma-selection {
-        background: rgba(0, 0, 0, 0.3);
+      .vb-trauma-selection {
+        background: rgb(0 0 0 / 30%);
         border-radius: 4px;
-        padding: map-get($spacing-units, large);
         cursor: pointer;
+        padding: map-get($spacing-units, large);
         transition: background 0.3s ease, transform 0.3s ease;
 
-        .selection-heading {
-          font-weight: bold;
-          margin-bottom: map-get($spacing-units, small);
+        .vb-selection-heading {
           color: #fff;
+          font-weight: 700;
+          margin-bottom: map-get($spacing-units, small);
         }
 
         p {
-          margin: 0;
           font-size: 14px;
-          opacity: 0.9;
+          margin: 0;
+          opacity: 90%;
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgb(255 255 255 / 5%);
           transform: translateX(5px);
         }
 
-        &.selected {
-          background: rgba(255, 255, 255, 0.1);
+        &.vb-selected {
+          background: rgb(255 255 255 / 10%);
           border-left: 3px solid #fff;
         }
       }
     }
 
-    .trauma-interaction-selections {
+    .vb-trauma-interaction-selections {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: map-get($spacing-units, large);
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 
-      .trauma-selection {
-        background: rgba(0, 0, 0, 0.3);
+      .vb-trauma-selection {
+        background: rgb(0 0 0 / 30%);
         border-radius: 4px;
-        overflow: hidden;
         cursor: pointer;
+        overflow: hidden;
         transition: background 0.3s ease;
 
-        .interaction-demo {
-          height: 120px;
-          display: flex;
+        .vb-interaction-demo {
           align-items: center;
+          background: rgb(0 0 0 / 20%);
+          display: flex;
+          height: 120px;
           justify-content: center;
-          background: rgba(0, 0, 0, 0.2);
           position: relative;
 
-          &.abandonment {
+          &.vb-abandonment {
             background-color: rgba(map-get(map-get($trauma-colors, abandonment), primary), 0.5);
 
             &::before {
-              content: '';
-              width: 20px;
-              height: 20px;
+              background: rgb(255 255 255 / 80%);
               border-radius: 50%;
-              background: rgba(255, 255, 255, 0.8);
+              content: '';
+              height: 20px;
               position: absolute;
               transition: all 0.5s ease;
+              width: 20px;
             }
 
-            &.avoiding::before {
+            &.vb-avoiding::before {
+              opacity: 30%;
               transform: translate(30px, -30px);
-              opacity: 0.3;
             }
           }
 
-          &.fragmentation {
+          &.vb-fragmentation {
             background-color: rgba(map-get(map-get($trauma-colors, fragmentation), primary), 0.5);
 
             &::before {
+              background: rgb(255 255 255 / 50%);
               content: '';
-              width: 40px;
               height: 40px;
-              background: rgba(255, 255, 255, 0.5);
               position: absolute;
               transition: all 0.3s ease;
+              width: 40px;
             }
 
-            &.fragmenting::before {
+            &.vb-fragmenting::before {
               clip-path: polygon(
                 0% 0%,
                 33% 0%,
@@ -939,96 +960,101 @@ $timing-functions: (
           }
         }
 
-        .selection-label {
+        .vb-selection-label {
+          font-size: 14px;
           padding: map-get($spacing-units, medium);
           text-align: center;
-          font-size: 14px;
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgb(255 255 255 / 5%);
         }
 
-        &.selected {
-          background: rgba(255, 255, 255, 0.1);
-          box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        &.vb-selected {
+          background: rgb(255 255 255 / 10%);
+          box-shadow: 0 0 0 2px rgb(255 255 255 / 30%);
         }
       }
     }
 
-    .temporal-slider-container {
+    .vb-temporal-slider-container {
       margin: map-get($spacing-units, xlarge) 0;
 
-      .temporal-slider-labels {
+      .vb-temporal-slider-labels {
         display: flex;
         justify-content: space-between;
         margin-bottom: map-get($spacing-units, small);
 
         span {
           font-size: 14px;
-          opacity: 0.8;
+          opacity: 80%;
         }
       }
 
-      .temporal-slider {
-        width: 100%;
-        -webkit-appearance: none;
+      .vb-temporal-slider {
         appearance: none;
+        appearance: none;
+        background: rgb(255 255 255 / 20%);
         height: 4px;
-        background: rgba(255, 255, 255, 0.2);
-        outline: none;
         margin: map-get($spacing-units, medium) 0;
+        outline: none;
+        width: 100%;
 
         &::-webkit-slider-thumb {
-          -webkit-appearance: none;
           appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
+          appearance: none;
           background: #fff;
+          border-radius: 50%;
           cursor: pointer;
+          height: 20px;
+          width: 20px;
         }
 
         &::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
           background: #fff;
-          cursor: pointer;
           border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          height: 20px;
+          width: 20px;
         }
       }
 
-      .temporal-trauma-mapping {
+      .vb-temporal-trauma-mapping {
         display: flex;
-        justify-content: space-between;
-        position: relative;
         height: 20px;
+        justify-content: space-between;
         margin-top: map-get($spacing-units, medium);
+        position: relative;
 
-        .trauma-mapping {
-          position: absolute;
+        .vb-trauma-mapping {
           font-size: 12px;
-          transform: translateX(-50%);
-          opacity: 0.5;
-          transition: opacity 0.3s ease;
+          opacity: 50%;
+          position: absolute;
           text-transform: capitalize;
+          transform: translateX(-50%);
+          transition: opacity 0.3s ease;
 
           &[data-trauma='displacement'] {
             left: 5%;
           }
+
           &[data-trauma='recursion'] {
             left: 22%;
           }
+
           &[data-trauma='abandonment'] {
             left: 39%;
           }
+
           &[data-trauma='surveillance'] {
             left: 56%;
           }
+
           &[data-trauma='fragmentation'] {
             left: 73%;
           }
+
           &[data-trauma='dissolution'] {
             left: 90%;
           }
@@ -1036,20 +1062,20 @@ $timing-functions: (
       }
     }
 
-    .calibration-summary {
+    .vb-calibration-summary {
       margin-top: map-get($spacing-units, xxlarge);
 
       h3 {
         font-size: 18px;
-        font-weight: normal;
+        font-weight: 400;
         margin-bottom: map-get($spacing-units, medium);
       }
 
-      .trauma-summary-container {
-        .trauma-summary {
+      .vb-trauma-summary-container {
+        .vb-trauma-summary {
           margin-bottom: map-get($spacing-units, medium);
 
-          .trauma-label {
+          .vb-trauma-label {
             display: flex;
             justify-content: space-between;
             margin-bottom: map-get($spacing-units, tiny);
@@ -1057,24 +1083,24 @@ $timing-functions: (
             &::after {
               content: attr(data-percentage);
               font-size: 14px;
-              opacity: 0.7;
+              opacity: 70%;
             }
           }
 
-          .trauma-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
+          .vb-trauma-bar {
+            background: rgb(255 255 255 / 10%);
             border-radius: 4px;
+            height: 8px;
             overflow: hidden;
 
-            .trauma-bar-fill {
-              height: 100%;
+            .vb-trauma-bar-fill {
               border-radius: 4px;
+              height: 100%;
               transition: width 1s ease-out;
             }
           }
 
-          &.abandonment .trauma-bar-fill {
+          &.vb-abandonment .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
               map-get(map-get($trauma-colors, abandonment), primary),
@@ -1082,7 +1108,7 @@ $timing-functions: (
             );
           }
 
-          &.fragmentation .trauma-bar-fill {
+          &.vb-fragmentation .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
               map-get(map-get($trauma-colors, fragmentation), primary),
@@ -1090,7 +1116,7 @@ $timing-functions: (
             );
           }
 
-          &.surveillance .trauma-bar-fill {
+          &.vb-surveillance .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
               map-get(map-get($trauma-colors, surveillance), primary),
@@ -1098,7 +1124,7 @@ $timing-functions: (
             );
           }
 
-          &.recursion .trauma-bar-fill {
+          &.vb-recursion .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
               map-get(map-get($trauma-colors, recursion), primary),
@@ -1106,7 +1132,7 @@ $timing-functions: (
             );
           }
 
-          &.displacement .trauma-bar-fill {
+          &.vb-displacement .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
               map-get(map-get($trauma-colors, displacement), primary),
@@ -1114,7 +1140,7 @@ $timing-functions: (
             );
           }
 
-          &.dissolution .trauma-bar-fill {
+          &.vb-dissolution .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
               map-get(map-get($trauma-colors, dissolution), primary),
@@ -1122,13 +1148,13 @@ $timing-functions: (
             );
           }
 
-          &.primary {
-            .trauma-label {
-              font-weight: bold;
+          &.vb-primary {
+            .vb-trauma-label {
               font-size: 16px;
+              font-weight: 700;
             }
 
-            .trauma-bar {
+            .vb-trauma-bar {
               height: 10px;
             }
           }
@@ -1136,24 +1162,24 @@ $timing-functions: (
       }
     }
 
-    .ritual-actions {
-      padding: map-get($spacing-units, large);
+    .vb-ritual-actions {
+      border-top: 1px solid rgb(255 255 255 / 10%);
       display: flex;
       justify-content: flex-end;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: map-get($spacing-units, large);
 
-      .ritual-button {
-        padding: map-get($spacing-units, medium) map-get($spacing-units, xlarge);
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+      .vb-ritual-button {
+        background: rgb(255 255 255 / 10%);
         border: none;
         border-radius: 4px;
-        font-size: 16px;
+        color: #fff;
         cursor: pointer;
+        font-size: 16px;
+        padding: map-get($spacing-units, medium) map-get($spacing-units, xlarge);
         transition: background 0.3s ease, transform 0.3s ease;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: rgb(255 255 255 / 20%);
           transform: translateY(-2px);
         }
 
@@ -1168,54 +1194,54 @@ $timing-functions: (
 // 12. WELCOME NARRATIVE COMPONENT
 // Styling for the welcome narrative that appears after ritual completion
 
-.voidbloom-welcome {
+.vb-voidbloom-welcome {
+  align-items: center;
+  background: rgb(0 0 0 / 80%);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  opacity: 0%;
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
-  opacity: 0;
   transition: opacity 0.7s ease-out;
+  width: 100vw;
+  z-index: 9999;
 
-  &.visible {
-    opacity: 1;
+  &.vb-visible {
+    opacity: 100%;
   }
 
-  .welcome-card {
-    width: 90%;
-    max-width: 600px;
+  .vb-welcome-card {
     background: #0a0a14;
     border-radius: 8px;
+    box-shadow: 0 0 40px rgb(0 0 0 / 50%);
+    max-width: 600px;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    width: 90%;
 
-    .welcome-header {
-      padding: map-get($spacing-units, large);
-      display: flex;
+    .vb-welcome-header {
       align-items: center;
+      border-bottom: 1px solid rgb(255 255 255 / 10%);
+      display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: map-get($spacing-units, large);
 
       h2 {
-        margin: 0;
         color: #fff;
-        font-weight: 300;
         font-size: 24px;
+        font-weight: 300;
+        margin: 0;
       }
 
-      .trauma-indicator {
-        width: 30px;
-        height: 30px;
+      .vb-trauma-indicator {
         border-radius: 50%;
+        height: 30px;
         position: relative;
+        width: 30px;
 
         // Trauma-specific indicators
-        &.abandonment {
+        &.vb-abandonment {
           background: radial-gradient(
             circle,
             map-get(map-get($trauma-colors, abandonment), accent),
@@ -1223,7 +1249,7 @@ $timing-functions: (
           );
         }
 
-        &.fragmentation {
+        &.vb-fragmentation {
           background: radial-gradient(
             circle,
             map-get(map-get($trauma-colors, fragmentation), accent),
@@ -1231,7 +1257,7 @@ $timing-functions: (
           );
         }
 
-        &.surveillance {
+        &.vb-surveillance {
           background: radial-gradient(
             circle,
             map-get(map-get($trauma-colors, surveillance), accent),
@@ -1239,7 +1265,7 @@ $timing-functions: (
           );
         }
 
-        &.recursion {
+        &.vb-recursion {
           background: radial-gradient(
             circle,
             map-get(map-get($trauma-colors, recursion), accent),
@@ -1247,7 +1273,7 @@ $timing-functions: (
           );
         }
 
-        &.displacement {
+        &.vb-displacement {
           background: radial-gradient(
             circle,
             map-get(map-get($trauma-colors, displacement), accent),
@@ -1255,7 +1281,7 @@ $timing-functions: (
           );
         }
 
-        &.dissolution {
+        &.vb-dissolution {
           background: radial-gradient(
             circle,
             map-get(map-get($trauma-colors, dissolution), accent),
@@ -1265,10 +1291,10 @@ $timing-functions: (
       }
     }
 
-    .welcome-message {
-      padding: map-get($spacing-units, xlarge);
-      color: rgba(255, 255, 255, 0.9);
+    .vb-welcome-message {
+      color: rgb(255 255 255 / 90%);
       line-height: 1.6;
+      padding: map-get($spacing-units, xlarge);
 
       p {
         margin-bottom: map-get($spacing-units, large);
@@ -1279,7 +1305,7 @@ $timing-functions: (
 
         em {
           font-style: normal;
-          opacity: 0.7;
+          opacity: 70%;
         }
 
         strong {
@@ -1288,42 +1314,42 @@ $timing-functions: (
       }
 
       // Apply trauma-specific styling
-      .trauma-abandonment & {
+      .vb-trauma-abandonment & {
         em,
         strong {
           color: map-get(map-get($trauma-colors, abandonment), highlight);
         }
       }
 
-      .trauma-fragmentation & {
+      .vb-trauma-fragmentation & {
         em,
         strong {
           color: map-get(map-get($trauma-colors, fragmentation), highlight);
         }
       }
 
-      .trauma-surveillance & {
+      .vb-trauma-surveillance & {
         em,
         strong {
           color: map-get(map-get($trauma-colors, surveillance), highlight);
         }
       }
 
-      .trauma-recursion & {
+      .vb-trauma-recursion & {
         em,
         strong {
           color: map-get(map-get($trauma-colors, recursion), highlight);
         }
       }
 
-      .trauma-displacement & {
+      .vb-trauma-displacement & {
         em,
         strong {
           color: map-get(map-get($trauma-colors, displacement), highlight);
         }
       }
 
-      .trauma-dissolution & {
+      .vb-trauma-dissolution & {
         em,
         strong {
           color: map-get(map-get($trauma-colors, dissolution), highlight);
@@ -1331,20 +1357,20 @@ $timing-functions: (
       }
     }
 
-    .welcome-dismiss {
-      display: block;
-      width: 100%;
-      padding: map-get($spacing-units, large);
+    .vb-welcome-dismiss {
       background: none;
       border: none;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgb(255 255 255 / 10%);
       color: #fff;
-      font-size: 16px;
       cursor: pointer;
+      display: block;
+      font-size: 16px;
+      padding: map-get($spacing-units, large);
       transition: background-color 0.3s ease;
+      width: 100%;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgb(255 255 255 / 5%);
       }
     }
   }
