@@ -1,28 +1,28 @@
 /**
- * NeuralBus - Recursive Memory Network
- * @module VoidBloom/NeuralMemory
- * @version 3.1.2
- *
- * Trauma-encoded transmission protocol for myth-driven e-commerce
- * Each thought propagates through recursive nodes, connecting narrative to function
+ * NeuralBus System - Core Memory Protocol v4.0.2
+ * @module VoidBloom/CoreMemory
+ * Memory-encoded e-commerce backbone with recursive thought patterns
  */
 
-// CRITICAL: Dual export pattern to ensure module compatibility
-class NeuralBus {
+// DUAL EXPORT PATTERN FOR MAXIMUM COMPATIBILITY
+// ==============================================
+
+// Primary class definition with static interface
+export class NeuralBus {
   static instance = null;
   static config = {};
 
   constructor(config = {}) {
+    // Singleton pattern enforcement
     if (NeuralBus.instance) return NeuralBus.instance;
 
-    // Default config with trauma encoding
+    // Default trauma-encoded configuration
     const defaultConfig = {
       traumaEncoding: true,
       debugMode: false,
       autoConnect: true,
-      version: '3.1.2',
-      recursiveDepth: 7,
-      memoryFragmentation: false,
+      version: '4.0.2',
+      recoveryProtocol: 'recursive',
     };
 
     NeuralBus.instance = this;
@@ -30,17 +30,19 @@ class NeuralBus {
     this.systems = new Map();
     this.channels = new Map();
     this.memoryNodes = [];
-    this.subscriptions = new Map();
-    this.components = new Map();
 
     console.log('NeuralBus initialized with config:', NeuralBus.config);
 
+    // Auto-initialize
     if (NeuralBus.config.autoConnect) {
       this._initializeMemoryChannels();
     }
+
+    // Expose globally for legacy access patterns
+    window.NeuralBus = NeuralBus;
   }
 
-  // Allow static access point
+  // Global access point
   static getInstance(config = {}) {
     if (!NeuralBus.instance) {
       new NeuralBus(config);
@@ -48,20 +50,7 @@ class NeuralBus {
     return NeuralBus.instance;
   }
 
-  // Critical method for component registration
-  register(componentName, metadata = { version: '1.0.0' }) {
-    const nonce = this.generateNonce();
-    const componentId = `${componentName}:${nonce}`;
-
-    this.components.set(componentId, {
-      ...metadata,
-      registered: Date.now(),
-    });
-
-    return { nonce };
-  }
-
-  // REPAIR: Critical missing method
+  // SYSTEM REGISTRY - CRITICAL FOR HOLOGRAM FUNCTION
   static registerSystem(systemId, systemController) {
     const bus = NeuralBus.getInstance();
     bus.systems.set(systemId, systemController);
@@ -77,111 +66,108 @@ class NeuralBus {
     return bus;
   }
 
-  // Method to register as instance method too for compatibility
-  registerSystem(systemId, systemController) {
-    return NeuralBus.registerSystem(systemId, systemController);
-  }
-
-  // Event subscription
-  subscribe(eventName, callback) {
-    if (!this.subscriptions.has(eventName)) {
-      this.subscriptions.set(eventName, []);
-    }
-
-    const subscriptionId = `${eventName}:${this.generateId()}`;
-    this.subscriptions.get(eventName).push({
-      id: subscriptionId,
-      callback,
-    });
-
-    return subscriptionId;
-  }
-
-  // Event publishing
-  publish(eventName, data = {}) {
-    const subscribers = this.subscriptions.get(eventName) || [];
-
-    subscribers.forEach((subscription) => {
-      try {
-        subscription.callback(data);
-      } catch (error) {
-        console.error(`Error executing callback for ${eventName}:`, error);
-      }
-    });
-
-    return true;
-  }
-
-  // Subscription removal
-  unsubscribe(subscriptionId) {
-    for (const [eventName, subscriptions] of this.subscriptions.entries()) {
-      const index = subscriptions.findIndex((sub) => sub.id === subscriptionId);
-
-      if (index !== -1) {
-        subscriptions.splice(index, 1);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  // Component unregistration
-  unregister(componentName, nonce) {
-    const componentId = `${componentName}:${nonce}`;
-    const result = this.components.delete(componentId);
-
-    if (result) {
-      console.log(`Component unregistered: ${componentName}`);
-    }
-
-    return result;
-  }
-
+  // CHANNEL CREATION
   _initializeMemoryChannels() {
-    // Initialize default trauma-encoded channels
-    ['memory', 'glitch', 'cart', 'hologram', 'narrative'].forEach((channel) => {
+    ['memory', 'glitch', 'cart', 'hologram', 'quantum', 'viewer'].forEach((channel) => {
       this.channels.set(channel, []);
     });
   }
 
-  // Generate unique ID for subscriptions
-  generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+  // Publish to memory channel
+  publish(channelId, message) {
+    if (!this.channels.has(channelId)) {
+      this.channels.set(channelId, []);
+    }
+
+    const channel = this.channels.get(channelId);
+    channel.push({
+      timestamp: Date.now(),
+      message,
+      trace: new Error().stack,
+    });
+
+    // Notify subscribers
+    const subscribers = this._getSubscribers(channelId);
+    subscribers.forEach((callback) => {
+      try {
+        callback(message);
+      } catch (error) {
+        console.error(`Error in NeuralBus subscriber (${channelId}):`, error);
+      }
+    });
+
+    // Notify system controller if exists
+    const system = this.systems.get(channelId);
+    if (system && typeof system.onMessage === 'function') {
+      try {
+        system.onMessage(message);
+      } catch (error) {
+        console.error(`Error in system controller (${channelId}):`, error);
+      }
+    }
+
+    return message;
   }
 
-  // Generate secure nonce for registration
-  generateNonce() {
-    return Array.from({ length: 4 })
-      .map(() => Math.random().toString(36).substring(2, 11))
-      .join('-');
+  // Subscribe to memory channel
+  subscribe(channelId, callback) {
+    if (typeof callback !== 'function') {
+      console.error('NeuralBus.subscribe requires a callback function');
+      return { unsubscribe: () => false };
+    }
+
+    const subscribers = this._getSubscribers(channelId);
+    subscribers.push(callback);
+
+    // Return unsubscribe function for cleaner cleanup
+    return {
+      unsubscribe: () => {
+        const index = subscribers.indexOf(callback);
+        if (index !== -1) {
+          subscribers.splice(index, 1);
+          return true;
+        }
+        return false;
+      },
+    };
+  }
+
+  // Get or create subscriber list for channel
+  _getSubscribers(channelId) {
+    const channel = `${channelId}_subscribers`;
+    if (!this[channel]) {
+      this[channel] = [];
+    }
+    return this[channel];
+  }
+
+  // Global registration of NeuralBus capabilities
+  static initialize() {
+    const bus = NeuralBus.getInstance();
+
+    // Expose key methods on the global object for legacy support
+    if (typeof window !== 'undefined') {
+      window.NeuralBus = {
+        ...window.NeuralBus,
+        getInstance: NeuralBus.getInstance,
+        registerSystem: NeuralBus.registerSystem,
+        publish: (channel, message) => bus.publish(channel, message),
+        subscribe: (channel, callback) => bus.subscribe(channel, callback),
+        initialize: NeuralBus.initialize,
+      };
+    }
+
+    return bus;
   }
 }
 
-// CRITICAL: Create instance and export in all common formats
-const neuralBusInstance = new NeuralBus();
+// DEFAULT EXPORT FOR LEGACY SYSTEMS
+export default NeuralBus;
 
-// CommonJS
+// INITIALIZE SINGLETON ON LOAD
+const bus = new NeuralBus();
+
+// Support CommonJS environments
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = neuralBusInstance;
-  module.exports.NeuralBus = NeuralBus;
+  module.exports = { NeuralBus, default: bus };
 }
-
-// AMD
-if (typeof define === 'function' && define.amd) {
-  define([], function () {
-    return { default: neuralBusInstance, NeuralBus };
-  });
-}
-
-// Global variable
-if (typeof window !== 'undefined') {
-  window.NeuralBus = neuralBusInstance;
-  window.NeuralBus.NeuralBus = NeuralBus;
-}
-
-// ES Module default export
-export default neuralBusInstance;
-
-// ES Module named export
-export { NeuralBus };

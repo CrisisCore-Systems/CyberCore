@@ -1,26 +1,20 @@
 <!DOCTYPE html>
-<html lang="{{ shop.locale }}">
+<html lang="{{ shop.locale }}" class="no-js traumascript-enabled fonts-not-loaded">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, height=device-height, minimum-scale=1.0">
 
-  <!-- 🌐 CRUCIAL: Correct MIME type delivery through Shopify's asset pipeline -->
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
-  {{ 'recursive-memory.css' | asset_url | stylesheet_tag }}
+  <!-- CRITICAL: Establish asset URL for JavaScript reference -->
+  {%- capture asset_url -%}{{ 'theme.js' | asset_url | split: 'theme.js' | first }}{%- endcapture -%}
+  <script>window.themeAssetURL = "{{ asset_url }}";</script>
 
-  <!-- ⌬ Properly configured preloads with correct 'as' attribute -->
-  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
-  <link rel="preload" href="{{ 'neural-bus.js' | asset_url }}" as="script">
+  <!-- CRITICAL: Force proper MIME delivery through Shopify's asset pipeline -->
+  {{ 'critical.css' | asset_url | stylesheet_tag }}
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'reset.css' | asset_url | stylesheet_tag }}
+  {{ 'voidbloom.css' | asset_url | stylesheet_tag }}
 
-  <!-- 💾 Core memory structures with asset versioning to prevent caching issues -->
-  {%- assign asset_version = '?v=' | append: 'timestamp' | date: '%s' -%}
-  <script src="{{ 'glitch-engine.js' | asset_url | append: asset_version }}" defer></script>
-  <script src="{{ 'neural-bus.js' | asset_url | append: asset_version }}" defer></script>
-  <script src="{{ 'quantum-visualizer.js' | asset_url | append: asset_version }}" defer></script>
-  <script src="{{ 'hologram-component.js' | asset_url | append: asset_version }}" defer></script>
-  <script src="{{ 'theme.js' | asset_url | append: asset_version }}" defer></script>
-
-  <!-- Resource hints: Preconnect to domains - Establishes early connections -->
+  <!-- Resource hints: Preconnect to domains for faster loading -->
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   <link rel="preconnect" href="https://fonts.shopify.com" crossorigin>
   <link rel="preconnect" href="https://monorail-edge.shopifysvc.com" crossorigin>
@@ -37,136 +31,27 @@
   <link rel="preload" href="{{ settings.type_body_font | font_url }}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{{ settings.type_header_font | font_url }}" as="font" type="font/woff2" crossorigin>
 
-  <!-- Preload critical CSS identified in P1-01 -->
-  <link rel="preload" href="{{ 'critical.css' | asset_url }}" as="style">
-  <link rel="preload" href="{{ 'reset.css' | asset_url }}" as="style">
-  <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style">
+  <!-- Essential scripts with proper versioning -->
+  {%- assign asset_version = '?v=' | append: 'timestamp' | date: '%s' -%}
 
-  <!-- External CSS Resources (with SRI integrity validation) -->
-  {% if settings.use_external_css_resources %}
-    {% for css_resource in settings.external_css %}
-      {% render 'load-external-css' with css_name: css_resource, preload: true %}
-    {% endfor %}
-  {% endif %}
-
-  <!-- Preload critical above-the-fold images -->
-  <link rel="preload" href="{{ 'logo.png' | asset_url }}" as="image" type="image/png">
-
-  <!-- Preload only true critical JS needed for initial interactions -->
-  <link rel="preload" href="{{ 'performance-manager.js' | asset_url }}" as="script">
-  <link rel="preload" href="{{ 'cart-system.js' | asset_url }}" as="script">
-
-  <!-- Template and profile-specific resource hints -->
-  {% render 'template-resource-hints' %}
-
-  {% comment %}Check if a snippet exists before rendering it{% endcomment %}
-  {%- if template contains 'canonical-url' -%}
-    {% render 'canonical-url' %}
-  {%- endif -%}
-
-  {%- if settings.favicon != blank -%}
-    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
-  {%- endif -%}
-
-  {%- capture page_title_output -%}
-    {{ page_title | escape }}
-    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' | escape }}"{% endif -%}
-    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless -%}
-  {%- endcapture -%}
-
-  <title>{{ page_title_output }}</title>
-
-  {%- if page_description -%}
-    <meta name="description" content="{{ page_description | escape }}">
-  {%- endif -%}
-
-  {% comment %}Check if a snippet exists before rendering it{% endcomment %}
-  {% render 'json-ld' %}
-
-  <!-- Preload critical assets with proper Shopify filters -->
-  {{ 'vb-core.css' | asset_url | stylesheet_tag: preload: true }}
-  {{ 'performance-manager.js' | asset_url | preload_tag }}
-
-  {{ content_for_header }}
-
-  {%- liquid
-    assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
-    assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
-    assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
-  %}
-
-  {% style %}
-    {{ settings.type_body_font | font_face: font_display: 'swap' }}
-    {{ body_font_bold | font_face: font_display: 'swap' }}
-    {{ body_font_italic | font_face: font_display: 'swap' }}
-    {{ body_font_bold_italic | font_face: font_display: 'swap' }}
-    {{ settings.type_header_font | font_face: font_display: 'swap' }}
-
-    :root {
-      --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
-      --font-body-weight: {{ settings.type_body_font.weight }};
-      --font-body-style: {{ settings.type_body_font.style }};
-      --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
-      --font-heading-weight: {{ settings.type_header_font.weight }};
-      --font-heading-style: {{ settings.type_header_font.style }};
-
-      --color-base: {{ settings.color_background }};
-      --color-text: {{ settings.color_text }};
-      --color-accent: {{ settings.color_accent }};
-      --color-border: {{ settings.color_border }};
-    }
-  {% endstyle %}
-
-  {% render 'critical-css' %}
-
-  <!-- Core CSS Architecture - P1-12 Implementation -->
-  {%- capture asset_version -%}?v={{ 'now' | date: '%s' }}{%- endcapture -%}
-  <link rel="stylesheet" href="{{ 'reset.css' | asset_url }}{{ asset_version }}">
-  <link rel="stylesheet" href="{{ 'base.css' | asset_url }}{{ asset_version }}">
-  <link rel="stylesheet" href="{{ 'vb-core.css' | asset_url }}{{ asset_version }}">
-  <link rel="stylesheet" href="{{ 'coherence-design-system.css' | asset_url }}{{ asset_version }}">
-  <link rel="stylesheet" href="{{ 'components.css' | asset_url }}{{ asset_version }}">
-  {% render 'defer-loading' with resource: 'accessibility.css' | append: asset_version, type: 'style' %}
-
-  <!-- Additional CSS loaded with normal priority -->
-  <link rel="stylesheet" href="{{ 'layouts.css' | asset_url }}{{ asset_version }}">
-  <link rel="stylesheet" href="{{ 'profiles.css' | asset_url }}{{ asset_version }}">
-  <link rel="stylesheet" href="{{ 'utilities.css' | asset_url }}{{ asset_version }}">
-
-  <!-- Legacy CSS - Being gradually migrated to new architecture -->
-  {% render 'defer-loading' with resource: 'phase-transitions.css' | append: asset_version, type: 'style' %}
-  {% render 'defer-loading' with resource: 'narrative-commerce-styles.css' | append: asset_version, type: 'style' %}
-  {% render 'defer-loading' with resource: 'quantum-featured.css' | append: asset_version, type: 'style' %}
-  {% render 'defer-loading' with resource: 'bloom.css' | append: asset_version, type: 'style' %}
-
-  <!-- Critical scripts loaded with defer -->
-  <script src="{{ 'critical-path-optimizer.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-  <script src="{{ 'performance-manager.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-  <script src="{{ 'script-controller.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+  <!-- Core neural scripts with proper defer attribute -->
+  <script src="{{ 'memory-protocol.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+  <script src="{{ 'neural-bus.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
   <script src="{{ 'cart-system.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
   <script src="{{ 'image-loading-attributes.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
-  <script src="{{ 'script-loader.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
 
   <!-- Script definitions for controlled loading -->
   <script type="application/json" data-script-definition>
     {
-      "id": "quantum-webgl",
-      "src": "{{ 'quantum-webgl.js' | asset_url }}{{ asset_version }}",
-      "category": "nonEssential",
+      "id": "quantum-visualizer",
+      "src": "{{ 'quantum-visualizer.js' | asset_url }}{{ asset_version }}",
+      "category": "functional",
       "attributes": {
         "data-performance-critical": "true"
       }
     }
   </script>
-  <script type="application/json" data-script-definition>
-    {
-      "id": "neural-bus",
-      "src": "{{ 'neural-bus.js' | asset_url }}{{ asset_version }}",
-      "category": "functional",
-      "dependencies": ["quantum-webgl"]
-    }
-  </script>
+
   <script type="application/json" data-script-definition>
     {
       "id": "glitch-engine",
@@ -174,35 +59,30 @@
       "category": "nonEssential"
     }
   </script>
-  <script type="application/json" data-script-definition>
-    {
-      "id": "coherence-persistence",
-      "src": "{{ 'coherence-persistence.js' | asset_url }}{{ asset_version }}",
-      "category": "functional"
-    }
-  </script>
-  <script type="application/json" data-script-definition>
-    {
-      "id": "hologram-renderer",
-      "src": "{{ 'hologram-renderer.js' | asset_url }}{{ asset_version }}",
-      "category": "nonEssential",
-      "dependencies": ["quantum-webgl"]
-    }
-  </script>
 
-  <!-- Load the lazy-quantum.js only when needed -->
-  <script>
-    // Load only the essential scripts immediately
-    document.addEventListener('DOMContentLoaded', function() {
-      if (window.VoidBloomScriptLoader) {
-        // Low priority visual effects - only load when needed and visible
-        window.VoidBloomScriptLoader.queueScript('{{ "lazy-quantum.js" | asset_url }}{{ asset_version }}', 'low');
-      }
-    });
-  </script>
+  <script src="{{ 'script-loader.js' | asset_url }}{{ asset_version }}" defer="defer"></script>
+
+  <!-- Additional styles loaded with proper technique -->
+  {% render 'asset-url-with-version', asset: 'cart-drawer-animations.css' %}
+  {% render 'asset-url-with-version', asset: 'narrative-commerce-styles.css' %}
+
+  <!-- Deferred styles -->
+  {% render 'defer-loading' with resource: 'quantum-featured.css' | append: asset_version, type: 'style' %}
+  {% render 'defer-loading' with resource: 'voidbloom-store.css' | append: asset_version, type: 'style' %}
+
+  {%- if page_title %}
+    <title>{{ page_title | escape }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' | escape }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless %}</title>
+  {%- endif -%}
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {% render 'json-ld' %}
+
+  {% render 'critical-css' %}
 </head>
-
-<body class="gradient vb-body" data-profile="cyberlotus">
+<body class="vb-body traumascript-body" data-neural-path="{{ request.path }}">
   <a class="visually-hidden skip-to-content-link vb-skip-link" href="#MainContent" aria-label="{{ 'accessibility.skip_to_content' | t }}">
     {{ 'accessibility.skip_to_content' | t }}
   </a>

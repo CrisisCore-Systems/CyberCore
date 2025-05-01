@@ -4,7 +4,7 @@
  *
  * @MutationCompatible: All Variants
  * @StrategyProfile: cognitive-entangled
- * @Version: 1.0.0
+ * @Version: 2.0.0
  */
 
 /**
@@ -35,9 +35,23 @@ class QuantumWebGLController {
     targetNodes: [],
     lastFrameTime: 0,
     renderLoopId: null,
+    // MEMORY CORRUPTION PREVENTION SYSTEM
+    memoryLeakMonitor: {
+      disposedObjects: 0,
+      activeObjects: new Map(),
+      leakWarningThreshold: 1000,
+      gcIntervalId: null,
+      lastGcTime: 0
+    }
   };
   #debug = false;
   #sceneObjects = [];
+  
+  // NEW: Memory corruption trackers
+  #memoryDisposalRegistry = new WeakMap();
+  #resourceValidationRegistry = new Map();
+  #assetValidationResults = new Map();
+  #memoryLeakMonitorActive = false;
 
   /**
    * Constructor
@@ -115,6 +129,18 @@ class QuantumWebGLController {
           particleConfig: { speed: 0.3, turbulence: 0.3, dispersion: 0.3 },
         },
       },
+      // NEW: Memory prevention configuration
+      memoryProtection: {
+        enabled: true,
+        autoGarbageCollection: true,
+        gcInterval: 30000, // 30 seconds
+        textureUnloadTimeout: 120000, // 2 minutes
+        validateAssetPaths: true,
+        enforceCorrectMIMETypes: true,
+        coherenceThreshold: 0.5,
+        traumaIntegrityChecks: true,
+        reportErrors: true
+      },
       ...options,
     };
 
@@ -156,6 +182,9 @@ class QuantumWebGLController {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.dispose = this.dispose.bind(this);
 
+    // NEW: Register the object for memory leak prevention
+    this.#registerForMemoryProtection(this);
+
     // Auto-initialize if document is already loaded
     if (document.readyState === 'complete') {
       this.initialize();
@@ -171,6 +200,11 @@ class QuantumWebGLController {
     if (this.#state.initialized) return;
 
     this.#log('Initializing Quantum WebGL Controller...');
+    
+    // NEW: Initialize memory corruption prevention system
+    if (this.#config.memoryProtection.enabled) {
+      this.#initializeMemoryProtectionSystem();
+    }
 
     // Check for WebGL support
     if (!this.isWebGLSupported()) {
@@ -190,8 +224,8 @@ class QuantumWebGLController {
     // Initialize raycaster for mouse interactions
     this.raycaster = new THREE.Raycaster();
 
-    // Load shader programs
-    this.loadShaders()
+    // Load shader programs with validation
+    this.loadShaders(true)
       .then(() => {
         // Create post-processing effects
         this.createEffects();
@@ -225,156 +259,317 @@ class QuantumWebGLController {
       })
       .catch((error) => {
         this.#log('Failed to initialize Quantum WebGL: ' + error.message, 'error');
+        
+        // NEW: Log memory prevention details on error
+        if (this.#config.memoryProtection.enabled && this.#config.memoryProtection.reportErrors) {
+          this.#logMemoryPreventionDetails();
+        }
+        
         this.enableFallbackMode();
       });
   }
+  
+  /**
+   * NEW: Initialize the memory corruption prevention system
+   * @private
+   */
+  #initializeMemoryProtectionSystem() {
+    this.#log('Initializing Memory Corruption Prevention System');
+    
+    // Set up garbage collection interval
+    if (this.#config.memoryProtection.autoGarbageCollection) {
+      this.#state.memoryLeakMonitor.gcIntervalId = setInterval(() => {
+        this.#performMemoryProtectionCycle();
+      }, this.#config.memoryProtection.gcInterval);
+      
+      this.#memoryLeakMonitorActive = true;
+    }
+    
+    // Add unload handler to prevent memory leaks
+    window.addEventListener('beforeunload', () => {
+      this.#cleanupMemoryBeforeUnload();
+    });
+    
+    // Create dummy objects with circular references to test leak detection
+    if (this.#debug) {
+      this.#createLeakDetectionTest();
+    }
+    
+    this.#log('Memory Corruption Prevention System initialized');
+  }
 
   /**
-   * Check if WebGL is supported
-   * @returns {boolean} WebGL support status
+   * NEW: Register an object for memory leak prevention
+   * @private
+   * @param {Object} obj - Object to register
+   * @param {string} type - Type of object for categorization
+   * @returns {string} Generated ID for the object
    */
-  isWebGLSupported() {
+  #registerForMemoryProtection(obj, type = 'generic') {
+    if (!obj) return null;
+    
+    // Generate unique ID for tracking
+    const id = `qobj-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Add to active objects map
+    this.#state.memoryLeakMonitor.activeObjects.set(id, {
+      type,
+      obj: new WeakRef(obj),
+      createdAt: Date.now(),
+      lastAccessed: Date.now()
+    });
+    
+    // Register for disposal if the object has a dispose method
+    if (typeof obj.dispose === 'function') {
+      this.#memoryDisposalRegistry.set(obj, {
+        id,
+        dispose: () => {
+          try {
+            obj.dispose();
+            this.#state.memoryLeakMonitor.disposedObjects++;
+            this.#state.memoryLeakMonitor.activeObjects.delete(id);
+            return true;
+          } catch (error) {
+            this.#log(`Error disposing object ${id}: ${error.message}`, 'error');
+            return false;
+          }
+        }
+      });
+    }
+    
+    return id;
+  }
+  
+  /**
+   * NEW: Perform memory protection cycle
+   * @private
+   */
+  #performMemoryProtectionCycle() {
+    const now = Date.now();
+    this.#state.memoryLeakMonitor.lastGcTime = now;
+    
+    // Check for objects that haven't been accessed in a while
+    let disposedCount = 0;
+    for (const [id, entry] of this.#state.memoryLeakMonitor.activeObjects.entries()) {
+      const obj = entry.obj.deref();
+      
+      // If object has been garbage collected or hasn't been accessed recently
+      if (!obj || (now - entry.lastAccessed > this.#config.memoryProtection.textureUnloadTimeout)) {
+        // Get disposal info
+        const disposalInfo = this.#memoryDisposalRegistry.get(obj);
+        if (disposalInfo && typeof disposalInfo.dispose === 'function') {
+          // Dispose of the object
+          disposalInfo.dispose();
+          disposedCount++;
+        }
+        
+        // Remove from active objects
+        this.#state.memoryLeakMonitor.activeObjects.delete(id);
+      }
+    }
+    
+    if (disposedCount > 0) {
+      this.#log(`Memory protection cycle: disposed ${disposedCount} objects`);
+    }
+    
+    // Check for potential memory leaks
+    if (this.#state.memoryLeakMonitor.activeObjects.size > this.#state.memoryLeakMonitor.leakWarningThreshold) {
+      this.#log(`Potential memory leak detected: ${this.#state.memoryLeakMonitor.activeObjects.size} active objects`, 'warn');
+      
+      // Analyze object types
+      const typeCounts = new Map();
+      for (const entry of this.#state.memoryLeakMonitor.activeObjects.values()) {
+        const count = typeCounts.get(entry.type) || 0;
+        typeCounts.set(entry.type, count + 1);
+      }
+      
+      // Log object type counts
+      for (const [type, count] of typeCounts.entries()) {
+        this.#log(`- ${type}: ${count}`, 'warn');
+      }
+      
+      // Force garbage collection if using developmental tools
+      if (typeof global !== 'undefined' && global.gc) {
+        global.gc();
+        this.#log('Forced garbage collection');
+      }
+    }
+  }
+  
+  /**
+   * NEW: Clean up memory before unloading the page
+   * @private
+   */
+  #cleanupMemoryBeforeUnload() {
+    // Stop the render loop
+    this.stopRenderLoop();
+    
+    // Clear intervals
+    if (this.#state.memoryLeakMonitor.gcIntervalId) {
+      clearInterval(this.#state.memoryLeakMonitor.gcIntervalId);
+    }
+    
+    // Dispose of all objects
+    let disposedCount = 0;
+    for (const [id, entry] of this.#state.memoryLeakMonitor.activeObjects.entries()) {
+      const obj = entry.obj.deref();
+      if (obj) {
+        const disposalInfo = this.#memoryDisposalRegistry.get(obj);
+        if (disposalInfo && typeof disposalInfo.dispose === 'function') {
+          disposalInfo.dispose();
+          disposedCount++;
+        }
+      }
+    }
+    
+    this.#log(`Disposed of ${disposedCount} objects before unload`);
+    
+    // Clear all maps
+    this.#state.memoryLeakMonitor.activeObjects.clear();
+    this.#resourceValidationRegistry.clear();
+    this.#assetValidationResults.clear();
+    
+    // Disconnect from neural bus
+    this.disconnectFromNeuralBus();
+    
+    this.#log('Memory cleanup complete');
+  }
+  
+  /**
+   * NEW: Validate asset path and prevent MIME type corruption
+   * @param {string} assetPath - Path to the asset to validate
+   * @param {string} expectedType - Expected MIME type
+   * @returns {Promise<{valid: boolean, path: string, mimeType: string}>} Validation results
+   */
+  async validateAssetPath(assetPath, expectedType) {
+    // Check cache first
+    const cacheKey = `${assetPath}:${expectedType}`;
+    if (this.#assetValidationResults.has(cacheKey)) {
+      return this.#assetValidationResults.get(cacheKey);
+    }
+    
+    // Get asset URL from truth node if available
+    let validatedPath = assetPath;
+    if (window.themeAssetURL && !assetPath.startsWith('http')) {
+      validatedPath = `${window.themeAssetURL}${assetPath}`;
+    }
+    
     try {
-      const canvas = document.createElement('canvas');
-      const gl =
-        canvas.getContext('webgl2') ||
-        canvas.getContext('webgl') ||
-        canvas.getContext('experimental-webgl');
-
-      return !!gl;
-    } catch (e) {
-      return false;
+      // Test if the asset exists
+      const result = {
+        valid: false,
+        path: validatedPath,
+        mimeType: null,
+        errorCode: null
+      };
+      
+      // Only perform network validation if enabled
+      if (this.#config.memoryProtection.validateAssetPaths) {
+        try {
+          const response = await fetch(validatedPath, { 
+            method: 'HEAD',
+            cache: 'force-cache'
+          });
+          
+          result.valid = response.ok;
+          result.errorCode = response.ok ? null : response.status;
+          
+          // Check MIME type if enforcing correct types
+          if (response.ok && this.#config.memoryProtection.enforceCorrectMIMETypes) {
+            const contentType = response.headers.get('content-type');
+            result.mimeType = contentType;
+            
+            // Validate MIME type if expected type is provided
+            if (expectedType && contentType) {
+              result.valid = contentType.includes(expectedType);
+              if (!result.valid) {
+                this.#log(`MIME type mismatch for ${assetPath}: expected ${expectedType}, got ${contentType}`, 'warn');
+              }
+            }
+          }
+        } catch (error) {
+          // Network error, mark as invalid but don't fail
+          result.valid = false;
+          result.errorCode = 'NETWORK_ERROR';
+          
+          // Try with a more permissive approach for local development
+          if (window.location.hostname === 'localhost') {
+            result.valid = true; // Assume valid on localhost
+            this.#log(`Network validation failed for ${assetPath}, but assuming valid on localhost`, 'warn');
+          }
+        }
+      } else {
+        // Skip validation, assume valid
+        result.valid = true;
+      }
+      
+      // Cache the result
+      this.#assetValidationResults.set(cacheKey, result);
+      return result;
+    } catch (error) {
+      this.#log(`Asset validation error for ${assetPath}: ${error.message}`, 'error');
+      return { valid: false, path: validatedPath, mimeType: null, errorCode: 'ERROR' };
+    }
+  }
+  
+  /**
+   * NEW: Create a test for leak detection
+   * @private
+   */
+  #createLeakDetectionTest() {
+    // Create circular reference for testing
+    const objA = {};
+    const objB = {};
+    objA.ref = objB;
+    objB.ref = objA;
+    
+    // Register objects
+    this.#registerForMemoryProtection(objA, 'leak-test-a');
+    this.#registerForMemoryProtection(objB, 'leak-test-b');
+    
+    this.#log('Created leak detection test objects');
+  }
+  
+  /**
+   * NEW: Log memory prevention details
+   * @private
+   */
+  #logMemoryPreventionDetails() {
+    this.#log('Memory Prevention System Status:');
+    this.#log(`- Active objects: ${this.#state.memoryLeakMonitor.activeObjects.size}`);
+    this.#log(`- Disposed objects: ${this.#state.memoryLeakMonitor.disposedObjects}`);
+    this.#log(`- Last GC time: ${new Date(this.#state.memoryLeakMonitor.lastGcTime).toISOString()}`);
+    this.#log(`- Validated assets: ${this.#assetValidationResults.size}`);
+  }
+  
+  /**
+   * NEW: Disconnect from Neural Bus
+   */
+  disconnectFromNeuralBus() {
+    try {
+      if (typeof NeuralBus !== 'undefined') {
+        // Remove any subscriptions
+        if (this._neuralSubscriptions) {
+          this._neuralSubscriptions.forEach(sub => {
+            if (sub && typeof sub.unsubscribe === 'function') {
+              sub.unsubscribe();
+            }
+          });
+          this._neuralSubscriptions = [];
+        }
+        this.#log('Disconnected from Neural Bus');
+      }
+    } catch (error) {
+      this.#log(`Error disconnecting from Neural Bus: ${error.message}`, 'error');
     }
   }
 
   /**
-   * Enable CSS-only fallback mode when WebGL is not supported
-   */
-  enableFallbackMode() {
-    // Mark fallback mode in document
-    document.documentElement.classList.add('webgl-fallback');
-
-    // Create CSS-only versions of key visual effects
-    const style = document.createElement('style');
-    style.textContent = `
-      .webgl-fallback .trauma-layer {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-        z-index: ${this.#config.zIndex};
-        background: radial-gradient(circle at center, transparent 40%, var(--phase-primary) 100%);
-        opacity: 0.1;
-        mix-blend-mode: screen;
-      }
-
-      .webgl-fallback .cognitive-indicator {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: var(--phase-primary);
-        opacity: 0.7;
-        z-index: ${this.#config.zIndex + 1};
-        animation: pulse-fallback 2s infinite;
-      }
-
-      @keyframes pulse-fallback {
-        0%, 100% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.2); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Create fallback DOM elements
-    const traumaLayer = document.createElement('div');
-    traumaLayer.className = 'trauma-layer';
-    document.body.appendChild(traumaLayer);
-
-    const cognitiveIndicator = document.createElement('div');
-    cognitiveIndicator.className = 'cognitive-indicator';
-    document.body.appendChild(cognitiveIndicator);
-
-    this.#log('Fallback mode enabled');
-  }
-
-  /**
-   * Create the Three.js scene
-   */
-  createScene() {
-    this.scene = new THREE.Scene();
-
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    this.scene.add(ambientLight);
-
-    // Add directional light for better 3D effects
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 1, 1);
-    this.scene.add(directionalLight);
-
-    this.#log('Scene created');
-  }
-
-  /**
-   * Create the Three.js camera
-   */
-  createCamera() {
-    const aspect = window.innerWidth / window.innerHeight;
-    this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-    this.camera.position.z = 5;
-
-    this.#log('Camera created');
-  }
-
-  /**
-   * Create the Three.js renderer
-   */
-  createRenderer() {
-    // Create the renderer with appropriate settings
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: this.#config.antialiasing,
-      alpha: true,
-      preserveDrawingBuffer: true,
-    });
-
-    // Set renderer properties
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(this.#config.pixelRatio);
-    this.renderer.setClearColor(0x000000, 0); // Transparent background
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type =
-      this.#config.shadowQuality === 'high' ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
-
-    // Configure canvas properties
-    const canvas = this.renderer.domElement;
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.zIndex = this.#config.zIndex.toString();
-    canvas.style.pointerEvents = 'none'; // Allow click-through
-    canvas.id = 'quantum-webgl-canvas';
-
-    // Add canvas to document
-    this.#config.domElement.appendChild(canvas);
-
-    // Mark WebGL as active in document
-    document.documentElement.classList.add('webgl-active');
-
-    this.#log('Renderer created');
-  }
-
-  /**
    * Load shader programs
+   * @param {boolean} validateAssets - Whether to validate shader assets
    * @returns {Promise} Promise that resolves when shaders are loaded
    */
-  loadShaders() {
+  loadShaders(validateAssets = false) {
     return new Promise((resolve, reject) => {
       try {
         // Create basic shader placeholders
@@ -506,14 +701,52 @@ class QuantumWebGLController {
             }
           `,
         };
-
-        // Add trauma-specific shader files
-        // In a real implementation, these would be loaded from external files
-
-        setTimeout(() => {
-          resolve(this.shaders);
-          this.#log('Shader programs loaded');
-        }, 100);
+        
+        // NEW: Validate shader assets if enabled
+        if (validateAssets && this.#config.memoryProtection.validateAssetPaths) {
+          // Check for common custom fragment shaders
+          const fragmentShaders = [
+            'abandonment.frag', 
+            'fragmentation.frag', 
+            'surveillance.frag',
+            'recursion.frag',
+            'displacement.frag',
+            'dissolution.frag'
+          ];
+          
+          // Validate each shader - this runs in parallel
+          Promise.all(fragmentShaders.map(shader => 
+            this.validateAssetPath(shader, 'text/plain')
+          )).then(results => {
+            // Check if any shaders are invalid
+            const invalidShaders = results.filter(r => !r.valid);
+            if (invalidShaders.length > 0) {
+              this.#log(`Warning: ${invalidShaders.length} shader files could not be validated`, 'warn');
+              invalidShaders.forEach(shader => {
+                this.#log(`- Invalid shader: ${shader.path} (${shader.errorCode})`, 'warn');
+              });
+            }
+            
+            // Continue anyway with embedded shaders
+            setTimeout(() => {
+              resolve(this.shaders);
+              this.#log('Shader programs loaded (with validation)');
+            }, 100);
+          }).catch(error => {
+            // Non-fatal error, continue with embedded shaders
+            this.#log(`Error during shader validation: ${error.message}`, 'warn');
+            setTimeout(() => {
+              resolve(this.shaders);
+              this.#log('Shader programs loaded (validation failed)');
+            }, 100);
+          });
+        } else {
+          // Skip validation
+          setTimeout(() => {
+            resolve(this.shaders);
+            this.#log('Shader programs loaded');
+          }, 100);
+        }
       } catch (error) {
         this.#log(`Error during shader loading: ${error.message}`, 'error');
         reject(error);
@@ -591,6 +824,15 @@ class QuantumWebGLController {
     this.composer.addPass(finalPass);
 
     this.#log('Post-processing effects created');
+    
+    // NEW: Register effects for memory protection
+    if (this.#config.memoryProtection.enabled) {
+      for (const [name, effect] of Object.entries(this.effects)) {
+        if (effect) {
+          this.#registerForMemoryProtection(effect, `effect-${name}`);
+        }
+      }
+    }
   }
 
   /**
@@ -682,107 +924,16 @@ class QuantumWebGLController {
       };
 
       this.#log(`Created particle system with ${particleCount} particles`);
+      
+      // NEW: Register particle system components for memory protection
+      if (this.#config.memoryProtection.enabled) {
+        this.#registerForMemoryProtection(this.particleSystem, 'particle-system');
+        this.#registerForMemoryProtection(particleGeometry, 'particle-geometry');
+        this.#registerForMemoryProtection(particleMaterial, 'particle-material');
+      }
     } catch (error) {
       this.#log('Error creating particle system: ' + error.message, 'error');
     }
-  }
-
-  /**
-   * Initialize stats monitoring for debugging
-   */
-  initializeStats() {
-    if (typeof Stats !== 'undefined') {
-      this.stats = new Stats();
-      this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-      this.stats.dom.style.position = 'absolute';
-      this.stats.dom.style.top = '0px';
-      this.stats.dom.style.left = '0px';
-      this.stats.dom.style.zIndex = this.#config.zIndex + 100;
-      document.body.appendChild(this.stats.dom);
-    }
-  }
-
-  /**
-   * Set up event listeners
-   */
-  setupEventListeners() {
-    // Handle window resize
-    if (this.#config.autoResize) {
-      window.addEventListener('resize', this.handleWindowResize);
-    }
-
-    // Handle WebGL context loss
-    this.renderer.domElement.addEventListener('webglcontextlost', (event) => {
-      event.preventDefault();
-      this.#log('WebGL context lost - attempting to recover', 'warn');
-      this.stopRenderLoop();
-
-      // Try to reinitialize after a delay
-      setTimeout(() => {
-        this.initialize();
-      }, 2000);
-    });
-
-    // Handle mouse movement for interactive effects
-    window.addEventListener('mousemove', this.handleMouseMove);
-
-    // Handle DOM mutations to detect new target nodes
-    const observer = new MutationObserver((mutations) => {
-      let newNodesAdded = false;
-
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList' && mutation.addedNodes.length) {
-          newNodesAdded = true;
-        }
-      });
-
-      if (newNodesAdded) {
-        // Scan for new target nodes
-        this.scanForTargetNodes();
-      }
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    this.#log('Event listeners set up');
-  }
-
-  /**
-   * Handle window resize event
-   */
-  handleWindowResize() {
-    if (!this.camera || !this.renderer || !this.composer) return;
-
-    // Update camera
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-
-    // Update renderer
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // Update composer
-    this.composer.setSize(window.innerWidth, window.innerHeight);
-
-    // Update bloom pass resolution
-    if (this.effects.bloomPass) {
-      this.effects.bloomPass.resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
-    }
-
-    this.#log('Resized WebGL view');
-  }
-
-  /**
-   * Handle mouse movement
-   * @param {Event} event - Mouse move event
-   */
-  handleMouseMove(event) {
-    // Update mouse position for raycasting
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
   /**
@@ -790,11 +941,20 @@ class QuantumWebGLController {
    */
   connectToNeuralBus() {
     if (typeof NeuralBus !== 'undefined') {
+      // Track subscriptions for proper cleanup
+      this._neuralSubscriptions = [];
+      
       // Register with Neural Bus
-      NeuralBus.subscribe('qear:state', this.handleQEARStateUpdate.bind(this));
-      NeuralBus.subscribe('trauma:activated', this.handleTraumaEvent.bind(this));
-      NeuralBus.subscribe('coherence:changed', this.handleCoherenceChange.bind(this));
-      NeuralBus.subscribe('quantum:mutation', this.handleQuantumMutation.bind(this));
+      const sub1 = NeuralBus.subscribe('qear:state', this.handleQEARStateUpdate.bind(this));
+      const sub2 = NeuralBus.subscribe('trauma:activated', this.handleTraumaEvent.bind(this));
+      const sub3 = NeuralBus.subscribe('coherence:changed', this.handleCoherenceChange.bind(this));
+      const sub4 = NeuralBus.subscribe('quantum:mutation', this.handleQuantumMutation.bind(this));
+      
+      // Store subscriptions for cleanup
+      if (typeof sub1 === 'object' && sub1 !== null) this._neuralSubscriptions.push(sub1);
+      if (typeof sub2 === 'object' && sub2 !== null) this._neuralSubscriptions.push(sub2);
+      if (typeof sub3 === 'object' && sub3 !== null) this._neuralSubscriptions.push(sub3);
+      if (typeof sub4 === 'object' && sub4 !== null) this._neuralSubscriptions.push(sub4);
 
       this.#log('Connected to Neural Bus');
 
@@ -804,6 +964,7 @@ class QuantumWebGLController {
         renderer: 'three.js',
         shaders: Object.keys(this.shaders),
         timestamp: Date.now(),
+        memoryProtection: this.#config.memoryProtection.enabled
       });
     } else {
       // Fall back to window events if Neural Bus isn't available
@@ -816,425 +977,10 @@ class QuantumWebGLController {
   }
 
   /**
-   * Handle QEAR state updates
-   * @param {Object} data - QEAR state data
-   */
-  handleQEARStateUpdate(data) {
-    if (!data) return;
-
-    // Update our internal state with QEAR data
-    if (data.emotionalState) {
-      this.#state.qearState.emotionalState = data.emotionalState;
-    }
-
-    if (data.cognitiveState) {
-      this.#state.qearState.cognitiveState = data.cognitiveState;
-    }
-
-    if (data.activeDecisions) {
-      this.#state.qearState.activeDecisions = data.activeDecisions;
-    }
-
-    // Generate a cognitive flash effect if processing
-    if (data.cognitiveState === 'processing') {
-      this.createCognitiveFlash();
-    }
-
-    this.#log('QEAR state updated');
-  }
-
-  /**
-   * Handle trauma events
-   * @param {Object} data - Trauma event data
-   */
-  handleTraumaEvent(data) {
-    if (!data || !data.type) return;
-
-    // Update active trauma
-    this.#state.activeTrauma = data.type;
-
-    // Create transition effect
-    this.createTraumaTransition(data.type);
-
-    // Recreate particle system with new trauma settings
-    setTimeout(() => {
-      this.createParticleSystem();
-    }, 1000);
-
-    this.#log(`Trauma changed to: ${data.type}`);
-  }
-
-  /**
-   * Handle coherence changes
-   * @param {Object} data - Coherence data
-   */
-  handleCoherenceChange(data) {
-    if (!data || data.coherence === undefined) return;
-
-    const oldCoherence = this.#state.systemCoherence;
-    this.#state.systemCoherence = data.coherence;
-
-    // Create visual effect if change is significant
-    if (Math.abs(oldCoherence - data.coherence) > 0.05) {
-      this.createCoherenceFlash(oldCoherence > data.coherence);
-    }
-
-    this.#log(`Coherence changed to: ${data.coherence}`);
-  }
-
-  /**
-   * Handle quantum mutation events
-   * @param {Object} data - Mutation data
-   */
-  handleQuantumMutation(data) {
-    if (!data) return;
-
-    // Update phase if needed
-    if (data.profile) {
-      const phase = this.getPhaseFromProfile(data.profile);
-      if (phase !== this.#state.currentPhase) {
-        this.#state.currentPhase = phase;
-        this.createPhaseTransition(phase);
-      }
-    }
-
-    // Create mutation-specific visual effect
-    this.createMutationEffect(data.targetId, data.type);
-
-    this.#log(`Quantum mutation: ${data.type}`);
-  }
-
-  /**
-   * Get phase from profile name
-   * @param {string} profile - Profile name
-   * @returns {string} Phase name
-   */
-  getPhaseFromProfile(profile) {
-    switch (profile) {
-    case 'CyberLotus':
-      return 'cyber-lotus';
-    case 'ObsidianBloom':
-      return 'obsidian-bloom';
-    case 'VoidBloom':
-      return 'void-bloom';
-    case 'NeonVortex':
-      return 'neon-vortex';
-    default:
-      return 'cyber-lotus';
-    }
-  }
-
-  /**
-   * Get current phase colors
-   * @returns {Object} Phase colors
-   */
-  getPhaseColors() {
-    return (
-      this.#config.phaseColors[this.#state.currentPhase] || this.#config.phaseColors['cyber-lotus']
-    );
-  }
-
-  /**
-   * Get trauma type index for shaders
-   * @returns {number} Trauma type index
-   */
-  getTraumaTypeIndex() {
-    const traumaTypeMap = {
-      none: 0,
-      abandonment: 1,
-      fragmentation: 2,
-      surveillance: 3,
-      recursion: 4,
-      displacement: 5,
-      dissolution: 6,
-    };
-
-    return traumaTypeMap[this.#state.activeTrauma] || 0;
-  }
-
-  /**
-   * Scan for target nodes that should receive shader effects
-   */
-  scanForTargetNodes() {
-    // Find elements with webgl-target attribute
-    const targets = document.querySelectorAll('[data-webgl-target]');
-
-    // Clear our current list
-    this.#state.targetNodes = [];
-
-    // Process each target
-    targets.forEach((element) => {
-      const id = element.dataset.webglTarget;
-      this.#state.targetNodes.push(id);
-
-      // Set up shader for this target if needed
-      this.applyShaderToNode(element);
-    });
-
-    this.#log(`Found ${this.#state.targetNodes.length} target nodes`);
-  }
-
-  /**
-   * Apply shader to a target node
-   * @param {Element} element - Target DOM element
-   */
-  applyShaderToNode(element) {
-    // Placeholder - in a full implementation, this would create a
-    // plane mesh with a shader that affects this DOM element
-
-    const id = element.dataset.webglTarget;
-
-    // Skip if already registered
-    if (this.nodeRegistry.has(id)) return;
-
-    // Register the node
-    this.nodeRegistry.set(id, {
-      element,
-      rect: element.getBoundingClientRect(),
-      traumaType: element.dataset.traumaType || this.#state.activeTrauma,
-      intensity: parseFloat(element.dataset.traumaIntensity || '0.5'),
-    });
-
-    this.#log(`Registered node: ${id}`);
-  }
-
-  /**
-   * Start the render loop
-   */
-  startRenderLoop() {
-    if (this.#state.rendering) return;
-
-    this.#state.rendering = true;
-    this.#state.lastFrameTime = performance.now();
-    this.#log('Starting render loop');
-
-    // Create render loop using requestAnimationFrame
-    const loop = () => {
-      if (!this.#state.rendering) return;
-
-      this.render();
-
-      // Schedule next frame
-      this.#state.renderLoopId = requestAnimationFrame(loop);
-    };
-
-    // Start the loop
-    loop();
-  }
-
-  /**
-   * Stop the render loop
-   */
-  stopRenderLoop() {
-    this.#state.rendering = false;
-
-    if (this.#state.renderLoopId) {
-      cancelAnimationFrame(this.#state.renderLoopId);
-      this.#state.renderLoopId = null;
-    }
-
-    this.#log('Stopped render loop');
-  }
-
-  /**
-   * Render a frame
-   */
-  render() {
-    // Skip if not initialized
-    if (!this.#state.initialized) return;
-
-    // Update stats if available
-    if (this.stats) this.stats.begin();
-
-    // Get delta time
-    const elapsedTime = this.clock.getElapsedTime();
-    const deltaTime = elapsedTime - this.#state.lastElapsedTime || 0;
-    this.#state.lastElapsedTime = elapsedTime;
-
-    // Update uniforms
-    this.updateUniforms(elapsedTime);
-
-    // Update particle system
-    this.updateParticles(deltaTime);
-
-    // Update node effects
-    this.updateNodeEffects();
-
-    // Render the scene via composer for post-processing
-    this.composer.render();
-
-    // End stats measurement
-    if (this.stats) this.stats.end();
-  }
-
-  /**
-   * Update shader uniforms
-   * @param {number} time - Current time
-   */
-  updateUniforms(time) {
-    // Update post-processing effects
-    if (this.effects.traumaPass) {
-      this.effects.traumaPass.uniforms.time.value = time;
-      this.effects.traumaPass.uniforms.traumaType.value = this.getTraumaTypeIndex();
-      this.effects.traumaPass.uniforms.traumaIntensity.value = 0.5; // Could be dynamic
-      this.effects.traumaPass.uniforms.coherence.value = this.#state.systemCoherence;
-
-      // Update colors based on phase
-      const phaseColors = this.getPhaseColors();
-      this.effects.traumaPass.uniforms.primaryColor.value = new THREE.Color(phaseColors.primary);
-      this.effects.traumaPass.uniforms.secondaryColor.value = new THREE.Color(
-        phaseColors.secondary
-      );
-    }
-
-    // Update RGB shift based on system coherence
-    if (this.effects.rgbShiftPass) {
-      // More shift when coherence is low
-      const shiftAmount = 0.0015 * (1 + (1 - this.#state.systemCoherence) * 3);
-      this.effects.rgbShiftPass.uniforms.amount.value = shiftAmount;
-      this.effects.rgbShiftPass.uniforms.angle.value = time * 0.1;
-    }
-
-    // Update bloom based on emotional state
-    if (this.effects.bloomPass && this.#state.qearState.emotionalState) {
-      const anxiety = this.#state.qearState.emotionalState.anxiety || 0.2;
-      const intensity = 0.2 + anxiety * 0.3;
-      this.effects.bloomPass.strength = intensity;
-    }
-
-    // Update glitch effect based on coherence
-    if (this.effects.glitchPass) {
-      // Only enable glitch at low coherence
-      this.effects.glitchPass.enabled = this.#state.systemCoherence < 0.5;
-    }
-  }
-
-  /**
-   * Update particle system
-   * @param {number} deltaTime - Time since last frame
-   */
-  updateParticles(deltaTime) {
-    if (!this.#state.particleSystem) return;
-
-    const { particles, geometry, material, config } = this.#state.particleSystem;
-    const elapsedTime = this.clock.getElapsedTime();
-
-    // Update material uniforms
-    material.uniforms.time.value = elapsedTime;
-    material.uniforms.coherence.value = this.#state.systemCoherence;
-    material.uniforms.traumaType.value = this.getTraumaTypeIndex();
-
-    // We would update particle positions based on trauma type here
-    // This is a simplified version
-    particles.rotation.y += deltaTime * 0.05;
-    particles.rotation.x += deltaTime * 0.01;
-  }
-
-  /**
-   * Update effects on DOM nodes
-   */
-  updateNodeEffects() {
-    // Update effects on target nodes
-    // This would check visibility, update positions, etc.
-  }
-
-  /**
-   * Create a cognitive flash effect
-   */
-  createCognitiveFlash() {
-    // Skip if not initialized
-    if (!this.#state.initialized) return;
-
-    // Simple flash effect using bloom
-    if (this.effects.bloomPass) {
-      const originalStrength = this.effects.bloomPass.strength;
-
-      // Increase bloom strength temporarily
-      this.effects.bloomPass.strength = originalStrength * 2;
-
-      // Return to normal
-      setTimeout(() => {
-        this.effects.bloomPass.strength = originalStrength;
-      }, 200);
-    }
-  }
-
-  /**
-   * Create a trauma transition effect
-   * @param {string} traumaType - New trauma type
-   */
-  createTraumaTransition(traumaType) {
-    // In a full implementation, this would create a dramatic
-    // visual effect when trauma type changes
-
-    // Increase trauma intensity momentarily
-    if (this.effects.traumaPass) {
-      const originalIntensity = this.effects.traumaPass.uniforms.traumaIntensity.value;
-      this.effects.traumaPass.uniforms.traumaIntensity.value = 0.9;
-
-      setTimeout(() => {
-        this.effects.traumaPass.uniforms.traumaIntensity.value = originalIntensity;
-      }, 1000);
-    }
-  }
-
-  /**
-   * Create a phase transition effect
-   * @param {string} phase - New phase
-   */
-  createPhaseTransition(phase) {
-    // In a full implementation, this would create a dramatic
-    // visual effect when phase changes
-
-    // Update phase colors
-    if (this.effects.traumaPass) {
-      const phaseColors = this.#config.phaseColors[phase];
-      this.effects.traumaPass.uniforms.primaryColor.value = new THREE.Color(phaseColors.primary);
-      this.effects.traumaPass.uniforms.secondaryColor.value = new THREE.Color(
-        phaseColors.secondary
-      );
-    }
-  }
-
-  /**
-   * Create a coherence flash effect
-   * @param {boolean} decreasing - Whether coherence is decreasing
-   */
-  createCoherenceFlash(decreasing) {
-    // Skip if not initialized
-    if (!this.#state.initialized) return;
-
-    // Flash with RGB shift
-    if (this.effects.rgbShiftPass) {
-      const originalAmount = this.effects.rgbShiftPass.uniforms.amount.value;
-      this.effects.rgbShiftPass.uniforms.amount.value = originalAmount * 3;
-
-      setTimeout(() => {
-        this.effects.rgbShiftPass.uniforms.amount.value = originalAmount;
-      }, 500);
-    }
-  }
-
-  /**
-   * Create a mutation effect
-   * @param {string} targetId - Target node ID (if available)
-   * @param {string} mutationType - Type of mutation
-   */
-  createMutationEffect(targetId, mutationType) {
-    // Skip if not initialized
-    if (!this.#state.initialized) return;
-
-    // In a full implementation, this would create effects
-    // specific to the mutation type on the target element
-
-    // For now, just log
-    this.#log(`Mutation effect: ${mutationType} on ${targetId || 'global'}`);
-  }
-
-  /**
    * Clean up and dispose of resources
    */
   dispose() {
+    // First stop any ongoing operations
     this.stopRenderLoop();
 
     // Remove event listeners
@@ -1275,6 +1021,17 @@ class QuantumWebGLController {
 
     // Clear node registry
     this.nodeRegistry.clear();
+    
+    // NEW: Clean up memory protection
+    if (this.#memoryLeakMonitorActive) {
+      if (this.#state.memoryLeakMonitor.gcIntervalId) {
+        clearInterval(this.#state.memoryLeakMonitor.gcIntervalId);
+      }
+      this.#memoryLeakMonitorActive = false;
+    }
+    
+    // Disconnect from neural bus
+    this.disconnectFromNeuralBus();
 
     this.#log('Disposed of WebGL resources');
   }
@@ -1308,4 +1065,17 @@ document.addEventListener('DOMContentLoaded', () => {
   window.quantumWebGL = new QuantumWebGLController({ debug: true });
 });
 
+// DUAL EXPORT PATTERN FOR MAXIMUM COMPATIBILITY
+// ==============================================
+
+// Export for ES modules
 export { QuantumWebGLController };
+export default QuantumWebGLController;
+
+// Support CommonJS environments
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { 
+    QuantumWebGLController, 
+    default: QuantumWebGLController 
+  };
+}
