@@ -338,7 +338,7 @@ class NeuralBusImplementation implements NeuralBusInterface {
    * Subscribes to an event on the NeuralBus
    * @param eventName Name of the event to subscribe to
    * @param callback Function to call when event is published
-   * @param options Subscription options
+   * @param options Optional configuration for the subscription
    * @returns Subscription ID that can be used to unsubscribe
    */
   subscribe(
@@ -346,35 +346,25 @@ class NeuralBusImplementation implements NeuralBusInterface {
     callback: EventCallback<unknown>,
     options: { componentId?: string; filter?: any; priority?: number } = {}
   ): string {
-    // Support for both new and legacy subscription patterns
-    const subscriptionId = `${options.componentId || 'anonymous'}:${this.generateId()}`;
+    // Generate a unique ID for this subscription
+    const subscriptionId = `${eventName}:${this.generateId()}`;
 
-    const subscription: NeuralSubscription = {
+    // Set up subscription data structure if needed
+    if (!this.subscriptions.has(eventName)) {
+      this.subscriptions.set(eventName, []);
+    }
+
+    // Add subscription to the list
+    this.subscriptions.get(eventName)!.push({
       id: subscriptionId,
       topic: eventName,
       callback,
       filter: options.filter,
       priority: options.priority || 0,
-    };
+    });
 
-    // Store in new format
-    if (!this.subscriptions.has(eventName)) {
-      this.subscriptions.set(eventName, []);
-    }
-
-    const topicSubscriptions = this.subscriptions.get(eventName)!;
-    topicSubscriptions.push(subscription);
-
-    // Sort by priority (higher first)
-    topicSubscriptions.sort((a, b) => b.priority - a.priority);
-
-    // Also store in legacy format for backwards compatibility
-    if (!this.events[eventName]) {
-      this.events[eventName] = [];
-    }
-    this.events[eventName].push(callback);
-
-    this.log(`Subscription added: ${subscriptionId} to ${eventName}`);
+    // Log subscription if in debug mode
+    this.log(`Subscribed to ${eventName}: ${subscriptionId}`);
 
     // Return the subscription ID for later unsubscription
     return subscriptionId;
