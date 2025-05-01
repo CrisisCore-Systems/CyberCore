@@ -1,7 +1,9 @@
 /**
  * NeuralBus: A component for managing neural interactions and data flow
  */
-class NeuralBus {
+import { NeuralBusInterface } from './neural-bus';
+
+class PromptEngineNeuralBus {
   private listeners: Record<string, Function[]> = {};
 
   /**
@@ -51,14 +53,12 @@ class NeuralBus {
   }
 }
 
-// Add NeuralBus to window
-declare global {
-  interface Window {
-    NeuralBus?: NeuralBus;
-  }
+// Export default instance
+const promptEngineNeuralBusInstance = new PromptEngineNeuralBus();
+
+// Only add to window if NeuralBus doesn't already exist (prevents conflicts with the main NeuralBus from neural-bus.ts)
+if (typeof window !== 'undefined' && !window.NeuralBus) {
+  window.NeuralBus = promptEngineNeuralBusInstance as unknown as NeuralBusInterface;
 }
 
-// Export default instance
-const neuralBusInstance = new NeuralBus();
-window.NeuralBus = neuralBusInstance;
-export default neuralBusInstance;
+export default promptEngineNeuralBusInstance;

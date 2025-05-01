@@ -5,7 +5,7 @@
  * Stores memory fragments, trauma patterns, and phase preferences.
  * Manages encoded identity persistence across sessions.
  *
- * @version 0.9.2
+ * @version 0.9.3
  * @phase cyber-lotus
  */
 class CustomerVessel {
@@ -20,6 +20,7 @@ class CustomerVessel {
     this.fragmentMap = new Map();
     this.traumaPatterns = new Map();
     this.phasePreferences = new Map();
+    this.memoryWeaveIntegration = null;
 
     // Metrics
     this.interactionHistory = [];
@@ -39,6 +40,7 @@ class CustomerVessel {
       traumaTracking: true,
       fragmentAggregation: true,
       maxLocalFragments: 200,
+      memoryWeaveEnabled: true,
     };
 
     // Neural integration
@@ -61,6 +63,9 @@ class CustomerVessel {
 
     // Connect to neural bus
     this._connectToNeuralBus();
+
+    // Initialize memory weave integration
+    this._initializeMemoryWeave();
 
     // Register visit
     this._registerVisit();
@@ -102,6 +107,11 @@ class CustomerVessel {
             const DecayEngine = module.default;
             this.decayEngine = new DecayEngine(this);
             console.log('[VOID://VESSEL] Decay engine loaded dynamically.');
+
+            // Initialize Memory Weave after decay engine is ready
+            if (this.config.memoryWeaveEnabled && !this.memoryWeaveIntegration) {
+              this._initializeMemoryWeave();
+            }
           })
           .catch((error) => {
             console.error('[VOID://VESSEL] Failed to load decay engine:', error);
@@ -125,13 +135,14 @@ class CustomerVessel {
 
     // Register with neural bus
     const registration = window.NeuralBus.register('customer-vessel', {
-      version: '0.9.2',
+      version: '0.9.3',
       traumaResponse: true,
       capabilities: {
         identityStorage: true,
         memoryPersistence: true,
         traumaTracking: true,
         consciousnessScoring: true,
+        memoryWeaveIntegration: this.config.memoryWeaveEnabled,
       },
     });
 
@@ -144,6 +155,44 @@ class CustomerVessel {
         this.addFragment(data.fragment);
       }
     });
+  }
+
+  /**
+   * Initialize memory weave integration
+   * @private
+   */
+  _initializeMemoryWeave() {
+    // Skip if disabled in config
+    if (!this.config.memoryWeaveEnabled) return;
+
+    try {
+      // Import and initialize memory weave integration
+      import('./memory-weave-integration.ts')
+        .then((module) => {
+          const MemoryWeaveIntegration = module.default;
+          this.memoryWeaveIntegration = new MemoryWeaveIntegration(this);
+
+          // Enable fragment forwarding if decay engine is ready
+          if (this.decayEngine) {
+            this.memoryWeaveIntegration.enableFragmentForwarding(true);
+          }
+
+          console.log('[VOID://VESSEL] Memory weave integration initialized');
+
+          // Announce memory weave capability
+          if (window.NeuralBus && this.neuralBusNonce) {
+            window.NeuralBus.publish('memory-weave:vessel-integrated', {
+              vesselId: this.anonymousId,
+              timestamp: Date.now(),
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('[VOID://VESSEL] Failed to initialize memory weave integration:', error);
+        });
+    } catch (error) {
+      console.error('[VOID://VESSEL] Error initializing memory weave:', error);
+    }
   }
 
   /**
@@ -169,32 +218,44 @@ class CustomerVessel {
     let identityScore = 0;
 
     // Calculate fragment score (quantity)
-    const totalFragments = activeFragments.length + crystallizedFragments.length;
-    fragmentScore = Math.min(totalFragments / 100, 1) * 25; // Max 25 points
+    const fragmentCount = activeFragments.length + crystallizedFragments.length;
+    fragmentScore = Math.min(10, fragmentCount / 5);
 
-    // Calculate diversity score (fragment type variety)
-    const fragmentTypes = new Set();
-    activeFragments.forEach((f) => fragmentTypes.add(f.type));
-    crystallizedFragments.forEach((f) => fragmentTypes.add(f.type));
-    diversityScore = Math.min(fragmentTypes.size / 10, 1) * 20; // Max 20 points
+    // Calculate diversity score (trauma type diversity)
+    const traumaTypes = new Set();
+    [...activeFragments, ...crystallizedFragments].forEach((fragment) => {
+      if (fragment.traumaType) {
+        traumaTypes.add(fragment.traumaType);
+      }
+    });
+    diversityScore = Math.min(10, traumaTypes.size * 2);
 
-    // Calculate engagement score (visit frequency + interactions)
-    const daysSinceFirstVisit =
-      (this.currentVisit - (this.lastVisit || this.currentVisit)) / (24 * 60 * 60 * 1000);
-    const visitFrequency = this.visitCount / Math.max(daysSinceFirstVisit, 1);
-    const interactionDensity = this.interactionHistory.length / Math.max(this.visitCount, 1);
-    engagementScore = Math.min((visitFrequency + interactionDensity) / 5, 1) * 30; // Max 30 points
+    // Calculate engagement score (recency and frequency)
+    engagementScore = Math.min(10, this.interactionHistory.length / 2);
 
-    // Calculate identity score (crystallized fragments + identity fragments)
-    const identityFragmentScore = Math.min(this.identityFragments.size / 5, 1) * 15; // Max 15 points
-    const crystallizedScore = Math.min(crystallizedFragments.length / 20, 1) * 10; // Max 10 points
-    identityScore = identityFragmentScore + crystallizedScore; // Max 25 points
+    // Calculate identity score (crystallization ratio)
+    const crystallizationRatio =
+      crystallizedFragments.length /
+      Math.max(1, activeFragments.length + crystallizedFragments.length);
+    identityScore = crystallizationRatio * 10;
 
-    // Calculate final score
+    // Factor in memory weave corruption if available
+    if (this.memoryWeaveIntegration) {
+      const status = this.memoryWeaveIntegration.getIntegrationStatus();
+      const corruptionFactor = 1 - (status.corruptionLevel || 0);
+
+      // Apply corruption factor (higher corruption = lower score)
+      fragmentScore *= corruptionFactor;
+      diversityScore *= corruptionFactor;
+      identityScore *= corruptionFactor;
+    }
+
+    // Calculate total score (0-100)
     this.consciousnessScore = Math.round(
-      fragmentScore + diversityScore + engagementScore + identityScore
+      fragmentScore * 2.5 + diversityScore * 2.5 + engagementScore * 2.5 + identityScore * 2.5
     );
 
+    // Log score calculation
     console.log(
       `[VOID://VESSEL] Consciousness score: ${
         this.consciousnessScore

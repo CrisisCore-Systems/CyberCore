@@ -4,8 +4,8 @@
 
 CyberCore is an advanced e-commerce enhancement framework designed to provide quantum-themed features, sophisticated rendering capabilities, and an event-driven component architecture. This document provides a comprehensive overview of the system architecture, core components, and integration patterns.
 
-Version: 2.0.0
-Last Updated: April 27, 2025
+Version: 1.0.0
+Last Updated: April 30, 2025
 
 ## System Overview
 
@@ -292,10 +292,9 @@ CyberCore components are designed to work together through several integration p
 
 CyberCore supports all modern browsers with WebGL and Web Components capabilities:
 
-- Chrome 80+
-- Firefox 75+
-- Safari 14+
-- Edge 80+
+- Chrome/Edge 100+
+- Firefox 95+
+- Safari 15.4+ (macOS only, limited support for quantum effects)
 
 ## Conclusion
 

@@ -4,27 +4,42 @@
 
 CyberCore is an advanced e-commerce enhancement framework with quantum-themed features. This documentation provides information about the architecture, components, and usage of the CyberCore system.
 
-Version: 2.0.0
-Last Updated: April 19, 2025
+Version: 1.0.0
+Last Updated: April 30, 2025
 
 ## Architecture
 
 CyberCore follows a modular architecture designed for performance, extensibility, and maintainability. The core components are organized as follows:
 
+> **Note:** This is a simplified representation of the system architecture. For detailed file organization, refer to the actual project structure.
+
 ```
 CyberCore
 ├── Core Components
-│   ├── HologramComponent (Web Component)
-│   ├── EnhancedCart
-│   ├── HologramRenderer (WebGL)
-│   ├── NeuralBus (Event System)
-│   └── Quantum Worker (Background Processing)
+│   ├── neural-bus.ts           # Event communication system
+│   ├── config-manager.js       # Configuration management
+│   ├── error-handler.js        # Error handling and recovery
+│   ├── performance-manager.js  # Performance monitoring
+│   └── coherence-persistence.js # State persistence
+├── Rendering Layer
+│   ├── HologramComponent.ts    # Web Component for 3D visualization
+│   ├── hologram-renderer.js    # WebGL-based rendering engine
+│   ├── glitch-engine.ts        # Visual distortion effects
+│   └── quantum-effects.css     # Visual effect styling
+├── Interaction Layer
+│   ├── enhanced-cart-system.ts # Enhanced cart functionality
+│   ├── memory-encoder.ts       # Memory encoding system
+│   └── ab-test-manager.ts      # A/B testing framework
 ├── CSS System
-│   └── Quantum CSS Variables
+│   ├── coherence-design-system.scss # Design system foundation
+│   ├── cyber-colors.scss       # Color system
+│   ├── cyber-animations.scss   # Animation system
+│   └── vb-animations.css       # VoidBloom animations
 └── Build System
-    ├── TypeScript Integration
-    ├── Webpack Bundling
-    └── Jest Testing Framework
+    ├── webpack.common.js       # Shared webpack configuration
+    ├── webpack.dev.js          # Development configuration
+    ├── webpack.prod.js         # Production configuration
+    └── quantum-forge.ps1       # Build automation script
 ```
 
 ### Key Architectural Features
@@ -214,10 +229,9 @@ CyberCore uses a modern build system with TypeScript and Webpack.
 
 CyberCore supports all modern browsers with WebGL and Web Components capabilities:
 
-- Chrome 80+
-- Firefox 75+
-- Safari 14+
-- Edge 80+
+- Chrome/Edge 100+
+- Firefox 95+
+- Safari 15.4+ (macOS only, limited support for quantum effects)
 
 ## Performance Considerations
 

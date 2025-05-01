@@ -4,6 +4,9 @@
 
 The CyberCore system includes several core components that work together to create a robust, efficient, and maintainable application architecture. This document outlines the architecture of these components, how they interact, and best practices for working with them.
 
+Version: 1.0.0
+Last Updated: April 30, 2025
+
 ## Core Systems
 
 ### 1. Error Handling System
