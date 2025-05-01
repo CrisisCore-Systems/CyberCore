@@ -74,8 +74,9 @@ export class DOMCacheManager {
       let shouldInvalidate = false;
 
       for (const mutation of mutations) {
-        // Only process if it's a subtree or childList mutation
-        if (mutation.type === 'childList' || mutation.type === 'subtree') {
+        // Only process if it's a childList or attributes mutation
+        // Note: 'subtree' is not a mutation type, it's a configuration option
+        if (mutation.type === 'childList') {
           shouldInvalidate = true;
           break;
         }

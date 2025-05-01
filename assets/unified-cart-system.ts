@@ -17,12 +17,16 @@ import CartErrorHandler, { ErrorCategory, ErrorSeverity } from './cart-error-han
 import { getCsrfToken } from './csrf-utils';
 import { memoryEncoder } from './memory-encoder';
 import { NeuralBus } from './neural-bus';
-import offlineCartManager, { CartData, CartItem as OfflineCartItem } from './offline-cart-manager';
+import offlineCartManager, {
+  CartData,
+  CartItem,
+  CartItem as OfflineCartItem,
+} from './offline-cart-manager';
 import { safeApiClient } from './safe-api-client';
 import { sanitizeHtml } from './security-utils';
 
 // Type definitions
-export { CartData, CartItem } from './offline-cart-manager';
+export type { CartData, CartItem } from './offline-cart-manager';
 
 export interface CartSystemConfig {
   selectors: {
@@ -207,8 +211,8 @@ export class CartSystem {
       if (this.#config.debug) {
         console.log('[CartSystem] Initialized with config:', this.#config);
       }
-    } catch (error) {
-      CartErrorHandler.handleError(error, {
+    } catch (error: any) {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'init',
       });
@@ -274,8 +278,8 @@ export class CartSystem {
   ): Promise<T | null> {
     try {
       return await operation();
-    } catch (error) {
-      CartErrorHandler.handleError(error, {
+    } catch (error: any) {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: context,
         severity: options.severity || ErrorSeverity.ERROR,
@@ -397,8 +401,8 @@ export class CartSystem {
       });
 
       // Other NeuralBus subscriptions
-      NeuralBus.subscribe('quantum:stability-update', (data) => {
-        if (data.factor !== undefined) {
+      NeuralBus.subscribe('quantum:stability-update', (data: any) => {
+        if (data && data.factor !== undefined) {
           // Apply stability changes if needed
         }
       });
@@ -418,9 +422,9 @@ export class CartSystem {
       // If we're back online, sync any offline changes
       try {
         await this.syncOfflineCart();
-      } catch (error) {
+      } catch (error: any) {
         // Handle sync errors
-        CartErrorHandler.handleError(error, {
+        CartErrorHandler.handleError(error as Error, {
           component: 'cart-system',
           method: 'handleOnlineStatus',
           context: 'Syncing offline cart',
@@ -660,8 +664,8 @@ export class CartSystem {
     // Update cart count
     const countEl = document.querySelector(this.#config.selectors.cartCount);
     if (countEl) {
-      countEl.textContent = this.#cartData.item_count.toString();
-      countEl.classList.toggle('hidden', this.#cartData.item_count === 0);
+      countEl.textContent = this.#cartData.item_count?.toString() || '0';
+      countEl.classList.toggle('hidden', !this.#cartData.item_count);
     }
 
     // Update cart total
@@ -671,7 +675,7 @@ export class CartSystem {
         style: 'currency',
         currency: this.#cartData.currency || 'USD',
       });
-      totalEl.textContent = formatter.format(this.#cartData.total_price / 100);
+      totalEl.textContent = formatter.format((this.#cartData.total_price || 0) / 100);
     }
 
     // Update cart items
@@ -712,7 +716,7 @@ export class CartSystem {
     }
 
     // If user is offline, show indicator
-    if (this.#config.features.useOfflineSupport && !offlineCartManager.isOnline()) {
+    if (this.#config.features.useOfflineSupport && navigator && !navigator.onLine) {
       this.#showOfflineIndicator();
     } else {
       this.#hideOfflineIndicator();
@@ -729,9 +733,9 @@ export class CartSystem {
     itemEl.setAttribute('data-id', item.id.toString());
 
     // Sanitize data before creating HTML (security enhancement)
-    const safeTitle = sanitizeHtml(item.title);
+    const safeTitle = sanitizeHtml(item.title || 'Product');
     const safeImage = sanitizeHtml(item.image || '');
-    const safePrice = this.#formatMoney(item.price);
+    const safePrice = this.#formatMoney(item.price || 0);
 
     // Add item HTML
     itemEl.innerHTML = `
@@ -890,7 +894,7 @@ export class CartSystem {
       return this.#cartData;
     } catch (error) {
       // Handle error using the error handler
-      CartErrorHandler.handleError(error, {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'fetchCart',
         category: ErrorCategory.API,
@@ -963,7 +967,7 @@ export class CartSystem {
       return this.#cartData;
     } catch (error) {
       // Handle error
-      CartErrorHandler.handleError(error, {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'addToCart',
         category: ErrorCategory.API,
@@ -1000,7 +1004,7 @@ export class CartSystem {
       return this.#cartData;
     } catch (error) {
       // Handle error
-      CartErrorHandler.handleError(error, {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'updateItemQuantity',
         category: ErrorCategory.API,
@@ -1036,7 +1040,7 @@ export class CartSystem {
       return this.#cartData;
     } catch (error) {
       // Handle error
-      CartErrorHandler.handleError(error, {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'removeItem',
         category: ErrorCategory.API,
@@ -1071,7 +1075,7 @@ export class CartSystem {
       return this.#cartData;
     } catch (error) {
       // Handle error
-      CartErrorHandler.handleError(error, {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'clearCart',
         category: ErrorCategory.API,
@@ -1168,7 +1172,7 @@ export class CartSystem {
       return syncResult;
     } catch (error) {
       // Handle error
-      CartErrorHandler.handleError(error, {
+      CartErrorHandler.handleError(error as Error, {
         component: 'cart-system',
         method: 'syncOfflineCart',
         category: ErrorCategory.NETWORK,

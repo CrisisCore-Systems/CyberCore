@@ -38,6 +38,14 @@ export function getCSRFToken(): string {
 }
 
 /**
+ * Get the current CSRF token (lowercase alias for compatibility)
+ * @returns The current or newly generated CSRF token
+ */
+export function getCsrfToken(): string {
+  return getCSRFToken();
+}
+
+/**
  * Add CSRF token to a URL
  * @param url URL to add token to
  * @returns URL with token appended

@@ -1,30 +1,42 @@
 /**
  * QUANTUM-EFFECTS-EXTENSION.TS
- * Quantum effects for cart UI elements
+ * Quantum effects extension for the cart system
  *
  * @MutationCompatible: All Variants
  * @StrategyProfile: quantum-entangled
- * @Version: 3.0.0
+ * @Version: 2.0.0
  */
 
 import { CartCore } from './cart-core';
 import { CartExtension } from './cart-extension-interface';
-import { NeuralBus } from './neural-bus';
+
+// Define an extended interface for quantum effects options
+interface QuantumEffectsConfig {
+  useWorker: boolean;
+  intensity: number;
+  profiles: string[];
+  traumaCodes: string[];
+  activeProfile: string;
+  debug: boolean;
+}
 
 /**
  * QuantumEffectsExtension
- * Adds quantum visual effects to the cart UI
+ * Adds quantum effects to the cart system
  */
 export class QuantumEffectsExtension implements CartExtension {
   name = 'quantum-effects';
-  version = '3.0.0';
+  version = '2.0.0';
 
+  private quantumSupported = false;
   private worker: Worker | null = null;
-  private config = {
+  private neuralBusConnected = false;
+  private config: QuantumEffectsConfig = {
     useWorker: true,
-    profile: 'CyberLotus',
-    intensity: 1.0,
+    intensity: 0.8,
+    profiles: ['CyberLotus', 'ObsidianBloom', 'VoidBloom', 'NeonVortex'],
     traumaCodes: [],
+    activeProfile: 'CyberLotus',
     debug: false,
   };
 
@@ -33,23 +45,184 @@ export class QuantumEffectsExtension implements CartExtension {
    * @param cart The cart core instance
    */
   initialize(cart: typeof CartCore): void {
-    // Merge configuration
-    Object.assign(this.config, cart.config.quantumEffectsOptions || {});
+    // Merge configuration with available quantumEffectsOptions
+    const cartConfig = cart.config as any;
+    const options = cartConfig.quantumEffectsOptions || {};
+
+    this.config = {
+      ...this.config,
+      ...options,
+    };
+
     this.config.debug = cart.config.debug || this.config.debug;
 
-    // Initialize worker if enabled
-    if (this.config.useWorker) {
-      this.initWorker();
+    // Check for Worker API support
+    this.checkWorkerSupport().then((supported) => {
+      this.quantumSupported = supported;
+
+      if (this.quantumSupported && this.config.useWorker) {
+        this.initializeWorker();
+        this.connectToNeuralBus();
+
+        if (this.config.debug) {
+          console.log('[QuantumEffectsExtension] Initialized with quantum support');
+        }
+      } else if (this.config.debug) {
+        console.log(
+          '[QuantumEffectsExtension] Initialized without quantum support (Web Workers not available)'
+        );
+      }
+    });
+  }
+
+  /**
+   * Check if the browser supports Web Workers
+   * @returns Promise that resolves to true if workers are supported
+   */
+  private checkWorkerSupport(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      try {
+        // Check if the browser supports Workers
+        const supported = typeof Worker !== 'undefined';
+        resolve(supported);
+      } catch (error) {
+        console.error('[QuantumEffectsExtension] Error checking Worker support:', error);
+        resolve(false);
+      }
+    });
+  }
+
+  /**
+   * Initialize quantum effects worker
+   */
+  private initializeWorker(): void {
+    try {
+      // Create a new Web Worker
+      this.worker = new Worker('/assets/quantum-worker.js');
+
+      // Set up message handling
+      this.worker.onmessage = this.handleWorkerMessage.bind(this);
+      this.worker.onerror = this.handleWorkerError.bind(this);
+
+      // Initialize worker with config
+      this.worker.postMessage({
+        type: 'initialize',
+        config: this.config,
+      });
+
+      if (this.config.debug) {
+        console.log('[QuantumEffectsExtension] Quantum worker initialized');
+      }
+    } catch (error) {
+      console.error('[QuantumEffectsExtension] Failed to initialize worker:', error);
+      this.worker = null;
+    }
+  }
+
+  /**
+   * Connect to NeuralBus for cart event synchronization
+   */
+  private connectToNeuralBus(): void {
+    try {
+      if (typeof window.NeuralBus === 'undefined') {
+        if (this.config.debug) {
+          console.warn('[QuantumEffectsExtension] NeuralBus not available');
+        }
+        return;
+      }
+
+      // Register with NeuralBus
+      window.NeuralBus.register('quantum-effects', { version: this.version });
+      this.neuralBusConnected = true;
+
+      // Listen for trauma events
+      window.NeuralBus.subscribe('trauma:activated', this.handleTraumaEvent.bind(this));
+
+      if (this.config.debug) {
+        console.log('[QuantumEffectsExtension] Connected to NeuralBus');
+      }
+    } catch (error) {
+      console.error('[QuantumEffectsExtension] Failed to connect to NeuralBus:', error);
+    }
+  }
+
+  /**
+   * Handle messages from the quantum worker
+   * @param event MessageEvent from the worker
+   */
+  private handleWorkerMessage(event: MessageEvent): void {
+    if (!event.data || !event.data.type) return;
+
+    switch (event.data.type) {
+      case 'effect-ready':
+        // Worker has prepared an effect, apply it
+        this.applyQuantumEffect(event.data.effect);
+        break;
+      case 'status':
+        // Worker status update
+        if (this.config.debug) {
+          console.log(`[QuantumEffectsExtension] Worker status: ${event.data.status}`);
+        }
+        break;
+      default:
+        // Unknown message type
+        if (this.config.debug) {
+          console.warn('[QuantumEffectsExtension] Unknown worker message:', event.data);
+        }
+    }
+  }
+
+  /**
+   * Handle errors from the quantum worker
+   * @param event ErrorEvent from the worker
+   */
+  private handleWorkerError(event: ErrorEvent): void {
+    console.error('[QuantumEffectsExtension] Worker error:', event);
+    // Clean up failed worker
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
+  }
+
+  /**
+   * Handle trauma events from NeuralBus
+   * @param data Trauma event data
+   */
+  private handleTraumaEvent(data: any): void {
+    if (!data || !data.type) return;
+
+    // Add the trauma code to our list
+    const traumaCode = `${data.type}-${data.intensity || 0.5}`;
+    if (!this.config.traumaCodes.includes(traumaCode)) {
+      this.config.traumaCodes.push(traumaCode);
+
+      // Limit length of trauma codes
+      if (this.config.traumaCodes.length > 10) {
+        this.config.traumaCodes.shift(); // Remove oldest code
+      }
     }
 
-    // Apply current profile to the document
-    this.applyProfile(this.config.profile);
+    // Send to worker to process
+    if (this.worker) {
+      this.worker.postMessage({
+        type: 'process-trauma',
+        traumaCode,
+        intensity: data.intensity || 0.5,
+        traumaType: data.type,
+      });
+    }
+  }
 
-    // Connect to NeuralBus
-    this.connectNeuralBus();
-
+  /**
+   * Apply a quantum effect to the UI
+   * @param effect Effect data from the worker
+   */
+  private applyQuantumEffect(effect: any): void {
+    // Effect application would go here
+    // This would typically involve DOM manipulation based on effect data
     if (this.config.debug) {
-      console.log('[QuantumEffectsExtension] Initialized', this.config);
+      console.log('[QuantumEffectsExtension] Applied effect:', effect);
     }
   }
 
@@ -59,100 +232,33 @@ export class QuantumEffectsExtension implements CartExtension {
    * @param data Event data
    */
   onEvent(event: string, data: any): void {
+    if (!this.quantumSupported || !this.worker) return;
+
     switch (event) {
       case 'itemAdded':
-        this.triggerEffect('add', data);
+        this.worker.postMessage({
+          type: 'cart-event',
+          event: 'item-added',
+          data,
+        });
         break;
 
       case 'itemRemoved':
-        this.triggerEffect('remove', data);
+        this.worker.postMessage({
+          type: 'cart-event',
+          event: 'item-removed',
+          data,
+        });
         break;
 
-      case 'itemUpdated':
-        this.triggerEffect('update', data);
+      case 'cartOpened':
+        this.worker.postMessage({
+          type: 'cart-event',
+          event: 'cart-opened',
+          data,
+        });
         break;
     }
-  }
-
-  /**
-   * Apply a mutation profile to the cart and UI
-   * @param profile Profile name
-   */
-  applyProfile(profile: string): void {
-    if (!profile) return;
-
-    this.config.profile = profile;
-
-    // Apply profile to document
-    document.documentElement.classList.remove(
-      'profile-cyberlotus',
-      'profile-obsidianbloom',
-      'profile-voidbloom',
-      'profile-neonvortex'
-    );
-    document.documentElement.classList.add(`profile-${profile.toLowerCase()}`);
-    document.documentElement.dataset.profile = profile.toLowerCase();
-
-    // Request mutation profile from worker
-    if (this.worker) {
-      this.worker.postMessage({
-        type: 'process-mutation-profile',
-        data: {
-          profile: this.config.profile,
-          intensity: this.config.intensity,
-        },
-      });
-    }
-
-    // Notify via NeuralBus
-    NeuralBus.publish('quantum-effects:profile-changed', {
-      profile,
-      timestamp: Date.now(),
-    });
-
-    if (this.config.debug) {
-      console.log(`[QuantumEffectsExtension] Applied profile: ${profile}`);
-    }
-  }
-
-  /**
-   * Set active trauma codes
-   * @param traumaCodes Trauma effect codes
-   */
-  setTraumaCodes(traumaCodes: string[]): void {
-    this.config.traumaCodes = traumaCodes || [];
-
-    // Apply trauma classes to document
-    document.documentElement.classList.remove(
-      'trauma-state-glitch',
-      'trauma-state-void',
-      'trauma-state-echo',
-      'trauma-state-fracture'
-    );
-
-    // Add trauma classes based on codes
-    this.config.traumaCodes.forEach((code) => {
-      const traumaType = code.split('-')[0];
-      document.documentElement.classList.add(`trauma-state-${traumaType}`);
-      document.documentElement.dataset.trauma = traumaType;
-    });
-
-    // Process trauma patterns in worker
-    if (this.worker) {
-      this.worker.postMessage({
-        type: 'process-trauma-patterns',
-        data: {
-          traumaCodes: this.config.traumaCodes,
-          intensity: this.config.intensity,
-        },
-      });
-    }
-
-    // Notify via NeuralBus
-    NeuralBus.publish('quantum-effects:trauma-codes-changed', {
-      traumaCodes: this.config.traumaCodes,
-      timestamp: Date.now(),
-    });
   }
 
   /**
@@ -164,187 +270,8 @@ export class QuantumEffectsExtension implements CartExtension {
       this.worker = null;
     }
 
-    // Remove classes
-    document.documentElement.classList.remove(
-      'profile-cyberlotus',
-      'profile-obsidianbloom',
-      'profile-voidbloom',
-      'profile-neonvortex',
-      'trauma-state-glitch',
-      'trauma-state-void',
-      'trauma-state-echo',
-      'trauma-state-fracture'
-    );
-
     if (this.config.debug) {
       console.log('[QuantumEffectsExtension] Disposed');
     }
-  }
-
-  /**
-   * Initialize Web Worker
-   */
-  private initWorker(): void {
-    try {
-      this.worker = new Worker('/assets/quantum-worker.js');
-
-      this.worker.addEventListener('message', (event) => {
-        const { type, result, error } = event.data;
-
-        if (error) {
-          console.error('[QuantumEffectsExtension] Worker error:', error);
-          return;
-        }
-
-        switch (type) {
-          case 'quantum-state-result':
-            this.applyQuantumState(result);
-            break;
-
-          case 'trauma-patterns-result':
-            this.applyTraumaPatterns(result);
-            break;
-
-          case 'mutation-profile-result':
-            this.applyMutationProfile(result);
-            break;
-        }
-      });
-
-      if (this.config.debug) {
-        console.log('[QuantumEffectsExtension] Worker initialized');
-      }
-    } catch (error) {
-      console.warn('[QuantumEffectsExtension] Web Worker initialization failed:', error);
-      this.config.useWorker = false;
-    }
-  }
-
-  /**
-   * Connect to NeuralBus
-   */
-  private connectNeuralBus(): void {
-    NeuralBus.subscribe('quantum:mutation', (data) => {
-      if (data && data.profile) {
-        this.applyProfile(data.profile);
-      }
-
-      if (data && data.traumaCodes) {
-        this.setTraumaCodes(data.traumaCodes);
-      }
-    });
-
-    // Register with NeuralBus
-    NeuralBus.register('quantum-effects', {
-      version: '3.0.0',
-      capabilities: {
-        workers: this.config.useWorker,
-        profiles: ['CyberLotus', 'ObsidianBloom', 'VoidBloom', 'NeonVortex'],
-      },
-    });
-  }
-
-  /**
-   * Trigger a quantum effect
-   */
-  private triggerEffect(effectType: string, data: any): void {
-    // Add dynamic pulse class to cart elements
-    const cartIcon = document.querySelector('#cart-icon-bubble');
-    if (cartIcon) {
-      cartIcon.classList.add('quantum-pulse');
-      setTimeout(() => {
-        cartIcon.classList.remove('quantum-pulse');
-      }, 1000);
-    }
-
-    // Add effect class to body
-    document.body.classList.add(`quantum-effect-${effectType}`);
-    setTimeout(() => {
-      document.body.classList.remove(`quantum-effect-${effectType}`);
-    }, 1000);
-
-    // Request quantum state from worker
-    if (this.worker) {
-      this.worker.postMessage({
-        type: 'process-quantum-state',
-        data: {
-          effectType,
-          intensity: this.config.intensity,
-          profile: this.config.profile,
-        },
-      });
-    }
-
-    // Publish event to NeuralBus
-    NeuralBus.publish('quantum-effects:effect-triggered', {
-      type: effectType,
-      data,
-      timestamp: Date.now(),
-    });
-  }
-
-  /**
-   * Apply quantum state from worker
-   */
-  private applyQuantumState(state: any): void {
-    // Apply to CSS variables
-    if (state && state.particles) {
-      document.documentElement.style.setProperty(
-        '--quantum-stability',
-        state.stabilityFactor.toFixed(2)
-      );
-    }
-
-    // Publish to NeuralBus
-    NeuralBus.publish('quantum-effects:quantum-state-updated', {
-      state,
-      timestamp: Date.now(),
-    });
-  }
-
-  /**
-   * Apply trauma patterns from worker
-   */
-  private applyTraumaPatterns(patterns: any): void {
-    // Apply to CSS variables
-    if (patterns && patterns.stabilityIndex) {
-      document.documentElement.style.setProperty(
-        '--trauma-intensity',
-        patterns.stabilityIndex.toFixed(2)
-      );
-    }
-
-    // Publish to NeuralBus
-    NeuralBus.publish('quantum-effects:trauma-patterns-updated', {
-      patterns,
-      timestamp: Date.now(),
-    });
-  }
-
-  /**
-   * Apply mutation profile from worker
-   */
-  private applyMutationProfile(profile: any): void {
-    if (!profile) return;
-
-    // Apply CSS custom properties
-    if (profile.colors) {
-      Object.entries(profile.colors).forEach(([name, value]) => {
-        document.documentElement.style.setProperty(`--color-${name}`, value as string);
-      });
-    }
-
-    // Apply CSS animations
-    if (profile.animations) {
-      Object.entries(profile.animations).forEach(([name, value]) => {
-        document.documentElement.style.setProperty(`--animation-${name}`, value as string);
-      });
-    }
-
-    // Publish to NeuralBus
-    NeuralBus.publish('quantum-effects:profile-applied', {
-      profile,
-      timestamp: Date.now(),
-    });
   }
 }

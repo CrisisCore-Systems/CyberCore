@@ -9,6 +9,19 @@
 
 import { domCache } from '../utils/dom-cache-manager';
 
+// Add proper CustomEvent definition to ensure CartEvents are typed correctly
+interface CartUpdatedEvent extends CustomEvent {
+  detail: {
+    cart: any; // Add proper type here based on your cart structure
+  };
+}
+
+interface CartItemEvent extends CustomEvent {
+  detail: {
+    item: any; // Add proper type here based on your cart item structure
+  };
+}
+
 /**
  * CartAccessibility
  * Enhances the cart system with accessibility features for assistive technologies
@@ -107,14 +120,17 @@ export class CartAccessibility {
     // Listen for cart closed event
     document.addEventListener('cart:closed', this.handleCartClosed.bind(this));
 
-    // Listen for cart updates
-    document.addEventListener('cart:updated', this.handleCartUpdated.bind(this));
+    // Listen for cart updates with proper type annotations
+    document.addEventListener('cart:updated', this.handleCartUpdated.bind(this) as EventListener);
 
     // Listen for item additions
-    document.addEventListener('cart:item-added', this.handleItemAdded.bind(this));
+    document.addEventListener('cart:item-added', this.handleItemAdded.bind(this) as EventListener);
 
     // Listen for item removals
-    document.addEventListener('cart:item-removed', this.handleItemRemoved.bind(this));
+    document.addEventListener(
+      'cart:item-removed',
+      this.handleItemRemoved.bind(this) as EventListener
+    );
 
     // Listen for keydown events (for modal trap behavior)
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -166,14 +182,14 @@ export class CartAccessibility {
   /**
    * Handle cart updated event
    */
-  private handleCartUpdated(event: CustomEvent): void {
+  private handleCartUpdated(event: CartUpdatedEvent): void {
     const detail = event.detail || {};
 
     // Create meaningful announcement based on cart data
     let message = 'Cart updated.';
 
-    if (detail.cartData) {
-      const itemCount = detail.cartData.item_count || 0;
+    if (detail.cart) {
+      const itemCount = detail.cart.item_count || 0;
 
       if (itemCount === 0) {
         message = 'Cart is now empty.';
@@ -189,7 +205,7 @@ export class CartAccessibility {
   /**
    * Handle item added event
    */
-  private handleItemAdded(event: CustomEvent): void {
+  private handleItemAdded(event: CartItemEvent): void {
     const detail = event.detail || {};
     const item = detail.item || {};
 
@@ -206,7 +222,7 @@ export class CartAccessibility {
   /**
    * Handle item removed event
    */
-  private handleItemRemoved(event: CustomEvent): void {
+  private handleItemRemoved(event: CartItemEvent): void {
     const detail = event.detail || {};
     const item = detail.item || {};
 
@@ -395,9 +411,18 @@ export class CartAccessibility {
     // Remove event listeners
     document.removeEventListener('cart:opened', this.handleCartOpened.bind(this));
     document.removeEventListener('cart:closed', this.handleCartClosed.bind(this));
-    document.removeEventListener('cart:updated', this.handleCartUpdated.bind(this));
-    document.removeEventListener('cart:item-added', this.handleItemAdded.bind(this));
-    document.removeEventListener('cart:item-removed', this.handleItemRemoved.bind(this));
+    document.removeEventListener(
+      'cart:updated',
+      this.handleCartUpdated.bind(this) as EventListener
+    );
+    document.removeEventListener(
+      'cart:item-added',
+      this.handleItemAdded.bind(this) as EventListener
+    );
+    document.removeEventListener(
+      'cart:item-removed',
+      this.handleItemRemoved.bind(this) as EventListener
+    );
     document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 
     // Remove announcements container

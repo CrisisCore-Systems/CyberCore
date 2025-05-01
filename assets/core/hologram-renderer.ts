@@ -78,7 +78,7 @@ interface RendererInstance {
 export class HologramRenderer {
   // Static properties for class-based usage
   private static instances = new WeakMap<HTMLElement, RendererInstance>();
-  private static initialized = false;
+  static initialized = false; // Changed to public for access in extensions
   private static options: HologramOptions = {};
   private static container: HTMLElement | null = null;
   private static worker: Worker | null = null;
@@ -306,7 +306,7 @@ export class HologramRenderer {
 
   /**
    * Apply glitch effect (static version)
-   * @param intensity - Glitch intensity
+   * @param intensity - Glitch intensity (0-1)
    * @param duration - Effect duration in ms
    */
   public static applyGlitchEffect(
@@ -314,6 +314,46 @@ export class HologramRenderer {
     duration: number = 1000
   ): typeof HologramRenderer {
     // Implementation will be added based on context
+    return this;
+  }
+
+  /**
+   * Apply glitch effect (static version)
+   * @param intensity - Glitch intensity (0-1)
+   * @param duration - Effect duration in milliseconds
+   * @returns The HologramRenderer class for method chaining
+   */
+  public static applyGlitch(intensity: number, duration: number = 1000): typeof HologramRenderer {
+    if (!this.initialized) {
+      console.warn('HologramRenderer: Not initialized, cannot apply glitch effect');
+      return this;
+    }
+
+    // Implementation based on HologramRenderer.applyGlitchEffect
+    return this.applyGlitchEffect(intensity, duration);
+  }
+
+  /**
+   * Set trauma codes for hologram effects (static version)
+   * @param traumaCodes - Array of trauma effect codes
+   */
+  public static setTraumaCodes(traumaCodes: string[]): typeof HologramRenderer {
+    if (!this.initialized) {
+      console.warn('HologramRenderer: Not initialized, cannot set trauma codes');
+      return this;
+    }
+
+    // Apply trauma effects based on codes
+    if (traumaCodes && traumaCodes.length > 0) {
+      this.traumaEffects = traumaCodes.map((code) => ({
+        code,
+        intensity: parseFloat(code.split('-')[1] || '0.5'),
+        type: code.split('-')[0] || 'glitch',
+      }));
+    } else {
+      this.traumaEffects = [];
+    }
+
     return this;
   }
 
@@ -684,7 +724,7 @@ export class HologramRenderer {
 
       loader.load(
         url,
-        (gltf) => {
+        (gltf: any) => {
           this.model = gltf.scene;
           this.scene.add(this.model);
 
@@ -699,7 +739,7 @@ export class HologramRenderer {
           resolve();
         },
         undefined,
-        (error) => {
+        (error: Error) => {
           console.error('Error loading model:', error);
           reject(error);
         }
@@ -769,6 +809,18 @@ export class HologramRenderer {
   }
 
   /**
+   * Apply glitch effect - instance method
+   * @param intensity - Glitch intensity (0-1)
+   * @param duration - Effect duration in milliseconds (optional)
+   */
+  public applyGlitch(intensity: number, duration?: number): void {
+    // Call the static method for implementation consistency
+    if (this.renderer && this.scene && this.camera) {
+      this.applyGlitchEffect(intensity);
+    }
+  }
+
+  /**
    * Apply trauma encoding to the hologram
    * @param traumaLevel - Trauma level (0-10)
    */
@@ -793,6 +845,28 @@ export class HologramRenderer {
     if (traumaLevel > 8) {
       // Extreme trauma: apply memory fragmentation
       this.options.memoryFragmentation = (traumaLevel - 8) / 2;
+    }
+  }
+
+  /**
+   * Set trauma codes for hologram effects (instance method)
+   * @param traumaCodes - Array of trauma effect codes
+   */
+  public setTraumaCodes(traumaCodes: string[]): void {
+    // Apply trauma encoding if supported
+    if (this.renderer) {
+      // Process each trauma code
+      (traumaCodes || []).forEach((code) => {
+        const [type, intensity] = code.split('-');
+
+        if (type === 'glitch' && this.renderer) {
+          // Apply glitch effect with intensity
+          this.applyGlitchEffect(parseFloat(intensity || '0.5'));
+        } else if (type === 'fragment' && this.options) {
+          // Set memory fragmentation level
+          this.options.memoryFragmentation = parseFloat(intensity || '0.5');
+        }
+      });
     }
   }
 

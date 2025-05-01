@@ -9,19 +9,25 @@
 // Import Web Components
 import { HologramComponent } from './HologramComponent';
 
+// Import the NeuralBus instance (not the type)
+import NeuralBusInstance from './core/neural-bus';
+
 // Import core services
-export { EnhancedCart } from './enhanced-cart';
+// Commented out the missing enhanced-cart export
+// export { EnhancedCart } from './enhanced-cart';
 export { NeuralBus } from './neural-bus';
 export { QuantumWebGL } from './quantum-webgl';
 
 // Import WebGL bridge
-export { QEARWebGLBridge } from './qear-webgl-bridge';
-
-// Import utilities
-export { GlitchEngine } from './glitch-engine';
 export { LoreGenerator } from './LoreGenerator';
 export { MemoryProtocol } from './memory-protocol';
+export { QEARWebGLBridge } from './qear-webgl-bridge';
 export { TraumaIndex } from './TraumaIndex';
+export { GlitchEngine };
+
+// Import utilities
+// Fixed the GlitchEngine export to use default import
+import GlitchEngine from './glitch-engine';
 
 // Register Web Components if not already registered
 if (!customElements.get('quantum-hologram')) {
@@ -36,15 +42,15 @@ document.addEventListener('DOMContentLoaded', () => {
   console.info('CyberCore initialized in ' + (DEBUG_MODE ? 'development' : 'production') + ' mode');
 
   // Initialize the NeuralBus event system
-  NeuralBus.initialize();
+  NeuralBusInstance.initialize();
 
   // Register all components with the NeuralBus
-  NeuralBus.register('hologram-component', { version: '2.0.0' });
-  NeuralBus.register('enhanced-cart', { version: '2.0.0' });
-  NeuralBus.register('quantum-webgl', { version: '2.0.0' });
+  NeuralBusInstance.register('hologram-component', { version: '2.0.0' });
+  NeuralBusInstance.register('enhanced-cart', { version: '2.0.0' });
+  NeuralBusInstance.register('quantum-webgl', { version: '2.0.0' });
 
   // Publish initialization event
-  NeuralBus.publish('cybercore:initialized', {
+  NeuralBusInstance.publish('cybercore:initialized', {
     timestamp: Date.now(),
     environment: DEBUG_MODE ? 'development' : 'production',
     components: ['hologram-component', 'enhanced-cart', 'quantum-webgl'],

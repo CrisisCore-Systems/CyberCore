@@ -9,7 +9,25 @@
 
 import { CartCore } from './cart-core';
 import { CartExtension } from './cart-extension-interface';
-import { HologramRenderer } from './hologram-renderer';
+import { HologramOptions, HologramRenderer } from './hologram-renderer';
+
+// Define an extended HologramOptions interface with additional options specific to this extension
+interface HolographicExtensionConfig {
+  containerSelector: string;
+  useQuantumEffects: boolean;
+  intensity: number;
+  traumaCodes: string[];
+  profile: string;
+  debug: boolean;
+}
+
+// Extend CartCore config to include holographic options
+declare module './cart-core' {
+  interface CartConfig {
+    holographicOptions?: Partial<HolographicExtensionConfig>;
+    debug?: boolean;
+  }
+}
 
 /**
  * HolographicExtension
@@ -23,7 +41,7 @@ export class HolographicExtension implements CartExtension {
   private renderer?: typeof HologramRenderer;
   private container?: HTMLElement;
   private activeProduct?: any;
-  private config = {
+  private config: HolographicExtensionConfig = {
     containerSelector: '#cart-preview-container',
     useQuantumEffects: true,
     intensity: 1.0,
@@ -37,8 +55,10 @@ export class HolographicExtension implements CartExtension {
    * @param cart The cart core instance
    */
   initialize(cart: typeof CartCore): void {
-    // Merge configuration
-    Object.assign(this.config, cart.config.holographicOptions || {});
+    // Merge configuration using type assertion to avoid TypeScript errors
+    const cartConfig = cart.config as any;
+    const holographicOptions = cartConfig.holographicOptions || {};
+    this.config = { ...this.config, ...holographicOptions };
     this.config.debug = cart.config.debug || this.config.debug;
 
     // Check for WebGL support
@@ -170,12 +190,14 @@ export class HolographicExtension implements CartExtension {
       this.renderer = module.HologramRenderer;
 
       if (this.renderer && !this.renderer.initialized) {
-        this.renderer.initialize({
-          useQuantumEffects: this.config.useQuantumEffects,
-          profile: this.config.profile,
+        // Create proper hologram options
+        const options: HologramOptions = {
           intensity: this.config.intensity,
+          profile: this.config.profile,
           debug: this.config.debug,
-        });
+        };
+
+        this.renderer.initialize(options);
       }
 
       if (this.config.debug) {
@@ -201,8 +223,14 @@ export class HolographicExtension implements CartExtension {
       document.body.appendChild(this.container);
     }
 
-    if (this.renderer?.setContainer) {
-      this.renderer.setContainer(this.container);
+    // Set container for the renderer
+    if (this.container && this.renderer) {
+      // Since setContainer doesn't exist, use init method instead
+      this.renderer.init(this.container, {
+        intensity: this.config.intensity,
+        profile: this.config.profile,
+        debug: this.config.debug,
+      });
     }
   }
 
@@ -282,7 +310,9 @@ export class HolographicExtension implements CartExtension {
     }
 
     // Fallback: Check for data attributes on product elements
-    const productElement = document.querySelector(`[data-product-id="${product.id}"]`);
+    const productElement = document.querySelector(
+      `[data-product-id="${product.id}"]`
+    ) as HTMLElement;
     if (productElement) {
       const modelUrl =
         productElement.dataset.modelUrl ||
@@ -303,15 +333,16 @@ export class HolographicExtension implements CartExtension {
 
     switch (effectType) {
       case 'add':
-        this.renderer.applyGlitch(0.7, 300);
+        // Use the static method for compatibility
+        this.renderer.applyGlitchEffect?.(0.7, 300);
         break;
 
       case 'remove':
-        this.renderer.applyGlitch(0.5, 200);
+        this.renderer.applyGlitchEffect?.(0.5, 200);
         break;
 
       case 'update':
-        this.renderer.applyGlitch(0.3, 150);
+        this.renderer.applyGlitchEffect?.(0.3, 150);
         break;
     }
   }
