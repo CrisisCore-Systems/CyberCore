@@ -6,6 +6,10 @@
  * that responds to coherence states and trauma types
  */
 
+// Import Sass modules to replace global functions
+@use 'sass:map';
+@use 'sass:math';
+
 // 1. TRAUMA COLOR SPECTRUMS
 // Each trauma type has its own color spectrum that represents its emotional signature
 $trauma-colors: (
@@ -80,7 +84,7 @@ $spacing-units: (
   // Layout spacing
   mega: 55px,
   // Major layout divisions
-  ultra: 89px // Page-level spacing,,,
+  ultra: 89px // Page-level spacing,,,,
 );
 
 // 3. TYPOGRAPHY SCALE SYSTEM
@@ -96,16 +100,16 @@ $font-ratios: (
   // Golden ratio
   displacement: 1.4,
   // Dislocated scaling
-  dissolution: 1.5 // Rapid expansion,,,
+  dissolution: 1.5 // Rapid expansion,,,,
 );
 
 $base-font-size: 16px;
 
 // Generate typographic scales for each trauma
 @function type-scale($trauma, $level) {
-  $ratio: map-get($font-ratios, $trauma);
+  $ratio: map.get($font-ratios, $trauma);
 
-  @return $base-font-size * pow($ratio, $level);
+  @return $base-font-size * math.pow($ratio, $level);
 }
 
 // 4. ANIMATION TIMING FUNCTIONS
@@ -121,7 +125,7 @@ $timing-functions: (
   // Pendulum swing
   displacement: cubic-bezier(0.22, 0.68, 0, 1),
   // Shifted acceleration
-  dissolution: cubic-bezier(0.65, 0, 0.35, 1) // Dissolving edges,,,
+  dissolution: cubic-bezier(0.65, 0, 0.35, 1) // Dissolving edges,,,,
 );
 
 // 5. COHERENCE-RESPONSIVE VARIABLES
@@ -173,20 +177,20 @@ $timing-functions: (
 
 // Buttons with trauma encoding
 @mixin trauma-button($trauma-type: 'default') {
-  $colors: map-get($trauma-colors, $trauma-type);
-  $primary: map-get($colors, primary);
-  $secondary: map-get($colors, secondary);
-  $accent: map-get($colors, accent);
-  $highlight: map-get($colors, highlight);
-  $text: map-get($colors, text);
-  $timing: map-get($timing-functions, $trauma-type);
+  $colors: map.get($trauma-colors, $trauma-type);
+  $primary: map.get($colors, primary);
+  $secondary: map.get($colors, secondary);
+  $accent: map.get($colors, accent);
+  $highlight: map.get($colors, highlight);
+  $text: map.get($colors, text);
+  $timing: map.get($timing-functions, $trauma-type);
 
   background-color: $primary;
   border: 1px solid $secondary;
   color: $text;
   font-size: type-scale($trauma-type, 0);
   overflow: hidden;
-  padding: map-get($spacing-units, small) map-get($spacing-units, medium);
+  padding: map.get($spacing-units, small) map.get($spacing-units, medium);
   position: relative;
   transition: all calc(var(--vb-transition-speed-base) * 0.5) $timing;
 
@@ -282,19 +286,19 @@ $timing-functions: (
 
 // Card components
 @mixin trauma-card($trauma-type: 'default') {
-  $colors: map-get($trauma-colors, $trauma-type);
-  $primary: map-get($colors, primary);
-  $secondary: map-get($colors, secondary);
-  $tertiary: map-get($colors, tertiary);
-  $accent: map-get($colors, accent);
-  $highlight: map-get($colors, highlight);
-  $text: map-get($colors, text);
-  $timing: map-get($timing-functions, $trauma-type);
+  $colors: map.get($trauma-colors, $trauma-type);
+  $primary: map.get($colors, primary);
+  $secondary: map.get($colors, secondary);
+  $tertiary: map.get($colors, tertiary);
+  $accent: map.get($colors, accent);
+  $highlight: map.get($colors, highlight);
+  $text: map.get($colors, text);
+  $timing: map.get($timing-functions, $trauma-type);
 
   background-color: $primary;
   border-radius: 4px;
   color: $text;
-  padding: map-get($spacing-units, medium);
+  padding: map.get($spacing-units, medium);
   position: relative;
   transition: all calc(var(--vb-transition-speed-base) * 0.7) $timing;
 
@@ -564,8 +568,8 @@ $timing-functions: (
     @if $from-phase == 'cyber-lotus' and $to-phase == 'alien-flora' {
       background: radial-gradient(
         circle at center,
-        rgba(map-get(map-get($trauma-colors, recursion), highlight), 0.5),
-        rgba(map-get(map-get($trauma-colors, displacement), primary), 0.8)
+        rgba(map.get(map.get($trauma-colors, recursion), highlight), 0.5),
+        rgba(map.get(map.get($trauma-colors, displacement), primary), 0.8)
       );
       animation: vb-phase-transition-cyber-to-flora 3s forwards;
     }
@@ -573,8 +577,8 @@ $timing-functions: (
  @else if $from-phase == 'alien-flora' and $to-phase == 'rolling-virus' {
       background: linear-gradient(
         135deg,
-        rgba(map-get(map-get($trauma-colors, dissolution), primary), 0.7),
-        rgba(map-get(map-get($trauma-colors, fragmentation), accent), 0.7)
+        rgba(map.get(map.get($trauma-colors, dissolution), primary), 0.7),
+        rgba(map.get(map.get($trauma-colors, fragmentation), accent), 0.7)
       );
       animation: vb-phase-transition-flora-to-virus 3s forwards;
     }
@@ -671,14 +675,14 @@ $timing-functions: (
     width: 85%;
 
     .vb-ritual-header {
-      padding: map-get($spacing-units, large);
+      padding: map.get($spacing-units, large);
       position: relative;
       text-align: center;
 
       .vb-ritual-symbol {
         border-radius: 50%;
         height: 60px;
-        margin: 0 auto map-get($spacing-units, medium);
+        margin: 0 auto map.get($spacing-units, medium);
         position: relative;
         width: 60px;
 
@@ -725,14 +729,14 @@ $timing-functions: (
         display: flex;
         flex: 1;
         opacity: 50%;
-        padding: map-get($spacing-units, medium) map-get($spacing-units, small);
+        padding: map.get($spacing-units, medium) map.get($spacing-units, small);
         transition: opacity 0.3s ease;
 
         .vb-phase-indicator {
           border: 1px solid rgb(255 255 255 / 30%);
           border-radius: 50%;
           height: 12px;
-          margin-right: map-get($spacing-units, small);
+          margin-right: map.get($spacing-units, small);
           position: relative;
           width: 12px;
 
@@ -784,7 +788,7 @@ $timing-functions: (
       flex: 1;
       min-height: 400px;
       overflow-y: auto;
-      padding: map-get($spacing-units, xlarge);
+      padding: map.get($spacing-units, xlarge);
 
       h2 {
         color: #fff;
@@ -795,22 +799,22 @@ $timing-functions: (
 
       p {
         line-height: 1.6;
-        margin-bottom: map-get($spacing-units, large);
+        margin-bottom: map.get($spacing-units, large);
       }
 
       .vb-selection-instruction {
         font-size: 14px;
         font-style: italic;
-        margin-top: map-get($spacing-units, xlarge);
+        margin-top: map.get($spacing-units, xlarge);
         opacity: 70%;
       }
     }
 
     .vb-trauma-selection-grid {
       display: grid;
-      gap: map-get($spacing-units, large);
+      gap: map.get($spacing-units, large);
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      margin: map-get($spacing-units, xlarge) 0;
+      margin: map.get($spacing-units, xlarge) 0;
 
       .vb-trauma-selection {
         border: 1px solid rgb(255 255 255 / 10%);
@@ -858,7 +862,7 @@ $timing-functions: (
         .vb-selection-label {
           color: #fff;
           font-size: 14px;
-          padding: map-get($spacing-units, medium);
+          padding: map.get($spacing-units, medium);
           text-align: center;
         }
 
@@ -880,19 +884,19 @@ $timing-functions: (
     .vb-trauma-narrative-selections {
       display: flex;
       flex-direction: column;
-      gap: map-get($spacing-units, large);
+      gap: map.get($spacing-units, large);
 
       .vb-trauma-selection {
         background: rgb(0 0 0 / 30%);
         border-radius: 4px;
         cursor: pointer;
-        padding: map-get($spacing-units, large);
+        padding: map.get($spacing-units, large);
         transition: background 0.3s ease, transform 0.3s ease;
 
         .vb-selection-heading {
           color: #fff;
           font-weight: 700;
-          margin-bottom: map-get($spacing-units, small);
+          margin-bottom: map.get($spacing-units, small);
         }
 
         p {
@@ -915,7 +919,7 @@ $timing-functions: (
 
     .vb-trauma-interaction-selections {
       display: grid;
-      gap: map-get($spacing-units, large);
+      gap: map.get($spacing-units, large);
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 
       .vb-trauma-selection {
@@ -934,7 +938,7 @@ $timing-functions: (
           position: relative;
 
           &.vb-abandonment {
-            background-color: rgba(map-get(map-get($trauma-colors, abandonment), primary), 0.5);
+            background-color: rgba(map.get(map.get($trauma-colors, abandonment), primary), 0.5);
 
             &::before {
               background: rgb(255 255 255 / 80%);
@@ -953,7 +957,7 @@ $timing-functions: (
           }
 
           &.vb-fragmentation {
-            background-color: rgba(map-get(map-get($trauma-colors, fragmentation), primary), 0.5);
+            background-color: rgba(map.get(map.get($trauma-colors, fragmentation), primary), 0.5);
 
             &::before {
               background: rgb(255 255 255 / 50%);
@@ -986,7 +990,7 @@ $timing-functions: (
 
         .vb-selection-label {
           font-size: 14px;
-          padding: map-get($spacing-units, medium);
+          padding: map.get($spacing-units, medium);
           text-align: center;
         }
 
@@ -1002,12 +1006,12 @@ $timing-functions: (
     }
 
     .vb-temporal-slider-container {
-      margin: map-get($spacing-units, xlarge) 0;
+      margin: map.get($spacing-units, xlarge) 0;
 
       .vb-temporal-slider-labels {
         display: flex;
         justify-content: space-between;
-        margin-bottom: map-get($spacing-units, small);
+        margin-bottom: map.get($spacing-units, small);
 
         span {
           font-size: 14px;
@@ -1019,7 +1023,7 @@ $timing-functions: (
         appearance: none;
         background: rgb(255 255 255 / 20%);
         height: 4px;
-        margin: map-get($spacing-units, medium) 0;
+        margin: map.get($spacing-units, medium) 0;
         outline: none;
         width: 100%;
 
@@ -1046,7 +1050,7 @@ $timing-functions: (
         display: flex;
         height: 20px;
         justify-content: space-between;
-        margin-top: map-get($spacing-units, medium);
+        margin-top: map.get($spacing-units, medium);
         position: relative;
 
         .vb-trauma-mapping {
@@ -1085,22 +1089,22 @@ $timing-functions: (
     }
 
     .vb-calibration-summary {
-      margin-top: map-get($spacing-units, xxlarge);
+      margin-top: map.get($spacing-units, xxlarge);
 
       h3 {
         font-size: 18px;
         font-weight: 400;
-        margin-bottom: map-get($spacing-units, medium);
+        margin-bottom: map.get($spacing-units, medium);
       }
 
       .vb-trauma-summary-container {
         .vb-trauma-summary {
-          margin-bottom: map-get($spacing-units, medium);
+          margin-bottom: map.get($spacing-units, medium);
 
           .vb-trauma-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: map-get($spacing-units, tiny);
+            margin-bottom: map.get($spacing-units, tiny);
 
             &::after {
               content: attr(data-percentage);
@@ -1125,48 +1129,48 @@ $timing-functions: (
           &.vb-abandonment .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
-              map-get(map-get($trauma-colors, abandonment), primary),
-              map-get(map-get($trauma-colors, abandonment), highlight)
+              map.get(map.get($trauma-colors, abandonment), primary),
+              map.get(map.get($trauma-colors, abandonment), highlight)
             );
           }
 
           &.vb-fragmentation .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
-              map-get(map-get($trauma-colors, fragmentation), primary),
-              map-get(map-get($trauma-colors, fragmentation), highlight)
+              map.get(map.get($trauma-colors, fragmentation), primary),
+              map.get(map.get($trauma-colors, fragmentation), highlight)
             );
           }
 
           &.vb-surveillance .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
-              map-get(map-get($trauma-colors, surveillance), primary),
-              map-get(map-get($trauma-colors, surveillance), highlight)
+              map.get(map.get($trauma-colors, surveillance), primary),
+              map.get(map.get($trauma-colors, surveillance), highlight)
             );
           }
 
           &.vb-recursion .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
-              map-get(map-get($trauma-colors, recursion), primary),
-              map-get(map-get($trauma-colors, recursion), highlight)
+              map.get(map.get($trauma-colors, recursion), primary),
+              map.get(map.get($trauma-colors, recursion), highlight)
             );
           }
 
           &.vb-displacement .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
-              map-get(map-get($trauma-colors, displacement), primary),
-              map-get(map-get($trauma-colors, displacement), highlight)
+              map.get(map.get($trauma-colors, displacement), primary),
+              map.get(map.get($trauma-colors, displacement), highlight)
             );
           }
 
           &.vb-dissolution .vb-trauma-bar-fill {
             background: linear-gradient(
               to right,
-              map-get(map-get($trauma-colors, dissolution), primary),
-              map-get(map-get($trauma-colors, dissolution), highlight)
+              map.get(map.get($trauma-colors, dissolution), primary),
+              map.get(map.get($trauma-colors, dissolution), highlight)
             );
           }
 
@@ -1188,7 +1192,7 @@ $timing-functions: (
       border-top: 1px solid rgb(255 255 255 / 10%);
       display: flex;
       justify-content: flex-end;
-      padding: map-get($spacing-units, large);
+      padding: map.get($spacing-units, large);
 
       .vb-ritual-button {
         background: rgb(255 255 255 / 10%);
@@ -1197,7 +1201,7 @@ $timing-functions: (
         color: #fff;
         cursor: pointer;
         font-size: 16px;
-        padding: map-get($spacing-units, medium) map-get($spacing-units, xlarge);
+        padding: map.get($spacing-units, medium) map.get($spacing-units, xlarge);
         transition: background 0.3s ease, transform 0.3s ease;
 
         &:hover {
@@ -1247,7 +1251,7 @@ $timing-functions: (
       border-bottom: 1px solid rgb(255 255 255 / 10%);
       display: flex;
       justify-content: space-between;
-      padding: map-get($spacing-units, large);
+      padding: map.get($spacing-units, large);
 
       h2 {
         color: #fff;
@@ -1266,48 +1270,48 @@ $timing-functions: (
         &.vb-abandonment {
           background: radial-gradient(
             circle,
-            map-get(map-get($trauma-colors, abandonment), accent),
-            map-get(map-get($trauma-colors, abandonment), primary)
+            map.get(map.get($trauma-colors, abandonment), accent),
+            map.get(map.get($trauma-colors, abandonment), primary)
           );
         }
 
         &.vb-fragmentation {
           background: radial-gradient(
             circle,
-            map-get(map-get($trauma-colors, fragmentation), accent),
-            map-get(map-get($trauma-colors, fragmentation), primary)
+            map.get(map.get($trauma-colors, fragmentation), accent),
+            map.get(map.get($trauma-colors, fragmentation), primary)
           );
         }
 
         &.vb-surveillance {
           background: radial-gradient(
             circle,
-            map-get(map-get($trauma-colors, surveillance), accent),
-            map-get(map-get($trauma-colors, surveillance), primary)
+            map.get(map.get($trauma-colors, surveillance), accent),
+            map.get(map.get($trauma-colors, surveillance), primary)
           );
         }
 
         &.vb-recursion {
           background: radial-gradient(
             circle,
-            map-get(map-get($trauma-colors, recursion), accent),
-            map-get(map-get($trauma-colors, recursion), primary)
+            map.get(map.get($trauma-colors, recursion), accent),
+            map.get(map.get($trauma-colors, recursion), primary)
           );
         }
 
         &.vb-displacement {
           background: radial-gradient(
             circle,
-            map-get(map-get($trauma-colors, displacement), accent),
-            map-get(map-get($trauma-colors, displacement), primary)
+            map.get(map.get($trauma-colors, displacement), accent),
+            map.get(map.get($trauma-colors, displacement), primary)
           );
         }
 
         &.vb-dissolution {
           background: radial-gradient(
             circle,
-            map-get(map-get($trauma-colors, dissolution), accent),
-            map-get(map-get($trauma-colors, dissolution), primary)
+            map.get(map.get($trauma-colors, dissolution), accent),
+            map.get(map.get($trauma-colors, dissolution), primary)
           );
         }
       }
@@ -1316,10 +1320,10 @@ $timing-functions: (
     .vb-welcome-message {
       color: rgb(255 255 255 / 90%);
       line-height: 1.6;
-      padding: map-get($spacing-units, xlarge);
+      padding: map.get($spacing-units, xlarge);
 
       p {
-        margin-bottom: map-get($spacing-units, large);
+        margin-bottom: map.get($spacing-units, large);
 
         &:last-child {
           margin-bottom: 0;
@@ -1339,42 +1343,42 @@ $timing-functions: (
       .vb-trauma-abandonment & {
         em,
         strong {
-          color: map-get(map-get($trauma-colors, abandonment), highlight);
+          color: map.get(map.get($trauma-colors, abandonment), highlight);
         }
       }
 
       .vb-trauma-fragmentation & {
         em,
         strong {
-          color: map-get(map-get($trauma-colors, fragmentation), highlight);
+          color: map.get(map.get($trauma-colors, fragmentation), highlight);
         }
       }
 
       .vb-trauma-surveillance & {
         em,
         strong {
-          color: map-get(map-get($trauma-colors, surveillance), highlight);
+          color: map.get(map.get($trauma-colors, surveillance), highlight);
         }
       }
 
       .vb-trauma-recursion & {
         em,
         strong {
-          color: map-get(map-get($trauma-colors, recursion), highlight);
+          color: map.get(map.get($trauma-colors, recursion), highlight);
         }
       }
 
       .vb-trauma-displacement & {
         em,
         strong {
-          color: map-get(map-get($trauma-colors, displacement), highlight);
+          color: map.get(map.get($trauma-colors, displacement), highlight);
         }
       }
 
       .vb-trauma-dissolution & {
         em,
         strong {
-          color: map-get(map-get($trauma-colors, dissolution), highlight);
+          color: map.get(map.get($trauma-colors, dissolution), highlight);
         }
       }
     }
@@ -1387,7 +1391,7 @@ $timing-functions: (
       cursor: pointer;
       display: block;
       font-size: 16px;
-      padding: map-get($spacing-units, large);
+      padding: map.get($spacing-units, large);
       transition: background-color 0.3s ease;
       width: 100%;
 

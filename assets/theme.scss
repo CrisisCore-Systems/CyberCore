@@ -1,4 +1,6 @@
-// ...existing code...
+// Add Sass module imports
+@use 'sass:color';
+@use 'sass:map';
 
 // Responsive images
 .responsive-image {
