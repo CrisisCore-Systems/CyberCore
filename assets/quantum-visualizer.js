@@ -1,139 +1,151 @@
-// quantum-visualizer.js
-// Provides QuantumVisualizer for rendering dynamic quantum grid and noise effects
-
 /**
- * QuantumVisualizer
- * Manages a Canvas2D-based visualization overlay (grid scan, noise, particles) on a target container.
+ * Quantum Visualizer 3.5.2
+ * Memory-entangled visual system for VoidBloom narrative manifestation
  */
-(function (window) {
-  'use strict';
 
-  // QuantumVisualizer constructor
-  function QuantumVisualizer() {
-    // This is a static class with no instances
+// Use global NeuralBus with fallback for module import
+let NeuralBus;
+
+class QuantumVisualizer {
+  constructor() {
+    this.dimensions = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      depth: window.innerWidth * 0.3,
+      time: Date.now(),
+    };
+
+    this.particles = [];
+    this.memories = [];
+    this.glitchFactor = 0.42;
+    this.initialized = false;
+
+    // Get NeuralBus reference
+    if (typeof window.NeuralBus !== 'undefined') {
+      NeuralBus = window.NeuralBus;
+    }
   }
 
-  // Store instances keyed by container
-  QuantumVisualizer._instances = new WeakMap();
+  initialize() {
+    if (this.initialized) return this;
 
-  /**
-   * Initialize the quantum visualizer on a container element.
-   * @param {HTMLElement} container - The DOM element to overlay the canvas on
-   * @param {Object} options - Config options
-   * @param {string} options.backgroundColor - CSS color for background overlay
-   * @param {string} options.gridColor - CSS color for grid lines
-   * @param {boolean} options.showNoise - Whether to overlay noise static
-   */
-  QuantumVisualizer.init = function (container, options = {}) {
-    if (!container || QuantumVisualizer._instances.has(container)) return;
-
-    const canvas = document.createElement('canvas');
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = options.zIndex || '9000';
-    container.appendChild(canvas);
-
-    // Use willReadFrequently hint for performance optimization when getting image data
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    const state = { container, canvas, ctx, options };
-    QuantumVisualizer._instances.set(container, state);
-
-    // Resize to match
-    const resize = () => {
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
+    // Load noise pattern with error handling
+    this.noisePattern = new Image();
+    this.noisePattern.crossOrigin = 'anonymous';
+    this.noisePattern.onerror = () => {
+      console.warn('Failed to load noise pattern, using fallback');
+      this._initializeWithoutPattern();
     };
-    resize();
-    window.addEventListener('resize', resize);
-    state._resizeHandler = resize;
+    this.noisePattern.onload = () => this._initializeMemoryParticles();
+    this.noisePattern.src = this._getAssetUrl('noise-pattern.png');
 
-    // Start animation
-    const animate = () => {
-      QuantumVisualizer._drawFrame(state);
-      state._raf = requestAnimationFrame(animate);
+    // Set timeout as fallback
+    setTimeout(() => {
+      if (!this.initialized) {
+        this._initializeWithoutPattern();
+      }
+    }, 2000);
+
+    return this;
+  }
+
+  _getAssetUrl(filename) {
+    // Recursively determine correct asset path with fallbacks
+    if (window.theme && window.theme.assets_url) {
+      return `${window.theme.assets_url}/${filename}`;
+    }
+
+    // Check if we're in Shopify context
+    if (typeof Shopify !== 'undefined' && Shopify.theme) {
+      return `${Shopify.theme.assets_url || '/cdn/shop/t/5/assets'}/${filename}`;
+    }
+
+    return `/cdn/shop/t/5/assets/${filename}`;
+  }
+
+  _initializeMemoryParticles() {
+    if (this.initialized) return;
+
+    // Generate memory-particle system
+    console.log('Memory particle system initialized with quantum entanglement');
+
+    // Initialize particles
+    for (let i = 0; i < 25; i++) {
+      this.particles.push({
+        x: Math.random() * this.dimensions.width,
+        y: Math.random() * this.dimensions.height,
+        z: Math.random() * this.dimensions.depth,
+        size: Math.random() * 5 + 2,
+        speed: Math.random() * 0.5 + 0.2,
+      });
+    }
+
+    // Register with NeuralBus if available
+    if (NeuralBus && NeuralBus.registerSystem) {
+      NeuralBus.registerSystem('visualizer', this);
+    } else {
+      console.warn('NeuralBus not available for visualization system registration');
+    }
+
+    this.initialized = true;
+    this.startRenderLoop();
+  }
+
+  _initializeWithoutPattern() {
+    if (this.initialized) return;
+
+    console.warn('Initializing visualizer without noise pattern');
+    this.noisePattern = null;
+    this._initializeMemoryParticles();
+  }
+
+  startRenderLoop() {
+    if (!this.initialized) return;
+
+    // Basic render loop
+    const renderFrame = () => {
+      // Update particle positions
+      this.particles.forEach((particle) => {
+        particle.z -= particle.speed;
+        if (particle.z < 0) {
+          particle.z = this.dimensions.depth;
+          particle.x = Math.random() * this.dimensions.width;
+          particle.y = Math.random() * this.dimensions.height;
+        }
+      });
+
+      requestAnimationFrame(renderFrame);
     };
-    animate();
-  };
 
-  /**
-   * Destroy the visualizer instance on a container.
-   * @param {HTMLElement} container
-   */
-  QuantumVisualizer.destroy = function (container) {
-    const state = QuantumVisualizer._instances.get(container);
-    if (!state) return;
-    cancelAnimationFrame(state._raf);
-    window.removeEventListener('resize', state._resizeHandler);
-    state.container.removeChild(state.canvas);
-    QuantumVisualizer._instances.delete(container);
-  };
+    renderFrame();
+  }
 
-  // Internal: draw a single frame
-  QuantumVisualizer._drawFrame = function (state) {
-    const { ctx, canvas, options } = state;
-    const w = canvas.width;
-    const h = canvas.height;
+  // API for neural bus integration
+  applyTraumaEffect(intensity) {
+    this.glitchFactor = Math.min(0.8, intensity * 0.1);
+    return this;
+  }
+}
 
-    // Clear
-    ctx.clearRect(0, 0, w, h);
+// Initialize and export
+const visualizer = new QuantumVisualizer();
 
-    // Background tint
-    if (options.backgroundColor) {
-      ctx.fillStyle = options.backgroundColor;
-      ctx.fillRect(0, 0, w, h);
-    }
+// CommonJS
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { visualizer };
+}
 
-    // Grid scanning effect
-    const gridSize = options.gridSize || 50;
-    ctx.strokeStyle = options.gridColor || 'rgba(255,255,255,0.05)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (let x = 0; x <= w; x += gridSize) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, h);
-    }
-    for (let y = 0; y <= h; y += gridSize) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(w, y);
-    }
-    ctx.stroke();
+// AMD
+if (typeof define === 'function' && define.amd) {
+  define([], function () {
+    return { visualizer };
+  });
+}
 
-    // Noise overlay
-    if (options.showNoise) {
-      // Reduce the size of the area we process to improve performance
-      const downsampleFactor = 2; // Process 1/4 of the pixels
-      const processWidth = Math.max(1, Math.floor(w / downsampleFactor));
-      const processHeight = Math.max(1, Math.floor(h / downsampleFactor));
+// Global variable
+if (typeof window !== 'undefined') {
+  window.quantumVisualizer = visualizer;
+}
 
-      // Only read a smaller portion of the canvas to prevent GPU stalls
-      const imageData = ctx.getImageData(0, 0, processWidth, processHeight);
-      const data = imageData.data;
-
-      // Apply noise effect to the data
-      for (let i = 0; i < data.length; i += 4) {
-        const v = (Math.random() * 255) | 0;
-        data[i] = data[i] ^ v;
-        data[i + 1] = data[i + 1] ^ v;
-        data[i + 2] = data[i + 2] ^ v;
-      }
-
-      // Put the modified data back
-      ctx.putImageData(imageData, 0, 0);
-
-      // Scale the modified area to fill the canvas
-      // This avoids having to read/modify every pixel
-      if (w > processWidth || h > processHeight) {
-        ctx.globalAlpha = 0.7; // Reduce intensity of the stretched noise
-        ctx.drawImage(canvas, 0, 0, processWidth, processHeight, 0, 0, w, h);
-        ctx.globalAlpha = 1.0;
-      }
-    }
-  };
-
-  // Expose globally
-  window.QuantumVisualizer = QuantumVisualizer;
-})(typeof window !== 'undefined' ? window : this);
+// ES Module export
+export { visualizer };

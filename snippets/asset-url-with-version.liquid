@@ -1,0 +1,19 @@
+{% comment %}
+  Adds versioning to asset URLs to prevent caching issues and MIME type errors
+
+  Usage:
+  {% render 'asset-url-with-version', asset: 'theme.css' %}
+  {% render 'asset-url-with-version', asset: 'neural-bus.js' %}
+{% endcomment %}
+
+{%- assign version_suffix = '?v=' -%}
+
+{%- if settings.use_asset_versioning -%}
+  {%- if settings.asset_version != blank -%}
+    {%- assign version_suffix = version_suffix | append: settings.asset_version -%}
+  {%- else -%}
+    {%- assign version_suffix = version_suffix | append: 'timestamp' | date: '%s' -%}
+  {%- endif -%}
+{%- endif -%}
+
+{{ asset | asset_url | append: version_suffix }}

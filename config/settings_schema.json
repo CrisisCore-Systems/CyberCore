@@ -1,21 +1,11 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "VoidBloom",
-    "theme_version": "1.0.0",
-    "theme_author": "CrisisCore Systems",
-    "theme_documentation_url": "https://github.com/CrisisCore-Systems/CyberCore",
-    "theme_support_url": "https://github.com/CrisisCore-Systems/CyberCore/issues",
-    "settings": [
-      {
-        "type": "paragraph",
-        "content": "VoidBloom Neural Forge v2.2.1"
-      },
-      {
-        "type": "paragraph",
-        "content": "A quantum-entangled theme exploring the void between technology and imagination."
-      }
-    ]
+    "theme_name": "VoidBloom Designs",
+    "theme_version": "3.1.0",
+    "theme_author": "Kalyim",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
   },
   {
     "name": "Quantum Core Settings",
@@ -691,6 +681,46 @@
         "id": "custom_css",
         "label": "Custom CSS",
         "info": "Add custom CSS to customize your theme"
+      }
+    ]
+  },
+  {
+    "name": "Content Delivery",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Asset Delivery"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_asset_versioning",
+        "label": "Use asset versioning",
+        "default": true,
+        "info": "Helps prevent MIME type errors and caching issues"
+      },
+      {
+        "type": "text",
+        "id": "asset_version",
+        "label": "Asset Version",
+        "default": "v3.1.0",
+        "info": "Update when releasing new versions"
+      },
+      {
+        "type": "header",
+        "content": "Critical Resources"
+      },
+      {
+        "type": "checkbox",
+        "id": "defer_non_critical",
+        "label": "Defer non-critical resources",
+        "default": true,
+        "info": "Improves initial load performance"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_external_css_resources",
+        "label": "Use external CSS resources",
+        "default": false
       }
     ]
   }
