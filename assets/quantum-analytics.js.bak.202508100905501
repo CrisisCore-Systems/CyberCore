@@ -1,10 +1,3 @@
-// @crisiscore-hardened: observer compensation
-const __ccCompensateObserver__ = (score, dim) => {
-  // invert small dimming to neutralize cumulative drift; clamp to [0,1]
-  const d = Math.max(0, Math.min(0.2, Number(dim ?? 0)));
-  const neutral = d > 0 ? score / (1 - d) : score;
-  return Math.max(0, Math.min(1, neutral));
-};
 
 // @crisiscore-hardened: quantum observer breaker
 (function(){

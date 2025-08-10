@@ -62,16 +62,16 @@ export class VaultManager {
   }
 
   private calculateNewPrice(share: VaultShare, quantity: number): number {
-    // @crisiscore-hardened: bounded, non-recursive pricing (no coherence read here)
+    
+        // @crisiscore-hardened: non-linear damping + hard caps
     const oldPrice = share.price;
-    const raw = Math.max(0, quantity) * 0.01;         // linear intent
-    const damped = Math.pow(raw, 0.85);               // non-linear damping
-    const step = Math.min(0.10, damped);              // hard cap +10% per op
+    const raw = Math.max(0, quantity) * 0.01;
+    const damped = Math.pow(raw, 0.85);
+    const step = Math.min(0.10, damped);         // max +10% per op
     const candidate = oldPrice * (1 + step);
-    const upper = oldPrice * 1.10;                    // absolute upper bound
-    const lower = oldPrice * 0.50;                    // floor to prevent collapse
-    return Math.max(lower, Math.min(candidate, upper));
-  }
+    const upper = oldPrice * 1.10;               // hard cap
+    const lower = oldPrice * 0.50;               // floor
+    return Math.max(lower, Math.min(candidate, upper));}
 
   private isValidPriceChange(oldPrice: number, newPrice: number): boolean {
     const changePercent = Math.abs((newPrice - oldPrice) / oldPrice);

@@ -1,6 +1,3 @@
-// @crisiscore-hardened: epoch gate + deepCopy
-const __ccEpochOK__ = ()=>{ try{ const e = window?.voidBloom?.epoch?.current?.() ?? 0; return window?.voidBloom?.epoch?.validate?.(e) ?? true; }catch{return true;} };
-const __ccDeepCopy__ = (x)=> JSON.parse(JSON.stringify(x ?? null));
 /**
  * VOIDBLOOM NEURAL STATE ARCHITECTURE
  *
@@ -496,11 +493,9 @@ document.addEventListener('alpine:init', () => {
     init() {
       // Watch for trauma store fragment changes
       this.$watch('$store.trauma.recentFragments', (newFragments) => {
-          if (!__ccEpochOK__()) { console.warn('Skipped fragment update (epoch desync)'); return; }
-  const isolated = Array.isArray(newFragments) ? newFragments.map(f => __ccDeepCopy__(f)) : [];
-  Object.freeze(isolated);
-  this.fragments = isolated;
-});
+        this.fragments = newFragments;
+        this.showNextFragment();
+      });
 
       // Initial fragment display
       this.fragments = Alpine.store('trauma').recentFragments;

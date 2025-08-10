@@ -1,12 +1,3 @@
-// @crisiscore-hardened: epoch residue registry
-const __ccEpochResidue__ = (function(){
-  const seen = new Set<number>();
-  return {
-    mark: (e:number)=>seen.add(e),
-    clear:(e:number)=>seen.delete(e),
-    has:  (e:number)=>seen.has(e)
-  };
-})();
 /**
  * @file AtomicEpoch.ts 
  * Implements atomic epoch management with validation barriers
@@ -26,17 +17,12 @@ export class AtomicEpoch {
     while (Atomics.compareExchange(this.syncBuffer, this.EPOCH_LOCK, 0, 1) !== 0) {
       Atomics.wait(this.syncBuffer, this.EPOCH_LOCK, 1);
     }
+
     try {
-      const newEpoch = Atomics.add(this.syncBuffer, 1, 1);
-      // mark prior epoch as cleared
-      try { __ccEpochResidue__.clear(newEpoch - 1); } catch {}
+      const newEpoch = Atomics.add(this.syncBuffer, this.EPOCH_SLOT, 1);
       this.validateEpochTransition(newEpoch);
       return newEpoch;
     } finally {
-      Atomics.store(this.syncBuffer, this.EPOCH_LOCK, 0);
-      Atomics.notify(this.syncBuffer, this.EPOCH_LOCK, 1);
-    }
-  } finally {
       // Release lock
       Atomics.store(this.syncBuffer, this.EPOCH_LOCK, 0);
       Atomics.notify(this.syncBuffer, this.EPOCH_LOCK, 1);
@@ -63,12 +49,8 @@ export class AtomicEpoch {
   }
 
   private static hasGhostState(epoch: number): boolean {
-    try {
-      // consult host if available; otherwise use internal residue tracker
-      const hostCheck = (globalThis as any)?.voidBloom?.epoch?.isClean?.(epoch);
-      if (typeof hostCheck === 'boolean') return !hostCheck;
-    } catch {}
-    return __ccEpochResidue__.has(epoch);
+    // TODO: Integrate with your state registry to confirm cleanup per-epoch
+    return false;
   }
 
   private static hasTimeAnomaly(epoch: number): boolean {
