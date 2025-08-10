@@ -278,9 +278,7 @@ export class QuantumAnalytics {
    * Record a coherence snapshot
    */
   recordCoherenceSnapshot() {
-        // @crisiscore-hardened: observation guard
-  if (!globalThis.__CrisisCoreBreaker__.can('coherenceSnapshot')) return;
-// CRISISCORE-HARDENED: observation guard
+      // CRISISCORE-HARDENED: observation guard
   if (!globalThis.__CrisisCoreBreaker__.can('coherenceSnapshot')) return;
 if (!this.persistence) return;
 
