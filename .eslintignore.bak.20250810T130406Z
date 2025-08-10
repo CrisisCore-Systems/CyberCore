@@ -5,7 +5,7 @@ coverage/
 test-results/
 
 # Problematic files with advanced JS features
-# crisiscore: was excluded -> assets/cart-system.js
+assets/cart-system.js
 # crisiscore: re-enabled linting assets/trauma-visualizer.js
 # crisiscore: re-enabled linting assets/js/ritual-engine/core/trauma-assessment.js
 # crisiscore: re-enabled linting assets/js/ritual-engine/vectors/narrative-assessment.js
