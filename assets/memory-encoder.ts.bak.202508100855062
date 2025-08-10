@@ -1,27 +1,3 @@
-
-// @crisiscore-hardened helpers (trauma)
-class TraumaDampener {
-  private readonly MAX_TRAUMA = 5;
-  private readonly DAMPING_FACTOR = 0.85;
-  damp(level:number){ return Math.min(Math.max(0, level) * this.DAMPING_FACTOR, this.MAX_TRAUMA); }
-}
-class CoherenceGate {
-  private readonly MIN = 0.30;
-  ok(x:number){ return (x ?? 0) >= this.MIN; }
-}
-class TimeGate {
-  okEpoch(){
-    try {
-      const e = (globalThis as any)?.window?.voidBloom?.epoch?.current?.() ?? 0;
-      return (globalThis as any)?.window?.voidBloom?.epoch?.validate?.(e) ?? true;
-    } catch { return true; }
-  }
-}
-class NeuralIsolator {
-  private readonly perms = new WeakMap<any, Set<string>>();
-  grant(src:any, key:string){ if(!this.perms.has(src)) this.perms.set(src, new Set()); this.perms.get(src)!.add(key); }
-  check(src:any, key:string){ return !!this.perms.get(src)?.has(key); }
-}
 /**
  * Memory Encoder System
  * Handles trauma-encoded memory operations for the cart system
@@ -114,19 +90,21 @@ export class MemoryEncoder {
    * Connect to NeuralBus for event tracking
    */
   #connectToNeuralBus(): void {
-      // @crisiscore-hardened: neural-isolation + bounds
-  const __gate__ = new CoherenceGate();
-  const __iso__  = new NeuralIsolator();
-  __iso__.grant(this, 'trauma:level-changed');
-  NeuralBus.subscribe('trauma:level-changed', (data:any) => {
-    if (!__iso__.check(this, 'trauma:level-changed')) return;
-    const lvl = Math.max(0, Math.min(5, Number(data?.level ?? 0)));
-    const coh = Number(data?.coherence ?? 1);
-    if (!__gate__.ok(coh)) { console.warn('Dropped trauma bus event: low coherence'); return; }
-    this.#traumaLevels.set(String(data?.productId ?? ''), lvl);
-  });
-}
+    if (typeof NeuralBus === 'undefined') return;
 
+    try {
+      NeuralBus.register('memory-encoder', {
+        version: '1.0.0',
+        capabilities: ['trauma-encoding', 'memory-visualization'],
+      });
+
+      this.#neuralBusConnected = true;
+
+      // Subscribe to relevant events
+      NeuralBus.subscribe('trauma:level-changed', (data) => {
+        if (data.productId && typeof data.level === 'number') {
+          this.#traumaLevels.set(data.productId.toString(), data.level);
+        }
       });
     } catch (e) {
       console.warn('Failed to connect memory-encoder to NeuralBus:', e);
@@ -382,16 +360,15 @@ export class MemoryEncoder {
    * Apply enhanced trauma visualization with dynamic effects
    */
   #applyEnhancedVisualization(element: HTMLElement, level: number, pattern: TraumaPattern): void {
-      const __tg__ = new TimeGate();
-  if (!__tg__.okEpoch()) { console.warn('Blocked visualization (epoch desync)'); return; }
-  const __damp__ = new TraumaDampener();
-  const __lvl__ = __damp__.damp(level);
-  element.dataset.traumaTimestamp = Date.now().toString();
-  if (__lvl__ >= 3) {
-    element.style.setProperty('--trauma-erosion', pattern.memoryErosion.toString());
-  }
-}
-`;
+    // Apply standard effects first
+    this.#applyStandardVisualization(element, level, pattern);
+
+    // Additional enhanced effects
+    if (level >= 3) {
+      // Create and add a pulsing overlay element
+      const pulseElement = document.createElement('div');
+      pulseElement.className = 'trauma-pulse-overlay';
+      pulseElement.style.opacity = `${0.2 * level}`;
       element.appendChild(pulseElement);
 
       // Set additional trauma properties
