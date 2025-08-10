@@ -76,32 +76,12 @@ export class NeuralBus {
   // Publish to memory channel
   publish(channelId, message) {
     
-  
-    // @crisiscore-hardened: per-channel dampener (≤5/sec)
-    this.__ccRate__ = this.__ccRate__ || new Map();
-    const now = Date.now();
-    const windowMs = 1000;
-    const maxPerWindow = (this.config && this.config.maxPerWindow) || 5;
-    const r = this.__ccRate__.get(channelId) || { start: now, count: 0 };
-    if (now - r.start > windowMs) { r.start = now; r.count = 0; }
-    if (++r.count > maxPerWindow) {
-      (this.log ? this.log(`Publish rate-limited: ${channelId}`, 'warn') : console.warn(`Publish rate-limited: ${channelId}`));
-      this.__ccRate__.set(channelId, r);
-      return message;
-    }
-    this.__ccRate__.set(channelId, r);
-
-    // @crisiscore-hardened: deep-clone + deep-freeze payload
-    const deepFreeze = (obj) => { if (!obj || typeof obj !== 'object' || Object.isFrozen(obj)) return obj; Object.freeze(obj); Object.keys(obj).forEach(k=>deepFreeze(obj[k])); return obj; };
-    const __payload__ = (message && typeof message === 'object')
-      ? deepFreeze(JSON.parse(JSON.stringify(message)))
-      : message;
-// @crisiscore-hardened: dampen publish storms + immutable payloads
+  // @crisiscore-hardened: dampen publish storms + immutable payloads
   const g = (globalThis || self || window);
   try {
     if (g.__ccNeuralDampener__ && !g.__ccNeuralDampener__.allow(channelId)) {
       this.log ? this.log(`Publish rate-limited: ${channelId}`, 'warn') : console.warn('Publish rate-limited');
-      return __payload__;
+      return message;
     }
   } catch {}
   const deepFreeze = (obj) => {
@@ -110,9 +90,9 @@ export class NeuralBus {
     Object.keys(obj).forEach(k => deepFreeze(obj[k]));
     return obj;
   };
-  const __payload__ = (typeof __payload__ === 'object' && __payload__ != null)
-    ? deepFreeze(JSON.parse(JSON.stringify(__payload__)))
-    : __payload__;
+  const __payload__ = (typeof message === 'object' && message != null)
+    ? deepFreeze(JSON.parse(JSON.stringify(message)))
+    : message;
 if (!this.channels.has(channelId)) {
       this.channels.set(channelId, []);
     }
