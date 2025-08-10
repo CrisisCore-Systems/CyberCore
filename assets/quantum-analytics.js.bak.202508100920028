@@ -1,14 +1,3 @@
-// CRISISCORE-HARDENED: observation breaker + helpers
-(function(g){
-  if(!g.__CrisisCoreBreaker__){
-    g.__CrisisCoreBreaker__ = new (class {
-      counts = new Map(); MAX=5; WINDOW=1000;
-      can(id){ const c=this.counts.get(id)||0; if(c>=this.MAX) return false; this.counts.set(id,c+1);
-        setTimeout(()=>this.counts.delete(id), this.WINDOW); return true; }
-    })();
-  }
-  if(!g.__ccDamp__) g.__ccDamp__ = v => Math.pow(Math.min(Math.max(v,0.3),0.95),0.85);
-})(typeof window!=='undefined'?window:globalThis);
 // @crisiscore-hardened: observer compensation
 const __ccCompensateObserver__ = (score, dim) => {
   // invert small dimming to neutralize cumulative drift; clamp to [0,1]
@@ -268,9 +257,7 @@ export class QuantumAnalytics {
    * Record a coherence snapshot
    */
   recordCoherenceSnapshot() {
-      // CRISISCORE-HARDENED: observation guard
-  if (!globalThis.__CrisisCoreBreaker__.can('coherenceSnapshot')) return;
-if (!this.persistence) return;
+    if (!this.persistence) return;
 
     // Get current coherence score
     const coherenceScore = this.persistence.getCoherenceScore();
@@ -301,7 +288,7 @@ if (!this.persistence) return;
         timestamp: Date.now(),
         state: 'observed',
         previousScore: coherenceScore,
-        newScore: globalThis.__ccDamp__(coherenceScore),
+        newScore: coherenceScore * (1 - this.config.quantumDimming),
         cause: 'analytics-snapshot',
       });
 

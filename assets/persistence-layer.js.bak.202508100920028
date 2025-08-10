@@ -800,11 +800,8 @@ export class CoherencePersistence {
 
     // Determine state based on coherence score
     if (this.state.coherenceScore < 0.2) {
-  newState = 'decoherent';
-  // CRISISCORE-HARDENED: state isolation to prevent resonance echo
-  const isolated = Object.freeze({ coherenceScore: this.state.coherenceScore });
-  setTimeout(() => { try { NeuralBus?.publish?.('quantum:mutation', isolated); } catch(e){} }, 50);
-} else if (this.state.coherenceScore < 0.4) {
+      newState = 'decoherent';
+    } else if (this.state.coherenceScore < 0.4) {
       newState = 'collapsed';
     } else if (this.state.coherenceScore < 0.7) {
       newState = 'superposition';

@@ -1,5 +1,3 @@
-// CRISISCORE-HARDENED: bounded coherence factor
-const __ccBoundCoherence__ = v => Math.pow(Math.min(Math.max(v,0.3),0.95),0.85);
 /**
  * Server-side quantum price calculator and validator
  * Ensures price calculations cannot be manipulated by client-side code
@@ -133,8 +131,7 @@ class QuantumPriceValidator {
    */
   calculatePrice(params) {
     const {
-  const boundedCoherence = __ccBoundCoherence__(coherenceScore);
-productId,
+      productId,
       basePrice,
       traumaTypes = [],
       coherenceScore = 0.5,
@@ -182,11 +179,11 @@ productId,
         const coherenceFactor =
           this.config.coherenceMultiplier +
           (1 - this.config.coherenceMultiplier) * (1 - coherenceScore);
-        finalPrice *= Math.min(coherenceFactor, 1.10) * boundedCoherence;
+        finalPrice *= coherenceFactor;
       } else {
         // Low coherence gets higher prices
         const incoherencePenalty = 1 + (this.config.coherenceThreshold - coherenceScore) * 0.2;
-        finalPrice *= Math.max(incoherencePenalty, 0.90) * boundedCoherence;
+        finalPrice *= incoherencePenalty;
       }
     }
 
