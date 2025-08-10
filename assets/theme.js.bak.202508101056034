@@ -247,50 +247,10 @@ function createMinimalNeuralBus() {
       return id;
     },
     publish(event, data) {
-      
-// @crisiscore-hardened: theme publish proxy
-try {
-  const deepFreeze = (obj) => {
-    if (!obj || typeof obj !== 'object' || Object.isFrozen(obj)) return obj;
-    Object.freeze(obj);
-    for (const k of Object.keys(obj)) deepFreeze(obj[k]);
-    return obj;
-  };
-
-  // if the hardened NeuralBus exists, delegate to it
-  if (globalThis.NeuralBus && typeof globalThis.NeuralBus.publish === 'function') {
-    return globalThis.NeuralBus.publish(event, data);
-  }
-
-  // Fallback: local no-storm guard (≤5/sec per topic) + immutable payload
-  this.__ccRate__ = this.__ccRate__ || new Map();
-  const now = Date.now();
-  const windowMs = 1000, maxPerWindow = 5;
-  const r = this.__ccRate__.get(event) || { start: now, count: 0 };
-  if (now - r.start > windowMs) { r.start = now; r.count = 0; }
-  if (++r.count > maxPerWindow) {
-    console.warn('[theme.publish] rate-limited', event);
-    this.__ccRate__.set(event, r);
-    return;
-  }
-  this.__ccRate__.set(event, r);
-
-  const frozen = (data && typeof data === 'object')
-    ? deepFreeze(JSON.parse(JSON.stringify(data)))
-    : data;
-
-  // deliver via whatever theme uses internally (if any)
-  if (typeof this._deliver === 'function') {
-    return this._deliver(event, frozen);
-  }
-  // or stash to a simple channel if present
-  this.__themeBus__ = this.__themeBus__ || {};
-  (this.__themeBus__[event] = this.__themeBus__[event] || []).push({ t: now, data: frozen });
-  return frozen;
-} catch (e) {
-  console.error('[theme.publish] hardening error', e);
-}
-
+      const callbacks = this.subscriptions.get(event) || [];
+      callbacks.forEach((sub) => {
+        try {
+          sub.callback(data);
         } catch (e) {
           console.error(e);
         }

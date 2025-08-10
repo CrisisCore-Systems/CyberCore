@@ -1,12 +1,22 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Run lint-staged
-npx lint-staged
+# Lint staged with the CrisisCore overlay config (does not touch your base config)
+npx lint-staged -c .lintstagedrc || {
+  echo "lint-staged failed"; exit 1;
+}
 
-# CrisisCore vector analysis
-node scripts/crisis-core-audit.js --pre-commit
-if [ $? -ne 0 ]; then
-  echo "CrisisCore audit failed - fix critical vectors before committing"
+# Run ESLint with the overlay on staged JS/TS files as an extra guard
+STAGED=$(git diff --cached --name-only --diff-filter=ACMRT | grep -E '\.(js|ts|tsx)$' || true)
+[ -z "$STAGED" ] || npx eslint -c scripts/.eslintrc.crisiscore.cjs $STAGED || {
+  echo "ESLint (CrisisCore overlay) failed"; exit 1;
+}
+
+# CrisisCore collapse checks
+node scripts/check-collapse-vectors.js || {
+  echo "⚠️  CRISIS: Collapse vectors detected. Fix before committing."
   exit 1
-fi
+}
+
+# Neural cascade heuristic (warn-only; does not block commit)
+node scripts/neural-cascade-check.js || true
