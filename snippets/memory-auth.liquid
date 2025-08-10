@@ -1,3 +1,20 @@
+
+// @crisiscore-hardened: epoch barrier for auth token writes
+(function(){
+  if (typeof window === 'undefined') return;
+  if (!window.__vbSetAuthToken__) {
+    window.__vbSetAuthToken__ = function(val){
+      try {
+        const __curr = window?.voidBloom?.epoch?.current?.() ?? 0;
+        const __ok   = window?.voidBloom?.epoch?.validate?.(__curr__) ?? true;
+        if (!__ok) throw new Error("Epoch desync");
+        window.__vbSetAuthToken__(val)
+      } catch (e) {
+        console.warn("Auth token write blocked by epoch barrier", e);
+      }
+    };
+  }
+})();
 {% comment %}
   VoidBloom Memory Authentication System
   Provides secure access controls for memory fragments and trauma encodings
@@ -207,7 +224,7 @@
     const __curr__ = window?.voidBloom?.epoch?.current?.() ?? 0;
     const __ok__   = window?.voidBloom?.epoch?.validate?.(__curr__) ?? true;
     if (!__ok__) throw new Error("Epoch desync");
-    localStorage.setItem("voidbloom_auth_token", token);
+    window.__vbSetAuthToken__(token)
   } catch (e) {
     console.warn("Auth token write blocked by epoch barrier", e);
   }

@@ -1,3 +1,18 @@
+
+// @crisiscore-hardened: global epoch guard for quantum cart mutation
+(function(){
+  if (typeof window === 'undefined') return;
+  if (!window.__vbQAddItem__) {
+    window.__vbQAddItem__ = function() {
+      try {
+        const __e = window?.voidBloom?.epoch?.current?.() ?? 0;
+        const __ok = window?.voidBloom?.epoch?.validate?.(__e) ?? true;
+        if (!__ok) { console.warn("Blocked quantum cart mutation due to epoch desync"); return; }
+      } catch(_e) { /* non-fatal */ }
+      return window.enhancedCart.addItemWithQuantumEffect.apply(window.enhancedCart, arguments);
+    };
+  }
+})();
 /**
  * Quantum Hologram Visualizer
  * Provides 3D holographic effects for product displays with quantum-themed
@@ -840,7 +855,7 @@ class QuantumHologram {
   const __epoch__ = window?.voidBloom?.epoch?.current?.() ?? 0;
   const __ok__    = window?.voidBloom?.epoch?.validate?.(__epoch__) ?? true;
   if (!__ok__) { console.warn("Blocked quantum cart mutation due to epoch desync"); return; }
-window.enhancedCart.addItemWithQuantumEffect(variantId, 1);
+window.__vbQAddItem__(variantId, 1);
     } else {
       // Fallback to standard cart API
       fetch('/cart/add.js', {
