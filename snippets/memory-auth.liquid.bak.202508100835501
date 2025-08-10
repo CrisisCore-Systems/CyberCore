@@ -202,15 +202,7 @@
          * Store authentication token
          */
         storeAuthToken(token, expiry) {
-          // @crisiscore-hardened: epoch barrier to prevent ghost auth states
-  try {
-    const __curr__ = window?.voidBloom?.epoch?.current?.() ?? 0;
-    const __ok__   = window?.voidBloom?.epoch?.validate?.(__curr__) ?? true;
-    if (!__ok__) throw new Error("Epoch desync");
-    localStorage.setItem("voidbloom_auth_token", token);
-  } catch (e) {
-    console.warn("Auth token write blocked by epoch barrier", e);
-  }
+          localStorage.setItem('voidbloom_auth_token', token);
           localStorage.setItem('voidbloom_auth_expiry', expiry.toString());
         }
 

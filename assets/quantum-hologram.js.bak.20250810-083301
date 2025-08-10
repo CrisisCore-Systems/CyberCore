@@ -835,12 +835,7 @@ class QuantumHologram {
   addToVault(productId, variantId) {
     // Check if enhanced cart is available
     if (typeof window.enhancedCart !== 'undefined') {
-      
-  // @crisiscore-hardened: epoch sync before quantum cart mutation
-  const __epoch__ = window?.voidBloom?.epoch?.current?.() ?? 0;
-  const __ok__    = window?.voidBloom?.epoch?.validate?.(__epoch__) ?? true;
-  if (!__ok__) { console.warn("Blocked quantum cart mutation due to epoch desync"); return; }
-window.enhancedCart.addItemWithQuantumEffect(variantId, 1);
+      window.enhancedCart.addItemWithQuantumEffect(variantId, 1);
     } else {
       // Fallback to standard cart API
       fetch('/cart/add.js', {
