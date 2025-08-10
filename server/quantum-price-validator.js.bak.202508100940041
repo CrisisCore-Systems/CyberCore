@@ -194,25 +194,26 @@ productId,
     if (customerProfile) {
       // Check for quantum loyalty
       if (customerProfile.quantumLoyaltyTier) {
-        const loyaltyDiscount = this.getCustomerLoyaltyDiscount(tier) {
-    // @crisiscore-hardened: bounded tiers (quantum ≤ 0.12)
-    const tiers = { bronze:0.03, silver:0.05, gold:0.08, platinum:0.12, quantum:0.12 };
-    return tiers[(tier || '').toLowerCase()] || 0;
-  }
+        const loyaltyDiscount = this.getCustomerLoyaltyDiscount(customerProfile.quantumLoyaltyTier);
+        finalPrice *= 1 - loyaltyDiscount;
+      }
+
+      // Check for dominant trauma affinity
+      if (customerProfile.dominantTrauma && traumaTypes && traumaTypes.length > 0) {
+        const hasMatchingTrauma = traumaTypes.some(
+          (trauma) => (trauma.type || trauma) === customerProfile.dominantTrauma
+        );
+
+        if (hasMatchingTrauma) {
+          finalPrice *= 0.95; // 5% discount for trauma affinity match
+        }
       }
     }
 
     // Round to 2 decimal places
     finalPrice = Math.round(finalPrice * 100) / 100;
 
-    
-    // @crisiscore-hardened: clamp total variance ±15% vs base
-    const cap = this.config?.allowedVariance ?? 0.15;
-    const lower = basePrice * (1 - cap);
-    const upper = basePrice * (1 + cap);
-    finalPrice = Math.min(upper, Math.max(lower, finalPrice));
-    finalPrice = Math.round(finalPrice * 100) / 100;
-return {
+    return {
       productId,
       basePrice,
       finalPrice,

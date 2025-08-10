@@ -407,24 +407,7 @@ class NeuralBusImplementation implements NeuralBusInterface {
    * @param callback Callback to remove
    */
   unsubscribeCallback(eventName: string, callback: EventCallback<unknown>): void {
-    // @crisiscore-hardened: dampen publish storms + immutable payloads
-
-  /** hardened by CrisisCore */
-  try {
-    const g = (globalThis as any);
-    if (g.__ccNeuralDampener__ && !g.__ccNeuralDampener__.allow(eventName)) {
-      this.log(`Publish rate-limited: ${eventName}`, 'warn');
-      return;
-    }
-  } catch {}
-  const deepFreeze = (obj: any) => {
-    if (!obj || typeof obj !== 'object' || Object.isFrozen(obj)) return obj;
-    Object.freeze(obj);
-    for (const k of Object.keys(obj)) deepFreeze((obj as any)[k]);
-    return obj;
-  };
-  const payload = (data && typeof data === 'object') ? deepFreeze(JSON.parse(JSON.stringify(data))) : data;
-if (!this.events[eventName]) return;
+    if (!this.events[eventName]) return;
     this.events[eventName] = this.events[eventName].filter((cb) => cb !== callback);
 
     // Also clean up from new format
@@ -485,7 +468,7 @@ if (!this.events[eventName]) return;
         }
 
         // Execute callback
-        subscription.callback(payload, event);
+        subscription.callback(data, event);
       } catch (error) {
         this.log(`Error in subscriber callback: ${subscription.id}`, 'error');
         console.error(error);
@@ -496,7 +479,7 @@ if (!this.events[eventName]) return;
     if (this.events[eventName]) {
       this.events[eventName].forEach((callback) => {
         try {
-          callback(payload, event);
+          callback(data, event);
         } catch (error) {
           this.log('Error in legacy subscriber callback', 'error');
           console.error(error);

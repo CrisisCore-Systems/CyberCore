@@ -575,36 +575,3 @@
     });
   </script>
 {% endif %}
-
-<script>
-// @crisiscore-hardened: deterministic memory checksum verification + epoch gate
-(function(){
-  function epochOK(){
-    try {
-      const e = window?.voidBloom?.epoch?.current?.();
-      return window?.voidBloom?.epoch?.validate?.(e) === true;
-    } catch { return true; }
-  }
-  async function verifyMemoryChecksumDeterministic() {
-    try { if (window?.voidBloom?.auth?.verifyChecksum) return !!(await window.voidBloom.auth.verifyChecksum()); } catch(e){ console.warn('[MemoryAuth] verifier error', e); }
-    if (window?.voidBloom?.auth?.verifySignedNonce) { try { return !!(await window.voidBloom.auth.verifySignedNonce()); } catch {} }
-    return false; // fail closed w/o verifier
-  }
-  window.__ccPatchAuthChecksum__ = async function(self){
-    if (!epochOK()) { console.warn('[MemoryAuth] dropped checksum (epoch desync)'); return; }
-    const ok = await verifyMemoryChecksumDeterministic();
-    if (ok) {
-      self.state.memoryChecksumValid = true;
-      self.state.currentAuthLevel = 3;
-      self.resetFailedAttempts?.();
-      window?.voidBloom?.neuralBus?.transmit?.('auth', {
-        action:'auth_level_changed', oldLevel:2, newLevel:3, source:'memory_checksum', timestamp:Date.now()
-      });
-      self.protectTraumaEncodedElements?.();
-    } else {
-      console.error('[MemoryAuth] Memory checksum verification failed');
-      self.handleAuthFailure?.('memory_checksum_invalid');
-    }
-  };
-})();
-</script>
