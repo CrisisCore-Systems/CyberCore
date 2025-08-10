@@ -182,11 +182,11 @@ productId,
         const coherenceFactor =
           this.config.coherenceMultiplier +
           (1 - this.config.coherenceMultiplier) * (1 - coherenceScore);
-        finalPrice *= Math.min(coherenceFactor, 1.10) * boundedCoherence;
+        finalPrice *= Math.min(coherenceFactor, 1.10) ;
       } else {
         // Low coherence gets higher prices
         const incoherencePenalty = 1 + (this.config.coherenceThreshold - coherenceScore) * 0.2;
-        finalPrice *= Math.max(incoherencePenalty, 0.90) * boundedCoherence;
+        finalPrice *= Math.max(incoherencePenalty, 0.90) ;
       }
     }
 

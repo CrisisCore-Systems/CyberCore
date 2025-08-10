@@ -139,7 +139,69 @@ export interface NeuralBusInterface {
    * @param data Data to pass to subscribers
    * @param options Publishing options
    */
-  publish(eventName: string, data?: unknown, options?: { source?: string }): void;
+  publish(eventName: string, data?: unknown, options?: {
+// @crisiscore-hardened: per-topic dampener (≤5/sec) + deep-freeze payload
+    (this as any).__ccRate__ = (this as any).__ccRate__ || new Map<string, { start: number; count: number }>();
+    const now = Date.now();
+    const windowMs = 1000;
+    const maxPerWindow = ((this as any).config && (this as any).config.maxPerWindow) || 5;
+    const r = (this as any).__ccRate__.get(eventName) || { start: now, count: 0 };
+    if (now - r.start > windowMs) { r.start = now; r.count = 0; }
+    if (++r.count > maxPerWindow) {
+      (this as any).log?.(`Publish rate-limited: ${eventName}`, 'warn');
+      (this as any).__ccRate__.set(eventName, r);
+      return;
+    }
+    (this as any).__ccRate__.set(eventName, r);
+
+    const deepFreeze = (obj: any) => {
+      if (!obj || typeof obj !== 'object' || Object.isFrozen(obj)) return obj;
+      Object.freeze(obj);
+      for (const k of Object.keys(obj)) deepFreeze((obj as any)[k]);
+      return obj;
+    };
+    const frozenData = deepFreeze(
+      data && typeof data === 'object' ? JSON.parse(JSON.stringify(data)) : data
+    );
+
+    const event: any = {
+      id: (this as any).generateId?.() ?? `${Date.now()}-${Math.random()}`,
+      topic: eventName,
+      data: frozenData,
+      timestamp: now,
+      source: options.source || 'unknown',
+      sequence: ((this as any).eventSequence = ((this as any).eventSequence || 0) + 1),
+    };
+
+    if ((this as any).eventHistory) {
+      (this as any).eventHistory.push(event);
+      const max = ((this as any).config?.maxEventHistory) || 100;
+      if ((this as any).eventHistory.length > max) (this as any).eventHistory.shift();
+    }
+
+    const subs = (this as any).subscriptions?.get?.(eventName) || [];
+    const wild = (this as any).subscriptions?.get?.('*') || [];
+    const all = [...subs, ...wild];
+    for (const s of all) {
+      try {
+        if (s.filter && !s.filter(frozenData, event)) continue;
+        s.callback(frozenData, event);
+      } catch (error) {
+        (this as any).log?.(`Error in subscriber callback: ${s.id || 'unknown'}`, 'error');
+        console.error(error);
+      }
+    }
+
+    if ((this as any).events?.[eventName]) {
+      (this as any).events[eventName].forEach((cb: Function) => {
+        try { cb(frozenData, event); }
+        catch (error) {
+          (this as any).log?.('Error in legacy subscriber callback', 'error');
+          console.error(error);
+        }
+      });
+    }
+}): void;
 
   /**
    * Gets event history

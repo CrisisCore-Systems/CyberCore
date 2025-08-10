@@ -243,7 +243,7 @@ const {
       silver: 0.05,
       gold: 0.08,
       platinum: 0.12,
-      quantum: 0.15,
+      quantum: 0.12,
     };
 
     return tiers[tier.toLowerCase()] || 0;
