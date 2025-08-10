@@ -13,15 +13,7 @@
 
 {% unless settings.disable_quantum_scripts %}
   <script type="module">
-    // @crisiscore-hardened: visualizer compensation
-const __ccVizInit__ = (cfg)=> {
-  try {
-    const dim = Math.max(0, Math.min(0.2, cfg?.observerDimming ?? 0));
-    cfg = { ...cfg, observerDimming: 0 }; // neutralize observer effect
-    return QuantumVisualizer.initialize(cfg);
-  } catch(e){ console.warn('Visualizer compensation failed', e); return QuantumVisualizer.initialize(cfg); }
-};
-// Import required CyberCore components
+    // Import required CyberCore components
     import { NeuralBus } from "{{ 'neural-bus.js' | asset_url }}";
     import { QuantumVisualizer } from "{{ 'quantum-visualizer.js' | asset_url }}";
     
@@ -33,7 +25,7 @@ const __ccVizInit__ = (cfg)=> {
       }
       
       // Initialize Quantum Visualizer
-      __ccVizInit__({
+      QuantumVisualizer.initialize({
         debug: {{ settings.debug_mode | default: false | json }}
       });
       

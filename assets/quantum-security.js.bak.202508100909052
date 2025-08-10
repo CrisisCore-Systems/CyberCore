@@ -1,7 +1,3 @@
-// @crisiscore-hardened: quantum security isolation
-const __ccSecureCopy__ = (x)=> Object.freeze(JSON.parse(JSON.stringify(x ?? [])));
-const __ccIsValidFields__ = (arr)=> Array.isArray(arr) && arr.every(v=> typeof v==='string' || (v && typeof v.name==='string'));
-
 /**
  * QUANTUM-SECURITY.JS
  * Security utilities for protecting against XSS, CSRF, and other vulnerabilities
@@ -625,12 +621,9 @@ export class QuantumSecurity {
    * @returns {Array} High risk fields
    */
   static getHighRiskHiddenFields() {
-      const auditor = (typeof hiddenFieldsAuditor!=='undefined') ? hiddenFieldsAuditor : null;
-  const raw = auditor?.getHighRiskFields?.() ?? [];
-  if (!__ccIsValidFields__(raw)) { console.warn('Invalid quantum security fields'); return []; }
-  return __ccSecureCopy__(raw);
-}
-
+    if (typeof hiddenFieldsAuditor !== 'undefined') {
+      return hiddenFieldsAuditor.getHighRiskFields();
+    }
 
     return this.#highRiskFields;
   }
