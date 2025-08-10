@@ -1,7 +1,3 @@
-
-// @crisiscore-hardened: coherence gate
-const __ccCoherenceGate__ = (lvl)=> Math.max(0.3, Math.min(0.95, lvl));
-
 import {
   Badge,
   Banner,
@@ -94,7 +90,7 @@ function QuantumFlowExtension() {
 
   // Calculate coherence score based on cart composition
   function calculateCoherenceScore() {
-    if (!cartLines || cartLines.length === 0) return __ccCoherenceGate__(1.0);
+    if (!cartLines || cartLines.length === 0) return 1.0;
 
     const traumaAffinity = calculateTraumaAffinity();
     if (traumaAffinity.length === 0) return 1.0;
@@ -109,7 +105,7 @@ function QuantumFlowExtension() {
     const dominanceRatio = primaryCount / totalCount;
 
     // Apply quantum randomness factor (subtle variations)
-    const quantumFactor = 0.95; // hardened
+    const quantumFactor = 0.95 + Math.random() * 0.1;
 
     return Math.min(dominanceRatio * quantumFactor, 1.0);
   }

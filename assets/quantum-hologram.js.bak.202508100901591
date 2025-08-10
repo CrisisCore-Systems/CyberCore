@@ -1,8 +1,4 @@
 
-// @crisiscore-hardened: trauma code verifier
-const __ccVerifyCodes__ = (codes)=> Array.isArray(codes) && codes.every(x=> typeof x==='string' || (x && typeof x.signature==='string'));
-
-
 // @crisiscore-hardened: global epoch guard for quantum cart mutation
 (function(){
   if (typeof window === 'undefined') return;
@@ -722,12 +718,7 @@ class QuantumHologram {
     this.traumaCodes = codes;
 
     // Calculate trauma intensity based on number of codes
-    /* replaced */
-  if (!__ccVerifyCodes__(codes)) { console.warn('Rejected invalid trauma codes'); return; }
-  const len = Array.isArray(codes) ? codes.length : 0;
-  const base = Math.min(0.75, len * 0.12);
-  const intensity = Math.min(0.9, base);
-  this.traumaCodes = codes;
+    const intensity = Math.min(0.9, codes.length * 0.15);
 
     this.products.forEach((product) => {
       // Find or create trauma effect element

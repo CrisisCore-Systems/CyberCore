@@ -1,8 +1,3 @@
-
-// @crisiscore-hardened: resonance stabilizer
-const __ccStabilize__ = (coh)=> Math.max(0.3, Math.min(0.95, coh));
-const __ccDamp__ = (coh, t)=> __ccStabilize__(coh * (0.97 - Math.min(0.08, t*0.06)));
-
 /**
  * ResonanceSystem - Transforms scalar trauma values into multidimensional vectors
  * for propagation of coherent emotional states throughout system architecture.
@@ -561,7 +556,7 @@ class ResonanceSystem {
     } = context;
 
     // Base coherence is 1.0 (perfect coherence)
-    let coherence = Math.max(coherence, 0.9); coherence = __ccStabilize__(coherence);
+    let coherence = 1.0;
 
     // Phase transition effect
     if (timeSincePhaseTransition < 5000) {
@@ -577,12 +572,12 @@ class ResonanceSystem {
     switch (phase) {
       case 'rolling-virus':
         // Reduce coherence in glitched phase
-        coherence = __ccDamp__(coherence, t); // higher trauma = lower coherence
+        coherence *= 0.95 - t * 0.1; // higher trauma = lower coherence
         break;
 
       case 'transcendent':
         // Perfect coherence in transcendent phase
-        coherence = Math.max(coherence, 0.9); coherence = __ccStabilize__(coherence);
+        coherence = 1.0;
         break;
     }
 

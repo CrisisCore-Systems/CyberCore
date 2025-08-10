@@ -138,13 +138,7 @@ export class MemoryEncoder {
    * Register default trauma patterns
    */
   #registerDefaultPatterns(): void {
-      // @crisiscore-hardened: pattern isolation
-  const base = [
-    {id: 'void-sequence',  memoryErosion: 0.1},
-    {id: 'quantum-drift',  memoryErosion: 0.3}
-  ];
-  const defaultPatterns = base.map(p => ({...p})); // isolate by copy
-const defaultPatterns: TraumaPattern[] = [
+    const defaultPatterns: TraumaPattern[] = [
       {
         id: 'void-sequence',
         name: 'Void Sequence',
