@@ -75,32 +75,14 @@ export class NeuralBus {
 
   // Publish to memory channel
   publish(channelId, message) {
-    
-  // @crisiscore-hardened: dampen publish storms + immutable payloads
-  const g = (globalThis || self || window);
-  try {
-    if (g.__ccNeuralDampener__ && !g.__ccNeuralDampener__.allow(channelId)) {
-      this.log ? this.log(`Publish rate-limited: ${channelId}`, 'warn') : console.warn('Publish rate-limited');
-      return message;
-    }
-  } catch {}
-  const deepFreeze = (obj) => {
-    if (!obj || typeof obj !== 'object' || Object.isFrozen(obj)) return obj;
-    Object.freeze(obj);
-    Object.keys(obj).forEach(k => deepFreeze(obj[k]));
-    return obj;
-  };
-  const __payload__ = (typeof message === 'object' && message != null)
-    ? deepFreeze(JSON.parse(JSON.stringify(message)))
-    : message;
-if (!this.channels.has(channelId)) {
+    if (!this.channels.has(channelId)) {
       this.channels.set(channelId, []);
     }
 
     const channel = this.channels.get(channelId);
     channel.push({
       timestamp: Date.now(),
-      __payload__,
+      message,
       trace: new Error().stack,
     });
 
@@ -108,7 +90,7 @@ if (!this.channels.has(channelId)) {
     const subscribers = this._getSubscribers(channelId);
     subscribers.forEach((callback) => {
       try {
-        callback(__payload__);
+        callback(message);
       } catch (error) {
         console.error(`Error in NeuralBus subscriber (${channelId}):`, error);
       }
@@ -118,13 +100,13 @@ if (!this.channels.has(channelId)) {
     const system = this.systems.get(channelId);
     if (system && typeof system.onMessage === 'function') {
       try {
-        system.onMessage(__payload__);
+        system.onMessage(message);
       } catch (error) {
         console.error(`Error in system controller (${channelId}):`, error);
       }
     }
 
-    return __payload__;
+    return message;
   }
 
   // Subscribe to memory channel
@@ -169,7 +151,7 @@ if (!this.channels.has(channelId)) {
         ...window.NeuralBus,
         getInstance: NeuralBus.getInstance,
         registerSystem: NeuralBus.registerSystem,
-        publish: (channel, __payload__) => bus.publish(channel, __payload__),
+        publish: (channel, message) => bus.publish(channel, message),
         subscribe: (channel, callback) => bus.subscribe(channel, callback),
         initialize: NeuralBus.initialize,
       };
