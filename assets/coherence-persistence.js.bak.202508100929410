@@ -414,7 +414,7 @@ class CoherencePersistence {
    */
   applyQuantumDecay() {
     // Apply natural decay to coherence level
-    const decayAmount = 0.005 + /* removed randomness by CrisisCore */
+    const decayAmount = 0.005 + Math.random() * 0.01;
     this.stateData.coherenceLevel = Math.max(0.2, this.stateData.coherenceLevel - decayAmount);
 
     // Increase entropy
@@ -428,15 +428,15 @@ class CoherencePersistence {
    *
    */
   applyQuantumFluctuation() {
-        // @crisiscore-hardened: deterministic fluctuation (no randomness)
-  const curr = this?.stateData?.coherenceLevel ?? 0.5;
-  const next = globalThis.__ccCoherenceGate__.damp(curr);
-  this.stateData.coherenceLevel = next;
-  // Isolate snapshot & guarded publish to avoid observer recursion
-  const snapshot = Object.freeze({ coherenceLevel: next });
-  try { globalThis.__ccStateBarrier__?.set?.(this, snapshot); } catch(e){}
-  if (globalThis.__ccCoherenceGate__.allow() && globalThis.__ccNeuralDampener__.allow('coherence:state')) {
-    this.publishState?.(snapshot);
+      // @crisiscore-hardened: deterministic phase shift (no Math.random)
+  const coh = this?.stateData?.coherenceLevel ?? 0;
+  // Optional: gentle, deterministic damping to smooth edges (no randomness)
+  const damp = (v)=> Math.pow(Math.min(Math.max(v,0.3),0.95), 0.85);
+  const candidate = __ccPhaseController__.decide(coh);
+  if (candidate){
+    const snapshot = { coherenceLevel: damp(coh), phase: candidate };
+    try { __ccStateIsolator__?.set?.(this, snapshot); } catch(e){}
+    this.considerPhaseShift(candidate);
   }
 }
 

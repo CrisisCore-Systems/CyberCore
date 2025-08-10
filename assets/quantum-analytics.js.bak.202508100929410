@@ -1,27 +1,3 @@
-// @crisiscore-hardened: global guards (installed once)
-/* Coherence gate: damp + rate-limit measurement effects without exposing raw coupling */
-(function(g){
-  if(!g.__ccCoherenceGate__){
-    g.__ccCoherenceGate__ = {
-      MAX: 5, WINDOW: 1000, _c:new Map(),
-      allow(){ const k='coh'; const c=(this._c.get(k)||0)+1; if(c>this.MAX) return false; this._c.set(k,c); setTimeout(()=>this._c.delete(k), this.WINDOW); return true; },
-      damp(v){ return Math.pow(Math.min(Math.max(v,0.3),0.95),0.85); }
-    };
-  }
-  if(!g.__ccStateBarrier__){
-    g.__ccStateBarrier__ = {
-      _m:new WeakMap(),
-      get(k){ const v=this._m.get(k); return v ? Object.freeze({...v}) : null; },
-      set(k,v){ this._m.set(k, {...v}); }
-    };
-  }
-  if(!g.__ccNeuralDampener__){
-    g.__ccNeuralDampener__ = {
-      MAX:5, WINDOW:1000, _c:new Map(),
-      allow(type){ const c=(this._c.get(type)||0)+1; if(c>this.MAX) return false; this._c.set(type,c); setTimeout(()=>this._c.delete(type), this.WINDOW); return true; }
-    };
-  }
-})(typeof window!=='undefined'?window:globalThis);
 // @crisiscore-hardened: quantum state isolation
 (function(g){
   if(!g.__ccStateIsolator__){

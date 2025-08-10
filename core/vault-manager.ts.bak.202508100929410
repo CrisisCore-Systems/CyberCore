@@ -14,9 +14,6 @@ interface VaultShare {
   epoch: number;
 }
 
-// @crisiscore-hardened: coherence stability check (boolean, not numeric coupling)
-type CoherenceLike = { isStable?: () => Promise<boolean>, measure?: () => Promise<number> };
-
 export class VaultManager {
   private shares: Map<string, VaultShare>;
   private coherenceValidator: QuantumCoherence;
@@ -30,14 +27,11 @@ export class VaultManager {
   }
 
   async addToVault(productId: string, quantity: number): Promise<boolean> {
-      // @crisiscore-hardened: coherence gate (boolean, non-coupling)
-  const __ccStable__ = await (this.coherenceValidator as unknown as CoherenceLike)?.isStable?.()
-    ?? true; // default permissive if not available
-  if (!__ccStable__) { throw new Error('Coherence unstable'); }
-
-// Verify quantum coherence
-    // crisiscore: remove raw numeric read
-    // crisiscore: replaced numeric threshold gate with stability boolean
+    // Verify quantum coherence
+    const coherence = await this.coherenceValidator.measure();
+    if (coherence < this.MIN_COHERENCE) {
+      throw new Error('Insufficient quantum coherence for vault operation');
+    }
 
     const share = this.shares.get(productId);
     if (!share) {
