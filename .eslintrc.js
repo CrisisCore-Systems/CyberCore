@@ -77,6 +77,17 @@ module.exports = {
     'promise/no-nesting': 'warn', // Avoid deeply nested promises
   },
   overrides: [
+  {
+    files: ["**/cart-system.js", "**/trauma-*.js", "**/ritual-engine/**/*.js"],
+    rules: {
+      "max-depth": ["error", 4],
+      "complexity": ["warn", 20],
+      "no-param-reassign": "error",
+      "no-self-assign": "error",
+      "no-return-assign": "error",
+      "custom/require-epoch-validation": "error"
+    }
+  },
     {
       // TypeScript specific configuration
       files: ['**/*.ts'],
@@ -114,12 +125,18 @@ module.exports = {
       },
     },
     {
-      files: ['**/quantum-*.js', '**/qear-*.js', '**/quantum-*.ts', '**/qear-*.ts'], // Include .ts files
-      rules: {
-        complexity: ['warn', 25], // Allow higher complexity for quantum components
-        'max-lines-per-function': ['warn', 200],
-        '@typescript-eslint/no-explicit-any': 'off', // Allow any in specific complex files
-      },
+  files: ["**/quantum-*.js", "**/qear-*.js", "**/quantum-*.ts", "**/qear-*.ts"],
+  rules: {
+    complexity: ["warn", 25],
+    "max-lines-per-function": ["warn", 200],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "no-param-reassign": "error",
+    "prefer-const": "error",
+    "no-var": "error",
+    "custom/freeze-return-values": "error",
+    "custom/validate-epoch-transitions": "error",
+    "custom/prevent-direct-state-mutation": "error"
+  }
     },
   ],
   // Ensure ignorePatterns is correct
